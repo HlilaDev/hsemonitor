@@ -1,6 +1,8 @@
-export const BASE_URL = "http://localhost:5000/" ;
-export const URL_UPLOAD = "http://localhost:5000/uploads/"
-export const BASE_API_URL = "http://localhost:5000/api"
+import { environment } from '../../environments/environment';
+
+export const BASE_URL = `${environment.baseUrl}/`;
+export const URL_UPLOAD = `${environment.uploadUrl}/`;
+export const BASE_API_URL = environment.apiBaseUrl;
 
 export const API_URLS ={
     auth:{

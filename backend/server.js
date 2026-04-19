@@ -23,7 +23,7 @@ if (!fs.existsSync(uploadsDir)) {
 // ✅ CORS
 app.use(
   cors({
-    origin: "http://localhost:4200",
+    origin: process.env.CLIENT_URL || "http://localhost:4200",
     credentials: true,
   })
 );
@@ -53,7 +53,9 @@ const server = http.createServer(app);
 initSocket(server);
 
 const port = process.env.PORT || 3001;
-server.listen(port, () => console.log(`Server running on port ${port}`));
+server.listen(port, "0.0.0.0", () => {
+  console.log(`Server running on port ${port}`);
+});
 
 
 //offline devices Checker

@@ -1,0 +1,18 @@
+services:
+  backend:
+    build: ./backend
+    container_name: hse-backend-container
+    ports:
+      - "3002:5000"
+    env_file:
+      - ./backend/.env
+    restart: unless-stopped
+
+  frontend:
+    build: ./frontend
+    container_name: hse-frontend-container
+    ports:
+      - "4200:4200"
+    depends_on:
+      - backend
+    restart: unless-stopped
