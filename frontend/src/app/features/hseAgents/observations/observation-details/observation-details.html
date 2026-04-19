@@ -1,0 +1,278 @@
+<section class="page">
+  <div class="head">
+    <div>
+      <h2>Détails de l’observation</h2>
+      <p class="muted">Consulte les informations complètes de l’observation.</p>
+    </div>
+
+    <div class="actions">
+      <a class="btn ghost" routerLink="/agent/observations">← Retour</a>
+      <button class="btn" type="button" (click)="load(id())" [disabled]="loading()">
+        {{ loading() ? 'Chargement...' : 'Actualiser' }}
+      </button>
+    </div>
+  </div>
+
+  @if (errorMsg()) {
+    <div class="alert error">
+      {{ errorMsg() }}
+    </div>
+  }
+
+  @if (actionError()) {
+    <div class="alert error">
+      {{ actionError() }}
+    </div>
+  }
+
+  @if (actionSuccess()) {
+    <div class="alert success">
+      {{ actionSuccess() }}
+    </div>
+  }
+
+  @if (loading()) {
+    <div class="loading">Chargement...</div>
+  } @else if (obs()) {
+    <div class="panel">
+      <div class="top">
+        <div class="left">
+          <h3 class="obs-title">{{ obs()!.title }}</h3>
+          <div class="meta muted">
+            <span>ID: {{ obs()!._id }}</span>
+            <span>•</span>
+            <span>{{ formatDate(obs()!.createdAt) }}</span>
+          </div>
+        </div>
+
+        <div class="badges">
+          <span class="badge" [attr.data-variant]="'sev-' + (obs()!.severity || 'low')">
+            {{ obs()!.severity }}
+          </span>
+          <span class="badge" [attr.data-variant]="'st-' + (obs()!.status || 'open')">
+            {{ obs()!.status }}
+          </span>
+        </div>
+      </div>
+
+      <div class="grid">
+        <div class="main">
+          <div class="block">
+            <div class="label">Description</div>
+            <div class="desc">{{ obs()!.description }}</div>
+          </div>
+
+          <div class="block">
+            <div class="label">Images de l’observation</div>
+
+            @if (hasImages()) {
+              <div class="images">
+                @for (im of obs()!.images ?? []; track im.url) {
+                  <button
+                    type="button"
+                    class="img"
+                    (click)="openImage(im.url)"
+                    title="Cliquer pour ouvrir"
+                  >
+                    <img [src]="normalizeUrl(im.url)" alt="Observation image" />
+                  </button>
+                }
+              </div>
+            } @else {
+              <div class="muted">Aucune image attachée.</div>
+            }
+          </div>
+
+          @if (canSubmitResolution()) {
+            <div class="block treatment-card">
+              <div class="label">Traitement de l’observation</div>
+
+              <div class="helper-text">
+                Décris les actions réalisées pour corriger le problème, puis
+                joins des photos de preuve avant d’envoyer l’observation au manager.
+              </div>
+
+              <div class="form-field">
+                <label for="resolutionComment">Commentaire de traitement</label>
+                <textarea
+                  id="resolutionComment"
+                  rows="5"
+                  [value]="resolutionComment()"
+                  (input)="onResolutionComment($any($event.target).value)"
+                  placeholder="Exemple : zone sécurisée, équipement remplacé, signalisation remise en place..."
+                ></textarea>
+              </div>
+
+              <div class="form-field">
+                <label>Photos de preuve (optionnel)</label>
+
+                <label class="upload-box" for="proofFiles">
+                  <input
+                    id="proofFiles"
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    (change)="onProofFilesSelected($event)"
+                  />
+
+                  <div class="upload-icon">📷</div>
+                  <div class="upload-text">
+                    <strong>Ajouter des images</strong>
+                    <span>PNG, JPG, JPEG, WEBP</span>
+                  </div>
+                </label>
+
+                <div class="file-summary">
+                  <span>{{ proofFilesCountLabel() }}</span>
+
+                  @if (hasProofFiles()) {
+                    <button
+                      type="button"
+                      class="mini-btn"
+                      (click)="clearProofFiles()"
+                    >
+                      Vider
+                    </button>
+                  }
+                </div>
+
+                @if (hasProofFiles()) {
+                  <div class="proof-grid">
+                    @for (item of proofPreviews(); track trackByProofPreview($index, item)) {
+                      <div class="proof-card">
+                        <div class="proof-thumb">
+                          <img [src]="item.preview" [alt]="item.file.name" />
+                        </div>
+
+                        <div class="proof-info">
+                          <div class="proof-name" [title]="item.file.name">
+                            {{ item.file.name }}
+                          </div>
+                          <button
+                            type="button"
+                            class="remove-btn"
+                            (click)="removeProofFile($index)"
+                          >
+                            Supprimer
+                          </button>
+                        </div>
+                      </div>
+                    }
+                  </div>
+                }
+              </div>
+
+              <div class="treatment-actions">
+                <button
+                  class="btn success"
+                  type="button"
+                  (click)="submitResolution()"
+                  [disabled]="submittingResolution()"
+                >
+                  {{ submittingResolution() ? 'Envoi...' : 'Marquer comme traité' }}
+                </button>
+              </div>
+            </div>
+          }
+
+          @if (
+            obs()!.resolutionComment ||
+            (obs()!.resolutionImages?.length ?? 0) > 0 ||
+            obs()!.resolvedAt
+          ) {
+            <div class="block">
+              <div class="label">Traitement soumis</div>
+
+              <div class="resolution-box">
+                <div class="resolution-meta muted">
+                  <span>Traité par : {{ getUserDisplayName(obs()!.resolvedBy) }}</span>
+                  <span>•</span>
+                  <span>{{ formatDate(obs()!.resolvedAt) }}</span>
+                </div>
+
+                <div class="desc">
+                  {{ obs()!.resolutionComment || 'Aucun commentaire fourni.' }}
+                </div>
+
+                @if (hasResolutionImages()) {
+                  <div class="images resolution-images">
+                    @for (im of obs()!.resolutionImages ?? []; track im.url) {
+                      <button
+                        type="button"
+                        class="img"
+                        (click)="openImage(im.url)"
+                        title="Cliquer pour ouvrir"
+                      >
+                        <img [src]="normalizeUrl(im.url)" alt="Resolution image" />
+                      </button>
+                    }
+                  </div>
+                }
+              </div>
+            </div>
+          }
+
+          @if (obs()!.validationComment || obs()!.validatedAt) {
+            <div class="block">
+              <div class="label">Retour de validation</div>
+
+              <div class="validation-box">
+                <div class="resolution-meta muted">
+                  <span>Validé par : {{ getUserDisplayName(obs()!.validatedBy) }}</span>
+                  <span>•</span>
+                  <span>{{ formatDate(obs()!.validatedAt) }}</span>
+                </div>
+
+                <div class="desc">
+                  {{ obs()!.validationComment || 'Aucun commentaire de validation.' }}
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+
+        <div class="side">
+          <div class="side-block">
+            <div class="label">Zone</div>
+            <div class="value">{{ obs()!.zone?.name || '—' }}</div>
+          </div>
+
+          <div class="side-block">
+            <div class="label">Déclarée par</div>
+            <div class="value">
+              <div>{{ getUserDisplayName(obs()!.reportedBy) }}</div>
+              <div class="muted">{{ getUserEmail(obs()!.reportedBy) }}</div>
+            </div>
+          </div>
+
+          <div class="side-block">
+            <div class="label">Affectée à</div>
+            <div class="value">{{ getUserDisplayName(obs()!.assignedTo) }}</div>
+          </div>
+
+          <div class="side-block">
+            <div class="label">Affectée par</div>
+            <div class="value">{{ getUserDisplayName(obs()!.assignedBy) }}</div>
+          </div>
+
+          <div class="side-block">
+            <div class="label">Date d’affectation</div>
+            <div class="value">{{ formatDate(obs()!.assignedAt) }}</div>
+          </div>
+
+          <div class="side-block">
+            <div class="label">Gravité</div>
+            <div class="value">{{ obs()!.severity }}</div>
+          </div>
+
+          <div class="side-block">
+            <div class="label">Statut</div>
+            <div class="value">{{ obs()!.status }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  } @else {
+    <div class="empty">Observation introuvable.</div>
+  }
+</section>

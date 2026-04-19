@@ -1,0 +1,110 @@
+{
+  "EMPLOYEES": {
+    "KICKER": "Workforce",
+    "TITLE": "Employees",
+    "SUBTITLE": "Employee list with filters",
+    "ADD_BTN": "Add Employee",
+    "ADD_TITLE": "Add Employee",
+    "EDIT_TITLE": "Edit Employee",
+    "LOADING_EMPLOYEE": "Loading employee...",
+    "LOADING_ZONES": "Loading zones...",
+    "SAVE_CHANGES": "Save changes",
+    "EMPTY": "No employees found.",
+    "STATS": {
+      "TOTAL": "Total Employees",
+      "ACTIVE": "Active Employees",
+      "INACTIVE": "Inactive Employees",
+      "ASSIGNED_ZONE": "Assigned to Zone"
+    },
+    "COLUMNS": {
+      "NAME": "Full Name",
+      "EMPLOYEE_ID": "Employee ID",
+      "DEPARTMENT": "Department",
+      "JOB_TITLE": "Job Title",
+      "ZONE": "Zone",
+      "PHONE": "Phone",
+      "STATUS": "Status",
+       "MATRICULE": "Matricule",
+      "FULL_NAME":"Full Name",
+      "ACTIVE":"Active",
+            "ACTIONS":"Actions",
+            "JOB": "Job",
+            "HIRE_DATE": "Hire Date"
+    },
+    "FILTERS": {
+      "SEARCH": "Search",
+      "SEARCH_PH": "Name, employee ID, or job title...",
+      "DEPARTMENT": "Department",
+      "DEPARTMENT_PH": "Department name...",
+      "ZONE": "Zone",
+      "ZONE_PH": "Zone name...",
+      "STATUS": "Status",
+      "ALL": "All"
+    },
+    "FORM": {
+      "FULL_NAME": "Full Name",
+      "FULL_NAME_PH": "Ex: Ahmed Ben Ali",
+      "EMPLOYEE_ID": "Employee ID",
+      "EMPLOYEE_ID_PH": "Ex: EMP-001",
+      "DEPARTMENT": "Department",
+      "DEPARTMENT_PH": "Ex: Production",
+      "JOB_TITLE": "Job Title",
+      "JOB_TITLE_PH": "Ex: Technician",
+      "ZONE": "Zone",
+      "SELECT_ZONE": "— Select a zone —",
+      "PHONE": "Phone",
+      "PHONE_PH": "+216 ...",
+      "HIRE_DATE": "Hire Date",
+      "ACTIVE": "Active"
+    },
+    "STATUS": {
+      "ACTIVE": "Active",
+      "INACTIVE": "Inactive"
+    },
+    "VALIDATION": {
+      "FULL_NAME_REQUIRED": "Full name is required (min 3 characters)."
+    },
+    "ERROR": {
+      "LOAD": "Error loading employees.",
+      "DELETE": "Error deleting employee.",
+      "TOGGLE_ACTIVE": "Error updating employee status.",
+      "MISSING_ID": "Missing employee ID.",
+      "LOAD_ONE": "Error loading employee.",
+      "UPDATE": "Error updating employee.",
+      "CREATE": "Error creating employee."
+    },
+    "CONFIRM_DELETE": "Do you really want to delete this employee?",
+    "PROFILE": {
+      "SUBTITLE": "View profile details, activity status, and training history.",
+      "PERSONAL_INFO": "Personal Information",
+      "TRAININGS": "Completed Trainings",
+      "NO_TRAININGS": "No trainings found for this employee.",
+      "CREATED_AT": "Created at",
+      "ACTIVATE": "Activate",
+      "DEACTIVATE": "Deactivate",
+      "SCORE": "Score",
+      "CERTIFIED": "Certified",
+      "ZONE_ID_PH": "Zone ObjectId"
+    }
+  },
+  "COMMON": {
+    "LOADING": "Loading...",
+    "RETRY": "Retry",
+    "EDIT": "Edit",
+    "DELETE": "Delete",
+    "VIEW": "View",
+    "BACK": "Back",
+    "SAVE": "Save",
+    "SAVING": "Saving...",
+    "CANCEL": "Cancel",
+    "FILTER": "Filter",
+    "RESET": "Reset",
+    "TOTAL": "Total",
+    "PAGE": "Page",
+    "ACTIONS": "Actions",
+    "ACTIVE": "Active",
+    "INACTIVE": "Inactive",
+    "ENABLE": "Enable",
+    "DISABLE": "Disable"
+  }
+}

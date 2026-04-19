@@ -1,0 +1,294 @@
+<div class="page">
+  <div class="header">
+    <div>
+      <div class="eyebrow">Audit Management</div>
+      <h1>Create Audit</h1>
+      <p>
+        Create a new audit linked to your HSE process, zone, auditor, findings,
+        and supporting documents.
+      </p>
+    </div>
+
+    <a class="btn light" routerLink="/manager/audits">
+      <i class="bi bi-arrow-left"></i>
+      Back
+    </a>
+  </div>
+
+  <div class="layout">
+    <div class="main-card">
+      <div class="card-head">
+        <h2>Audit Form</h2>
+        <span>Fill the audit information based on your backend model.</span>
+      </div>
+
+      <div *ngIf="error()" class="alert error">
+        <i class="bi bi-exclamation-circle"></i>
+        <span>{{ error() }}</span>
+      </div>
+
+      <div *ngIf="success()" class="alert success">
+        <i class="bi bi-check-circle"></i>
+        <span>{{ success() }}</span>
+      </div>
+
+      <form class="form" [formGroup]="form" (ngSubmit)="submit()">
+        <div class="section">
+          <h3>Main Information</h3>
+
+          <div class="grid two">
+            <div class="field field-full">
+              <label>Title <span>*</span></label>
+              <input
+                class="input"
+                type="text"
+                formControlName="title"
+                placeholder="Ex: Weekly PPE Safety Audit - Zone A"
+              />
+              <small class="error-text" *ngIf="fieldInvalid('title')">
+                Title is required and must have at least 3 characters.
+              </small>
+            </div>
+
+            <div class="field">
+              <label>Type <span>*</span></label>
+              <select class="input" formControlName="type">
+                <option *ngFor="let type of auditTypes" [value]="type">
+                  {{ type }}
+                </option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label>Status <span>*</span></label>
+              <select class="input" formControlName="status">
+                <option *ngFor="let status of auditStatuses" [value]="status">
+                  {{ status }}
+                </option>
+              </select>
+            </div>
+
+            <div class="field field-full">
+              <label>Description</label>
+              <textarea
+                class="input textarea"
+                rows="4"
+                formControlName="description"
+                placeholder="Write audit description, scope, objectives and operational notes..."
+              ></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <h3>Assignment & Scheduling</h3>
+
+          <div class="grid two">
+            <div class="field">
+              <label>Zone ID</label>
+              <input
+                class="input"
+                type="text"
+                formControlName="zone"
+                placeholder="Zone ObjectId"
+              />
+            </div>
+
+            <div class="field">
+              <label>Auditor ID <span>*</span></label>
+              <input
+                class="input"
+                type="text"
+                formControlName="auditor"
+                placeholder="User ObjectId"
+              />
+              <small class="error-text" *ngIf="fieldInvalid('auditor')">
+                Auditor is required.
+              </small>
+            </div>
+
+            <div class="field">
+              <label>Scheduled Date</label>
+              <input
+                class="input"
+                type="datetime-local"
+                formControlName="scheduledDate"
+              />
+            </div>
+
+            <div class="field">
+              <label>Completed Date</label>
+              <input
+                class="input"
+                type="datetime-local"
+                formControlName="completedDate"
+              />
+            </div>
+
+            <div class="field">
+              <label>Score</label>
+              <input
+                class="input"
+                type="number"
+                min="0"
+                max="100"
+                formControlName="score"
+                placeholder="0 - 100"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-head">
+            <h3>Findings</h3>
+            <button class="btn primary small" type="button" (click)="addFinding()">
+              <i class="bi bi-plus-lg"></i>
+              Add finding
+            </button>
+          </div>
+
+          <div class="findings-list" formArrayName="findings">
+            <div
+              class="finding-card"
+              *ngFor="let item of findings.controls; let i = index"
+              [formGroupName]="i"
+            >
+              <div class="finding-top">
+                <h4>Finding #{{ i + 1 }}</h4>
+                <button
+                  class="btn danger small"
+                  type="button"
+                  (click)="removeFinding(i)"
+                >
+                  <i class="bi bi-trash3"></i>
+                  Remove
+                </button>
+              </div>
+
+              <div class="grid two">
+                <div class="field field-full">
+                  <label>Finding Title <span>*</span></label>
+                  <input
+                    class="input"
+                    type="text"
+                    formControlName="title"
+                    placeholder="Ex: Emergency exit blocked"
+                  />
+                  <small class="error-text" *ngIf="findingFieldInvalid(i, 'title')">
+                    Finding title is required.
+                  </small>
+                </div>
+
+                <div class="field field-full">
+                  <label>Description</label>
+                  <textarea
+                    class="input textarea"
+                    rows="3"
+                    formControlName="description"
+                    placeholder="Describe the problem..."
+                  ></textarea>
+                </div>
+
+                <div class="field">
+                  <label>Severity</label>
+                  <select class="input" formControlName="severity">
+                    <option *ngFor="let sev of findingSeverities" [value]="sev">
+                      {{ sev }}
+                    </option>
+                  </select>
+                </div>
+
+                <div class="field">
+                  <label>Status</label>
+                  <select class="input" formControlName="status">
+                    <option *ngFor="let st of findingStatuses" [value]="st">
+                      {{ st }}
+                    </option>
+                  </select>
+                </div>
+
+                <div class="field">
+                  <label>Due Date</label>
+                  <input
+                    class="input"
+                    type="datetime-local"
+                    formControlName="dueDate"
+                  />
+                </div>
+
+                <div class="field">
+                  <label>Assigned To</label>
+                  <input
+                    class="input"
+                    type="text"
+                    formControlName="assignedTo"
+                    placeholder="User ObjectId"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <h3>Attachments</h3>
+
+          <div class="field">
+            <label>Attachment URLs</label>
+            <textarea
+              class="input textarea"
+              rows="4"
+              formControlName="attachmentsText"
+              placeholder="https://file1.pdf, https://image2.jpg"
+            ></textarea>
+            <small class="hint">
+              Separate URLs with commas. They will be saved as a string array.
+            </small>
+          </div>
+        </div>
+
+        <div class="actions">
+          <a class="btn light" routerLink="/manager/audits">Cancel</a>
+
+          <button class="btn primary" type="submit" [disabled]="loading()">
+            <span *ngIf="!loading()">
+              <i class="bi bi-shield-check"></i>
+              Create Audit
+            </span>
+            <span *ngIf="loading()">Saving...</span>
+          </button>
+        </div>
+      </form>
+    </div>
+
+<aside class="side-card">
+  <div class="card-head">
+    <h2>Audit Tips</h2>
+    <span>Best practices for creating a complete audit.</span>
+  </div>
+
+  <div class="tips-list">
+    <div class="tip-item">
+      <strong>Clear title</strong>
+      <p>Use the zone or process name in the audit title.</p>
+    </div>
+
+    <div class="tip-item">
+      <strong>Assign auditor</strong>
+      <p>Select the responsible auditor before saving.</p>
+    </div>
+
+    <div class="tip-item">
+      <strong>Add findings</strong>
+      <p>Record observed issues directly during audit creation.</p>
+    </div>
+
+    <div class="tip-item">
+      <strong>Attach evidence</strong>
+      <p>Add document or image links for traceability.</p>
+    </div>
+  </div>
+</aside>
+  </div>
+</div>

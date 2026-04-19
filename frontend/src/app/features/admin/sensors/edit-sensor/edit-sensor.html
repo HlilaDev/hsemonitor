@@ -1,0 +1,115 @@
+<div class="page">
+  <div class="header">
+    <div>
+      <h2>Modifier un capteur</h2>
+      <p class="muted">Mettre à jour les informations du capteur sélectionné</p>
+    </div>
+
+    <a class="btn ghost" routerLink="/admin/sensors">
+      <i class="bi bi-arrow-left"></i>
+      Retour
+    </a>
+  </div>
+
+  <div class="card">
+    @if (error()) {
+      <div class="alert error">
+        <i class="bi bi-exclamation-triangle"></i>
+        {{ error() }}
+      </div>
+    }
+
+    @if (loading()) {
+      <div class="state-box">
+        <span class="spinner"></span>
+        <span>Chargement du capteur...</span>
+      </div>
+    } @else {
+      <form class="form" [formGroup]="form" (ngSubmit)="submit()">
+        <div class="grid">
+          <div class="field">
+            <label>Nom *</label>
+            <input
+              class="input"
+              formControlName="name"
+              placeholder="Ex: Temp Sensor A1"
+            />
+            @if (fieldInvalid('name')) {
+              <div class="hint error">Nom requis (min 2 caractères)</div>
+            }
+          </div>
+
+          <div class="field">
+            <label>Type *</label>
+            <select class="input" formControlName="type">
+              @for (t of sensorTypes; track t.value) {
+                <option [value]="t.value">{{ t.label }}</option>
+              }
+            </select>
+            @if (fieldInvalid('type')) {
+              <div class="hint error">Type requis</div>
+            }
+          </div>
+
+          <div class="field">
+            <label>Device</label>
+            <input class="input" [value]="deviceLabel()" disabled />
+            <div class="hint">Le device n’est pas modifiable ici.</div>
+          </div>
+
+          <div class="field">
+            <label>Zone</label>
+            <input class="input" [value]="zoneLabel()" disabled />
+            <div class="hint">La zone actuelle est dérivée du device.</div>
+          </div>
+
+          <div class="field">
+            <label>Threshold</label>
+            <input
+              class="input"
+              type="number"
+              formControlName="threshold"
+              placeholder="Ex: 80"
+            />
+          </div>
+
+          <div class="field">
+            <label>Unité</label>
+            <input
+              class="input"
+              formControlName="unit"
+              placeholder="Ex: °C, ppm, dB"
+            />
+          </div>
+
+          <div class="field full">
+            <label>Status *</label>
+            <select class="input" formControlName="status">
+              @for (s of statuses; track s.value) {
+                <option [value]="s.value">{{ s.label }}</option>
+              }
+            </select>
+            @if (fieldInvalid('status')) {
+              <div class="hint error">Status requis</div>
+            }
+          </div>
+        </div>
+
+        <div class="actions">
+          <a class="btn" routerLink="/admin/sensors">Annuler</a>
+
+          <button class="btn primary" type="submit" [disabled]="!canSubmit()">
+            @if (!saving()) {
+              <span>Enregistrer</span>
+            } @else {
+              <span class="inline">
+                <span class="spinner"></span>
+                Sauvegarde...
+              </span>
+            }
+          </button>
+        </div>
+      </form>
+    }
+  </div>
+</div>

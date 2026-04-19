@@ -1,0 +1,186 @@
+<header class="header-container">
+  <div class="left-section">
+    <button class="icon-btn menu-toggle" type="button" (click)="onToggleSidebar()">
+      <i class="bi bi-list"></i>
+    </button>
+
+    <div class="search-bar">
+      <input type="text" [placeholder]="'HEADER.SEARCH_PLACEHOLDER' | translate" />
+      <i class="bi bi-search"></i>
+    </div>
+  </div>
+
+  <div class="right-section">
+    <button class="icon-btn" type="button"><i class="bi bi-moon"></i></button>
+    <button class="icon-btn" type="button"><i class="bi bi-fullscreen"></i></button>
+
+    <!-- NOTIFICATIONS -->
+    <div class="notification-wrapper">
+      <button
+        class="icon-btn badge-container"
+        type="button"
+        (click)="toggleNotificationMenu($event)"
+        aria-haspopup="menu"
+        [attr.aria-expanded]="isNotificationOpen"
+      >
+        <i class="bi bi-bell"></i>
+
+        @if (notificationStore.unreadCount() > 0) {
+          <span class="badge bg-danger">
+            {{ notificationStore.unreadCount() > 9 ? '9+' : notificationStore.unreadCount() }}
+          </span>
+        }
+      </button>
+
+      @if (isNotificationOpen) {
+        <div class="notification-menu" role="menu">
+          <div class="notification-head">
+            <div>
+              <div class="title">Notifications</div>
+              <div class="subtitle">
+                {{ notificationStore.unreadCount() }} non lue(s)
+              </div>
+            </div>
+
+            <button
+              class="mark-all-btn"
+              type="button"
+              (click)="markAllNotificationsRead()"
+            >
+              Tout lire
+            </button>
+          </div>
+
+          @if (notificationStore.latestNotifications().length > 0) {
+            <div class="notification-list">
+              @for (item of notificationStore.latestNotifications(); track trackByAlert($index, item)) {
+                <button
+                  class="notification-item"
+                  type="button"
+                  [class.unread]="!item.isRead"
+                  (click)="openNotification(item._id)"
+                >
+                  <div
+                    class="notification-dot"
+                    [ngClass]="notificationStore.getSeverityClass(item.severity)"
+                  ></div>
+
+                  <div class="notification-content">
+                    <div class="notification-title">
+                      {{ item.title || 'Nouvelle alerte' }}
+                    </div>
+
+                    <div class="notification-message">
+                      {{ item.message || 'Aucune description' }}
+                    </div>
+
+                    <div class="notification-meta">
+                      <span>{{ notificationStore.getZoneName(item.zone) }}</span>
+                      <span>•</span>
+                      <span>{{ notificationStore.getDeviceName(item.device) }}</span>
+                    </div>
+
+                    <div class="notification-time">
+                      {{ notificationStore.getTime(item.createdAt) }}
+                    </div>
+                  </div>
+                </button>
+              }
+            </div>
+          } @else {
+            <div class="empty-notifications">
+              <i class="bi bi-bell-slash"></i>
+              <p>Aucune notification pour le moment</p>
+            </div>
+          }
+
+          <div class="notification-footer">
+            <button class="view-all-btn" type="button" (click)="openNotificationsPage()">
+              Afficher toutes les notifications
+            </button>
+          </div>
+        </div>
+      }
+    </div>
+
+    <div class="icon-btn badge-container">
+      <i class="bi bi-chat-dots"></i>
+      <span class="badge bg-danger">3</span>
+    </div>
+
+    <!-- LANGUAGE DROPDOWN -->
+    <div class="lang-wrapper">
+      <button
+        class="icon-btn"
+        type="button"
+        (click)="toggleLangMenu($event)"
+        aria-haspopup="menu"
+        [attr.aria-expanded]="isLangOpen"
+      >
+        <img class="flag-icon" [src]="lang.flagByCode[currentLang]" alt="flag" />
+        <span class="lang-text">{{ currentLang }}</span>
+        <i class="bi bi-chevron-down chevron"></i>
+      </button>
+
+      @if (isLangOpen) {
+        <div class="lang-menu" role="menu">
+          @for (o of lang.options; track o.code) {
+            <button
+              class="lang-item"
+              type="button"
+              (click)="chooseLang(o.code)"
+              [class.active]="o.code === currentLang"
+              role="menuitem"
+            >
+              <img class="flag-icon" [src]="o.flag" [alt]="o.code + ' flag'" />
+              <span class="code">{{ o.code }}</span>
+              <span class="label">{{ o.label }}</span>
+            </button>
+          }
+        </div>
+      }
+    </div>
+
+    <!-- USER DROPDOWN -->
+    <div class="user-wrapper">
+      <button
+        class="user-profile"
+        type="button"
+        (click)="toggleUserMenu($event)"
+        aria-haspopup="menu"
+        [attr.aria-expanded]="isUserOpen"
+      >
+        <img [src]="avatarUrl" alt="User" class="avatar" />
+      </button>
+
+      @if (isUserOpen) {
+        <div class="user-menu" role="menu">
+          <div class="user-head">
+            <div class="name">{{ displayName }}</div>
+
+            <div class="role">
+              {{ ('HEADER.ROLES.' + displayRole) | translate }}
+            </div>
+          </div>
+
+          <a class="user-item" routerLink="/admin/profile" (click)="closeUserMenu()">
+            {{ 'HEADER.USER.PROFILE' | translate }}
+          </a>
+
+          <a class="user-item" routerLink="/admin/settings" (click)="closeUserMenu()">
+            {{ 'HEADER.USER.SETTINGS' | translate }}
+          </a>
+
+          <div class="divider"></div>
+
+          <button class="user-item danger" type="button" (click)="logout()">
+            {{ 'HEADER.USER.LOGOUT' | translate }}
+          </button>
+        </div>
+      }
+    </div>
+
+    <button class="icon-btn" type="button"><i class="bi bi-grid-3x3-gap"></i></button>
+    <button class="icon-btn" type="button"><i class="bi bi-gear"></i></button>
+  </div>
+</header>

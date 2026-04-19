@@ -1,0 +1,89 @@
+<div class="page">
+  <div class="header">
+    <div>
+      <h2>Ajouter un capteur</h2>
+      <p class="muted">
+        Créer un nouveau capteur et l'affecter à un device (zone auto)
+      </p>
+    </div>
+
+    <a class="btn ghost" routerLink="/admin/sensors">
+      <i class="bi bi-arrow-left"></i>
+      Retour
+    </a>
+  </div>
+
+  <div class="card">
+    <div *ngIf="error()" class="alert error">
+      <i class="bi bi-exclamation-triangle"></i>
+      {{ error() }}
+    </div>
+
+    <form class="form" [formGroup]="form" (ngSubmit)="submit()">
+      <div class="grid">
+        <div class="field">
+          <label>Nom *</label>
+          <input class="input" formControlName="name" placeholder="Ex: Temp Sensor A1" />
+          <div class="hint error" *ngIf="fieldInvalid('name')">
+            Nom requis (min 2 caractères)
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Type *</label>
+          <select class="input" formControlName="type">
+            <option *ngFor="let t of sensorTypes" [value]="t.value">
+              {{ t.label }}
+            </option>
+          </select>
+          <div class="hint error" *ngIf="fieldInvalid('type')">Type requis</div>
+        </div>
+
+        <!-- ✅ IMPORTANT: formControlName="device" and value = d._id -->
+        <div class="field">
+          <label>Device *</label>
+          <select
+            class="input"
+            formControlName="device"
+            (change)="onDeviceChange(form.value.device || '')"
+          >
+            <option value="">-- Choisir device --</option>
+            <option *ngFor="let d of devices()" [value]="d._id">
+              {{ deviceLabel(d) }}
+            </option>
+          </select>
+          <div class="hint error" *ngIf="fieldInvalid('device')">Device requis</div>
+        </div>
+
+        <div class="field">
+          <label>Zone (auto depuis device)</label>
+          <input class="input" [value]="zoneLabel()" disabled />
+          <div class="hint" *ngIf="!selectedZone()">
+            Sélectionne un device pour remplir la zone automatiquement.
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Threshold (optionnel)</label>
+          <input class="input" type="number" formControlName="threshold" placeholder="Ex: 80" />
+        </div>
+
+        <div class="field">
+          <label>Unité (optionnel)</label>
+          <input class="input" formControlName="unit" placeholder="Ex: °C, ppm, dB" />
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="btn primary" type="submit" [disabled]="!canSubmit()">
+          <span *ngIf="!loading()">Créer</span>
+          <span *ngIf="loading()" class="inline">
+            <span class="spinner"></span>
+            Création...
+          </span>
+        </button>
+        <a class="btn" routerLink="/admin/sensors">Annuler</a>
+      </div>
+    </form>
+  </div>
+</div>

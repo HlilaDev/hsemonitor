@@ -1,0 +1,278 @@
+<div class="page">
+  <ng-container *ngIf="loading(); else loadedBlock">
+    <div class="skeleton-page">
+      <div class="skeleton-line w30"></div>
+      <div class="skeleton-line w60"></div>
+
+      <div class="hero-skeleton card">
+        <div class="skeleton-line w40"></div>
+        <div class="skeleton-pills">
+          <div class="skeleton-pill"></div>
+          <div class="skeleton-pill"></div>
+          <div class="skeleton-pill"></div>
+        </div>
+      </div>
+
+      <div class="metrics-grid">
+        <div class="card skeleton-card" *ngFor="let item of [1, 2, 3, 4]">
+          <div class="skeleton-line w50"></div>
+          <div class="skeleton-line w30 big"></div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-template #loadedBlock>
+    <div *ngIf="error()" class="alert error">
+      <i class="bi bi-exclamation-triangle"></i>
+      <span>{{ error() }}</span>
+    </div>
+
+    <div *ngIf="!error() && !report()" class="card empty-state">
+      <div class="empty-icon">
+        <i class="bi bi-file-earmark-text"></i>
+      </div>
+      <h3>Rapport introuvable</h3>
+      <p>Le rapport demandé n’existe pas ou n’est plus disponible.</p>
+      <button class="btn primary" (click)="goBack()">
+        <i class="bi bi-arrow-left"></i>
+        Retour à la liste
+      </button>
+    </div>
+
+    <ng-container *ngIf="report() as r">
+      <div class="topbar">
+        <button class="btn ghost" (click)="goBack()">
+          <i class="bi bi-arrow-left"></i>
+          Retour
+        </button>
+
+        <div class="topbar-actions">
+          <a
+            class="btn ghost"
+            *ngIf="r.exportUrl"
+            [href]="getExportUrl(r.exportUrl)"
+            target="_blank"
+            rel="noopener"
+          >
+            <i class="bi bi-file-earmark-pdf"></i>
+            Ouvrir PDF
+          </a>
+
+          <a
+            class="btn ghost"
+            [routerLink]="['/manager/reports', r._id, 'edit']"
+          >
+            <i class="bi bi-pencil-square"></i>
+            Modifier
+          </a>
+
+          <button
+            class="btn primary"
+            (click)="recalcMetrics()"
+            [disabled]="recalculating()"
+          >
+            <i class="bi bi-arrow-clockwise"></i>
+            {{ recalculating() ? 'Recalcul...' : 'Recalculer métriques' }}
+          </button>
+        </div>
+      </div>
+
+      <div class="card hero">
+        <div class="hero-left">
+          <div class="eyebrow">Rapport HSE</div>
+
+          <h1>{{ r.title || ('Rapport ' + typeLabel(r.type)) }}</h1>
+
+          <div class="hero-meta">
+            <span class="badge" [ngClass]="badgeClass(r.type)">
+              {{ typeLabel(r.type) }}
+            </span>
+
+            <span class="chip">
+              <i class="bi bi-calendar3"></i>
+              {{ formatPeriod(r.startDate, r.endDate) }}
+            </span>
+
+            <span class="chip" *ngIf="zoneName(r.zone) !== '—'">
+              <i class="bi bi-geo-alt"></i>
+              {{ zoneName(r.zone) }}
+            </span>
+
+            <span class="chip" *ngIf="r.isAutomatic; else manualBlock">
+              <i class="bi bi-cpu"></i>
+              Automatique
+            </span>
+
+            <ng-template #manualBlock>
+              <span class="chip">
+                <i class="bi bi-person"></i>
+                Manuel
+              </span>
+            </ng-template>
+          </div>
+        </div>
+
+        <div class="hero-right">
+          <div class="status-card">
+            <span class="status-label">Conformité globale</span>
+            <span class="status-value">
+              {{ complianceValue() | number:'1.0-2' }}%
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="metrics-grid">
+        <div class="card metric-card">
+          <div class="metric-icon incidents">
+            <i class="bi bi-exclamation-octagon"></i>
+          </div>
+          <div class="metric-content">
+            <div class="metric-label">Incidents</div>
+            <div class="metric-value">{{ incidentsValue() }}</div>
+            <div class="metric-sub">Nombre total enregistrés</div>
+          </div>
+        </div>
+
+        <div class="card metric-card">
+          <div class="metric-icon observations">
+            <i class="bi bi-clipboard-check"></i>
+          </div>
+          <div class="metric-content">
+            <div class="metric-label">Observations</div>
+            <div class="metric-value">{{ observationsValue() }}</div>
+            <div class="metric-sub">Observations HSE collectées</div>
+          </div>
+        </div>
+
+        <div class="card metric-card">
+          <div class="metric-icon compliance">
+            <i class="bi bi-shield-check"></i>
+          </div>
+          <div class="metric-content">
+            <div class="metric-label">Compliance</div>
+            <div class="metric-value">
+              {{ complianceValue() | number:'1.0-2' }}%
+            </div>
+            <div class="metric-sub">Niveau de conformité calculé</div>
+          </div>
+        </div>
+
+        <div class="card metric-card">
+          <div class="metric-icon generated">
+            <i class="bi bi-person-badge"></i>
+          </div>
+          <div class="metric-content">
+            <div class="metric-label">Généré par</div>
+            <div class="metric-value smaller">{{ userName(r.generatedBy) }}</div>
+            <div class="metric-sub">Auteur du rapport</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="details-grid">
+        <div class="card detail-card">
+          <div class="section-title">
+            <i class="bi bi-info-circle"></i>
+            Informations générales
+          </div>
+
+          <div class="detail-list">
+            <div class="detail-row">
+              <span class="k">Titre</span>
+              <span class="v">{{ r.title || '—' }}</span>
+            </div>
+
+            <div class="detail-row">
+              <span class="k">Type</span>
+              <span class="v">{{ typeLabel(r.type) }}</span>
+            </div>
+
+            <div class="detail-row">
+              <span class="k">Zone</span>
+              <span class="v">{{ zoneName(r.zone) }}</span>
+            </div>
+
+            <div class="detail-row">
+              <span class="k">Mode</span>
+              <span class="v">{{ r.isAutomatic ? 'Automatique' : 'Manuel' }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card detail-card">
+          <div class="section-title">
+            <i class="bi bi-calendar-event"></i>
+            Période & traçabilité
+          </div>
+
+          <div class="detail-list">
+            <div class="detail-row">
+              <span class="k">Date début</span>
+              <span class="v">
+                {{ r.startDate ? (r.startDate | date:'dd/MM/yyyy') : '—' }}
+              </span>
+            </div>
+
+            <div class="detail-row">
+              <span class="k">Date fin</span>
+              <span class="v">
+                {{ r.endDate ? (r.endDate | date:'dd/MM/yyyy') : '—' }}
+              </span>
+            </div>
+
+            <div class="detail-row">
+              <span class="k">Créé le</span>
+              <span class="v">
+                {{ r.createdAt ? (r.createdAt | date:'dd/MM/yyyy HH:mm') : '—' }}
+              </span>
+            </div>
+
+            <div class="detail-row">
+              <span class="k">Mis à jour</span>
+              <span class="v">
+                {{ r.updatedAt ? (r.updatedAt | date:'dd/MM/yyyy HH:mm') : '—' }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card export-card">
+        <div class="section-title">
+          <i class="bi bi-file-earmark-pdf"></i>
+          Export PDF
+        </div>
+
+        <ng-container *ngIf="r.exportUrl; else noPdf">
+          <div class="export-box available">
+            <div class="export-text">
+              <strong>Export disponible</strong>
+              <p>Le rapport possède déjà un fichier PDF généré.</p>
+            </div>
+
+            <a
+              class="btn primary"
+              [href]="getExportUrl(r.exportUrl)"
+              target="_blank"
+              rel="noopener"
+            >
+              <i class="bi bi-box-arrow-up-right"></i>
+              Ouvrir le PDF
+            </a>
+          </div>
+        </ng-container>
+
+        <ng-template #noPdf>
+          <div class="export-box">
+            <div class="export-text">
+              <strong>Aucun export PDF</strong>
+              <p>Ce rapport ne contient pas encore de fichier PDF généré.</p>
+            </div>
+          </div>
+        </ng-template>
+      </div>
+    </ng-container>
+  </ng-template>
+</div>

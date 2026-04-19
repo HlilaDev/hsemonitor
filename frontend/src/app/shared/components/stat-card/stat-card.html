@@ -1,0 +1,23 @@
+<div class="card">
+  <div class="top">
+    <div class="texts">
+      <div class="title">{{ title }}</div>
+      <div class="value">{{ value }}</div>
+
+      <div class="subtitle" *ngIf="subtitle">{{ subtitle }}</div>
+    </div>
+
+    <div class="icon" [ngClass]="variant">
+      <i [class]="iconClass"></i>
+    </div>
+  </div>
+
+  <!-- ✅ only this is clickable -->
+  <a class="link" *ngIf="routerLink; else noLink" [routerLink]="routerLink">
+    {{ linkLabel }}
+  </a>
+
+  <ng-template #noLink>
+    <span class="link disabled">{{ linkLabel }}</span>
+  </ng-template>
+</div>

@@ -1,0 +1,22 @@
+<div class="super-layout">
+  @if (isMobile() && sidebarOpen()) {
+    <div class="sidebar-overlay" (click)="closeSidebar()"></div>
+  }
+
+  <div
+    class="sidebar-shell"
+    [class.open]="sidebarOpen()"
+    [class.mobile]="isMobile()"
+    [class.collapsed]="!sidebarOpen() && !isMobile()"
+  >
+    <app-sidebar></app-sidebar>
+  </div>
+
+  <div class="layout-main" [class.expanded]="!sidebarOpen() && !isMobile()">
+    <app-header (toggleSidebar)="onToggleSidebar()"></app-header>
+
+    <main class="page-content" (click)="closeSidebar()">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+</div>

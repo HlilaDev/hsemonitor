@@ -1,0 +1,181 @@
+<div class="page">
+  <div class="page-header">
+    <div>
+      <a class="back-link" routerLink="/manager/monitoring">
+        <i class="bi bi-arrow-left"></i>
+        Retour au monitoring
+      </a>
+
+      <h2>Monitoring du device</h2>
+      <p class="muted">
+        Suivi en temps réel, dernières valeurs et historique du device sélectionné.
+      </p>
+    </div>
+
+    <button class="btn-refresh" type="button" (click)="refresh()">
+      <i class="bi bi-arrow-clockwise"></i>
+      Actualiser
+    </button>
+  </div>
+
+  @if (error()) {
+    <div class="alert error">
+      <i class="bi bi-exclamation-triangle"></i>
+      <span>{{ error() }}</span>
+    </div>
+  }
+
+  @if (isLoading()) {
+    <div class="loading-card">
+      <div class="loader"></div>
+      <p>Chargement des données du device...</p>
+    </div>
+  } @else {
+    @if (latestReading(); as latest) {
+      <div class="hero-card">
+        <div class="hero-main">
+          <div class="hero-icon">
+            <i class="bi bi-cpu"></i>
+          </div>
+
+          <div class="hero-content">
+            <h3>{{ asDeviceIdLabel() }}</h3>
+            <div class="meta-list">
+              <span><strong>Device ID :</strong> {{ deviceId() }}</span>
+              <span><strong>Zone :</strong> {{ zoneName() || '—' }}</span>
+              <span><strong>Capteur :</strong> {{ latest.sensorType }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-side">
+          <span class="status-badge" [ngClass]="getStatusClass(latestStatus())">
+            {{ latestStatus() }}
+          </span>
+          <small>Dernière lecture : {{ latest.ts | date:'dd/MM/yyyy HH:mm:ss' }}</small>
+        </div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card temperature">
+          <div class="stat-icon">
+            <i class="bi bi-thermometer-half"></i>
+          </div>
+          <div class="stat-body">
+            <span class="label">Température</span>
+            <strong>{{ temperature() !== null ? (temperature() + ' °C') : '—' }}</strong>
+          </div>
+        </div>
+
+        <div class="stat-card humidity">
+          <div class="stat-icon">
+            <i class="bi bi-droplet-half"></i>
+          </div>
+          <div class="stat-body">
+            <span class="label">Humidité</span>
+            <strong>{{ humidity() !== null ? (humidity() + ' %') : '—' }}</strong>
+          </div>
+        </div>
+
+        <div class="stat-card gas">
+          <div class="stat-icon">
+            <i class="bi bi-wind"></i>
+          </div>
+          <div class="stat-body">
+            <span class="label">Gaz</span>
+            <strong>{{ gas() !== null ? gas() : '—' }}</strong>
+          </div>
+        </div>
+
+        <div class="stat-card sync">
+          <div class="stat-icon">
+            <i class="bi bi-clock-history"></i>
+          </div>
+          <div class="stat-body">
+            <span class="label">Synchronisation</span>
+            <strong>{{ latest.ts | date:'HH:mm:ss' }}</strong>
+          </div>
+        </div>
+      </div>
+
+      <div class="charts-grid">
+        <div class="panel-card">
+          <div class="panel-head">
+            <h3>Évolution de la température</h3>
+            <span>{{ temperaturePoints().length }} dernières mesures</span>
+          </div>
+
+          <div class="chart-host">
+<app-sensor-trend-curve
+  [points]="temperaturePoints()"
+  [datasetLabel]="'Température'"
+  [unit]="'°C'"
+  [color]="'#ef4444'">
+</app-sensor-trend-curve>
+          </div>
+        </div>
+
+        <div class="panel-card">
+          <div class="panel-head">
+            <h3>Évolution de l’humidité</h3>
+            <span>{{ humidityPoints().length }} dernières mesures</span>
+          </div>
+
+          <div class="chart-host">
+            <app-sensor-trend-curve
+              [points]="humidityPoints()"
+              [datasetLabel]="'Humidité'"
+              [unit]="'%'"
+              [color]="'#2563eb'">
+            </app-sensor-trend-curve>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel-card">
+        <div class="panel-head">
+          <div>
+            <h3>Historique récent</h3>
+            <span>Les dernières lectures enregistrées pour ce device</span>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Type capteur</th>
+                <th>Valeurs</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              @if (history().length > 0) {
+                @for (item of history(); track item._id || item.ts) {
+                  <tr>
+                    <td>{{ item.ts | date:'dd/MM/yyyy HH:mm:ss' }}</td>
+                    <td>
+                      <span class="sensor-chip">{{ item.sensorType }}</span>
+                    </td>
+                    <td>{{ formatValues(item) }}</td>
+                  </tr>
+                }
+              } @else {
+                <tr>
+                  <td colspan="3" class="empty-cell">
+                    Aucune lecture trouvée pour ce device.
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    } @else {
+      <div class="loading-card">
+        <p>Aucune lecture disponible pour ce device.</p>
+      </div>
+    }
+  }
+</div>

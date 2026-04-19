@@ -1,0 +1,87 @@
+<div class="page">
+  <div class="page-header">
+    <div>
+      <h2>Utilisateurs</h2>
+      <p class="muted">Liste des comptes (Agent / Manager / Admin / Supervisor).</p>
+    </div>
+
+    <div class="header-actions">
+      <a class="btn btn-outline-secondary" routerLink="/admin">← Retour</a>
+      <a class="btn btn-primary" routerLink="/admin/users/add">+ Ajouter</a>
+    </div>
+  </div>
+
+  <div class="card">
+    @if (loading) {
+      <div class="state muted">Chargement...</div>
+    } @else if (errorMessage) {
+      <div class="alert alert-danger">{{ errorMessage }}</div>
+      <button class="btn btn-light" type="button" (click)="loadUsers()">Réessayer</button>
+    } @else if (users.length === 0) {
+      <div class="state muted">Aucun utilisateur.</div>
+    } @else {
+
+      <div class="table-wrap">
+        <table class="table">
+          <thead>
+            <tr>
+              <th style="width: 260px;">Nom</th>
+              <th>Email</th>
+              <th style="width: 160px; text-align:center;">Rôle</th>
+              <th style="width: 200px;">Créé le</th>
+              <th style="width: 220px; text-align:right;">Actions</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            @for (u of users; track trackById($index, u)) {
+              <tr>
+                <td class="strong">{{ fullName(u) }}</td>
+                <td class="mono">{{ u.email }}</td>
+
+                <td style="text-align:center;">
+                  <span
+                    class="badge"
+                    [class.admin]="u.role === 'admin'"
+                    [class.manager]="u.role === 'manager'"
+                    [class.agent]="u.role === 'agent'"
+                    [class.supervisor]="u.role === 'supervisor'"
+                  >
+                    {{ roleText(u.role) }}
+                  </span>
+                </td>
+
+                <td>
+                  @if (u.createdAt) {
+                    {{ u.createdAt | date:'yyyy-MM-dd HH:mm' }}
+                  } @else {
+                    <span class="muted">—</span>
+                  }
+                </td>
+
+                <td class="actions">
+                  <a
+                    class="btn btn-sm btn-outline-primary"
+                    [routerLink]="['/admin/users/edit', u._id]"
+                  >
+                    Modifier
+                  </a>
+
+                  <button
+                    class="btn btn-sm btn-outline-danger"
+                    type="button"
+                    [disabled]="!u._id"
+                    (click)="deleteUser(u._id!)"
+                  >
+                    Supprimer
+                  </button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+    }
+  </div>
+</div>

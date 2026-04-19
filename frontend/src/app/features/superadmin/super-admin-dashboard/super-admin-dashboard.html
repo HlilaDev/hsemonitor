@@ -1,0 +1,221 @@
+<div class="dashboard-page">
+  <div class="page-header">
+    <div>
+      <span class="eyebrow">Super Admin / Overview</span>
+      <h2>Dashboard global</h2>
+      <p class="muted">
+        Vue réelle sur les companies et les administrateurs de la plateforme.
+      </p>
+    </div>
+
+    <div class="header-actions">
+      <a class="btn btn-light" routerLink="/superadmin/companies">
+        Companies
+      </a>
+
+      <a class="btn btn-primary" routerLink="/superadmin/admins">
+        Admins
+      </a>
+    </div>
+  </div>
+
+  @if (loading()) {
+    <div class="state-card">
+      <div class="state-text">Chargement du dashboard...</div>
+    </div>
+  } @else if (errorMessage()) {
+    <div class="alert-error">
+      {{ errorMessage() }}
+    </div>
+  } @else {
+    <div class="stats-grid">
+      <div class="stat-card primary">
+        <div class="stat-top">
+          <span class="stat-label">Companies</span>
+          <span class="stat-icon">🏢</span>
+        </div>
+
+        <strong class="stat-value">{{ totalCompanies() }}</strong>
+        <p class="stat-meta">Total des sociétés enregistrées</p>
+        <a class="stat-link" routerLink="/superadmin/companies">Voir les companies</a>
+      </div>
+
+      <div class="stat-card emerald">
+        <div class="stat-top">
+          <span class="stat-label">Companies actives</span>
+          <span class="stat-icon">✅</span>
+        </div>
+
+        <strong class="stat-value">{{ activeCompanies() }}</strong>
+        <p class="stat-meta">Companies actives dans la plateforme</p>
+        <a class="stat-link" routerLink="/superadmin/companies">Voir la liste</a>
+      </div>
+
+      <div class="stat-card danger">
+        <div class="stat-top">
+          <span class="stat-label">Companies inactives</span>
+          <span class="stat-icon">⏸️</span>
+        </div>
+
+        <strong class="stat-value">{{ inactiveCompanies() }}</strong>
+        <p class="stat-meta">Companies temporairement inactives</p>
+        <a class="stat-link" routerLink="/superadmin/companies">Voir la liste</a>
+      </div>
+
+      <div class="stat-card indigo">
+        <div class="stat-top">
+          <span class="stat-label">Admins</span>
+          <span class="stat-icon">🛡️</span>
+        </div>
+
+        <strong class="stat-value">{{ totalAdmins() }}</strong>
+        <p class="stat-meta">Administrateurs liés aux companies</p>
+        <a class="stat-link" routerLink="/superadmin/admins">Voir les admins</a>
+      </div>
+    </div>
+
+    <div class="summary-grid">
+      <div class="summary-card">
+        <div class="summary-head">
+          <h3>Résumé companies</h3>
+          <span>Données réelles</span>
+        </div>
+
+        <div class="mini-stats">
+          <div class="mini-stat">
+            <span>Total</span>
+            <strong>{{ totalCompanies() }}</strong>
+          </div>
+
+          <div class="mini-stat">
+            <span>Actives</span>
+            <strong>{{ activeCompanies() }}</strong>
+          </div>
+
+          <div class="mini-stat">
+            <span>Inactives</span>
+            <strong>{{ inactiveCompanies() }}</strong>
+          </div>
+        </div>
+      </div>
+
+      <div class="summary-card">
+        <div class="summary-head">
+          <h3>Actions rapides</h3>
+          <span>Navigation</span>
+        </div>
+
+        <div class="quick-links">
+          <a class="quick-link" routerLink="/superadmin/companies/add">
+            <span class="quick-icon">＋</span>
+            <div>
+              <strong>Ajouter company</strong>
+              <small>Créer une nouvelle société</small>
+            </div>
+          </a>
+
+          <a class="quick-link" routerLink="/superadmin/admins/add">
+            <span class="quick-icon">＋</span>
+            <div>
+              <strong>Ajouter admin</strong>
+              <small>Créer un admin lié à une company</small>
+            </div>
+          </a>
+
+          <a class="quick-link" routerLink="/superadmin/companies">
+            <span class="quick-icon">→</span>
+            <div>
+              <strong>Voir companies</strong>
+              <small>Consulter la liste complète</small>
+            </div>
+          </a>
+
+          <a class="quick-link" routerLink="/superadmin/admins">
+            <span class="quick-icon">→</span>
+            <div>
+              <strong>Voir admins</strong>
+              <small>Consulter les administrateurs</small>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-grid">
+      <div class="panel-card">
+        <div class="panel-head">
+          <div>
+            <h3>Companies récentes</h3>
+            <p>Dernières companies créées</p>
+          </div>
+
+          <a class="panel-link" routerLink="/superadmin/companies">Tout voir</a>
+        </div>
+
+        @if (recentCompanies().length === 0) {
+          <div class="empty-state">
+            Aucune company disponible.
+          </div>
+        } @else {
+          <div class="list-block">
+            @for (company of recentCompanies(); track company._id) {
+              <div class="list-row">
+                <div class="list-avatar">
+                  {{ company.name?.charAt(0) || 'C' }}
+                </div>
+
+                <div class="list-meta">
+                  <strong>{{ company.name }}</strong>
+                  <span>{{ company.industry || 'Industry non définie' }}</span>
+                </div>
+
+                <div
+                  class="status-badge"
+                  [class.inactive]="company.isActive === false"
+                >
+                  {{ company.isActive === false ? 'Inactive' : 'Active' }}
+                </div>
+              </div>
+            }
+          </div>
+        }
+      </div>
+
+      <div class="panel-card">
+        <div class="panel-head">
+          <div>
+            <h3>Admins récents</h3>
+            <p>Administrateurs disponibles</p>
+          </div>
+
+          <a class="panel-link" routerLink="/superadmin/admins">Tout voir</a>
+        </div>
+
+        @if (recentAdmins().length === 0) {
+          <div class="empty-state">
+            Aucun admin trouvé.
+          </div>
+        } @else {
+          <div class="list-block">
+            @for (admin of recentAdmins(); track admin._id) {
+              <div class="list-row">
+                <div class="list-avatar admin">
+                  {{ getUserDisplayName(admin).charAt(0) }}
+                </div>
+
+                <div class="list-meta">
+                  <strong>{{ getUserDisplayName(admin) }}</strong>
+                  <span>{{ admin.email }}</span>
+                </div>
+
+                <div class="inline-company">
+                  {{ getCompanyName(admin) }}
+                </div>
+              </div>
+            }
+          </div>
+        }
+      </div>
+    </div>
+  }
+</div>

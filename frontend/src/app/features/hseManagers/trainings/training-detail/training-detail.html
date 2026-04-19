@@ -1,0 +1,403 @@
+<div class="page">
+  <div class="page-head">
+    <div class="left">
+      <button class="btn ghost" type="button" (click)="goBack()">
+        <i class="bi bi-arrow-left"></i>
+        Retour
+      </button>
+    </div>
+
+    <div class="right">
+      <button
+        class="btn primary"
+        type="button"
+        (click)="goEdit()"
+        [disabled]="!training()"
+      >
+        <i class="bi bi-pencil-square"></i>
+        Modifier
+      </button>
+    </div>
+  </div>
+
+  @if (error()) {
+    <div class="alert error">
+      <i class="bi bi-exclamation-triangle"></i>
+      <span>{{ error() }}</span>
+    </div>
+  }
+
+  @if (isLoading()) {
+    <div class="loading-grid">
+      <div class="skeleton card large"></div>
+      <div class="skeleton card"></div>
+      <div class="skeleton card"></div>
+    </div>
+  } @else if (training(); as t) {
+    <div class="hero card">
+      <div class="hero-top">
+        <div class="hero-left">
+          <div class="eyebrow">Formation HSE</div>
+          <h1>{{ t.title }}</h1>
+
+          <div class="hero-badges">
+            <span class="chip">
+              <i class="bi bi-tags"></i>
+              {{ categoryLabel(t.category) }}
+            </span>
+
+            <span [class]="badgeClass(t.status)">
+              {{ statusLabel(t.status) }}
+            </span>
+
+            <span class="chip soft">
+              <i class="bi bi-people"></i>
+              {{ (t.participants?.length ?? 0) }} participant(s)
+            </span>
+          </div>
+        </div>
+
+        <div class="hero-right">
+          <div class="meta-box">
+            <span class="meta-label">Créée par</span>
+<strong>{{ getCreatedByName() }}</strong>
+            <small>{{ t.createdBy?.email || '' }}</small>
+          </div>
+        </div>
+      </div>
+
+      @if (t.description) {
+        <div class="hero-desc">
+          {{ t.description }}
+        </div>
+      }
+    </div>
+
+    <div class="content-grid">
+      <div class="main-col">
+        <div class="card info-card">
+          <div class="section-head">
+            <h3>Informations générales</h3>
+          </div>
+
+          <div class="info-grid">
+            <div class="info-item">
+              <span class="k"><i class="bi bi-calendar-event"></i> Début</span>
+              <span class="v">{{ fmtDateTime(t.startDate) }}</span>
+            </div>
+
+            <div class="info-item">
+              <span class="k"><i class="bi bi-calendar-check"></i> Fin</span>
+              <span class="v">{{ t.endDate ? fmtDateTime(t.endDate) : '-' }}</span>
+            </div>
+
+            <div class="info-item">
+              <span class="k"><i class="bi bi-building"></i> Provider</span>
+              <span class="v">{{ t.provider || '-' }}</span>
+            </div>
+
+            <div class="info-item">
+              <span class="k"><i class="bi bi-geo-alt"></i> Lieu</span>
+              <span class="v">{{ t.location || '-' }}</span>
+            </div>
+
+            <div class="info-item">
+              <span class="k"><i class="bi bi-diagram-3"></i> Société</span>
+              <span class="v">{{ t.company?.name || '-' }}</span>
+            </div>
+
+            <div class="info-item">
+              <span class="k"><i class="bi bi-clock-history"></i> Créée le</span>
+              <span class="v">{{ fmtDate(t.createdAt) }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card participants-card">
+          <div class="section-head participants-head">
+            <div>
+              <h3>Participants</h3>
+              <p class="section-subtitle">
+                Gérez les employés inscrits à cette formation.
+              </p>
+            </div>
+
+            <div class="participants-head-actions">
+              <span class="count">{{ t.participants?.length ?? 0 }}</span>
+
+              @if (canManageParticipants()) {
+                <button
+                  class="btn add-participant-btn"
+                  type="button"
+                  (click)="openAddParticipantsModal()"
+                >
+                  <i class="bi bi-plus-lg"></i>
+                  Ajouter
+                </button>
+              }
+            </div>
+          </div>
+
+          @if (!canManageParticipants()) {
+            <div class="inline-info">
+              <i class="bi bi-info-circle"></i>
+              <span>
+                L’ajout de participants est autorisé uniquement pour une
+                formation planifiée qui n’a pas encore commencé.
+              </span>
+            </div>
+          }
+
+          @if (!t.participants || t.participants.length === 0) {
+            <div class="empty-state">
+              <i class="bi bi-people"></i>
+              <p>Aucun participant enregistré pour cette formation.</p>
+
+              @if (canManageParticipants()) {
+                <button
+                  class="btn primary"
+                  type="button"
+                  (click)="openAddParticipantsModal()"
+                >
+                  <i class="bi bi-plus-lg"></i>
+                  Ajouter des participants
+                </button>
+              }
+            </div>
+          } @else {
+            <div class="participants-list">
+              @for (participant of t.participants; track participant._id || $index) {
+                <div class="participant-row">
+                  <div class="participant-left">
+                    <div class="avatar">
+                      <i class="bi bi-person"></i>
+                    </div>
+
+                    <div class="participant-body">
+                      <div class="name-row">
+                        <strong>{{ employeeName(participant) }}</strong>
+                        <span [class]="participantBadgeClass(participant.status)">
+                          {{ participantStatusLabel(participant.status) }}
+                        </span>
+                      </div>
+
+                      <div class="sub">
+                        {{ employeeMeta(participant) }}
+                      </div>
+
+                      @if (participant.note) {
+                        <div class="note">
+                          {{ participant.note }}
+                        </div>
+                      }
+                    </div>
+                  </div>
+
+                  <div class="participant-right">
+                    <div class="mini-stat">
+                      <span class="label">Score</span>
+                      <strong>{{ participant.score ?? '-' }}</strong>
+                    </div>
+
+                    <div class="mini-stat">
+                      <span class="label">Validité</span>
+                      <strong>
+                        {{ participant.validUntil ? fmtDate(participant.validUntil) : '-' }}
+                      </strong>
+                    </div>
+                  </div>
+                </div>
+              }
+            </div>
+          }
+        </div>
+      </div>
+
+      <div class="side-col">
+        <div class="card quick-card">
+          <div class="section-head">
+            <h3>Résumé</h3>
+          </div>
+
+          <div class="quick-list">
+            <div class="quick-item">
+              <span>Catégorie</span>
+              <strong>{{ categoryLabel(t.category) }}</strong>
+            </div>
+
+            <div class="quick-item">
+              <span>Statut</span>
+              <strong>{{ statusLabel(t.status) }}</strong>
+            </div>
+
+            <div class="quick-item">
+              <span>Participants</span>
+              <strong>{{ t.participants?.length ?? 0 }}</strong>
+            </div>
+
+            <div class="quick-item">
+              <span>Lieu</span>
+              <strong>{{ t.location || '-' }}</strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="card actions-card">
+          <div class="section-head">
+            <h3>Actions</h3>
+          </div>
+
+          <div class="action-stack">
+            <button class="btn primary block" type="button" (click)="goEdit()">
+              <i class="bi bi-pencil-square"></i>
+              Modifier la formation
+            </button>
+
+            @if (canManageParticipants()) {
+              <button
+                class="btn ghost block"
+                type="button"
+                (click)="openAddParticipantsModal()"
+              >
+                <i class="bi bi-person-plus"></i>
+                Ajouter des participants
+              </button>
+            }
+
+            <button class="btn ghost block" type="button" (click)="goBack()">
+              <i class="bi bi-list-ul"></i>
+              Retour à la liste
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    @if (showAddParticipantsModal()) {
+      <div class="modal-backdrop" (click)="closeAddParticipantsModal()">
+        <div class="modal-card" (click)="$event.stopPropagation()">
+          <div class="modal-head">
+            <div>
+              <h3>Ajouter des participants</h3>
+              <p>
+                Sélectionnez un ou plusieurs employés à inscrire à la formation.
+              </p>
+            </div>
+
+            <button
+              class="icon-btn"
+              type="button"
+              (click)="closeAddParticipantsModal()"
+              [disabled]="isSubmittingParticipants()"
+            >
+              <i class="bi bi-x-lg"></i>
+            </button>
+          </div>
+
+          <div class="modal-toolbar">
+            <div class="search-box">
+              <i class="bi bi-search"></i>
+              <input
+                type="text"
+                placeholder="Rechercher un employé..."
+                [value]="employeeSearch()"
+                (input)="onSearchEmployees($any($event.target).value)"
+              />
+            </div>
+
+            <div class="selected-chip">
+              {{ selectedCount() }} sélectionné(s)
+            </div>
+          </div>
+
+          @if (employeesError()) {
+            <div class="alert error compact">
+              <i class="bi bi-exclamation-triangle"></i>
+              <span>{{ employeesError() }}</span>
+            </div>
+          }
+
+          <div class="modal-body">
+            @if (employeesLoading()) {
+              <div class="modal-loading">
+                <div class="spinner"></div>
+                <span>Chargement des employés...</span>
+              </div>
+            } @else if (availableEmployees().length === 0) {
+              <div class="empty-state slim">
+                <i class="bi bi-person-x"></i>
+                <p>
+                  Aucun employé disponible à ajouter.
+                </p>
+              </div>
+            } @else {
+              <div class="employee-select-list">
+                @for (employee of availableEmployees(); track trackByEmployee($index, employee)) {
+                  <button
+                    class="employee-option"
+                    type="button"
+                    [class.selected]="isSelected(employee._id)"
+                    (click)="toggleEmployee(employee._id)"
+                  >
+                    <div class="employee-option-left">
+                      <div class="employee-avatar">
+                        {{ initials(employee.fullName) }}
+                      </div>
+
+                      <div class="employee-main">
+                        <strong>{{ employee.fullName }}</strong>
+                        <span>{{ employeeShortMeta(employee) }}</span>
+                      </div>
+                    </div>
+
+                    <div class="employee-option-right">
+                      @if (isSelected(employee._id)) {
+                        <i class="bi bi-check-circle-fill"></i>
+                      } @else {
+                        <i class="bi bi-circle"></i>
+                      }
+                    </div>
+                  </button>
+                }
+              </div>
+            }
+          </div>
+
+          <div class="modal-actions">
+            <button
+              class="btn ghost"
+              type="button"
+              (click)="closeAddParticipantsModal()"
+              [disabled]="isSubmittingParticipants()"
+            >
+              Annuler
+            </button>
+
+            <button
+              class="btn primary"
+              type="button"
+              (click)="addSelectedParticipants()"
+              [disabled]="selectedCount() === 0 || isSubmittingParticipants()"
+            >
+              @if (isSubmittingParticipants()) {
+                <span class="btn-loader"></span>
+                Ajout...
+              } @else {
+                <i class="bi bi-person-plus"></i>
+                Ajouter les participants
+              }
+            </button>
+          </div>
+        </div>
+      </div>
+    }
+  } @else {
+    <div class="empty-state card">
+      <i class="bi bi-journal-x"></i>
+      <p>Formation introuvable.</p>
+      <button class="btn ghost" type="button" (click)="goBack()">
+        Retour
+      </button>
+    </div>
+  }
+</div>

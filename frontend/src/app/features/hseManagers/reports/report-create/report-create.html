@@ -1,0 +1,189 @@
+<div class="page">
+  <div class="header">
+    <div class="title">
+      <h2>Créer un Report</h2>
+      <p class="muted">
+        Générer un rapport (weekly / monthly / yearly / audit / custom) pour une zone et une période.
+      </p>
+    </div>
+
+    <div class="actions">
+      <a class="btn ghost" routerLink="/manager/reports">
+        <i class="bi bi-arrow-left"></i>
+        Retour
+      </a>
+    </div>
+  </div>
+
+  <div *ngIf="error()" class="alert error">
+    <i class="bi bi-exclamation-triangle"></i>
+    {{ error() }}
+  </div>
+
+  <div class="card content">
+    <form class="form" [formGroup]="form" (ngSubmit)="submit()">
+      <div class="grid2">
+        <div class="field span2">
+          <label>Titre</label>
+          <div class="input-wrap">
+            <i class="bi bi-type"></i>
+            <input
+              class="input"
+              formControlName="title"
+              placeholder="Ex: Rapport Audit Zone A"
+            />
+          </div>
+          <p class="hint">
+            Optionnel. Si vide, un titre peut être généré automatiquement.
+          </p>
+        </div>
+
+        <div class="field">
+          <label>Type *</label>
+          <select class="select" formControlName="type">
+            <option value="weekly">weekly</option>
+            <option value="monthly">monthly</option>
+            <option value="yearly">yearly</option>
+            <option value="audit">audit</option>
+            <option value="custom">custom</option>
+          </select>
+          <p class="hint error" *ngIf="fieldInvalid('type')">Type requis</p>
+        </div>
+
+        <div class="field">
+          <label>Zone</label>
+          <select class="select" formControlName="zone">
+            <option value="">Toutes / globale</option>
+            <option *ngFor="let z of zones()" [value]="z._id">{{ z.name }}</option>
+          </select>
+          <p class="hint">Laisse vide si le rapport est global.</p>
+        </div>
+
+        <div class="field">
+          <label>Date début</label>
+          <div class="input-wrap">
+            <i class="bi bi-calendar-event"></i>
+            <input class="input" type="date" formControlName="startDate" />
+          </div>
+          <p class="hint">Optionnel.</p>
+        </div>
+
+        <div class="field">
+          <label>Date fin</label>
+          <div class="input-wrap">
+            <i class="bi bi-calendar-check"></i>
+            <input class="input" type="date" formControlName="endDate" />
+          </div>
+          <p class="hint error" *ngIf="dateError()">
+            La date de fin doit être supérieure à la date de début.
+          </p>
+        </div>
+
+        <div class="field span2">
+          <label>Mode</label>
+          <div class="toggle">
+            <label class="switch">
+              <input type="checkbox" formControlName="isAutomatic" />
+              <span class="slider"></span>
+            </label>
+
+            <div class="toggle-text">
+              <div class="t1">
+                {{ form.value.isAutomatic ? 'Automatique' : 'Manuel' }}
+              </div>
+              <div class="t2 muted">
+                Automatique : le serveur calcule les métriques et peut générer l’export.
+                Manuel : tu peux compléter ou ajuster les données ensuite.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Total Incidents</label>
+          <div class="input-wrap">
+            <i class="bi bi-exclamation-octagon"></i>
+            <input
+              class="input"
+              type="number"
+              min="0"
+              formControlName="totalIncidents"
+            />
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Total Observations</label>
+          <div class="input-wrap">
+            <i class="bi bi-clipboard-check"></i>
+            <input
+              class="input"
+              type="number"
+              min="0"
+              formControlName="totalObservations"
+            />
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Compliance Rate (%)</label>
+          <div class="input-wrap">
+            <i class="bi bi-shield-check"></i>
+            <input
+              class="input"
+              type="number"
+              min="0"
+              max="100"
+              step="0.01"
+              formControlName="complianceRate"
+            />
+          </div>
+        </div>
+
+        <div class="field span2">
+          <label>Upload PDF</label>
+
+          <label class="upload-box">
+            <input
+              type="file"
+              accept="application/pdf,.pdf"
+              (change)="onPdfSelected($event)"
+              hidden
+            />
+
+            <div class="upload-content">
+              <i class="bi bi-file-earmark-pdf"></i>
+              <div>
+                <div class="upload-title">
+                  {{ selectedPdfName() || 'Choisir un fichier PDF' }}
+                </div>
+                <div class="upload-subtitle">
+                  Taille max conseillée : 10 MB
+                </div>
+              </div>
+            </div>
+          </label>
+
+          <p class="hint">Optionnel. Tu peux joindre directement le PDF du rapport.</p>
+          <p class="hint error" *ngIf="pdfError()">{{ pdfError() }}</p>
+        </div>
+      </div>
+
+      <div class="footer-actions">
+        <button type="button" class="btn ghost" (click)="cancel()">
+          <i class="bi bi-x-circle"></i>
+          Annuler
+        </button>
+
+        <button
+          type="submit"
+          class="btn primary"
+          [disabled]="form.invalid || loading()"
+        >
+          <i class="bi bi-check2-circle"></i>
+          {{ loading() ? 'Création...' : 'Créer' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

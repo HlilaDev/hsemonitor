@@ -1,0 +1,108 @@
+.page {
+  padding: 18px;
+  display: flex;
+  justify-content: center;
+}
+
+.card {
+  width: min(920px, 100%);
+  background: #fff;
+  border: 1px solid #ececec;
+  border-radius: 14px;
+  padding: 18px;
+  box-shadow: 0 10px 25px rgba(0,0,0,.05);
+}
+
+.head h2 { margin: 0; font-size: 20px; }
+.head p { margin: 6px 0 0; color: #666; }
+
+.alert {
+  margin: 12px 0;
+  padding: 10px 12px;
+  border-radius: 10px;
+  font-size: 14px;
+}
+.alert.error { background: #fff2f2; border: 1px solid #ffd1d1; color: #8c1d1d; }
+.alert.success { background: #f2fff6; border: 1px solid #c8f5d6; color: #1c6b35; }
+
+.form { margin-top: 12px; }
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.field { display: flex; flex-direction: column; gap: 6px; }
+.field.full { grid-column: 1 / -1; }
+
+label { font-size: 13px; color: #444; }
+input, select, textarea {
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 10px 12px;
+  outline: none;
+}
+input:focus, select:focus, textarea:focus { border-color: #b9b9b9; }
+
+small { color: #b3261e; font-size: 12px; }
+
+.images { margin-top: 14px; }
+.row { display: flex; gap: 10px; align-items: end; }
+.field.flex { flex: 1; }
+
+.chips {
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid #e6e6e6;
+  border-radius: 999px;
+  padding: 6px 10px;
+  background: #fafafa;
+}
+.truncate {
+  max-width: 420px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  display: inline-block;
+}
+.chip button {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.actions {
+  margin-top: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.btn {
+  border: none;
+  border-radius: 12px;
+  padding: 10px 14px;
+  cursor: pointer;
+  background: #111;
+  color: #fff;
+}
+.btn:disabled { opacity: .6; cursor: not-allowed; }
+.btn.ghost {
+  background: #f3f3f3;
+  color: #111;
+  border: 1px solid #e6e6e6;
+}
+.link { color: #444; text-decoration: none; }
+.link:hover { text-decoration: underline; }
+
+@media (max-width: 760px) {
+  .grid { grid-template-columns: 1fr; }
+  .row { flex-direction: column; align-items: stretch; }
+}

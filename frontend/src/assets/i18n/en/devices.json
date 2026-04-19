@@ -1,0 +1,125 @@
+{
+  "DEVICES": {
+    "TITLE": "Devices",
+    "LIST_TITLE": "Devices",
+    "SUBTITLE": "List of devices with filters",
+    "ADD_LABEL": "Add device",
+    "ADD_BTN": "Add",
+    "ADD_TITLE": "Add device",
+    "ADD_SUBTITLE": "Create a new device and assign it to a zone.",
+    "EMPTY": "No devices found.",
+    "COLUMNS": {
+      "DEVICE_ID": "Device ID",
+      "NAME": "Name",
+      "ZONE": "Zone",
+      "SENSORS": "Sensors",
+      "STATUS": "Status",
+      "ACTIONS": "Actions"
+    },
+    "FILTERS": {
+      "SEARCH": "Search",
+      "SEARCH_PH": "Device name or ID...",
+      "ZONE": "Zone",
+      "ZONE_PH": "Zone name or ID",
+      "STATUS": "Status",
+      "ALL": "All"
+    },
+    "FORM": {
+      "DEVICE_ID": "Device ID",
+      "DEVICE_ID_PH": "Ex: esp8266-01",
+      "NAME": "Device name",
+      "NAME_PH": "Ex: ESP Zone A",
+      "ZONE": "Zone",
+      "SELECT_ZONE": "Select a zone",
+      "SENSORS": "Sensors",
+      "SENSORS_PH": "Ex: temperature, humidity, gas",
+      "SENSORS_HELP": "Enter sensors separated by commas.",
+      "STATUS": "Status",
+      "DESCRIPTION": "Description",
+      "DESC_PH": "Describe this device..."
+    },
+    "DETAIL": {
+      "KICKER": "Devices",
+      "TITLE": "Device details",
+      "SUBTITLE": "Device details + linked sensors list.",
+      "MANAGEMENT": "Management",
+      "OVERVIEW": "Overview",
+      "LAST_SEEN": "Last activity",
+      "CREATED": "Created on",
+      "SENSORS": "Sensors",
+      "LOADING_SENSORS": "Loading sensors...",
+      "NO_SENSORS": "No sensors linked to this device.",
+      "NOT_FOUND": "Device not found.",
+      "SENSORS_LOAD_ERROR": "Error while loading linked sensors."
+    },
+    "STATUS": {
+      "online": "Online",
+      "offline": "Offline",
+      "maintenance": "Maintenance"
+    },
+    "VALIDATION": {
+      "DEVICE_ID_REQUIRED": "Device ID is required.",
+      "DEVICE_ID_MIN": "Device ID must contain at least 3 characters.",
+      "ZONE_REQUIRED": "Zone is required."
+    },
+    "MESSAGES": {
+      "LOAD_ERROR": "Error while loading devices.",
+      "CREATE_SUCCESS": "Device added successfully.",
+      "CREATE_ERROR": "Error while adding device.",
+      "DELETE_CONFIRM": "Are you sure you want to delete this device?",
+      "DELETE_SUCCESS": "Device deleted successfully.",
+      "DELETE_ERROR": "Error while deleting device."
+    },
+    "ERROR": {
+      "LOAD": "Error while loading devices.",
+      "DELETE": "Error while deleting device.",
+      "MISSING_ID": "Missing device ID in route.",
+      "LOAD_ONE": "Error while loading device."
+    },
+    "CONFIRM_DELETE": "Are you sure you want to delete this device?"
+  },
+  "SENSORS": {
+    "TITLE": "Sensors",
+    "SUBTITLE": "Sensors list",
+    "COLUMNS": {
+      "NAME": "Name",
+      "TYPE": "Type",
+      "ZONE": "Zone",
+      "STATUS": "Status",
+      "THRESHOLD": "Threshold"
+    },
+    "TYPE": {
+      "temperature": "Temperature",
+      "humidity": "Humidity",
+      "gas": "Gas",
+      "smoke": "Smoke",
+      "motion": "Motion",
+      "pressure": "Pressure",
+      "light": "Light",
+      "sound": "Sound",
+      "vibration": "Vibration",
+      "other": "Other"
+    },
+    "STATUS": {
+      "online": "Online",
+      "offline": "Offline",
+      "maintenance": "Maintenance"
+    }
+  },
+  "COMMON": {
+    "LOADING": "Loading...",
+    "RETRY": "Retry",
+    "EDIT": "Edit",
+    "DELETE": "Delete",
+    "VIEW": "View",
+    "BACK": "Back",
+    "SAVE": "Save",
+    "SAVING": "Saving...",
+    "CANCEL": "Cancel",
+    "FILTER": "Filter",
+    "RESET": "Reset",
+    "TOTAL": "Total",
+    "PAGE": "Page",
+    "EMPTY_VALUE": "—"
+  }
+}

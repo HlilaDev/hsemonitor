@@ -1,0 +1,13 @@
+<div class="hseagent-layout" [class.sidebar-collapsed]="layout.sidebarCollapsed()">
+  <app-hseagent-sidebar class="sidebar"></app-hseagent-sidebar>
+
+  <div class="main-content">
+    <app-header-agent class="header"></app-header-agent>
+
+    <div class="content-area">
+      <router-outlet></router-outlet>
+    </div>
+
+    <app-footer class="footer"></app-footer>
+  </div>
+</div>

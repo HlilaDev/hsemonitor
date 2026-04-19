@@ -1,0 +1,146 @@
+<div class="dashboard-page">
+  <div class="hero">
+    <div class="hero-content">
+      <span class="eyebrow">AGENT DASHBOARD</span>
+      <h1>Bienvenue {{ agentName }}</h1>
+      <p>
+        Suivez rapidement vos observations, vos affectations, les formations et
+        les notifications importantes.
+      </p>
+    </div>
+
+    <button class="refresh-btn" type="button" (click)="loadDashboard()" [disabled]="loading">
+      <i class="bi bi-arrow-repeat"></i>
+      {{ loading ? 'Chargement...' : 'Actualiser' }}
+    </button>
+  </div>
+
+  <div class="widgets-grid">
+    <app-stat-card
+      [title]="'Mes observations'"
+      [iconClass]="'bi bi-exclamation-circle'"
+      [value]="myObservationsCount"
+      [routerLink]="['/agent/observations']"
+      [variant]="'blue'"
+      [linkLabel]="'Voir mes observations'"
+      [subtitle]="'Observations créées par vous'"
+    ></app-stat-card>
+
+    <app-stat-card
+      [title]="'Observations affectées'"
+      [iconClass]="'bi bi-person-check'"
+      [value]="assignedObservationsCount"
+      [routerLink]="['/agent/observations']"
+      [variant]="'orange'"
+      [linkLabel]="'Voir les affectations'"
+      [subtitle]="'Observations assignées à traiter'"
+    ></app-stat-card>
+
+    <app-stat-card
+      [title]="'Formations planifiées'"
+      [iconClass]="'bi bi-calendar-event'"
+      [value]="scheduledTrainingsCount"
+      [routerLink]="['/agent/trainings']"
+      [variant]="'purple'"
+      [linkLabel]="'Voir les formations'"
+      [subtitle]="'Sessions encore à réaliser'"
+    ></app-stat-card>
+
+    <app-stat-card
+      [title]="'Formations terminées'"
+      [iconClass]="'bi bi-patch-check'"
+      [value]="completedTrainingsCount"
+      [routerLink]="['/agent/trainings']"
+      [variant]="'green'"
+      [linkLabel]="'Voir l’historique'"
+      [subtitle]="'Sessions déjà clôturées'"
+    ></app-stat-card>
+
+    <app-stat-card
+      [title]="'Notifications non lues'"
+      [iconClass]="'bi bi-bell'"
+      [value]="unreadNotificationsCount"
+      [routerLink]="['/agent/notifications']"
+      [variant]="'red'"
+      [linkLabel]="'Voir les notifications'"
+      [subtitle]="'Alertes et actions en attente'"
+    ></app-stat-card>
+  </div>
+
+  <div class="bottom-panels">
+    <div class="panel quick-actions">
+      <div class="panel-head">
+        <h3>Accès rapides</h3>
+        <p>Les actions les plus utiles pour l’agent.</p>
+      </div>
+
+      <div class="actions-list">
+        <a routerLink="/agent/observations" class="action-item">
+          <i class="bi bi-search"></i>
+          <div>
+            <strong>Observations</strong>
+            <span>Consulter et traiter les observations</span>
+          </div>
+        </a>
+
+        <a routerLink="/agent/trainings" class="action-item">
+          <i class="bi bi-mortarboard"></i>
+          <div>
+            <strong>Formations</strong>
+            <span>Suivre les sessions planifiées et terminées</span>
+          </div>
+        </a>
+
+        <a routerLink="/agent/notifications" class="action-item">
+          <i class="bi bi-bell"></i>
+          <div>
+            <strong>Notifications</strong>
+            <span>Voir les alertes et affectations reçues</span>
+          </div>
+        </a>
+
+        <a routerLink="/agent/profile" class="action-item">
+          <i class="bi bi-person"></i>
+          <div>
+            <strong>Mon profil</strong>
+            <span>Gérer vos informations personnelles</span>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <div class="panel summary-panel">
+      <div class="panel-head">
+        <h3>Résumé agent</h3>
+        <p>Vue synthétique de votre activité.</p>
+      </div>
+
+      <div class="summary-list">
+        <div class="summary-row">
+          <span>Total widgets métier</span>
+          <strong>5</strong>
+        </div>
+
+        <div class="summary-row">
+          <span>Observations créées</span>
+          <strong>{{ myObservationsCount }}</strong>
+        </div>
+
+        <div class="summary-row">
+          <span>Observations affectées</span>
+          <strong>{{ assignedObservationsCount }}</strong>
+        </div>
+
+        <div class="summary-row">
+          <span>Formations planifiées</span>
+          <strong>{{ scheduledTrainingsCount }}</strong>
+        </div>
+
+        <div class="summary-row">
+          <span>Notifications non lues</span>
+          <strong>{{ unreadNotificationsCount }}</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

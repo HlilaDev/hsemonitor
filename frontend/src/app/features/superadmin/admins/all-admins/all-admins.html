@@ -1,0 +1,153 @@
+<div class="page">
+  <div class="page-header">
+    <div class="title-block">
+      <span class="eyebrow">Super Admin / Gestion</span>
+      <h2>Admins</h2>
+      <p class="muted">Gestion des administrateurs des companies</p>
+    </div>
+
+    <div class="header-actions">
+      <a class="btn btn-light" routerLink="/superadmin">
+        <span>←</span>
+        Retour
+      </a>
+
+      <button class="btn btn-primary" type="button" routerLink="/super/admins/add">
+        <span>+</span>
+        Ajouter
+      </button>
+    </div>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <span class="stat-label">Total</span>
+      <strong class="stat-value">{{ total() }}</strong>
+    </div>
+
+    <div class="stat-card">
+      <span class="stat-label">Page</span>
+      <strong class="stat-value">{{ page() }}</strong>
+    </div>
+
+    <div class="stat-card">
+      <span class="stat-label">Résultats</span>
+      <strong class="stat-value">{{ admins().length }}</strong>
+    </div>
+  </div>
+
+  <div class="card search-card">
+    <div class="search-top">
+      <div class="search-input-wrap">
+        <input
+          type="text"
+          placeholder="Rechercher un admin..."
+          [ngModel]="q()"
+          (ngModelChange)="q.set($event)"
+        />
+      </div>
+
+      <button class="btn btn-primary search-btn" type="button" (click)="onSearch()">
+        Search
+      </button>
+    </div>
+  </div>
+
+  @if (loading()) {
+    <div class="state-card">
+      <div class="state-text">Chargement des administrateurs...</div>
+    </div>
+  } @else if (errorMessage()) {
+    <div class="alert-error">
+      {{ errorMessage() }}
+    </div>
+  } @else if (admins().length === 0) {
+    <div class="empty-card">
+      <div class="empty-icon">👤</div>
+      <h3>Aucun administrateur trouvé</h3>
+      <p>Essayez une autre recherche ou ajoutez un nouvel admin.</p>
+    </div>
+  } @else {
+    <div class="card table-card">
+      <div class="table-head">
+        <div>
+          <h3>Liste des admins</h3>
+          <p>{{ total() }} administrateur(s) trouvé(s)</p>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table class="admins-table">
+          <thead>
+            <tr>
+              <th>Nom</th>
+              <th>Email</th>
+              <th>Statut</th>
+              <th class="actions-col">Actions</th>
+            </tr>
+          </thead>
+
+<tbody>
+  @for (admin of admins(); track admin._id) {
+    <tr>
+      <td>
+        <div class="admin-cell">
+          <div class="avatar">
+            {{ getAdminDisplayName(admin).charAt(0) }}
+          </div>
+
+          <div class="admin-meta">
+            <strong>{{ getAdminDisplayName(admin) }}</strong>
+            <span>ID: {{ admin._id }}</span>
+          </div>
+        </div>
+      </td>
+
+      <td>
+        <span class="email">{{ admin.email }}</span>
+      </td>
+
+      <td>
+        <span class="badge active">
+          {{ admin.isActive === false ? 'Inactive' : 'Active' }}
+        </span>
+      </td>
+
+      <td class="actions">
+        <button class="btn-table btn-edit" type="button">Edit</button>
+        <button class="btn-table btn-delete" type="button">Delete</button>
+      </td>
+    </tr>
+  }
+</tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="pagination">
+      <button
+        type="button"
+        class="page-btn"
+        [disabled]="page() === 1"
+        (click)="goToPage(page() - 1)"
+      >
+        Prev
+      </button>
+
+      <div class="page-indicator">
+        <span class="current">{{ page() }}</span>
+        <span class="separator">/</span>
+        <span>{{ pages() }}</span>
+      </div>
+
+      <button
+        type="button"
+        class="page-btn"
+        [disabled]="page() === pages()"
+        (click)="goToPage(page() + 1)"
+      >
+        Next
+      </button>
+    </div>
+  }
+</div>

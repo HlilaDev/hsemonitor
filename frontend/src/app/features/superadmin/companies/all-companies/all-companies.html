@@ -1,0 +1,232 @@
+<div class="companies-page">
+  <section class="hero-card">
+    <div class="hero-content">
+      <div>
+        <span class="eyebrow">Super Admin</span>
+        <h1>Companies Management</h1>
+        <p>
+          Manage all registered companies in your HSE intelligent platform.
+        </p>
+      </div>
+
+      <a class="btn primary" routerLink="/super/companies/add">
+        <i class="bi bi-plus-lg"></i>
+        <span>Add Company</span>
+      </a>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <span class="stat-label">Total</span>
+        <strong>{{ stats().total }}</strong>
+      </div>
+
+      <div class="stat-card">
+        <span class="stat-label">Active</span>
+        <strong>{{ stats().active }}</strong>
+      </div>
+
+      <div class="stat-card">
+        <span class="stat-label">Inactive</span>
+        <strong>{{ stats().inactive }}</strong>
+      </div>
+    </div>
+  </section>
+
+  <section class="filters-card">
+    <div class="filters-grid">
+      <div class="field">
+        <label>Search</label>
+        <input
+          type="text"
+          class="input"
+          placeholder="Company name..."
+          [ngModel]="q()"
+          (ngModelChange)="q.set($event)"
+          (keyup.enter)="onSearch()"
+        />
+      </div>
+
+      <div class="field">
+        <label>Status</label>
+        <select
+          class="select"
+          [ngModel]="activeFilter()"
+          (ngModelChange)="activeFilter.set($event); onFilterChange()"
+        >
+          <option value="">All</option>
+          <option value="true">Active</option>
+          <option value="false">Inactive</option>
+        </select>
+      </div>
+
+      <div class="actions">
+        <button class="btn secondary" type="button" (click)="onSearch()">
+          <i class="bi bi-search"></i>
+          <span>Search</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  @if (errorMessage()) {
+    <div class="alert error">
+      <i class="bi bi-exclamation-triangle"></i>
+      <span>{{ errorMessage() }}</span>
+    </div>
+  }
+
+  @if (successMessage()) {
+    <div class="alert success">
+      <i class="bi bi-check-circle"></i>
+      <span>{{ successMessage() }}</span>
+    </div>
+  }
+
+  <section class="table-card">
+    <div class="table-head">
+      <div>
+        <h2>All Companies</h2>
+        <p>{{ total() }} company(s) found</p>
+      </div>
+    </div>
+
+    @if (loading()) {
+      <div class="state-box">
+        <div class="spinner"></div>
+        <p>Loading companies...</p>
+      </div>
+    } @else if (companies().length === 0) {
+      <div class="state-box empty">
+        <i class="bi bi-buildings"></i>
+        <p>No companies found.</p>
+      </div>
+    } @else {
+      <div class="table-wrapper">
+        <table class="companies-table">
+          <thead>
+            <tr>
+              <th>Company</th>
+              <th>Industry</th>
+              <th>Contact</th>
+              <th>Location</th>
+              <th>Status</th>
+              <th class="actions-col">Actions</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            @for (company of companies(); track company._id) {
+              <tr>
+                <td>
+                  <div class="company-cell">
+                    <div class="company-logo">
+                      @if (company.logoUrl) {
+                        <img [src]="company.logoUrl" [alt]="company.name" />
+                      } @else {
+                        <span>{{ company.name.charAt(0) }}</span>
+                      }
+                    </div>
+
+                    <div class="company-meta">
+                      <strong>{{ company.name }}</strong>
+                      <span>{{ company._id }}</span>
+                    </div>
+                  </div>
+                </td>
+
+                <td>
+                  {{ company.industry || '—' }}
+                </td>
+
+                <td>
+                  <div class="info-stack">
+                    <span>{{ company.contacts?.email || '—' }}</span>
+                    <small>{{ company.contacts?.phone || '' }}</small>
+                  </div>
+                </td>
+
+                <td>
+                  <div class="info-stack">
+                    <span>{{ company.address?.city || '—' }}</span>
+                    <small>{{ company.address?.country || '' }}</small>
+                  </div>
+                </td>
+
+                <td>
+                  <span
+                    class="status-badge"
+                    [class.active]="company.isActive"
+                    [class.inactive]="!company.isActive"
+                  >
+                    {{ company.isActive ? 'Active' : 'Inactive' }}
+                  </span>
+                </td>
+
+                <td class="actions-col">
+                  <div class="row-actions">
+                    <a
+                      class="icon-btn view"
+                      [routerLink]="['/super/companies', company._id]"
+                      title="View"
+                    >
+                      <i class="bi bi-eye"></i>
+                    </a>
+
+                    <a
+                      class="icon-btn edit"
+                      [routerLink]="['/super/companies/edit', company._id]"
+                      title="Edit"
+                    >
+                      <i class="bi bi-pencil-square"></i>
+                    </a>
+
+                    <button
+                      class="icon-btn delete"
+                      type="button"
+                      title="Delete"
+                      [disabled]="deletingId() === company._id"
+                      (click)="onDelete(company._id, company.name)"
+                    >
+                      @if (deletingId() === company._id) {
+                        <span class="mini-spinner"></span>
+                      } @else {
+                        <i class="bi bi-trash"></i>
+                      }
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      @if (pages() > 1) {
+        <div class="pagination">
+          <button
+            class="page-btn"
+            type="button"
+            [disabled]="page() === 1"
+            (click)="goToPage(page() - 1)"
+          >
+            Previous
+          </button>
+
+          <span class="page-indicator">
+            Page {{ page() }} / {{ pages() }}
+          </span>
+
+          <button
+            class="page-btn"
+            type="button"
+            [disabled]="page() === pages()"
+            (click)="goToPage(page() + 1)"
+          >
+            Next
+          </button>
+        </div>
+      }
+    }
+  </section>
+</div>

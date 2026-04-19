@@ -1,0 +1,105 @@
+{
+  "EMPLOYEES": {
+    "KICKER": "Belegschaft",
+    "TITLE": "Mitarbeiter",
+    "SUBTITLE": "Mitarbeiterliste mit Filtern",
+    "ADD_BTN": "Mitarbeiter hinzufügen",
+    "ADD_TITLE": "Mitarbeiter hinzufügen",
+    "EDIT_TITLE": "Mitarbeiter bearbeiten",
+    "LOADING_EMPLOYEE": "Mitarbeiter wird geladen...",
+    "LOADING_ZONES": "Zonen werden geladen...",
+    "SAVE_CHANGES": "Änderungen speichern",
+    "EMPTY": "Keine Mitarbeiter gefunden.",
+    "STATS": {
+      "TOTAL": "Mitarbeiter gesamt",
+      "ACTIVE": "Aktive Mitarbeiter",
+      "INACTIVE": "Inaktive Mitarbeiter",
+      "ASSIGNED_ZONE": "Einer Zone zugewiesen"
+    },
+    "COLUMNS": {
+      "NAME": "Vollständiger Name",
+      "EMPLOYEE_ID": "Mitarbeiter-ID",
+      
+      "DEPARTMENT": "Abteilung",
+      "JOB_TITLE": "Position",
+      "ZONE": "Zone",
+      "PHONE": "Telefon",
+      "STATUS": "Status"
+    },
+    "FILTERS": {
+      "SEARCH": "Suche",
+      "SEARCH_PH": "Name, Mitarbeiter-ID oder Position...",
+      "DEPARTMENT": "Abteilung",
+      "DEPARTMENT_PH": "Abteilungsname...",
+      "ZONE": "Zone",
+      "ZONE_PH": "Zonenname...",
+      "STATUS": "Status",
+      "ALL": "Alle"
+    },
+    "FORM": {
+      "FULL_NAME": "Vollständiger Name",
+      "FULL_NAME_PH": "Z. B.: Ahmed Ben Ali",
+      "EMPLOYEE_ID": "Mitarbeiter-ID",
+      "EMPLOYEE_ID_PH": "Z. B.: EMP-001",
+      "DEPARTMENT": "Abteilung",
+      "DEPARTMENT_PH": "Z. B.: Produktion",
+      "JOB_TITLE": "Position",
+      "JOB_TITLE_PH": "Z. B.: Techniker",
+      "ZONE": "Zone",
+      "SELECT_ZONE": "— Eine Zone auswählen —",
+      "PHONE": "Telefon",
+      "PHONE_PH": "+216 ...",
+      "HIRE_DATE": "Einstellungsdatum",
+      "ACTIVE": "Aktiv"
+    },
+    "STATUS": {
+      "ACTIVE": "Aktiv",
+      "INACTIVE": "Inaktiv"
+    },
+    "VALIDATION": {
+      "FULL_NAME_REQUIRED": "Der vollständige Name ist erforderlich (mind. 3 Zeichen)."
+    },
+    "ERROR": {
+      "LOAD": "Fehler beim Laden der Mitarbeiter.",
+      "DELETE": "Fehler beim Löschen des Mitarbeiters.",
+      "TOGGLE_ACTIVE": "Fehler beim Aktualisieren des Mitarbeiterstatus.",
+      "MISSING_ID": "Mitarbeiter-ID fehlt.",
+      "LOAD_ONE": "Fehler beim Laden des Mitarbeiters.",
+      "UPDATE": "Fehler beim Aktualisieren des Mitarbeiters.",
+      "CREATE": "Fehler beim Erstellen des Mitarbeiters."
+    },
+    "CONFIRM_DELETE": "Möchten Sie diesen Mitarbeiter wirklich löschen?",
+    "PROFILE": {
+      "SUBTITLE": "Profilinformationen, Aktivitätsstatus und Schulungsverlauf anzeigen.",
+      "PERSONAL_INFO": "Persönliche Informationen",
+      "TRAININGS": "Abgeschlossene Schulungen",
+      "NO_TRAININGS": "Für diesen Mitarbeiter wurden keine Schulungen gefunden.",
+      "CREATED_AT": "Erstellt am",
+      "ACTIVATE": "Aktivieren",
+      "DEACTIVATE": "Deaktivieren",
+      "SCORE": "Punktzahl",
+      "CERTIFIED": "Zertifiziert",
+      "ZONE_ID_PH": "Zone-ObjectId"
+    }
+  },
+  "COMMON": {
+    "LOADING": "Wird geladen...",
+    "RETRY": "Erneut versuchen",
+    "EDIT": "Bearbeiten",
+    "DELETE": "Löschen",
+    "VIEW": "Anzeigen",
+    "BACK": "Zurück",
+    "SAVE": "Speichern",
+    "SAVING": "Wird gespeichert...",
+    "CANCEL": "Abbrechen",
+    "FILTER": "Filtern",
+    "RESET": "Zurücksetzen",
+    "TOTAL": "Gesamt",
+    "PAGE": "Seite",
+    "ACTIONS": "Aktionen",
+    "ACTIVE": "Aktiv",
+    "INACTIVE": "Inaktiv",
+    "ENABLE": "Aktivieren",
+    "DISABLE": "Deaktivieren"
+  }
+}

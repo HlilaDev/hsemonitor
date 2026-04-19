@@ -1,0 +1,176 @@
+<div class="page">
+  <div class="hero-card">
+    <div class="hero-left">
+      <div class="eyebrow">Notification Center</div>
+      <h2 class="title">Notifications</h2>
+      <p class="muted">
+        Suivez les alertes système et les actions importantes des utilisateurs
+        sur la plateforme HSE.
+      </p>
+    </div>
+
+    <div class="hero-stats">
+      <div class="stat-card">
+        <span class="stat-label">Total</span>
+        <strong class="stat-value">{{ totalCount() }}</strong>
+      </div>
+
+      <div class="stat-card unread">
+        <span class="stat-label">Non lues</span>
+        <strong class="stat-value">{{ unreadCount() }}</strong>
+      </div>
+    </div>
+  </div>
+
+  <div class="toolbar-card">
+    <div class="tabs">
+      <button
+        *ngFor="let tab of tabs"
+        type="button"
+        class="tab-btn"
+        [class.active]="activeTab() === tab.key"
+        (click)="setTab(tab.key)"
+      >
+        {{ tab.label }}
+      </button>
+    </div>
+
+    <div class="filters-row">
+      <div class="search-box">
+        <i class="bi bi-search"></i>
+        <input
+          type="text"
+          placeholder="Rechercher une notification..."
+          [ngModel]="search()"
+          (ngModelChange)="onSearchChange($event)"
+        />
+      </div>
+
+      <div class="select-wrap">
+        <select
+          [ngModel]="statusFilter()"
+          (ngModelChange)="setStatusFilter($event)"
+        >
+          <option value="all">Tous les états</option>
+          <option value="unread">Non lues</option>
+          <option value="read">Lues</option>
+        </select>
+      </div>
+
+      <button class="btn ghost" type="button" (click)="clearFilters()">
+        Réinitialiser
+      </button>
+
+      <button class="btn primary" type="button" (click)="markAllAsRead()">
+        Tout marquer comme lu
+      </button>
+    </div>
+  </div>
+
+  <div class="notifications-grid" *ngIf="notifications().length > 0; else emptyTpl">
+    <div
+      class="notification-card"
+      *ngFor="let item of notifications(); trackBy: trackById"
+      [class.unread]="!item.isRead"
+    >
+      <div class="card-top">
+        <div class="type-badge" [ngClass]="item.type || 'system'">
+          <i [class]="getTypeIcon(item.type)"></i>
+          <span>{{ getTypeLabel(item.type) }}</span>
+        </div>
+
+        <div
+          class="severity-pill"
+          [ngClass]="notificationStore.getSeverityClass(item.severity)"
+        >
+          {{ item.severity || 'info' }}
+        </div>
+      </div>
+
+      <div class="card-body">
+        <div class="heading-row">
+          <h3>{{ item.title || 'Notification' }}</h3>
+
+          <span class="read-state" [class.unread-badge]="!item.isRead">
+            {{ item.isRead ? 'Lu' : 'Non lu' }}
+          </span>
+        </div>
+
+        <p class="message">
+          {{ item.message || 'Aucun message disponible.' }}
+        </p>
+
+        <div class="meta-list">
+          <div class="meta-item" *ngIf="item.zone">
+            <i class="bi bi-geo-alt"></i>
+            <span>{{ notificationStore.getZoneName(item.zone) }}</span>
+          </div>
+
+          <div class="meta-item" *ngIf="item.device">
+            <i class="bi bi-cpu"></i>
+            <span>{{ notificationStore.getDeviceName(item.device) }}</span>
+          </div>
+
+          <div class="meta-item" *ngIf="item.action">
+            <i class="bi bi-lightning-charge"></i>
+            <span>{{ item.action }}</span>
+          </div>
+
+          <div class="meta-item" *ngIf="item.actor && typeof item.actor !== 'string'">
+            <i class="bi bi-person"></i>
+            <span>
+              {{
+                item.actor.fullName ||
+                ((item.actor.firstName || '') + ' ' + (item.actor.lastName || '')).trim() ||
+                item.actor.email ||
+                item.actor._id
+              }}
+            </span>
+          </div>
+
+          <div class="meta-item">
+            <i class="bi bi-clock"></i>
+            <span>{{ notificationStore.getTime(item.createdAt) }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-actions">
+        <button
+          class="action-btn secondary"
+          type="button"
+          *ngIf="!item.isRead"
+          (click)="markOneAsRead(item._id)"
+        >
+          <i class="bi bi-check2-circle"></i>
+          Marquer lu
+        </button>
+
+        <button
+          class="action-btn danger"
+          type="button"
+          (click)="deleteOne(item._id)"
+        >
+          <i class="bi bi-trash3"></i>
+          Supprimer
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #emptyTpl>
+    <div class="empty-state">
+      <div class="empty-icon">
+        <i class="bi bi-bell-slash"></i>
+      </div>
+      <h3>Aucune notification trouvée</h3>
+      <p>
+        Aucune notification ne correspond aux filtres actuels ou aucune
+        notification n’a encore été générée.
+      </p>
+      <button class="btn ghost" type="button" (click)="clearFilters()">
+        Réinitialiser les filtres
+      </button>
+    </div>
+  </ng-template>
+</div>

@@ -1,0 +1,246 @@
+<div class="inspection-fill-page">
+  <div class="page-header">
+    <div class="page-header__content">
+      <h1>Remplir l’inspection</h1>
+      <p>
+        Répondez à chaque point de contrôle puis sauvegardez les réponses.
+      </p>
+    </div>
+
+    <div class="page-header__actions">
+      <button type="button" class="btn btn-light" (click)="goBack()">
+        Retour
+      </button>
+
+      @if (canComplete()) {
+        <button
+          type="button"
+          class="btn btn-primary"
+          [disabled]="completing()"
+          (click)="completeInspection()"
+        >
+          @if (completing()) {
+            Finalisation...
+          } @else {
+            Terminer l’inspection
+          }
+        </button>
+      }
+    </div>
+  </div>
+
+  @if (loading()) {
+    <div class="state-card loading-state">
+      <div class="spinner"></div>
+      <h3>Chargement de l’inspection...</h3>
+      <p>Veuillez patienter pendant la récupération des éléments à remplir.</p>
+    </div>
+  } @else {
+    @if (pageError()) {
+      <div class="alert alert-error">
+        <span>{{ pageError() }}</span>
+        <button type="button" class="btn btn-light btn-sm" (click)="retry()">
+          Réessayer
+        </button>
+      </div>
+    }
+
+    @if (inspection(); as current) {
+      <div class="content-grid">
+        <section class="main-panel">
+          <div class="hero-card">
+            <div class="hero-card__top">
+              <div>
+                <span class="status-badge" [class]="statusClass(current.status)">
+                  {{ statusLabel(current.status) }}
+                </span>
+
+                <h2>{{ executionTitle() }}</h2>
+                <p>{{ executionDescription() }}</p>
+              </div>
+
+              <div class="progress-card">
+                <span class="progress-card__label">Progression</span>
+                <strong class="progress-card__value">
+                  {{ progressPercent() }}%
+                </strong>
+                <span class="progress-card__meta">
+                  {{ answeredCount() }} / {{ totalCount() }} réponses
+                </span>
+              </div>
+            </div>
+
+            <div class="progress-bar">
+              <div
+                class="progress-bar__fill"
+                [style.width.%]="progressPercent()"
+              ></div>
+            </div>
+          </div>
+
+          @if (!checklistItems().length) {
+            <div class="state-card empty-state">
+              <h3>Aucun item à remplir</h3>
+              <p>Le template lié à cette inspection ne contient aucun point de contrôle.</p>
+            </div>
+          } @else {
+            <div class="items-list">
+              @for (item of checklistItems(); track trackByItem($index, item)) {
+                <div class="item-card">
+                  <div class="item-card__head">
+                    <div>
+                      <h3>{{ item.label }}</h3>
+                      <div class="item-meta">
+                        <span class="mini-badge">{{ itemTypeLabel(item.type) }}</span>
+
+                        @if (item.isRequired) {
+                          <span class="mini-badge required">Obligatoire</span>
+                        }
+                      </div>
+                    </div>
+
+                    <div class="item-order">
+                      #{{ item.order }}
+                    </div>
+                  </div>
+
+                  <div class="response-area">
+                    @if (item.type === 'boolean') {
+                      <div class="boolean-actions">
+                        <button
+                          type="button"
+                          class="choice-btn yes"
+                          [class.active]="isBooleanTrue(item._id)"
+                          (click)="setBooleanValue(item._id, true)"
+                        >
+                          Oui
+                        </button>
+
+                        <button
+                          type="button"
+                          class="choice-btn no"
+                          [class.active]="isBooleanFalse(item._id)"
+                          (click)="setBooleanValue(item._id, false)"
+                        >
+                          Non
+                        </button>
+                      </div>
+                    }
+
+                    @if (item.type === 'text') {
+                      <textarea
+                        rows="4"
+                        placeholder="Saisir une réponse..."
+                        [value]="getDraft(item._id).value || ''"
+                        (input)="updateTextValue(item._id, $event)"
+                      ></textarea>
+                    }
+
+                    @if (item.type === 'number') {
+                      <input
+                        type="number"
+                        placeholder="Entrer une valeur"
+                        [value]="getDraft(item._id).value ?? ''"
+                        (input)="updateNumberValue(item._id, $event)"
+                      />
+                    }
+                  </div>
+
+                  <div class="field-group">
+                    <label>Commentaire</label>
+                    <textarea
+                      rows="3"
+                      placeholder="Ajouter un commentaire..."
+                      [value]="getDraft(item._id).comment"
+                      (input)="updateComment(item._id, $event)"
+                    ></textarea>
+                  </div>
+
+                  <div class="field-group">
+                    <label>Photo (URL pour le moment)</label>
+                    <input
+                      type="text"
+                      placeholder="https://..."
+                      [value]="getDraft(item._id).photo"
+                      (input)="updatePhoto(item._id, $event)"
+                    />
+                  </div>
+
+                  @if (getDraft(item._id).error) {
+                    <div class="inline-error">
+                      {{ getDraft(item._id).error }}
+                    </div>
+                  }
+
+                  @if (getDraft(item._id).saved) {
+                    <div class="inline-success">
+                      Réponse sauvegardée.
+                    </div>
+                  }
+
+                  <div class="item-actions">
+                    <button
+                      type="button"
+                      class="btn btn-primary"
+                      [disabled]="getDraft(item._id).saving"
+                      (click)="saveItemResponse(item)"
+                    >
+                      @if (getDraft(item._id).saving) {
+                        Sauvegarde...
+                      } @else {
+                        Enregistrer la réponse
+                      }
+                    </button>
+                  </div>
+                </div>
+              }
+            </div>
+          }
+        </section>
+
+        <aside class="side-panel">
+          <div class="summary-card">
+            <h3>Résumé rapide</h3>
+
+            <div class="summary-list">
+              <div class="summary-row">
+                <span>Inspection</span>
+                <strong>{{ executionTitle() }}</strong>
+              </div>
+
+              <div class="summary-row">
+                <span>Statut</span>
+                <strong>{{ statusLabel(current.status) }}</strong>
+              </div>
+
+              <div class="summary-row">
+                <span>Démarrage</span>
+                <strong>{{ displayDate(current.startedAt || current.createdAt) }}</strong>
+              </div>
+
+              <div class="summary-row">
+                <span>Items</span>
+                <strong>{{ totalCount() }}</strong>
+              </div>
+
+              <div class="summary-row">
+                <span>Répondu</span>
+                <strong>{{ answeredCount() }}</strong>
+              </div>
+
+              <div class="summary-row">
+                <span>Progression</span>
+                <strong>{{ progressPercent() }}%</strong>
+              </div>
+            </div>
+          </div>
+        </aside>
+      </div>
+    } @else {
+      <div class="state-card empty-state">
+        <h3>Inspection introuvable</h3>
+        <p>Impossible d’afficher cette inspection.</p>
+      </div>
+    }
+  }
+</div>

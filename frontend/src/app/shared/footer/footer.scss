@@ -1,0 +1,28 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+.footer {
+  background-color: #ffffff;
+  padding: 20px 0;
+  border-top: 1px solid #f0f0f5; // Ligne subtile pour séparer du contenu
+  color: #64748b; // Gris ardoise doux
+  font-size: 14px;
+  font-family: 'Inter', sans-serif;
+
+  .brand-name {
+    color: #4f46e5; // Le bleu indigo de votre thème
+    font-weight: 600;
+  }
+
+  p {
+    letter-spacing: 0.3px;
+  }
+}
+
+// Optionnel : Effet au survol sur le nom de la marque
+.brand-name:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}

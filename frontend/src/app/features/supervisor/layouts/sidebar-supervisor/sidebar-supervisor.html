@@ -1,0 +1,53 @@
+<div class="sidebar-wrapper">
+  <div class="logo-section">
+    <a class="brand-link" [routerLink]="brand.homeLink || '/'">
+      <div class="logo-container">
+        <img
+          [src]="brand.logoSrc || 'assets/images/logo.webp'"
+          alt="HSE Agent"
+          class="logo-icon"
+        />
+      </div>
+
+      <div class="brand-texts">
+        <span class="logo-text">
+          {{ brand.title }} <span class="text-primary">{{ brand.accent }}</span>
+        </span>
+
+        @if (brand.subtitle) {
+          <span class="brand-subtitle">{{ brand.subtitle }}</span>
+        }
+      </div>
+    </a>
+  </div>
+
+  <div class="menu-container">
+    <nav class="sidebar-nav">
+      @for (section of sections; track section.titleKey) {
+        <div class="menu-section">
+          <p class="section-title">
+            <span class="dots">...</span>
+            {{ section.titleKey | translate }}
+          </p>
+
+          <ul class="list-unstyled">
+            @for (item of section.items; track item.route) {
+              <li>
+                <a
+                  [routerLink]="item.route"
+                  routerLinkActive="active"
+                  class="menu-item"
+                  [routerLinkActiveOptions]="{ exact: item.exact ?? false }"
+                >
+                  <i class="icon" [class]="item.icon"></i>
+                  <span class="label">{{ item.labelKey | translate }}</span>
+                  <i class="bi bi-chevron-right arrow"></i>
+                </a>
+              </li>
+            }
+          </ul>
+        </div>
+      }
+    </nav>
+  </div>
+</div>

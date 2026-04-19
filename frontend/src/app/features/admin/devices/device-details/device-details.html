@@ -1,0 +1,166 @@
+<div class="page">
+  <div class="header">
+    <div>
+      <div class="kicker">{{ 'DEVICES.DETAIL.KICKER' | translate }}</div>
+      <h2 class="title">{{ 'DEVICES.DETAIL.TITLE' | translate }}</h2>
+      <p class="desc">{{ 'DEVICES.DETAIL.SUBTITLE' | translate }}</p>
+    </div>
+
+    <div class="actions">
+      <button class="btn" type="button" (click)="back()">
+        <i class="bi bi-arrow-left"></i>
+        {{ 'COMMON.BACK' | translate }}
+      </button>
+
+      <button
+        class="btn primary"
+        type="button"
+        (click)="edit()"
+        [disabled]="loading() || !device()"
+      >
+        <i class="bi bi-pencil"></i>
+        {{ 'COMMON.EDIT' | translate }}
+      </button>
+
+      <button
+        class="btn dark"
+        type="button"
+        (click)="management()"
+        [disabled]="loading() || !device()"
+      >
+        <i class="bi bi-sliders"></i>
+        {{ 'DEVICES.DETAIL.MANAGEMENT' | translate }}
+      </button>
+    </div>
+  </div>
+
+  @if (loading()) {
+    <div class="state">{{ 'COMMON.LOADING' | translate }}</div>
+  } @else if (error()) {
+    <div class="state error">
+      <i class="bi bi-exclamation-triangle"></i>
+      {{ error() | translate }}
+    </div>
+  } @else if (device(); as d) {
+    <div class="grid">
+
+      <div class="card">
+        <div class="cardTitle">
+          <i class="bi bi-cpu"></i>
+          {{ 'DEVICES.DETAIL.OVERVIEW' | translate }}
+        </div>
+        <div class="rows">
+          <div class="row">
+            <div class="label">{{ 'DEVICES.COLUMNS.NAME' | translate }}</div>
+            <div class="value">{{ v(d.name) }}</div>
+          </div>
+          <div class="row">
+            <div class="label">{{ 'DEVICES.COLUMNS.DEVICE_ID' | translate }}</div>
+            <div class="value mono">{{ v(d.deviceId ?? d._id) }}</div>
+          </div>
+          <div class="row">
+            <div class="label">{{ 'DEVICES.COLUMNS.STATUS' | translate }}</div>
+            <div class="value">
+              <span
+                class="badge"
+                [class.ok]="(d.status || '').toLowerCase() === 'online'"
+                [class.bad]="(d.status || '').toLowerCase() === 'offline'"
+              >
+                {{ deviceStatusKey(d.status) | translate }}
+              </span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="label">{{ 'DEVICES.DETAIL.LAST_SEEN' | translate }}</div>
+            <div class="value">
+              {{ d.lastSeen ? (d.lastSeen | date : 'medium') : ('COMMON.EMPTY_VALUE' | translate) }}
+            </div>
+          </div>
+          <div class="row">
+            <div class="label">{{ 'DEVICES.DETAIL.CREATED' | translate }}</div>
+            <div class="value">
+              {{ d.createdAt ? (d.createdAt | date : 'medium') : ('COMMON.EMPTY_VALUE' | translate) }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="cardTitle">
+          <i class="bi bi-geo-alt"></i>
+          {{ 'DEVICES.COLUMNS.ZONE' | translate }}
+        </div>
+        <div class="rows">
+          <div class="row">
+            <div class="label">{{ 'DEVICES.COLUMNS.ZONE' | translate }}</div>
+            <div class="value">{{ zoneName(d.zone) }}</div>
+          </div>
+          <div class="row">
+            <div class="label">{{ 'DEVICES.FORM.DESCRIPTION' | translate }}</div>
+            <div class="value">{{ v(d.description) }}</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card wide">
+        <div class="cardTitle">
+          <i class="bi bi-activity"></i>
+          {{ 'DEVICES.DETAIL.SENSORS' | translate }} ({{ sensors().length }})
+        </div>
+
+        @if (sensorsLoading()) {
+          <div class="miniState">{{ 'DEVICES.DETAIL.LOADING_SENSORS' | translate }}</div>
+        } @else if (sensorsError()) {
+          <div class="miniState error">
+            <i class="bi bi-exclamation-triangle"></i>
+            {{ sensorsError() | translate }}
+          </div>
+        } @else if (sensors().length === 0) {
+          <div class="miniState">{{ 'DEVICES.DETAIL.NO_SENSORS' | translate }}</div>
+        } @else {
+          <div class="tableWrap">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>{{ 'SENSORS.COLUMNS.NAME' | translate }}</th>
+                  <th>{{ 'SENSORS.COLUMNS.TYPE' | translate }}</th>
+                  <th>{{ 'SENSORS.COLUMNS.ZONE' | translate }}</th>
+                  <th>{{ 'SENSORS.COLUMNS.STATUS' | translate }}</th>
+                  <th class="right">{{ 'SENSORS.COLUMNS.THRESHOLD' | translate }}</th>
+                  <th class="right">{{ 'DEVICES.DETAIL.CREATED' | translate }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (s of sensors(); track s._id) {
+                  <tr>
+                    <td class="strong">{{ v(s.name) }}</td>
+                    <td><span class="pill">{{ sensorTypeKey(s.type) | translate }}</span></td>
+                    <td>{{ zoneName(s.zone) }}</td>
+                    <td>
+                      <span
+                        class="pill"
+                        [class.ok]="(s.status || '').toLowerCase() === 'online'"
+                        [class.bad]="(s.status || '').toLowerCase() === 'offline'"
+                      >
+                        {{ sensorStatusKey(s.status) | translate }}
+                      </span>
+                    </td>
+                    <td class="right mono">
+                      {{ s.threshold ?? ('COMMON.EMPTY_VALUE' | translate) }} {{ s.unit ?? '' }}
+                    </td>
+                    <td class="right">
+                      {{ s.createdAt ? (s.createdAt | date : 'short') : ('COMMON.EMPTY_VALUE' | translate) }}
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
+      </div>
+
+    </div>
+  } @else {
+    <div class="state">{{ 'DEVICES.DETAIL.NOT_FOUND' | translate }}</div>
+  }
+</div>

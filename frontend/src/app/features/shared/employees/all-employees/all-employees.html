@@ -1,0 +1,222 @@
+<div class="page">
+  <!-- Header -->
+  <div class="hero">
+    <div>
+      <div class="kicker">{{ 'EMPLOYEES.KICKER' | translate }}</div>
+      <h2 class="title">{{ 'EMPLOYEES.TITLE' | translate }}</h2>
+      <p class="muted">{{ 'EMPLOYEES.SUBTITLE' | translate }}</p>
+    </div>
+
+    <a class="btn primary" [routerLink]="['/manager/employees/add']">
+      <i class="bi bi-plus-lg"></i>
+      {{ 'EMPLOYEES.ADD_BTN' | translate }}
+    </a>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats">
+    <div class="stat-card">
+      <span class="stat-label">{{ 'EMPLOYEES.STATS.TOTAL' | translate }}</span>
+      <strong class="stat-value">{{ total() }}</strong>
+    </div>
+
+    <div class="stat-card">
+      <span class="stat-label">{{ 'EMPLOYEES.STATS.ACTIVE' | translate }}</span>
+      <strong class="stat-value">{{ activeCount() }}</strong>
+    </div>
+
+    <div class="stat-card">
+      <span class="stat-label">{{ 'EMPLOYEES.STATS.INACTIVE' | translate }}</span>
+      <strong class="stat-value">{{ inactiveCount() }}</strong>
+    </div>
+
+    <div class="stat-card">
+      <span class="stat-label">{{ 'EMPLOYEES.STATS.ASSIGNED_ZONE' | translate }}</span>
+      <strong class="stat-value">{{ withZoneCount() }}</strong>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="card filters">
+    <div class="field">
+      <label>{{ 'EMPLOYEES.FILTERS.SEARCH' | translate }}</label>
+      <input
+        class="input"
+        type="text"
+        [placeholder]="'EMPLOYEES.FILTERS.SEARCH_PH' | translate"
+        [ngModel]="q()"
+        (ngModelChange)="q.set($event)"
+        (keyup.enter)="onSearch()"
+      />
+    </div>
+
+    <div class="field">
+      <label>{{ 'EMPLOYEES.FILTERS.DEPARTMENT' | translate }}</label>
+      <input
+        class="input"
+        type="text"
+        [placeholder]="'EMPLOYEES.FILTERS.DEPARTMENT_PH' | translate"
+        [ngModel]="department()"
+        (ngModelChange)="department.set($event)"
+        (keyup.enter)="onSearch()"
+      />
+    </div>
+
+    <div class="field">
+      <label>{{ 'EMPLOYEES.FILTERS.ZONE' | translate }}</label>
+      <input
+        class="input"
+        type="text"
+        [placeholder]="'EMPLOYEES.FILTERS.ZONE_PH' | translate"
+        [ngModel]="zone()"
+        (ngModelChange)="zone.set($event)"
+        (keyup.enter)="onSearch()"
+      />
+    </div>
+
+    <div class="field">
+      <label>{{ 'EMPLOYEES.FILTERS.STATUS' | translate }}</label>
+      <select
+        class="input"
+        [ngModel]="status()"
+        (ngModelChange)="status.set($event)"
+      >
+        <option value="">{{ 'EMPLOYEES.FILTERS.ALL' | translate }}</option>
+        <option value="active">{{ 'COMMON.ACTIVE' | translate }}</option>
+        <option value="inactive">{{ 'COMMON.INACTIVE' | translate }}</option>
+      </select>
+    </div>
+
+    <div class="actions">
+      <button class="btn" (click)="onSearch()" [disabled]="loading()">
+        <i class="bi bi-search"></i>
+        {{ 'COMMON.FILTER' | translate }}
+      </button>
+
+      <button class="btn ghost" (click)="clearFilters()" [disabled]="loading()">
+        {{ 'COMMON.RESET' | translate }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Table -->
+  <div class="card">
+    @if (error()) {
+      <div class="alert error">
+        <i class="bi bi-exclamation-triangle"></i>
+        {{ error() }}
+      </div>
+    }
+
+    @if (loading()) {
+      <div class="loading">
+        <span class="spinner"></span>
+        {{ 'COMMON.LOADING' | translate }}
+      </div>
+    } @else {
+      <div class="table-wrap">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>{{ 'EMPLOYEES.COLUMNS.NAME' | translate }}</th>
+              <th>{{ 'EMPLOYEES.COLUMNS.EMPLOYEE_ID' | translate }}</th>
+              <th>{{ 'EMPLOYEES.COLUMNS.DEPARTMENT' | translate }}</th>
+              <th>{{ 'EMPLOYEES.COLUMNS.JOB_TITLE' | translate }}</th>
+              <th>{{ 'EMPLOYEES.COLUMNS.ZONE' | translate }}</th>
+              <th>{{ 'EMPLOYEES.COLUMNS.PHONE' | translate }}</th>
+              <th class="center">{{ 'EMPLOYEES.COLUMNS.STATUS' | translate }}</th>
+              <th class="right">{{ 'COMMON.ACTIONS' | translate }}</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            @for (e of pagedEmployees(); track trackByEmployee($index, e)) {
+              <tr>
+                <td class="strong">{{ e.fullName || '—' }}</td>
+                <td>{{ e.employeeId || '—' }}</td>
+                <td>{{ getDepartment(e) }}</td>
+                <td>{{ getJobTitle(e) }}</td>
+                <td>{{ getZoneName(e) }}</td>
+                <td>{{ e.phone || '—' }}</td>
+
+                <td class="center">
+                  <span class="badge" [class]="badgeClass(e.isActive)">
+                    {{ getStatusKey(e) | translate }}
+                  </span>
+                </td>
+
+                <td class="right actions-cell">
+                  <a
+                    class="btn xs"
+                    [routerLink]="['/manager/employees', getRowId(e)]"
+                    [title]="'COMMON.VIEW' | translate"
+                  >
+                    <i class="bi bi-eye"></i>
+                  </a>
+
+                  <a
+                    class="btn xs"
+                    [routerLink]="['/manager/employees/edit', getRowId(e)]"
+                    [title]="'COMMON.EDIT' | translate"
+                  >
+                    <i class="bi bi-pencil"></i>
+                  </a>
+
+                  <button
+                    class="btn xs"
+                    type="button"
+                    (click)="toggleActive(e)"
+                    [title]="e.isActive ? ('COMMON.DISABLE' | translate) : ('COMMON.ENABLE' | translate)"
+                  >
+                    <i class="bi" [ngClass]="e.isActive ? 'bi-toggle-on' : 'bi-toggle-off'"></i>
+                  </button>
+
+                  <button
+                    class="btn xs danger"
+                    type="button"
+                    (click)="deleteEmployee(e)"
+                    [disabled]="loading()"
+                    [title]="'COMMON.DELETE' | translate"
+                  >
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </td>
+              </tr>
+            }
+
+            @if (pagedEmployees().length === 0) {
+              <tr>
+                <td colspan="8" class="empty">
+                  {{ 'EMPLOYEES.EMPTY' | translate }}
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+
+    <!-- Pagination -->
+    @if (!loading()) {
+      <div class="pager">
+        <div class="muted">
+          {{ 'COMMON.TOTAL' | translate }} : <b>{{ total() }}</b>
+        </div>
+
+        <div class="pager-actions">
+          <button class="btn" (click)="prev()" [disabled]="page() <= 1">
+            <i class="bi bi-chevron-left"></i>
+          </button>
+
+          <span class="muted">
+            {{ 'COMMON.PAGE' | translate }} {{ page() }} / {{ pages() }}
+          </span>
+
+          <button class="btn" (click)="next()" [disabled]="page() >= pages()">
+            <i class="bi bi-chevron-right"></i>
+          </button>
+        </div>
+      </div>
+    }
+  </div>
+</div>

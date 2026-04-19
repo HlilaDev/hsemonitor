@@ -1,0 +1,245 @@
+<div class="page">
+  <div class="hero">
+    <div class="hero-left">
+      <div class="eyebrow">HSE Monitoring</div>
+      <h1>Live Stream Surveillance</h1>
+      <p>
+        Real-time camera monitoring demo for industrial safety, worker behavior,
+        PPE compliance and critical zone supervision.
+      </p>
+    </div>
+
+    <div class="hero-right">
+      <div class="clock-card">
+        <div class="clock-label">System Time</div>
+        <div class="clock-value">{{ now() | date:'HH:mm:ss' }}</div>
+        <div class="clock-date">{{ now() | date:'fullDate' }}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-icon success">
+        <i class="bi bi-camera-video"></i>
+      </div>
+      <div>
+        <div class="stat-value">{{ totalOnline() }}</div>
+        <div class="stat-label">Cameras Online</div>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon warning">
+        <i class="bi bi-exclamation-triangle"></i>
+      </div>
+      <div>
+        <div class="stat-value">{{ totalWarnings() }}</div>
+        <div class="stat-label">Warnings</div>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon danger">
+        <i class="bi bi-wifi-off"></i>
+      </div>
+      <div>
+        <div class="stat-value">{{ totalOffline() }}</div>
+        <div class="stat-label">Offline Cameras</div>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon info">
+        <i class="bi bi-broadcast-pin"></i>
+      </div>
+      <div>
+        <div class="stat-value">{{ isLive() ? 'LIVE' : 'STOPPED' }}</div>
+        <div class="stat-label">Main Stream</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="main-grid">
+    <section class="viewer-card">
+      <div class="viewer-header">
+        <div>
+          <div class="viewer-title-row">
+            <h2>{{ streamTitle() }}</h2>
+            <span class="live-badge" [class.off]="!isLive()">
+              <span class="dot"></span>
+              {{ isLive() ? 'LIVE' : 'OFFLINE' }}
+            </span>
+          </div>
+          <p>{{ streamZone() }}</p>
+        </div>
+
+        <div class="viewer-actions">
+          <button class="action-btn" (click)="toggleSound()">
+            <i class="bi" [ngClass]="soundEnabled() ? 'bi-volume-up' : 'bi-volume-mute'"></i>
+            {{ soundEnabled() ? 'Sound On' : 'Muted' }}
+          </button>
+
+          <button class="action-btn" (click)="toggleRecording()">
+            <i class="bi" [ngClass]="isRecording() ? 'bi-record-circle' : 'bi-pause-circle'"></i>
+            {{ isRecording() ? 'Recording' : 'Paused' }}
+          </button>
+
+          <button class="action-btn primary" (click)="refreshDemo()">
+            <i class="bi bi-arrow-clockwise"></i>
+            Refresh Demo
+          </button>
+        </div>
+      </div>
+
+      <div class="stream-box" [class.fullscreen-mode]="fullscreen()">
+        <div class="stream-overlay top-left">
+          <span class="overlay-chip">
+            <i class="bi bi-shield-check"></i>
+            AI Safety Vision
+          </span>
+        </div>
+
+        <div class="stream-overlay top-right">
+          <span class="overlay-chip dark">
+            {{ now() | date:'HH:mm:ss' }}
+          </span>
+        </div>
+
+        <div class="stream-scene">
+          <div class="scan-line"></div>
+          <div class="grid-lines"></div>
+
+          <div class="person person-1">
+            <span class="tag safe">Helmet OK</span>
+          </div>
+
+          <div class="person person-2">
+            <span class="tag warn">Vest Missing</span>
+          </div>
+
+          <div class="zone-box zone-a">
+            <span>Restricted Area</span>
+          </div>
+
+          <div class="zone-box zone-b">
+            <span>PPE Check</span>
+          </div>
+
+          <div class="center-play" *ngIf="!isLive()">
+            <i class="bi bi-camera-video-off"></i>
+            <span>Camera stream unavailable</span>
+          </div>
+        </div>
+
+        <div class="stream-footer">
+          <div class="meta">
+            <span><i class="bi bi-people"></i> {{ selectedCamera()?.workers ?? 0 }} workers</span>
+            <span><i class="bi bi-bell"></i> {{ selectedCamera()?.alerts ?? 0 }} alerts</span>
+            <span><i class="bi bi-activity"></i> Motion: {{ selectedCamera()?.lastMotion ?? '—' }}</span>
+          </div>
+
+          <button class="fullscreen-btn" (click)="toggleFullscreen()">
+            <i class="bi" [ngClass]="fullscreen() ? 'bi-fullscreen-exit' : 'bi-arrows-fullscreen'"></i>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <aside class="side-panel">
+      <div class="panel-card">
+        <div class="panel-head">
+          <h3>Recent Alerts</h3>
+          <span>{{ recentEvents().length }}</span>
+        </div>
+
+        <div class="event-list">
+          <div
+            class="event-item"
+            *ngFor="let item of recentEvents()"
+            [class.info]="item.level === 'info'"
+            [class.warning]="item.level === 'warning'"
+            [class.danger]="item.level === 'danger'"
+          >
+            <div class="event-time">{{ item.time }}</div>
+            <div class="event-body">
+              <div class="event-title">{{ item.title }}</div>
+              <div class="event-zone">{{ item.zone }}</div>
+            </div>
+            <div class="event-badge">{{ eventBadge(item.level) }}</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel-card">
+        <div class="panel-head">
+          <h3>Zone Summary</h3>
+        </div>
+
+        <div class="zone-summary">
+          <div class="zone-row">
+            <span>Production Area</span>
+            <strong>Normal</strong>
+          </div>
+          <div class="zone-row">
+            <span>Chemical Storage</span>
+            <strong class="warn">Attention</strong>
+          </div>
+          <div class="zone-row">
+            <span>Loading Area</span>
+            <strong>Stable</strong>
+          </div>
+          <div class="zone-row">
+            <span>PPE Control Gate</span>
+            <strong class="danger">Violation</strong>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <section class="camera-section">
+    <div class="section-head">
+      <div>
+        <h2>Camera Grid</h2>
+        <p>Choose a camera to simulate live monitoring.</p>
+      </div>
+    </div>
+
+    <div class="camera-grid">
+      <div
+        class="camera-card"
+        *ngFor="let cam of cameras()"
+        [class.selected]="cam.selected"
+        (click)="selectCamera(cam)"
+      >
+        <div class="thumb">
+          <div class="thumb-badge" [class.offline]="cam.status === 'offline'" [class.warning]="cam.status === 'warning'">
+            {{ statusLabel(cam.status) }}
+          </div>
+
+          <div class="thumb-scene">
+            <div class="mini-grid"></div>
+            <div class="mini-person one"></div>
+            <div class="mini-person two"></div>
+          </div>
+        </div>
+
+        <div class="camera-body">
+          <div class="camera-top">
+            <h3>{{ cam.name }}</h3>
+            <span class="status-dot" [class.online]="cam.status === 'online'" [class.warning]="cam.status === 'warning'" [class.offline]="cam.status === 'offline'"></span>
+          </div>
+
+          <p>{{ cam.zone }}</p>
+
+          <div class="camera-meta">
+            <span><i class="bi bi-people"></i> {{ cam.workers }}</span>
+            <span><i class="bi bi-bell"></i> {{ cam.alerts }}</span>
+            <span><i class="bi bi-clock-history"></i> {{ cam.lastMotion }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

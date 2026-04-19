@@ -1,0 +1,156 @@
+<div class="page">
+  <div class="header">
+    <div class="title">
+      <h2>Nouvelle formation</h2>
+      <p class="muted">Créer une formation HSE et inviter des employés (participants).</p>
+    </div>
+
+    <div class="actions">
+      <button class="btn ghost" type="button" routerLink="../" [disabled]="isLoading()">
+        <i class="bi bi-arrow-left"></i>
+        Retour
+      </button>
+
+      <button class="btn primary" type="submit" form="trainingForm" [disabled]="isLoading()">
+        <i class="bi bi-plus-lg"></i>
+        {{ isLoading() ? 'Enregistrement...' : 'Créer' }}
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="error()" class="alert error">
+    <i class="bi bi-exclamation-triangle"></i>
+    <span>{{ error() }}</span>
+  </div>
+
+  <form id="trainingForm" class="card form-card" [formGroup]="form" (ngSubmit)="submit()">
+    <div class="grid">
+      <div class="field span-2">
+        <label for="title">Titre <span class="req">*</span></label>
+        <input
+          id="title"
+          class="input"
+          type="text"
+          formControlName="title"
+          placeholder="Ex: Formation Port des EPI"
+          [class.invalid]="fieldInvalid('title')"
+        />
+        <div class="hint error" *ngIf="fieldInvalid('title')">Titre requis (min 3 caractères).</div>
+      </div>
+
+      <div class="field">
+        <label for="category">Catégorie <span class="req">*</span></label>
+        <select id="category" class="select" formControlName="category" [class.invalid]="fieldInvalid('category')">
+          <option value="safety">Safety</option>
+          <option value="environment">Environment</option>
+          <option value="quality">Quality</option>
+          <option value="security">Security</option>
+          <option value="other">Other</option>
+        </select>
+        <div class="hint error" *ngIf="fieldInvalid('category')">Catégorie requise.</div>
+      </div>
+
+      <div class="field">
+        <label for="status">Statut <span class="req">*</span></label>
+        <select id="status" class="select" formControlName="status" [class.invalid]="fieldInvalid('status')">
+          <option value="scheduled">Prévu</option>
+          <option value="completed">Terminé</option>
+          <option value="cancelled">Annulé</option>
+        </select>
+        <div class="hint error" *ngIf="fieldInvalid('status')">Statut requis.</div>
+      </div>
+
+      <div class="field">
+        <label for="provider">Provider</label>
+        <input id="provider" class="input" type="text" formControlName="provider" placeholder="Ex: INPT / Consultant" />
+      </div>
+
+      <div class="field">
+        <label for="location">Lieu</label>
+        <input id="location" class="input" type="text" formControlName="location" placeholder="Ex: Salle A, Usine 1" />
+      </div>
+
+      <div class="field">
+        <label for="startDate">Date de début <span class="req">*</span></label>
+        <input id="startDate" class="input" type="date" formControlName="startDate" [class.invalid]="fieldInvalid('startDate')" />
+        <div class="hint error" *ngIf="fieldInvalid('startDate')">Date de début requise.</div>
+      </div>
+
+      <div class="field">
+        <label for="endDate">Date de fin</label>
+        <input id="endDate" class="input" type="date" formControlName="endDate" />
+        <div class="hint muted">Optionnel</div>
+      </div>
+
+      <div class="field span-2">
+        <label for="description">Description</label>
+        <textarea
+          id="description"
+          class="textarea"
+          rows="4"
+          formControlName="description"
+          placeholder="Objectif, contenu, prérequis..."
+        ></textarea>
+      </div>
+    </div>
+
+    <div class="participants card inner-card">
+      <div class="section-head">
+        <div>
+          <div class="section-title">
+            <i class="bi bi-people"></i>
+            Participants
+          </div>
+          <div class="section-sub">Sélectionner les employés à inviter.</div>
+        </div>
+      </div>
+
+      <div class="field span-2">
+        <label>Ajouter des employés</label>
+
+        <select
+          class="select"
+          multiple
+          [value]="selectedEmployeeIds()"
+          (change)="onEmployeesSelectChange($event)"
+        >
+          @for (e of employees(); track e._id) {
+            <option [value]="e._id">{{ employeeLabel(e) }}</option>
+          }
+        </select>
+
+        <div class="hint muted">
+          Astuce : maintiens <b>Ctrl</b> (Windows) / <b>Cmd</b> (Mac) pour sélectionner plusieurs.
+        </div>
+      </div>
+
+      <div class="chips" *ngIf="selectedEmployeeIds().length > 0">
+        @for (empId of selectedEmployeeIds(); track empId) {
+          <div class="chip">
+            <i class="bi bi-person"></i>
+            <span class="txt">{{ employeeLabelById(empId) }}</span>
+            <button type="button" class="x" (click)="removeParticipantById(empId)" title="Retirer">
+              <i class="bi bi-x-lg"></i>
+            </button>
+          </div>
+        }
+      </div>
+
+      <div class="empty-mini" *ngIf="selectedEmployeeIds().length === 0">
+        <i class="bi bi-info-circle"></i>
+        Aucun participant sélectionné.
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button class="btn ghost" type="button" routerLink="../" [disabled]="isLoading()">
+        Annuler
+      </button>
+
+      <button class="btn primary" type="submit" [disabled]="isLoading()">
+        <i class="bi bi-plus-lg"></i>
+        {{ isLoading() ? 'Enregistrement...' : 'Créer la formation' }}
+      </button>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,134 @@
+<div class="page">
+  <div class="header">
+    <h2 class="title">{{ 'EMPLOYEES.EDIT_TITLE' | translate }}</h2>
+
+    <a class="btn btn-outline" routerLink="/admin/employees">
+      {{ 'COMMON.BACK' | translate }}
+    </a>
+  </div>
+
+  <div class="card">
+    @if (errorMessage) {
+      <div class="alert">{{ errorMessage | translate }}</div>
+    }
+
+    @if (loadingEmployee) {
+      <div class="state">
+        <div class="spinner" aria-hidden="true"></div>
+        <span class="muted">{{ 'EMPLOYEES.LOADING_EMPLOYEE' | translate }}</span>
+      </div>
+    } @else {
+      <form [formGroup]="form" (ngSubmit)="submit()" class="form">
+        <!-- Full name -->
+        <div class="field">
+          <label>
+            {{ 'EMPLOYEES.FORM.FULL_NAME' | translate }}
+            <span class="req">*</span>
+          </label>
+
+          <input
+            type="text"
+            [placeholder]="'EMPLOYEES.FORM.FULL_NAME_PH' | translate"
+            formControlName="fullName"
+            [class.invalid]="f.fullName.touched && f.fullName.invalid"
+          />
+
+          @if (f.fullName.touched && f.fullName.invalid) {
+            <small class="error">
+              {{ 'EMPLOYEES.VALIDATION.FULL_NAME_REQUIRED' | translate }}
+            </small>
+          }
+        </div>
+
+        <!-- Matricule -->
+        <div class="field">
+          <label>{{ 'EMPLOYEES.FORM.EMPLOYEE_ID' | translate }}</label>
+          <input
+            type="text"
+            [placeholder]="'EMPLOYEES.FORM.EMPLOYEE_ID_PH' | translate"
+            formControlName="employeeId"
+          />
+        </div>
+
+        <!-- Department / Job -->
+        <div class="grid">
+          <div class="field">
+            <label>{{ 'EMPLOYEES.FORM.DEPARTMENT' | translate }}</label>
+            <input
+              type="text"
+              [placeholder]="'EMPLOYEES.FORM.DEPARTMENT_PH' | translate"
+              formControlName="department"
+            />
+          </div>
+
+          <div class="field">
+            <label>{{ 'EMPLOYEES.FORM.JOB_TITLE' | translate }}</label>
+            <input
+              type="text"
+              [placeholder]="'EMPLOYEES.FORM.JOB_TITLE_PH' | translate"
+              formControlName="jobTitle"
+            />
+          </div>
+        </div>
+
+        <!-- Zone -->
+        <div class="field">
+          <label>{{ 'EMPLOYEES.FORM.ZONE' | translate }}</label>
+
+          @if (loadingZones) {
+            <div class="muted">{{ 'EMPLOYEES.LOADING_ZONES' | translate }}</div>
+          } @else {
+            <select formControlName="zone">
+              <option value="">
+                {{ 'EMPLOYEES.FORM.SELECT_ZONE' | translate }}
+              </option>
+              @for (z of zones; track z._id) {
+                <option [value]="z._id">{{ z.name }}</option>
+              }
+            </select>
+          }
+        </div>
+
+        <!-- Phone / Hire date -->
+        <div class="grid">
+          <div class="field">
+            <label>{{ 'EMPLOYEES.FORM.PHONE' | translate }}</label>
+            <input
+              type="text"
+              [placeholder]="'EMPLOYEES.FORM.PHONE_PH' | translate"
+              formControlName="phone"
+            />
+          </div>
+
+          <div class="field">
+            <label>{{ 'EMPLOYEES.FORM.HIRE_DATE' | translate }}</label>
+            <input type="date" formControlName="hireDate" />
+          </div>
+        </div>
+
+        <!-- Active -->
+        <div class="field inline">
+          <label class="check">
+            <input type="checkbox" formControlName="isActive" />
+            <span>{{ 'EMPLOYEES.FORM.ACTIVE' | translate }}</span>
+          </label>
+        </div>
+
+        <!-- Actions -->
+        <div class="actions">
+          <button class="btn btn-primary" type="submit" [disabled]="submitting">
+            @if (submitting) {
+              {{ 'COMMON.SAVING' | translate }}
+            } @else {
+              {{ 'EMPLOYEES.SAVE_CHANGES' | translate }}
+            }
+          </button>
+
+          <a class="btn btn-outline" routerLink="/admin/employees">
+            {{ 'COMMON.CANCEL' | translate }}
+          </a>
+        </div>
+      </form>
+    }
+  </div>
+</div>

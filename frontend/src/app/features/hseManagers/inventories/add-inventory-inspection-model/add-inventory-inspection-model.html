@@ -1,0 +1,213 @@
+@if (open) {
+  <div class="inspection-modal-backdrop" (click)="onOverlayClick($event)">
+    <div
+      class="inspection-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="inspectionModalTitle"
+    >
+      <div class="modal-header">
+        <div>
+          <p class="eyebrow">Inspection</p>
+          <h2 id="inspectionModalTitle">Nouvelle inspection</h2>
+
+          @if (item) {
+            <p class="subtitle">
+              {{ item.name }}
+              @if (item.inventoryCode) {
+                <span class="code">• {{ item.inventoryCode }}</span>
+              }
+            </p>
+          }
+        </div>
+
+        <button
+          class="icon-btn"
+          type="button"
+          (click)="onClose()"
+          [disabled]="loading"
+          aria-label="Fermer"
+        >
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+
+      <form class="modal-body" (ngSubmit)="onSubmit()">
+        @if (errorMessage) {
+          <div class="error-box">
+            {{ errorMessage }}
+          </div>
+        }
+
+        <div class="item-box">
+          <div class="item-meta">
+            <span>Article</span>
+            <strong>{{ item?.name || '—' }}</strong>
+          </div>
+
+          <div class="item-meta">
+            <span>Statut actuel</span>
+            <strong>{{ item?.status || '—' }}</strong>
+          </div>
+
+          <div class="item-meta">
+            <span>Zone actuelle</span>
+            <strong>{{ getItemZoneLabel() }}</strong>
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="inspectionDate">
+              Date d’inspection <span class="required">*</span>
+            </label>
+
+            <input
+              id="inspectionDate"
+              type="date"
+              name="inspectionDate"
+              [ngModel]="inspectionDate()"
+              (ngModelChange)="inspectionDate.set($event)"
+            />
+
+            @if (submitted() && !inspectionDate()) {
+              <small class="error-text">La date d’inspection est obligatoire.</small>
+            }
+          </div>
+
+          <div class="form-group">
+            <label for="status">
+              Statut <span class="required">*</span>
+            </label>
+
+            <select
+              id="status"
+              name="status"
+              [ngModel]="status()"
+              (ngModelChange)="status.set($event)"
+            >
+              @for (statusOption of statusOptions; track statusOption.value) {
+                <option [value]="statusOption.value">
+                  {{ statusOption.label }}
+                </option>
+              }
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="condition">État</label>
+
+            <select
+              id="condition"
+              name="condition"
+              [ngModel]="condition()"
+              (ngModelChange)="condition.set($event)"
+            >
+              @for (conditionOption of conditionOptions; track conditionOption.value) {
+                <option [value]="conditionOption.value">
+                  {{ conditionOption.label }}
+                </option>
+              }
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="zone">Zone</label>
+
+            <select
+              id="zone"
+              name="zone"
+              [ngModel]="zone()"
+              (ngModelChange)="zone.set($event)"
+            >
+              <option value="">Aucune zone</option>
+
+              @for (zoneOption of zones; track zoneOption._id) {
+                <option [value]="zoneOption._id">
+                  {{ getZoneLabel(zoneOption) }}
+                </option>
+              }
+            </select>
+          </div>
+
+          <div class="form-group full">
+            <label for="findings">Constats / Findings</label>
+
+            <textarea
+              id="findings"
+              name="findings"
+              rows="4"
+              [ngModel]="findings()"
+              (ngModelChange)="findings.set($event)"
+              placeholder="Ex: usure visible, défaut de fixation, contrôle conforme..."
+            ></textarea>
+          </div>
+
+          <div class="form-group full">
+            <label for="actionsRequired">Actions requises</label>
+
+            <textarea
+              id="actionsRequired"
+              name="actionsRequired"
+              rows="4"
+              [ngModel]="actionsRequired()"
+              (ngModelChange)="actionsRequired.set($event)"
+              placeholder="Ex: remplacer l’équipement, envoyer en maintenance..."
+            ></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="nextInspectionDate">Prochaine inspection</label>
+
+            <input
+              id="nextInspectionDate"
+              type="date"
+              name="nextInspectionDate"
+              [ngModel]="nextInspectionDate()"
+              (ngModelChange)="nextInspectionDate.set($event)"
+            />
+          </div>
+
+          <div class="form-group full">
+            <label for="notes">Note</label>
+
+            <textarea
+              id="notes"
+              name="notes"
+              rows="3"
+              [ngModel]="notes()"
+              (ngModelChange)="notes.set($event)"
+              placeholder="Informations complémentaires..."
+            ></textarea>
+          </div>
+        </div>
+
+        @if (selectedZone()) {
+          <div class="selected-box">
+            <span>Zone sélectionnée</span>
+            <strong>{{ selectedZone()?.name }}</strong>
+          </div>
+        }
+
+        <div class="modal-actions">
+          <button
+            class="btn btn-light"
+            type="button"
+            (click)="onClose()"
+            [disabled]="loading"
+          >
+            Annuler
+          </button>
+
+          <button class="btn btn-primary" type="submit" [disabled]="loading">
+            @if (!loading) {
+              Enregistrer inspection
+            } @else {
+              Enregistrement...
+            }
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+}

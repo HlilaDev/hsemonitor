@@ -1,0 +1,65 @@
+/* Container principal */
+.dashboard-container {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+  background: #f5f6fa;
+}
+
+app-header-admin.header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  flex: 0 0 var(--header-h);
+  height: var(--header-h);
+}
+
+/* Sidebar */
+app-sidebar-admin {
+  width: 250px;
+  min-width: 250px;
+  height: 100vh;
+  background: #1e293b; /* couleur sombre pro */
+  color: white;
+  transition: width 0.3s ease;
+}
+
+/* Sidebar collapsed */
+.dashboard-container.sidebar-collapsed app-sidebar-admin {
+  width: 80px;
+  min-width: 80px;
+}
+
+/* Zone droite (header + content + footer) */
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* Header */
+.header {
+  width: 100%;
+  flex-shrink: 0;
+}
+
+/* Content */
+.content-area {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+  background: #f8fafc;
+}
+
+/* Footer */
+.footer {
+  height: 50px;
+  flex-shrink: 0;
+  background: #ffffff;
+  border-top: 1px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

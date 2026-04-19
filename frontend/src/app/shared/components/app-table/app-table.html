@@ -1,0 +1,76 @@
+<div class="table-shell">
+  @if (title || addLabel) {
+    <div class="table-top">
+      <h2 class="table-title">{{ title }}</h2>
+
+      @if (addLabel) {
+        <button class="btn-add" type="button" (click)="add.emit()">
+          {{ addLabel }}
+        </button>
+      }
+    </div>
+  }
+
+  @if (loading) {
+    <div class="table-state">Loading...</div>
+  } @else if (error) {
+    <div class="table-state error">{{ error }}</div>
+  } @else if (!data || data.length === 0) {
+    <div class="table-state">{{ emptyText }}</div>
+  } @else {
+    <div class="table-card">
+      <table class="app-table">
+        <thead>
+          <tr>
+            @for (col of columns; track col.header) {
+              <th
+                [style.width]="col.width ?? null"
+                [class.center]="col.align === 'center'"
+                [class.right]="col.align === 'right'"
+              >
+                {{ col.header }}
+              </th>
+            }
+
+            @if (actionsTpl) {
+              <th class="right">Actions</th>
+            }
+          </tr>
+        </thead>
+
+        <tbody>
+          @for (row of data; track trackBy($index, row)) {
+            <tr>
+              @for (col of columns; track col.header) {
+                <td
+                  [class.center]="col.align === 'center'"
+                  [class.right]="col.align === 'right'"
+                >
+                  @if (col.cellTpl) {
+                    <ng-container
+                      [ngTemplateOutlet]="col.cellTpl"
+                      [ngTemplateOutletContext]="{ $implicit: row }"
+                    />
+                  } @else {
+                    {{ col.cell?.(row) ?? '' }}
+                  }
+                </td>
+              }
+
+              @if (actionsTpl) {
+                <td class="right">
+                  <div class="actions">
+                    <ng-container
+                      [ngTemplateOutlet]="actionsTpl"
+                      [ngTemplateOutletContext]="{ $implicit: row }"
+                    />
+                  </div>
+                </td>
+              }
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>

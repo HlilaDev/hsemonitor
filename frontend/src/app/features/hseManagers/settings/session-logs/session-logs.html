@@ -1,0 +1,159 @@
+<div class="logs-page">
+  <div class="page-header">
+    <div class="title-wrap">
+      <span class="eyebrow">Account Security</span>
+      <h1>Session Logs</h1>
+      <p>
+        Monitor recent sign-ins, active devices, failed attempts and expired sessions
+        linked to your account.
+      </p>
+    </div>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-icon blue">
+        <i class="bi bi-clock-history"></i>
+      </div>
+      <div class="stat-content">
+        <span>Total Logs</span>
+        <strong>{{ totalSessions() }}</strong>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon green">
+        <i class="bi bi-check-circle"></i>
+      </div>
+      <div class="stat-content">
+        <span>Successful</span>
+        <strong>{{ successCount() }}</strong>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon red">
+        <i class="bi bi-x-octagon"></i>
+      </div>
+      <div class="stat-content">
+        <span>Failed</span>
+        <strong>{{ failedCount() }}</strong>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon orange">
+        <i class="bi bi-hourglass-split"></i>
+      </div>
+      <div class="stat-content">
+        <span>Expired</span>
+        <strong>{{ expiredCount() }}</strong>
+      </div>
+    </div>
+  </div>
+
+  <div class="toolbar-card">
+    <div class="toolbar">
+      <div class="search-box">
+        <i class="bi bi-search"></i>
+        <input
+          type="text"
+          placeholder="Search by device, browser, IP or location..."
+          [ngModel]="search()"
+          (ngModelChange)="search.set($event)"
+        />
+      </div>
+
+      <div class="filters">
+        <select
+          [ngModel]="selectedStatus()"
+          (ngModelChange)="selectedStatus.set($event)"
+        >
+          <option value="all">All status</option>
+          <option value="success">Success</option>
+          <option value="failed">Failed</option>
+          <option value="expired">Expired</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="table-card">
+    <div class="table-head">
+      <div>
+        <h3>Recent Sessions</h3>
+        <p>{{ filteredSessions().length }} log(s) found</p>
+      </div>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Device</th>
+            <th>Browser</th>
+            <th>IP Address</th>
+            <th>Location</th>
+            <th>Status</th>
+            <th>Login Time</th>
+            <th>Last Activity</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let session of filteredSessions(); trackBy: trackById">
+            <td>
+              <div class="device-cell">
+                <div class="device-icon">
+                  <i class="bi" [ngClass]="getDeviceIcon(session.deviceType)"></i>
+                </div>
+
+                <div class="device-info">
+                  <strong>{{ session.deviceName }}</strong>
+                  <span *ngIf="session.current" class="current-badge">Current Session</span>
+                </div>
+              </div>
+            </td>
+
+            <td>{{ session.browser }}</td>
+            <td>{{ session.ipAddress }}</td>
+            <td>{{ session.location }}</td>
+
+            <td>
+              <span class="status-badge" [ngClass]="session.status">
+                <span class="dot"></span>
+                {{ getStatusLabel(session.status) }}
+              </span>
+            </td>
+
+            <td>{{ session.loginAt }}</td>
+            <td>{{ session.lastActivity }}</td>
+          </tr>
+
+          <tr *ngIf="filteredSessions().length === 0">
+            <td colspan="7">
+              <div class="empty-state">
+                <i class="bi bi-inboxes"></i>
+                <p>No session logs found for the selected filter.</p>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="security-note">
+    <div class="note-icon">
+      <i class="bi bi-shield-lock"></i>
+    </div>
+
+    <div class="note-content">
+      <h3>Security Advice</h3>
+      <p>
+        Review failed login attempts and unknown devices regularly. If you notice suspicious access,
+        change your password immediately and revoke old sessions.
+      </p>
+    </div>
+  </div>
+</div>

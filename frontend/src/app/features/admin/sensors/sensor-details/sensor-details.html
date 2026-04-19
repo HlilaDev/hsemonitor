@@ -1,0 +1,210 @@
+<div class="sd-root" *ngIf="!isLoading; else loadingTpl">
+  <ng-container *ngIf="sensor; else noSensor">
+
+    <!-- ░░ AMBIENT BACKGROUND ORBS ░░ -->
+    <div class="orb orb--violet"></div>
+    <div class="orb orb--cyan"></div>
+    <div class="orb orb--pink"></div>
+
+    <!-- ░░ TOP BAR ░░ -->
+    <div class="topbar">
+      <button class="back-btn" routerLink="/admin/sensors">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+        Retour
+      </button>
+      <div class="topbar__breadcrumb">
+        <span>Capteurs</span>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        <span class="topbar__current">{{ sensor.name }}</span>
+      </div>
+    </div>
+
+    <!-- ░░ HERO ░░ -->
+    <div class="hero">
+
+      <!-- LEFT: image + id -->
+      <div class="hero__image-col">
+        <div class="hero__img-ring">
+          <div class="hero__img-wrap">
+            <img *ngIf="sensor.imageUrl; else iconFallback"
+              [src]="sensor.imageUrl" [alt]="sensor.name" class="hero__img"/>
+            <ng-template #iconFallback>
+              <div class="hero__img-placeholder">
+                <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
+                  <circle cx="12" cy="12" r="3"/>
+                  <path d="M12 2v3M12 19v3M2 12h3M19 12h3"/>
+                  <path d="M4.93 4.93l2.12 2.12M16.95 16.95l2.12 2.12M4.93 19.07l2.12-2.12M16.95 7.05l2.12-2.12"/>
+                </svg>
+              </div>
+            </ng-template>
+          </div>
+          <span class="hero__status-dot" [ngClass]="sensor.status"></span>
+        </div>
+        <code class="hero__id">{{ sensor._id }}</code>
+      </div>
+
+      <!-- CENTER: name + meta -->
+      <div class="hero__body">
+        <div class="hero__name-row">
+          <h1 class="hero__name">{{ sensor.name }}</h1>
+          <span class="hero__badge" [ngClass]="sensor.status">
+            <span class="hero__badge-dot"></span>
+            {{ sensor.status }}
+          </span>
+        </div>
+
+        <div class="hero__tags">
+          <span class="tag tag--zone">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            {{ getZoneName() }}
+          </span>
+          <span class="tag tag--type">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            {{ sensor.type }}
+          </span>
+          <span class="tag tag--unit" *ngIf="sensor.unit">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+            {{ sensor.unit }}
+          </span>
+        </div>
+      </div>
+
+      <!-- RIGHT: last seen -->
+      <div class="hero__lastseen">
+        <div class="hero__lastseen-label">Dernière activité</div>
+        <div class="hero__lastseen-val">{{ sensor.lastSeen | date:'dd MMM yyyy' }}</div>
+        <div class="hero__lastseen-time">{{ sensor.lastSeen | date:'HH:mm:ss' }}</div>
+      </div>
+
+    </div>
+
+    <!-- ░░ STAT CARDS ░░ -->
+    <div class="stats-row">
+
+      <div class="stat-card stat-card--orange">
+        <div class="stat-card__icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        </div>
+        <span class="stat-card__label">Seuil d'alerte</span>
+        <span class="stat-card__val">
+          {{ sensor.threshold !== null && sensor.threshold !== undefined ? sensor.threshold : '—' }}
+          <small *ngIf="sensor.unit">{{ sensor.unit }}</small>
+        </span>
+      </div>
+
+      <div class="stat-card stat-card--violet">
+        <div class="stat-card__icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        </div>
+        <span class="stat-card__label">Device ID</span>
+        <span class="stat-card__val mono">{{ sensor.deviceId }}</span>
+      </div>
+
+      <div class="stat-card stat-card--teal">
+        <div class="stat-card__icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        </div>
+        <span class="stat-card__label">Créé le</span>
+        <span class="stat-card__val">{{ sensor.createdAt | date:'dd MMM yyyy' }}</span>
+      </div>
+
+      <div class="stat-card stat-card--pink">
+        <div class="stat-card__icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        </div>
+        <span class="stat-card__label">Modifié le</span>
+        <span class="stat-card__val">{{ sensor.updatedAt | date:'dd MMM yyyy' }}</span>
+      </div>
+
+    </div>
+
+    <!-- ░░ TOPIC URL ░░ -->
+    <div class="glass-panel">
+      <div class="panel-header panel-header--cyan">
+        <div class="panel-header__icon">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
+        </div>
+        <h2>Topic URL</h2>
+      </div>
+      <div class="topic-row">
+        <div class="topic-input-wrap">
+          <svg class="topic-input-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
+          <input type="url" class="topic-input" [(ngModel)]="topicUrl"
+            placeholder="mqtt://broker.example.com/sensors/{{ sensor._id }}"/>
+        </div>
+        <button class="copy-btn" (click)="copyTopicUrl()" [class.copied]="urlCopied">
+          <svg *ngIf="!urlCopied" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+          <svg *ngIf="urlCopied" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+          {{ urlCopied ? 'Copié !' : 'Copier' }}
+        </button>
+      </div>
+    </div>
+
+    <!-- ░░ HISTORY ░░ -->
+    <div class="glass-panel">
+      <div class="panel-header panel-header--violet">
+        <div class="panel-header__icon">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <h2>Historique du capteur</h2>
+        <span class="panel-header__count" *ngIf="history.length > 0">{{ history.length }} entrées</span>
+      </div>
+
+      <div class="history-loading" *ngIf="isHistoryLoading">
+        <span class="spinner"></span> Chargement…
+      </div>
+
+      <ng-container *ngIf="!isHistoryLoading">
+        <div class="history-empty" *ngIf="history.length === 0">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+          Aucun historique disponible.
+        </div>
+
+        <div class="history-list" *ngIf="history.length > 0">
+          <div class="history-head">
+            <span>Date / Heure</span>
+            <span>Valeur</span>
+            <span>Statut</span>
+            <span>Message</span>
+          </div>
+          <div class="history-item" *ngFor="let entry of history; let i = index"
+               [style.animation-delay]="i * 40 + 'ms'">
+            <span class="history-item__ts mono">{{ entry.timestamp | date:'dd/MM/yy HH:mm:ss' }}</span>
+            <span class="history-item__val">
+              {{ entry.value !== undefined ? entry.value + ' ' + (sensor.unit ?? '') : '—' }}
+            </span>
+            <span class="history-item__status">
+              <span class="status-pill" [ngClass]="entry.status">
+                <span class="status-pill__dot"></span>{{ entry.status }}
+              </span>
+            </span>
+            <span class="history-item__msg">{{ entry.message ?? '—' }}</span>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+
+  </ng-container>
+
+  <!-- ░░ EMPTY ░░ -->
+  <ng-template #noSensor>
+    <div class="empty-state">
+      <div class="empty-state__icon">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      </div>
+      <h2>Capteur introuvable</h2>
+      <p>{{ errorMessage || 'Ce capteur n\'existe pas ou a été supprimé.' }}</p>
+      <button class="back-btn" routerLink="/admin/sensors">← Retour à la liste</button>
+    </div>
+  </ng-template>
+</div>
+
+<!-- ░░ LOADING ░░ -->
+<ng-template #loadingTpl>
+  <div class="loading-state">
+    <div class="loading-state__rings">
+      <span></span><span></span><span></span>
+    </div>
+    <p>Chargement du capteur…</p>
+  </div>
+</ng-template>

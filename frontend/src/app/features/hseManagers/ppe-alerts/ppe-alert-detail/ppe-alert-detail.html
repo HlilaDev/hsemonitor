@@ -1,0 +1,207 @@
+<div class="page">
+  @if (loading()) {
+    <div class="state-card">
+      <div class="spinner"></div>
+      <h3>Chargement de l’alerte PPE...</h3>
+      <p>Veuillez patienter pendant la récupération des informations.</p>
+    </div>
+  } @else if (error()) {
+    <div class="state-card error">
+      <h3>Erreur</h3>
+      <p>{{ error() }}</p>
+      <button type="button" class="btn btn-light" (click)="goBack()">
+        Retour
+      </button>
+    </div>
+  } @else if (alert()) {
+    <div class="topbar">
+      <button type="button" class="btn btn-light" (click)="goBack()">
+        ← Retour
+      </button>
+
+      <div class="topbar-text">
+        <p class="eyebrow">PPE alert detail</p>
+        <h1>Détail alerte PPE</h1>
+        <p class="subtitle">
+          Consultez les informations de l’alerte, vérifiez la preuve visuelle et
+          appliquez une action de traitement.
+        </p>
+      </div>
+    </div>
+
+    <div class="hero-card">
+      <div class="hero-left">
+        <div class="title-row">
+          <h2>{{ getTypeLabel(alert()!.alertType) }}</h2>
+
+          <div class="badges">
+            <span class="badge" [class]="getTypeClass(alert()!.alertType)">
+              {{ getTypeLabel(alert()!.alertType) }}
+            </span>
+
+            <span class="badge" [class]="getStatusClass(alert()!.status)">
+              {{ getStatusLabel(alert()!.status) }}
+            </span>
+          </div>
+        </div>
+
+        <p class="label-text">{{ alert()!.label || 'Alerte PPE' }}</p>
+
+        <div class="confidence-card">
+          <div class="confidence-head">
+            <span>Confiance du modèle</span>
+            <strong>{{ confidencePercent() }}%</strong>
+          </div>
+
+          <div class="confidence-bar">
+            <div
+              class="confidence-fill"
+              [style.width.%]="confidencePercent()"
+            ></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-right">
+        <div class="quick-stat">
+          <span class="quick-stat-label">Date</span>
+          <strong>{{ alert()!.timestamp | date: 'dd/MM/yyyy' }}</strong>
+          <small>{{ alert()!.timestamp | date: 'HH:mm:ss' }}</small>
+        </div>
+
+        <div class="quick-stat">
+          <span class="quick-stat-label">Source</span>
+          <strong>{{ alert()!.source || 'N/A' }}</strong>
+          <small>{{ alert()!.cameraId || 'Caméra inconnue' }}</small>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-grid">
+      <section class="card info-card">
+        <div class="card-header">
+          <h3>Informations générales</h3>
+        </div>
+
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="info-label">Device</span>
+            <strong>{{ alert()!.device?.name || alert()!.deviceId || 'N/A' }}</strong>
+            <small>{{ alert()!.device?.deviceId || alert()!.deviceId || '' }}</small>
+          </div>
+
+          <div class="info-item">
+            <span class="info-label">Zone</span>
+            <strong>{{ alert()!.zone?.name || 'N/A' }}</strong>
+            <small>{{ alert()!.zone?.code || 'Aucun code zone' }}</small>
+          </div>
+
+          <div class="info-item">
+            <span class="info-label">Caméra</span>
+            <strong>{{ alert()!.cameraId || 'N/A' }}</strong>
+            <small>Vision source</small>
+          </div>
+
+          <div class="info-item">
+            <span class="info-label">Site</span>
+            <strong>{{ alert()!.siteId || 'N/A' }}</strong>
+            <small>Zone industrielle</small>
+          </div>
+
+          <div class="info-item">
+            <span class="info-label">Statut</span>
+            <strong>{{ getStatusLabel(alert()!.status) }}</strong>
+            <small>État actuel de traitement</small>
+          </div>
+
+          <div class="info-item">
+            <span class="info-label">Horodatage</span>
+            <strong>{{ alert()!.timestamp | date: 'dd/MM/yyyy' }}</strong>
+            <small>{{ alert()!.timestamp | date: 'HH:mm:ss' }}</small>
+          </div>
+
+          @if (alert()!.metadata?.trackId !== null && alert()!.metadata?.trackId !== undefined) {
+            <div class="info-item">
+              <span class="info-label">Track ID</span>
+              <strong>{{ alert()!.metadata?.trackId }}</strong>
+              <small>Identifiant de suivi</small>
+            </div>
+          }
+
+          @if (alert()!.metadata?.eventType) {
+            <div class="info-item">
+              <span class="info-label">Event type</span>
+              <strong>{{ alert()!.metadata?.eventType }}</strong>
+              <small>Type technique</small>
+            </div>
+          }
+        </div>
+      </section>
+
+      <section class="card preview-card">
+        <div class="card-header">
+          <h3>Preuve visuelle</h3>
+        </div>
+
+        @if (alert()!.snapshotPath) {
+          <div class="snapshot-wrapper">
+            <img
+              [src]="getSnapshotUrl(alert()!.snapshotPath)"
+              [alt]="alert()!.label || 'Snapshot PPE'"
+            />
+          </div>
+        } @else {
+          <div class="empty-preview">
+            <div class="empty-icon">📷</div>
+            <h4>Aucune image disponible</h4>
+            <p>
+              Aucun snapshot n’a été envoyé avec cette alerte pour le moment.
+            </p>
+          </div>
+        }
+      </section>
+    </div>
+
+    <section class="card actions-card">
+      <div class="card-header">
+        <h3>Actions de traitement</h3>
+        <p>Choisissez l’action adaptée à cette alerte PPE.</p>
+      </div>
+
+      <div class="actions">
+        @if (alert()!.status === 'open') {
+          <button
+            type="button"
+            class="btn btn-warning"
+            [disabled]="actionLoading()"
+            (click)="updateStatus('acknowledged')"
+          >
+            Accuser réception
+          </button>
+        }
+
+        @if (alert()!.status !== 'resolved') {
+          <button
+            type="button"
+            class="btn btn-success"
+            [disabled]="actionLoading()"
+            (click)="updateStatus('resolved')"
+          >
+            Résoudre
+          </button>
+        }
+
+        @if (alert()!.status !== 'false_positive') {
+          <button
+            type="button"
+            class="btn btn-danger-soft"
+            [disabled]="actionLoading()"
+            (click)="updateStatus('false_positive')"
+          >
+            Marquer faux positif
+          </button>
+        }
+      </div>
+    </section>
+  }
+</div>

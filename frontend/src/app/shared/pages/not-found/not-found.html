@@ -1,0 +1,27 @@
+<div class="page">
+  <div class="card">
+    <div class="badge">404</div>
+
+    <h1>Page introuvable</h1>
+    <p class="muted">
+      La page que vous cherchez n’existe pas, a été déplacée, ou vous n’avez pas accès.
+    </p>
+
+    <div class="actions">
+      <a class="btn" routerLink="/auth/login">
+        <i class="bi bi-box-arrow-in-right"></i>
+        Aller au login
+      </a>
+
+      <button class="btn ghost" type="button" (click)="goBack()">
+        <i class="bi bi-arrow-left"></i>
+        Retour
+      </button>
+    </div>
+
+    <div class="hint">
+      <i class="bi bi-info-circle"></i>
+      Astuce : vérifiez l’URL ou revenez à la page d’accueil.
+    </div>
+  </div>
+</div>

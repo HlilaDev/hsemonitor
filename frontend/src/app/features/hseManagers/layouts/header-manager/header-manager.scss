@@ -1,0 +1,45 @@
+.delete-notification-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+
+  width: 28px;
+  height: 28px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: none;
+  border-radius: 8px;
+
+  background: transparent;
+  color: #6b7280; // gris soft
+
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  opacity: 0; // caché par défaut
+}
+
+/* afficher au hover de la notification */
+.notification-item:hover .delete-notification-btn {
+  opacity: 1;
+}
+
+/* hover effet */
+.delete-notification-btn:hover {
+  background: rgba(239, 68, 68, 0.1); // rouge light
+  color: #ef4444; // rouge
+}
+
+/* click effet */
+.delete-notification-btn:active {
+  transform: scale(0.9);
+}
+
+/* icône */
+.delete-notification-btn i {
+  font-size: 14px;
+  pointer-events: none;
+}

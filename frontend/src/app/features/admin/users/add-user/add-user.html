@@ -1,0 +1,136 @@
+<div class="page">
+  <div class="page-header">
+    <div>
+      <h2>Ajouter un utilisateur</h2>
+      <p class="muted">Créer un compte (Agent / Manager / admin).</p>
+    </div>
+
+    <a class="btn btn-outline-secondary" routerLink="/admin/users">← Retour</a>
+  </div>
+
+  <div class="card">
+    <form [formGroup]="form" (ngSubmit)="submit()">
+
+      @if (errorMessage) {
+        <div class="alert alert-danger">{{ errorMessage }}</div>
+      }
+
+      @if (successMessage) {
+        <div class="alert alert-success">{{ successMessage }}</div>
+      }
+
+      <!-- First name -->
+      <div class="form-group">
+        <label class="form-label">
+          Prénom <span class="req">*</span>
+        </label>
+
+        <input
+          type="text"
+          class="form-control"
+          formControlName="firstName"
+          placeholder="Ex: Ahmed"
+          [class.is-invalid]="firstName.touched && firstName.invalid"
+        />
+
+        @if (firstName.touched && firstName.errors?.['required']) {
+          <div class="invalid-feedback">Le prénom est obligatoire.</div>
+        }
+        @if (firstName.touched && firstName.errors?.['minlength']) {
+          <div class="invalid-feedback">Minimum 2 caractères.</div>
+        }
+      </div>
+
+      <!-- Last name -->
+      <div class="form-group">
+        <label class="form-label">
+          Nom <span class="req">*</span>
+        </label>
+
+        <input
+          type="text"
+          class="form-control"
+          formControlName="lastName"
+          placeholder="Ex: Ben Ali"
+          [class.is-invalid]="lastName.touched && lastName.invalid"
+        />
+
+        @if (lastName.touched && lastName.errors?.['required']) {
+          <div class="invalid-feedback">Le nom est obligatoire.</div>
+        }
+        @if (lastName.touched && lastName.errors?.['minlength']) {
+          <div class="invalid-feedback">Minimum 2 caractères.</div>
+        }
+      </div>
+
+      <!-- Email -->
+      <div class="form-group">
+        <label class="form-label">
+          Email <span class="req">*</span>
+        </label>
+
+        <input
+          type="email"
+          class="form-control"
+          formControlName="email"
+          placeholder="Ex: user@company.com"
+          [class.is-invalid]="email.touched && email.invalid"
+        />
+
+        @if (email.touched && email.errors?.['required']) {
+          <div class="invalid-feedback">L’email est obligatoire.</div>
+        }
+        @if (email.touched && email.errors?.['email']) {
+          <div class="invalid-feedback">Email invalide.</div>
+        }
+      </div>
+
+      <!-- Password -->
+      <div class="form-group">
+        <label class="form-label">
+          Mot de passe <span class="req">*</span>
+        </label>
+
+        <input
+          type="password"
+          class="form-control"
+          formControlName="password"
+          placeholder="Minimum 6 caractères"
+          [class.is-invalid]="password.touched && password.invalid"
+        />
+
+        @if (password.touched && password.errors?.['required']) {
+          <div class="invalid-feedback">Le mot de passe est obligatoire.</div>
+        }
+        @if (password.touched && password.errors?.['minlength']) {
+          <div class="invalid-feedback">Minimum 6 caractères.</div>
+        }
+      </div>
+
+      <!-- Role -->
+      <div class="form-group">
+        <label class="form-label">
+          Rôle <span class="req">*</span>
+        </label>
+
+        <select class="form-select" formControlName="role">
+          <option value="agent">Agent</option>
+          <option value="manager">Manager</option>
+           <option value="supervisor">Supervisor</option>
+          <option value="admin">Admin</option>
+        </select>
+      </div>
+
+      <!-- Actions -->
+      <div class="actions">
+        <button class="btn btn-primary" type="submit" [disabled]="loading">
+          @if (!loading) { <span>Créer</span> } @else { <span>Création...</span> }
+        </button>
+
+        <button class="btn btn-light" type="button" (click)="reset()" [disabled]="loading">
+          Réinitialiser
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

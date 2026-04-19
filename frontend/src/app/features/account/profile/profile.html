@@ -1,0 +1,64 @@
+<div class="page">
+
+  <div class="page-header">
+    <h2>{{ 'PROFILE.TITLE' | translate }}</h2>
+  </div>
+
+  @if (loading) {
+    <p>{{ 'COMMON.LOADING' | translate }}</p>
+  }
+
+  @if (!loading && error) {
+    <div class="alert alert-danger">
+      {{ 'PROFILE.ERROR' | translate }}
+    </div>
+  }
+
+  @if (!loading && user) {
+
+    <div class="card profile-card">
+
+      <div class="profile-top">
+        <img [src]="avatarUrl" class="avatar" alt="avatar" />
+
+        <div class="info">
+          <h3>{{ displayName }}</h3>
+          <p class="role">
+            {{ ('HEADER.ROLES.' + displayRole) | translate }}
+          </p>
+          <p class="email">{{ user.email }}</p>
+        </div>
+
+        <a routerLink="/account/profile/edit" class="btn btn-primary">
+          {{ 'COMMON.EDIT' | translate }}
+        </a>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="profile-details">
+        <div class="detail-item">
+          <span class="label">{{ 'PROFILE.FIRST_NAME' | translate }}</span>
+          <span>{{ user.firstName }}</span>
+        </div>
+
+        <div class="detail-item">
+          <span class="label">{{ 'PROFILE.LAST_NAME' | translate }}</span>
+          <span>{{ user.lastName }}</span>
+        </div>
+
+        <div class="detail-item">
+          <span class="label">{{ 'PROFILE.EMAIL' | translate }}</span>
+          <span>{{ user.email }}</span>
+        </div>
+
+        <div class="detail-item">
+          <span class="label">{{ 'PROFILE.ROLE' | translate }}</span>
+          <span>{{ ('HEADER.ROLES.' + user.role) | translate }}</span>
+        </div>
+      </div>
+
+    </div>
+  }
+
+</div>

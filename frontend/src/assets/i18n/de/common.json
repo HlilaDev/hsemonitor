@@ -1,0 +1,19 @@
+{
+  "HEADER": {
+    "SEARCH_PLACEHOLDER": "Suche...",
+    "USER": {
+      "ROLE": "Administrator",
+      "PROFILE": "Profil",
+      "SETTINGS": "Einstellungen",
+      "LOGOUT": "Abmelden"
+    }
+  },
+  "FOOTER": {
+    "COPYRIGHT": "Copyright © {{year}} {{brand}}. Alle Rechte vorbehalten."
+  },
+  "COMMON": {
+    "ACTIVE": "Aktiv",
+    "INACTIVE": "Inaktiv",
+    "ACTIONS": "Aktionen"
+  }
+}

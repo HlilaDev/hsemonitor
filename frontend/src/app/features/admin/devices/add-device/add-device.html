@@ -1,0 +1,94 @@
+<div class="page">
+  <div class="page-header">
+    <div>
+      <h2>Add Device</h2>
+      <p class="muted">Create a simple device</p>
+    </div>
+
+    <a class="btn btn-outline-secondary" routerLink="/admin/devices">
+      ← Back
+    </a>
+  </div>
+
+  <div class="card">
+    @if (errorKey) {
+      <div class="alert alert-danger">
+        {{ errorKey }}
+      </div>
+    }
+
+    @if (successKey) {
+      <div class="alert alert-success">
+        {{ successKey }}
+      </div>
+    }
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+      <!-- NAME -->
+      <div class="form-group">
+        <label class="form-label">
+          Device Name
+          <span class="req">*</span>
+        </label>
+
+        <input
+          type="text"
+          class="form-control"
+          formControlName="name"
+          placeholder="Ex: Camera zone A"
+          [class.is-invalid]="name.touched && name.invalid"
+        />
+
+        @if (name.touched && name.errors?.['required']) {
+          <div class="invalid-feedback">
+            Name is required
+          </div>
+        }
+      </div>
+
+      <!-- DEVICE ID -->
+      <div class="form-group">
+        <label class="form-label">
+          Device ID
+        </label>
+
+        <input
+          type="text"
+          class="form-control auto-field"
+          formControlName="deviceId"
+          readonly
+        />
+      </div>
+
+      <!-- DESCRIPTION -->
+      <div class="form-group">
+        <label class="form-label">
+          Description
+        </label>
+
+        <textarea
+          class="form-control"
+          rows="4"
+          formControlName="description"
+          placeholder="Optional description..."
+        ></textarea>
+      </div>
+
+      <!-- ACTIONS -->
+      <div class="actions">
+        <button type="submit" class="btn btn-success" [disabled]="saving">
+          @if (!saving) {
+            Save
+          } @else {
+            Saving...
+          }
+        </button>
+
+        <a class="btn btn-light" routerLink="/admin/devices">
+          Cancel
+        </a>
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,174 @@
+<div class="page">
+  <div class="page-header">
+    <div>
+      <div class="eyebrow">{{ 'ZONES.OVERVIEW.KICKER' | translate }}</div>
+      <h2 class="title">{{ 'ZONES.OVERVIEW.TITLE' | translate }}</h2>
+      <p class="subtitle">{{ 'ZONES.OVERVIEW.SUBTITLE' | translate }}</p>
+    </div>
+
+    <div class="header-actions">
+      <a class="btn primary" routerLink="/manager/zones">
+        <i class="bi bi-grid"></i>
+        {{ 'ZONES.OVERVIEW.ALL_ZONES' | translate }}
+      </a>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-label">{{ 'ZONES.OVERVIEW.STATS.TOTAL' | translate }}</div>
+      <div class="stat-value">{{ totalZones() }}</div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-label">{{ 'ZONES.OVERVIEW.STATS.ACTIVE' | translate }}</div>
+      <div class="stat-value">{{ activeZones() }}</div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-label">{{ 'ZONES.OVERVIEW.STATS.WARNING' | translate }}</div>
+      <div class="stat-value">{{ warningZones() }}</div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-label">{{ 'ZONES.OVERVIEW.STATS.ALERTS' | translate }}</div>
+      <div class="stat-value">{{ totalAlerts() }}</div>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="card filters">
+    <div class="field">
+      <label>{{ 'ZONES.OVERVIEW.FILTERS.SEARCH' | translate }}</label>
+      <input
+        class="input"
+        type="text"
+        [placeholder]="'ZONES.OVERVIEW.FILTERS.SEARCH_PH' | translate"
+        [ngModel]="search()"
+        (ngModelChange)="search.set($event)"
+      />
+    </div>
+
+    <div class="field">
+      <label>{{ 'ZONES.OVERVIEW.FILTERS.STATUS' | translate }}</label>
+      <select
+        class="input"
+        [ngModel]="statusFilter()"
+        (ngModelChange)="statusFilter.set($event)"
+      >
+        <option value="">{{ 'ZONES.OVERVIEW.FILTERS.ALL' | translate }}</option>
+        <option value="active">{{ 'ZONES.OVERVIEW.STATUS.active' | translate }}</option>
+        <option value="warning">{{ 'ZONES.OVERVIEW.STATUS.warning' | translate }}</option>
+        <option value="inactive">{{ 'ZONES.OVERVIEW.STATUS.inactive' | translate }}</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>{{ 'ZONES.OVERVIEW.FILTERS.RISK' | translate }}</label>
+      <select
+        class="input"
+        [ngModel]="riskFilter()"
+        (ngModelChange)="riskFilter.set($event)"
+      >
+        <option value="">{{ 'ZONES.OVERVIEW.FILTERS.ALL' | translate }}</option>
+        <option value="low">{{ 'ZONES.OVERVIEW.RISK.low' | translate }}</option>
+        <option value="medium">{{ 'ZONES.OVERVIEW.RISK.medium' | translate }}</option>
+        <option value="high">{{ 'ZONES.OVERVIEW.RISK.high' | translate }}</option>
+      </select>
+    </div>
+
+    <div class="filters-actions">
+      <button class="btn ghost" type="button" (click)="clearFilters()">
+        {{ 'COMMON.RESET' | translate }}
+      </button>
+    </div>
+  </div>
+
+  @if (loading()) {
+    <div class="card state">
+      <div class="spinner" aria-hidden="true"></div>
+      <span>{{ 'COMMON.LOADING' | translate }}</span>
+    </div>
+  } @else if (error()) {
+    <div class="card state error">
+      <i class="bi bi-exclamation-triangle"></i>
+      <span>{{ error() | translate }}</span>
+    </div>
+  } @else if (filteredZones().length === 0) {
+    <div class="card state empty">
+      <i class="bi bi-inboxes"></i>
+      <span>{{ 'ZONES.OVERVIEW.EMPTY' | translate }}</span>
+    </div>
+  } @else {
+    <div class="zones-grid">
+      @for (zone of filteredZones(); track trackByZone($index, zone)) {
+        <div class="zone-card">
+          <div class="zone-card-top">
+            <div>
+              <div class="zone-name">{{ zone.name }}</div>
+              <div class="zone-code">{{ value(zone.code) }}</div>
+            </div>
+
+            <div class="badges">
+              <span class="badge" [class]="statusClass(zone.status)">
+                {{ statusKey(zone.status) | translate }}
+              </span>
+
+              <span class="badge soft" [class]="riskClass(zone.riskLevel)">
+                {{ riskKey(zone.riskLevel) | translate }}
+              </span>
+            </div>
+          </div>
+
+          <p class="zone-desc">
+            {{ value(zone.description) }}
+          </p>
+
+          <div class="metrics">
+            <div class="metric">
+              <div class="metric-label">{{ 'ZONES.OVERVIEW.CARD.EMPLOYEES' | translate }}</div>
+              <div class="metric-value">{{ zone.employeesCount }}</div>
+            </div>
+
+            <div class="metric">
+              <div class="metric-label">{{ 'ZONES.OVERVIEW.CARD.DEVICES' | translate }}</div>
+              <div class="metric-value">{{ zone.devicesCount }}</div>
+            </div>
+
+            <div class="metric">
+              <div class="metric-label">{{ 'ZONES.OVERVIEW.CARD.SENSORS' | translate }}</div>
+              <div class="metric-value">{{ zone.sensorsCount }}</div>
+            </div>
+
+            <div class="metric">
+              <div class="metric-label">{{ 'ZONES.OVERVIEW.CARD.ALERTS' | translate }}</div>
+              <div class="metric-value">{{ zone.alertsCount }}</div>
+            </div>
+          </div>
+
+          <div class="env-row">
+            <div class="env-box">
+              <span class="env-label">{{ 'ZONES.OVERVIEW.CARD.TEMPERATURE' | translate }}</span>
+              <strong>{{ value(zone.temperature) }}°C</strong>
+            </div>
+
+            <div class="env-box">
+              <span class="env-label">{{ 'ZONES.OVERVIEW.CARD.HUMIDITY' | translate }}</span>
+              <strong>{{ value(zone.humidity) }}%</strong>
+            </div>
+          </div>
+
+          <div class="card-actions">
+            <a class="btn" [routerLink]="['/manager/zones', zone._id]">
+              <i class="bi bi-eye"></i>
+              {{ 'COMMON.VIEW' | translate }}
+            </a>
+
+
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>

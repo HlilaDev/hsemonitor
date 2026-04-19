@@ -1,0 +1,258 @@
+@if (open) {
+  <div class="assign-modal-backdrop" (click)="onOverlayClick($event)">
+    <div
+      class="assign-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="assignInventoryTitle"
+    >
+      <div class="modal-header">
+        <div>
+          <p class="eyebrow">Affectation</p>
+          <h2 id="assignInventoryTitle">Affecter un article</h2>
+
+          @if (item) {
+            <p class="subtitle">
+              {{ item.name }}
+              @if (item.inventoryCode) {
+                <span class="code">• {{ item.inventoryCode }}</span>
+              }
+            </p>
+          }
+        </div>
+
+        <button
+          class="icon-btn"
+          type="button"
+          (click)="onClose()"
+          [disabled]="loading"
+          aria-label="Fermer"
+        >
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+
+      <form class="modal-body" (ngSubmit)="onSubmit()">
+        @if (errorMessage) {
+          <div class="error-box">
+            {{ errorMessage }}
+          </div>
+        }
+
+        <div class="item-box">
+          <div class="item-meta">
+            <span>Article</span>
+            <strong>{{ item?.name || '—' }}</strong>
+          </div>
+
+          <div class="item-meta">
+            <span>Zone actuelle</span>
+            <strong>{{ currentZoneName() }}</strong>
+          </div>
+
+          <div class="item-meta">
+            <span>Employés de cette zone</span>
+            <strong>{{ currentZoneEmployeeCount() }}</strong>
+          </div>
+        </div>
+
+        <div class="strategy-box">
+          <label class="strategy-option">
+            <input
+              type="radio"
+              name="strategy"
+              [checked]="isIndividual"
+              (change)="onStrategyChange('individual')"
+            />
+            <div>
+              <strong>Employé unique</strong>
+              <p>Sélectionner un employé précis.</p>
+            </div>
+          </label>
+
+          <label class="strategy-option">
+            <input
+              type="radio"
+              name="strategy"
+              [checked]="isAllCurrentZoneEmployees"
+              (change)="onStrategyChange('all_current_zone_employees')"
+            />
+            <div>
+              <strong>Tous les employés de la zone actuelle</strong>
+              <p>
+                Crée une affectation pour chaque employé actif de la zone de l’article.
+              </p>
+            </div>
+          </label>
+        </div>
+
+        <div class="form-grid">
+          @if (isIndividual) {
+            <div class="form-group full">
+              <label for="employeeSearch">Recherche employé</label>
+              <input
+                id="employeeSearch"
+                type="text"
+                name="employeeSearch"
+                placeholder="Nom, matricule, département..."
+                [ngModel]="search()"
+                (ngModelChange)="search.set($event)"
+              />
+            </div>
+
+            <div class="form-group full">
+              <label for="employee">Employé <span class="required">*</span></label>
+              <select
+                id="employee"
+                name="employee"
+                [ngModel]="employee()"
+                (ngModelChange)="employee.set($event)"
+              >
+                <option value="">Sélectionner un employé</option>
+
+                @for (emp of filteredEmployees(); track emp._id) {
+                  <option [value]="emp._id">
+                    {{ emp.fullName }}
+                    @if (emp.employeeId) {
+                      - {{ emp.employeeId }}
+                    }
+                    @if (emp.department) {
+                      ({{ emp.department }})
+                    }
+                  </option>
+                }
+              </select>
+
+              @if (submitted() && !employee()) {
+                <small class="error-text">Veuillez sélectionner un employé.</small>
+              }
+            </div>
+          }
+
+          @if (isAllCurrentZoneEmployees) {
+            <div class="zone-preview-box full">
+              <div class="zone-preview-head">
+                <strong>{{ currentZoneName() }}</strong>
+                <span>{{ currentZoneEmployeeCount() }} employé(s)</span>
+              </div>
+
+              @if (currentZoneEmployeeCount() === 0) {
+                <small class="error-text">
+                  Aucun employé actif trouvé dans la zone actuelle.
+                </small>
+              } @else {
+                <div class="zone-employee-list">
+                  @for (emp of currentZoneEmployees; track emp._id) {
+                    @if (emp.isActive !== false) {
+                      <div class="zone-employee-chip">
+                        <strong>{{ emp.fullName }}</strong>
+                        <span>
+                          {{ emp.department || '—' }}
+                          @if (emp.jobTitle) {
+                            • {{ emp.jobTitle }}
+                          }
+                        </span>
+                      </div>
+                    }
+                  }
+                </div>
+              }
+            </div>
+          }
+
+          <div class="form-group">
+            <label for="assignmentType">Type d’affectation</label>
+            <select
+              id="assignmentType"
+              name="assignmentType"
+              [ngModel]="assignmentType()"
+              (ngModelChange)="assignmentType.set($event)"
+            >
+              <option value="temporary">Temporaire</option>
+              <option value="permanent">Permanente</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="assignedAt">Date d’affectation <span class="required">*</span></label>
+            <input
+              id="assignedAt"
+              type="date"
+              name="assignedAt"
+              [ngModel]="assignedAt()"
+              (ngModelChange)="assignedAt.set($event)"
+            />
+
+            @if (submitted() && !assignedAt()) {
+              <small class="error-text">Veuillez saisir la date d’affectation.</small>
+            }
+          </div>
+
+          @if (isTemporary) {
+            <div class="form-group">
+              <label for="expectedReturnDate">Date retour prévue</label>
+              <input
+                id="expectedReturnDate"
+                type="date"
+                name="expectedReturnDate"
+                [ngModel]="expectedReturnDate()"
+                (ngModelChange)="expectedReturnDate.set($event)"
+              />
+            </div>
+          }
+
+          <div class="form-group full">
+            <label for="note">Note</label>
+            <textarea
+              id="note"
+              name="note"
+              rows="4"
+              placeholder="Ex: affectation terrain, intervention, inspection..."
+              [ngModel]="note()"
+              (ngModelChange)="note.set($event)"
+            ></textarea>
+          </div>
+        </div>
+
+        @if (isIndividual && selectedEmployee()) {
+          <div class="selected-box">
+            <span>Employé sélectionné</span>
+            <strong>{{ selectedEmployee()?.fullName }}</strong>
+
+            <div class="selected-meta">
+              @if (selectedEmployee()?.employeeId) {
+                <span>{{ selectedEmployee()?.employeeId }}</span>
+              }
+              @if (selectedEmployee()?.department) {
+                <span>{{ selectedEmployee()?.department }}</span>
+              }
+              @if (selectedEmployee()?.jobTitle) {
+                <span>{{ selectedEmployee()?.jobTitle }}</span>
+              }
+              <span>{{ getEmployeeZoneName(selectedEmployee()!) }}</span>
+            </div>
+          </div>
+        }
+
+        <div class="modal-actions">
+          <button
+            class="btn btn-light"
+            type="button"
+            (click)="onClose()"
+            [disabled]="loading"
+          >
+            Annuler
+          </button>
+
+          <button class="btn btn-primary" type="submit" [disabled]="loading">
+            @if (!loading) {
+              Confirmer l’affectation
+            } @else {
+              Enregistrement...
+            }
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+}

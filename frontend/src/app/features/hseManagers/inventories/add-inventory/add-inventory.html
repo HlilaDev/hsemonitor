@@ -1,0 +1,326 @@
+<section class="inventory-add-page">
+  <div class="page-header">
+    <div>
+      <p class="eyebrow">HSE Inventory</p>
+      <h1>Ajouter un élément d’inventaire</h1>
+      <p class="subtitle">
+        Créez un nouvel équipement, EPI, extincteur ou matériel de sécurité.
+      </p>
+    </div>
+
+    <div class="header-actions">
+      <a routerLink="/manager/inventories" class="btn btn-light">
+        Retour à la liste
+      </a>
+    </div>
+  </div>
+
+  @if (successMessage()) {
+    <div class="alert alert-success">
+      <i class="bi bi-check-circle"></i>
+      <span>{{ successMessage() }}</span>
+    </div>
+  }
+
+  @if (errorMessage()) {
+    <div class="alert alert-danger">
+      <i class="bi bi-exclamation-triangle"></i>
+      <span>{{ errorMessage() }}</span>
+    </div>
+  }
+
+  <form class="inventory-form" [formGroup]="form" (ngSubmit)="submit()">
+    <div class="form-layout">
+      <div class="main-column">
+        <div class="card">
+          <div class="card-header">
+            <h2>Informations générales</h2>
+            <p>Les informations principales de l’équipement.</p>
+          </div>
+
+          <div class="card-body form-grid">
+            <div class="field field-full">
+              <label for="name">Nom de l’équipement <span>*</span></label>
+              <input id="name" type="text" formControlName="name" placeholder="Ex: Casque de sécurité blanc" />
+              @if (f['name'].touched && f['name'].invalid) {
+                <small class="error-text">Le nom est obligatoire.</small>
+              }
+            </div>
+
+            <div class="field field-full">
+              <label for="description">Description</label>
+              <textarea
+                id="description"
+                rows="4"
+                formControlName="description"
+                placeholder="Décrivez l’élément, son usage, sa conformité..."
+              ></textarea>
+            </div>
+
+            <div class="field">
+              <label for="category">Catégorie <span>*</span></label>
+              <select id="category" formControlName="category">
+                @for (category of categories; track category) {
+                  <option [value]="category">
+                    {{ getCategoryLabel(category) }}
+                  </option>
+                }
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="subCategory">Sous-catégorie</label>
+              <input id="subCategory" type="text" formControlName="subCategory" placeholder="Ex: helmet, gloves, co2..." />
+            </div>
+
+            <div class="field">
+              <label for="inventoryCode">Code inventaire</label>
+              <input id="inventoryCode" type="text" formControlName="inventoryCode" placeholder="Ex: INV-HSE-001" />
+            </div>
+
+            <div class="field">
+              <label for="serialNumber">Numéro de série</label>
+              <input id="serialNumber" type="text" formControlName="serialNumber" placeholder="Ex: SN-2026-458" />
+            </div>
+
+            <div class="field">
+              <label for="brand">Marque</label>
+              <input id="brand" type="text" formControlName="brand" placeholder="Ex: 3M, Dräger, Honeywell" />
+            </div>
+
+            <div class="field">
+              <label for="model">Modèle</label>
+              <input id="model" type="text" formControlName="model" placeholder="Ex: H700" />
+            </div>
+
+            <div class="field">
+              <label for="status">Statut <span>*</span></label>
+              <select id="status" formControlName="status">
+                @for (status of statuses; track status) {
+                  <option [value]="status">
+                    {{ getStatusLabel(status) }}
+                  </option>
+                }
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="condition">État <span>*</span></label>
+              <select id="condition" formControlName="condition">
+                @for (condition of conditions; track condition) {
+                  <option [value]="condition">
+                    {{ getConditionLabel(condition) }}
+                  </option>
+                }
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h2>Stock et localisation</h2>
+            <p>Gérez la quantité, l’unité et l’emplacement.</p>
+          </div>
+
+          <div class="card-body form-grid">
+            <div class="field">
+              <label for="quantity">Quantité <span>*</span></label>
+              <input id="quantity" type="number" formControlName="quantity" min="0" />
+            </div>
+
+            <div class="field">
+              <label for="minStockLevel">Seuil minimum</label>
+              <input id="minStockLevel" type="number" formControlName="minStockLevel" min="0" />
+            </div>
+
+            <div class="field">
+              <label for="unit">Unité</label>
+              <input id="unit" type="text" formControlName="unit" placeholder="Ex: piece, box, unit" />
+            </div>
+
+            <div class="field field-full">
+              <label for="locationDescription">Description de localisation</label>
+              <input
+                id="locationDescription"
+                type="text"
+                formControlName="locationDescription"
+                placeholder="Ex: Magasin central, Bloc B, Zone de production 2"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h2>Achats, maintenance et conformité</h2>
+            <p>Dates importantes liées au cycle de vie de l’équipement.</p>
+          </div>
+
+          <div class="card-body form-grid">
+            <div class="field">
+              <label for="supplier">Fournisseur</label>
+              <input id="supplier" type="text" formControlName="supplier" placeholder="Ex: Fournisseur local HSE" />
+            </div>
+
+            <div class="field">
+              <label for="purchasePrice">Prix d’achat</label>
+              <input id="purchasePrice" type="number" step="0.001" formControlName="purchasePrice" placeholder="0.000" />
+            </div>
+
+            <div class="field">
+              <label for="purchaseDate">Date d’achat</label>
+              <input id="purchaseDate" type="date" formControlName="purchaseDate" />
+            </div>
+
+            <div class="field">
+              <label for="warrantyUntil">Garantie jusqu’au</label>
+              <input id="warrantyUntil" type="date" formControlName="warrantyUntil" />
+            </div>
+
+            <div class="field">
+              <label for="manufactureDate">Date de fabrication</label>
+              <input id="manufactureDate" type="date" formControlName="manufactureDate" />
+            </div>
+
+            <div class="field">
+              <label for="expiryDate">Date d’expiration</label>
+              <input id="expiryDate" type="date" formControlName="expiryDate" />
+            </div>
+
+            <div class="field">
+              <label for="lastInspectionDate">Dernière inspection</label>
+              <input id="lastInspectionDate" type="date" formControlName="lastInspectionDate" />
+            </div>
+
+            <div class="field">
+              <label for="nextInspectionDate">Prochaine inspection</label>
+              <input id="nextInspectionDate" type="date" formControlName="nextInspectionDate" />
+            </div>
+
+            <div class="field">
+              <label for="lastMaintenanceDate">Dernière maintenance</label>
+              <input id="lastMaintenanceDate" type="date" formControlName="lastMaintenanceDate" />
+            </div>
+
+            <div class="field">
+              <label for="nextMaintenanceDate">Prochaine maintenance</label>
+              <input id="nextMaintenanceDate" type="date" formControlName="nextMaintenanceDate" />
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h2>Compléments</h2>
+            <p>Image, remarques et informations additionnelles.</p>
+          </div>
+
+          <div class="card-body form-grid">
+            <div class="field field-full">
+              <label for="imageUrl">Image URL</label>
+              <input id="imageUrl" type="text" formControlName="imageUrl" placeholder="http://localhost:5000/uploads/..." />
+            </div>
+
+            <div class="field field-full">
+              <label for="notes">Notes</label>
+              <textarea
+                id="notes"
+                rows="5"
+                formControlName="notes"
+                placeholder="Remarques, conformité, affectation future, restrictions..."
+              ></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <aside class="side-column">
+        <div class="card sticky-card">
+          <div class="card-header">
+            <h2>Résumé</h2>
+            <p>Contrôle rapide avant l’enregistrement.</p>
+          </div>
+
+          <div class="card-body">
+            <div class="summary-list">
+              <div class="summary-item">
+                <span>Nom</span>
+                <strong>{{ form.get('name')?.value || '—' }}</strong>
+              </div>
+
+              <div class="summary-item">
+                <span>Catégorie</span>
+                <strong>{{ getCategoryLabel(form.get('category')?.value || '') }}</strong>
+              </div>
+
+              <div class="summary-item">
+                <span>Statut</span>
+                <strong>{{ getStatusLabel(form.get('status')?.value || '') }}</strong>
+              </div>
+
+              <div class="summary-item">
+                <span>État</span>
+                <strong>{{ getConditionLabel(form.get('condition')?.value || '') }}</strong>
+              </div>
+
+              <div class="summary-item">
+                <span>Quantité</span>
+                <strong>{{ form.get('quantity')?.value ?? 0 }}</strong>
+              </div>
+
+              <div class="summary-item">
+                <span>Unité</span>
+                <strong>{{ form.get('unit')?.value || '—' }}</strong>
+              </div>
+            </div>
+
+            @if (isPpe) {
+              <div class="hint-box">
+                <i class="bi bi-shield-check"></i>
+                <div>
+                  <h4>Catégorie EPI</h4>
+                  <p>
+                    Pensez à renseigner la sous-catégorie :
+                    casque, gants, lunettes, bottes, gilet...
+                  </p>
+                </div>
+              </div>
+            }
+
+            @if (isExtinguisher) {
+              <div class="hint-box warning">
+                <i class="bi bi-fire"></i>
+                <div>
+                  <h4>Catégorie extincteur</h4>
+                  <p>
+                    Vérifiez la date d’expiration, la prochaine inspection et le modèle.
+                  </p>
+                </div>
+              </div>
+            }
+
+            <div class="actions">
+              <button class="btn btn-primary" type="submit" [disabled]="loading()">
+                @if (!loading()) {
+                  <span>Enregistrer</span>
+                } @else {
+                  <span>Enregistrement...</span>
+                }
+              </button>
+
+              <button
+                class="btn btn-light"
+                type="button"
+                (click)="resetForm()"
+                [disabled]="loading()"
+              >
+                Réinitialiser
+              </button>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </form>
+</section>

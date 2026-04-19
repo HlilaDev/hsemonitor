@@ -1,0 +1,97 @@
+<div class="page">
+  <div class="head">
+    <h2>Créer un template d’inspection</h2>
+    <p>Définissez une checklist utilisée par les agents sur le terrain.</p>
+  </div>
+
+  @if (errorMsg) {
+    <div class="alert error">{{ errorMsg }}</div>
+  }
+
+  @if (successMsg) {
+    <div class="alert success">{{ successMsg }}</div>
+  }
+
+  <div class="card">
+    <div class="form-grid">
+      <div class="field">
+        <label>Titre *</label>
+        <input [(ngModel)]="form.title" placeholder="Ex: Contrôle EPI zone A" />
+      </div>
+
+      <div class="field">
+        <label>Catégorie</label>
+        <select [(ngModel)]="form.category">
+          <option value="safety">Safety</option>
+          <option value="environment">Environment</option>
+          <option value="quality">Quality</option>
+          <option value="security">Security</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+
+      <div class="field full">
+        <label>Description</label>
+        <textarea [(ngModel)]="form.description"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="items-head">
+      <h3>Items de checklist</h3>
+
+      <button class="btn ghost" (click)="addItem()">
+        <i class="bi bi-plus"></i>
+        Ajouter item
+      </button>
+    </div>
+
+    <div class="items-list">
+      @for (item of items; track $index) {
+        <div class="item-card">
+          <div class="item-grid">
+            <div class="field">
+              <label>Question</label>
+              <input [(ngModel)]="item.label" placeholder="Ex: Casque porté ?" />
+            </div>
+
+            <div class="field">
+              <label>Type</label>
+              <select [(ngModel)]="item.type">
+                <option value="boolean">Oui / Non</option>
+                <option value="text">Texte</option>
+                <option value="number">Nombre</option>
+              </select>
+            </div>
+
+            <div class="field checkbox">
+              <label>
+                <input type="checkbox" [(ngModel)]="item.isRequired" />
+                Obligatoire
+              </label>
+            </div>
+          </div>
+
+          <button
+            class="delete-btn"
+            (click)="removeItem($index)"
+            [disabled]="items.length === 1"
+          >
+            <i class="bi bi-trash"></i>
+          </button>
+        </div>
+      }
+    </div>
+  </div>
+
+  <div class="actions">
+    <button class="btn ghost" routerLink="/manager/inspections/templates">
+      Annuler
+    </button>
+
+    <button class="btn primary" (click)="submit()" [disabled]="loading">
+      {{ loading ? 'Création...' : 'Créer le template' }}
+    </button>
+  </div>
+</div>

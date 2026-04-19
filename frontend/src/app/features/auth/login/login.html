@@ -1,0 +1,152 @@
+<div class="login-page">
+  <div class="login-shell">
+    <section class="login-brand-panel">
+      <div class="brand-overlay"></div>
+
+      <div class="brand-content">
+        <div class="brand-badge">Smart HSE Platform</div>
+
+        <h1>
+          Secure your company,
+          <span>protect your teams</span>
+        </h1>
+
+        <p class="brand-text">
+          Centralize HSE operations, connected devices, PPE monitoring,
+          training, inspections, and live alerts in one intelligent SaaS platform.
+        </p>
+
+        <div class="brand-highlights">
+          <div class="highlight-card">
+            <div class="highlight-number">24/7</div>
+            <div class="highlight-label">Safety monitoring</div>
+          </div>
+
+          <div class="highlight-card">
+            <div class="highlight-number">IoT</div>
+            <div class="highlight-label">Connected sensors & devices</div>
+          </div>
+
+          <div class="highlight-card">
+            <div class="highlight-number">AI</div>
+            <div class="highlight-label">PPE & behavior detection</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="login-form-panel">
+      <div class="login-card">
+        <div class="login-card-header">
+          <div class="logo-box">
+            <img src="assets/images/logo.webp" alt="HSE Monitor" />
+          </div>
+
+          <div>
+            <p class="welcome-tag">Welcome back</p>
+            <h2>Sign in to your workspace</h2>
+            <p class="subtitle">
+              Access your HSE dashboard, devices, alerts and inspections.
+            </p>
+          </div>
+        </div>
+
+        @if (errorMessage) {
+          <div class="error-box">
+            <span class="error-icon">!</span>
+            <span>{{ errorMessage }}</span>
+          </div>
+        }
+
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+          <div class="form-group">
+            <label for="email">Email address</label>
+
+            <div class="input-shell">
+              <span class="input-icon">@</span>
+              <input
+                id="email"
+                type="email"
+                formControlName="email"
+                placeholder="name@company.com"
+              />
+            </div>
+
+            @if (email?.touched && email?.invalid) {
+              <small class="field-error">
+                @if (email?.errors?.['required']) {
+                  <span>Email is required</span>
+                }
+                @if (email?.errors?.['email']) {
+                  <span>Please enter a valid email address</span>
+                }
+              </small>
+            }
+          </div>
+
+          <div class="form-group">
+            <label for="password">Password</label>
+
+            <div class="input-shell">
+              <span class="input-icon">#</span>
+              <input
+                id="password"
+                [type]="showPassword ? 'text' : 'password'"
+                formControlName="password"
+                placeholder="Enter your password"
+              />
+
+              <button
+                type="button"
+                class="toggle-password"
+                (click)="togglePasswordVisibility()"
+              >
+                {{ showPassword ? 'Hide' : 'Show' }}
+              </button>
+            </div>
+
+            @if (password?.touched && password?.invalid) {
+              <small class="field-error">
+                @if (password?.errors?.['required']) {
+                  <span>Password is required</span>
+                }
+                @if (password?.errors?.['minlength']) {
+                  <span>Minimum 4 characters</span>
+                }
+              </small>
+            }
+          </div>
+
+          <div class="form-row">
+            <label class="remember-option">
+              <input
+                type="checkbox"
+                [checked]="rememberMe"
+                (change)="rememberMe = !rememberMe"
+              />
+              <span>Remember me</span>
+            </label>
+
+            <a class="forgot-link" href="#">Forgot password?</a>
+          </div>
+
+          <button
+            type="submit"
+            class="btn-login"
+            [disabled]="loading"
+          >
+            @if (!loading) {
+              <span>Sign In</span>
+            } @else {
+              <span>Signing in...</span>
+            }
+          </button>
+        </form>
+
+        <div class="login-footer">
+          <p>Safe operations start with secure access.</p>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>

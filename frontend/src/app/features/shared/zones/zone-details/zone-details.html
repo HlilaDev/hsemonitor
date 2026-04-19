@@ -1,0 +1,201 @@
+<div class="page">
+  <div class="page-header">
+    <div>
+      <div class="eyebrow">{{ 'ZONES.TITLE' | translate }}</div>
+      <h2 class="title">{{ 'ZONES.DETAIL.TITLE' | translate }}</h2>
+      <p class="subtitle">{{ 'ZONES.DETAIL.SUBTITLE' | translate }}</p>
+    </div>
+
+    <div class="header-actions">
+      <button class="btn ghost" type="button" (click)="back()">
+        <i class="bi bi-arrow-left"></i>
+        {{ 'COMMON.BACK' | translate }}
+      </button>
+
+      <button class="btn primary" type="button" (click)="edit()" [disabled]="loading() || !zone()">
+        <i class="bi bi-pencil"></i>
+        {{ 'COMMON.EDIT' | translate }}
+      </button>
+    </div>
+  </div>
+
+  @if (loading()) {
+    <div class="card state">
+      <div class="spinner" aria-hidden="true"></div>
+      <span>{{ 'COMMON.LOADING' | translate }}</span>
+    </div>
+  } @else if (error()) {
+    <div class="card state error">
+      <i class="bi bi-exclamation-triangle"></i>
+      <span>{{ error() }}</span>
+    </div>
+  } @else if (zone(); as z) {
+    <div class="hero-grid">
+      <div class="hero-card">
+        <div class="hero-top">
+          <div>
+            <h3 class="zone-name">{{ z.name }}</h3>
+            <p class="zone-desc">{{ value(z.description) }}</p>
+          </div>
+
+          <div class="hero-badges">
+            <span class="badge" [class]="badgeClass(z.isActive ? 'active' : 'inactive')">
+              {{ statusKey(z.isActive) | translate }}
+            </span>
+
+            <span class="badge soft" [class]="riskClass(z.riskLevel)">
+              {{ riskKey(z.riskLevel) | translate }}
+            </span>
+          </div>
+        </div>
+
+        <div class="stats-grid">
+          <div class="mini-stat">
+            <span>{{ 'ZONES.OVERVIEW.CARD.DEVICES' | translate }}</span>
+            <strong>{{ devicesCount() }}</strong>
+          </div>
+
+          <div class="mini-stat">
+            <span>{{ 'ZONES.OVERVIEW.CARD.SENSORS' | translate }}</span>
+            <strong>{{ sensorsCount() }}</strong>
+          </div>
+
+          <div class="mini-stat">
+            <span>{{ 'ZONES.OVERVIEW.CARD.EMPLOYEES' | translate }}</span>
+            <strong>{{ employeesCount() }}</strong>
+          </div>
+
+          <div class="mini-stat">
+            <span>{{ 'ZONES.OVERVIEW.CARD.ALERTS' | translate }}</span>
+            <strong>{{ z.alertsCount ?? 0 }}</strong>
+          </div>
+        </div>
+      </div>
+
+      <div class="info-card">
+        <div class="card-title">{{ 'ZONES.DETAIL.ENVIRONMENT' | translate }}</div>
+
+        <div class="env-grid">
+          <div class="env-box">
+            <span>{{ 'ZONES.OVERVIEW.CARD.TEMPERATURE' | translate }}</span>
+            <strong>{{ value(z.temperature) }}°C</strong>
+          </div>
+
+          <div class="env-box">
+            <span>{{ 'ZONES.OVERVIEW.CARD.HUMIDITY' | translate }}</span>
+            <strong>{{ value(z.humidity) }}%</strong>
+          </div>
+
+          <div class="env-box">
+            <span>{{ 'ZONES.DETAIL.CREATED_AT' | translate }}</span>
+            <strong>{{ z.createdAt ? (z.createdAt | date:'yyyy-MM-dd HH:mm') : '—' }}</strong>
+          </div>
+
+          <div class="env-box">
+            <span>{{ 'ZONES.DETAIL.UPDATED_AT' | translate }}</span>
+            <strong>{{ z.updatedAt ? (z.updatedAt | date:'yyyy-MM-dd HH:mm') : '—' }}</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-grid">
+      <div class="card">
+        <div class="card-title">
+          <i class="bi bi-cpu"></i>
+          {{ 'ZONES.DETAIL.DEVICES' | translate }}
+          <span class="count">({{ devicesCount() }})</span>
+        </div>
+
+        @if ((z.devices?.length ?? 0) === 0) {
+          <div class="empty-box">{{ 'ZONES.DETAIL.NO_DEVICES' | translate }}</div>
+        } @else {
+          <div class="list">
+            @for (d of z.devices ?? []; track trackById($index, d)) {
+              <div class="list-item">
+                <div>
+                  <div class="item-title">{{ d.name }}</div>
+                  <div class="item-sub">{{ d.deviceId }}</div>
+                </div>
+
+                <span class="badge" [class]="badgeClass(d.status)">
+                  {{ deviceStatusKey(d.status) | translate }}
+                </span>
+              </div>
+            }
+          </div>
+        }
+      </div>
+
+      <div class="card">
+        <div class="card-title">
+          <i class="bi bi-activity"></i>
+          {{ 'ZONES.DETAIL.SENSORS' | translate }}
+          <span class="count">({{ sensorsCount() }})</span>
+        </div>
+
+        @if ((z.sensors?.length ?? 0) === 0) {
+          <div class="empty-box">{{ 'ZONES.DETAIL.NO_SENSORS' | translate }}</div>
+        } @else {
+          <div class="list">
+            @for (s of z.sensors ?? []; track trackById($index, s)) {
+              <div class="list-item">
+                <div>
+                  <div class="item-title">{{ s.name }}</div>
+                  <div class="item-sub">{{ sensorTypeKey(s.type) | translate }}</div>
+                </div>
+
+                <span class="badge" [class]="badgeClass(s.status)">
+                  {{ sensorStatusKey(s.status) | translate }}
+                </span>
+              </div>
+            }
+          </div>
+        }
+      </div>
+
+      <div class="card full">
+        <div class="card-title">
+          <i class="bi bi-people"></i>
+          {{ 'ZONES.DETAIL.EMPLOYEES' | translate }}
+          <span class="count">({{ employeesCount() }})</span>
+        </div>
+
+        @if ((z.employees?.length ?? 0) === 0) {
+          <div class="empty-box">{{ 'ZONES.DETAIL.NO_EMPLOYEES' | translate }}</div>
+        } @else {
+          <div class="table-wrap">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>{{ 'EMPLOYEES.COLUMNS.FULL_NAME' | translate }}</th>
+                  <th>{{ 'EMPLOYEES.COLUMNS.DEPARTMENT' | translate }}</th>
+                  <th>{{ 'EMPLOYEES.COLUMNS.JOB' | translate }}</th>
+                  <th class="right">{{ 'EMPLOYEES.COLUMNS.ACTIVE' | translate }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (e of z.employees ?? []; track trackById($index, e)) {
+                  <tr>
+                    <td class="strong">{{ e.fullName }}</td>
+                    <td>{{ value(e.department) }}</td>
+                    <td>{{ value(e.jobTitle) }}</td>
+                    <td class="right">
+                      <span class="badge" [class]="badgeClass(e.isActive ? 'active' : 'inactive')">
+                        {{ employeeStatusKey(e.isActive) | translate }}
+                      </span>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
+      </div>
+    </div>
+  } @else {
+    <div class="card state">
+      <span>{{ 'ZONES.DETAIL.NOT_FOUND' | translate }}</span>
+    </div>
+  }
+</div>

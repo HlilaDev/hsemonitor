@@ -1,0 +1,14 @@
+<div class="kpi-card">
+  <div [class]="toneClass()">
+    <i [class]="icon"></i>
+  </div>
+
+  <div class="body">
+    <span>{{ title }}</span>
+    <strong>{{ value }}</strong>
+
+    @if (subtitle) {
+      <small>{{ subtitle }}</small>
+    }
+  </div>
+</div>

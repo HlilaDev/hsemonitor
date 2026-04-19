@@ -1,0 +1,234 @@
+<div class="team-page">
+  <div class="page-header">
+    <div class="title-wrap">
+      <span class="eyebrow">HSE Team Monitoring</span>
+      <h1>Team Overview</h1>
+      <p>
+        View managers and agents from your company in real time from the backend.
+      </p>
+    </div>
+
+    <div class="header-actions">
+      <button
+        class="view-btn"
+        [class.active]="viewMode() === 'table'"
+        (click)="setView('table')"
+        type="button">
+        <i class="bi bi-table"></i>
+        Table
+      </button>
+
+      <button
+        class="view-btn"
+        [class.active]="viewMode() === 'cards'"
+        (click)="setView('cards')"
+        type="button">
+        <i class="bi bi-grid-3x3-gap"></i>
+        Cards
+      </button>
+
+      <button class="view-btn" type="button" (click)="loadTeam()">
+        <i class="bi bi-arrow-clockwise"></i>
+        Refresh
+      </button>
+    </div>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-icon blue">
+        <i class="bi bi-people"></i>
+      </div>
+      <div class="stat-content">
+        <span>Total Team</span>
+        <strong>{{ totalMembers() }}</strong>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon green">
+        <i class="bi bi-person-badge"></i>
+      </div>
+      <div class="stat-content">
+        <span>Managers</span>
+        <strong>{{ managersCount() }}</strong>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon orange">
+        <i class="bi bi-person-workspace"></i>
+      </div>
+      <div class="stat-content">
+        <span>Agents</span>
+        <strong>{{ agentsCount() }}</strong>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon gray">
+        <i class="bi bi-funnel"></i>
+      </div>
+      <div class="stat-content">
+        <span>Filtered</span>
+        <strong>{{ filteredTeam().length }}</strong>
+      </div>
+    </div>
+  </div>
+
+  <div class="toolbar-card">
+    <div class="toolbar">
+      <div class="search-box">
+        <i class="bi bi-search"></i>
+        <input
+          type="text"
+          placeholder="Search by name, role, email or company..."
+          [ngModel]="search()"
+          (ngModelChange)="search.set($event)" />
+      </div>
+
+      <div class="filters">
+        <select [ngModel]="selectedRole()" (ngModelChange)="selectedRole.set($event)">
+          <option value="all">All roles</option>
+          <option value="manager">Manager</option>
+          <option value="agent">Agent</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  @if (loading()) {
+    <div class="table-card">
+      <div class="empty-state">
+        <i class="bi bi-arrow-repeat spin"></i>
+        <p>Loading team members...</p>
+      </div>
+    </div>
+  } @else if (error()) {
+    <div class="table-card">
+      <div class="empty-state error-state">
+        <i class="bi bi-exclamation-triangle"></i>
+        <p>{{ error() }}</p>
+      </div>
+    </div>
+  } @else {
+    @if (viewMode() === 'table') {
+      <div class="table-card">
+        <div class="table-head">
+          <div>
+            <h3>Team Members</h3>
+            <p>{{ filteredTeam().length }} member(s) found</p>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Member</th>
+                <th>Role</th>
+                <th>Company</th>
+                <th>Email</th>
+                <th>Created At</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              @if (filteredTeam().length > 0) {
+                @for (member of filteredTeam(); track member._id) {
+                  <tr>
+                    <td>
+                      <div class="member-cell">
+                        <div class="avatar">
+                          {{ getInitials(member.fullName) }}
+                        </div>
+
+                        <div class="member-info">
+                          <strong>{{ member.fullName }}</strong>
+                          <span>{{ member._id }}</span>
+                        </div>
+                      </div>
+                    </td>
+
+                    <td>
+                      <span class="role-badge">
+                        {{ getRoleLabel(member.role) }}
+                      </span>
+                    </td>
+
+                    <td>{{ member.companyName }}</td>
+                    <td>{{ member.email }}</td>
+                    <td>
+                      {{ member.createdAt ? (member.createdAt | date:'dd/MM/yyyy HH:mm') : '-' }}
+                    </td>
+                  </tr>
+                }
+              } @else {
+                <tr>
+                  <td colspan="5">
+                    <div class="empty-state">
+                      <i class="bi bi-inboxes"></i>
+                      <p>No team members found for the selected filters.</p>
+                    </div>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    } @else {
+      <div class="cards-grid">
+        @if (filteredTeam().length > 0) {
+          @for (member of filteredTeam(); track member._id) {
+            <div class="member-card">
+              <div class="card-top">
+                <div class="avatar large">
+                  {{ getInitials(member.fullName) }}
+                </div>
+
+                <span class="role-badge">
+                  {{ getRoleLabel(member.role) }}
+                </span>
+              </div>
+
+              <div class="card-body">
+                <h3>{{ member.fullName }}</h3>
+                <p class="role">{{ member.email }}</p>
+
+                <div class="meta-list">
+                  <div class="meta-item">
+                    <i class="bi bi-building"></i>
+                    <span>{{ member.companyName }}</span>
+                  </div>
+
+                  <div class="meta-item">
+                    <i class="bi bi-envelope"></i>
+                    <span>{{ member.email }}</span>
+                  </div>
+
+                  <div class="meta-item">
+                    <i class="bi bi-person-badge"></i>
+                    <span>{{ getRoleLabel(member.role) }}</span>
+                  </div>
+
+                  <div class="meta-item">
+                    <i class="bi bi-clock-history"></i>
+                    <span>
+                      {{ member.createdAt ? (member.createdAt | date:'dd/MM/yyyy HH:mm') : '-' }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          }
+        } @else {
+          <div class="empty-state cards-empty">
+            <i class="bi bi-inboxes"></i>
+            <p>No team members found for the selected filters.</p>
+          </div>
+        }
+      </div>
+    }
+  }
+</div>

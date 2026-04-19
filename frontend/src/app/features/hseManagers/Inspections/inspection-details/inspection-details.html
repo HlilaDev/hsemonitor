@@ -1,0 +1,247 @@
+<div class="inspection-details-page">
+  <div class="page-header">
+    <div class="page-header__content">
+      <h1>Détail de l’inspection</h1>
+      <p>Consultez les informations, réponses et résultats de cette inspection.</p>
+    </div>
+
+    <div class="page-header__actions">
+      <button type="button" class="btn btn-light" (click)="goBack()">
+        Retour
+      </button>
+
+      @if (canComplete()) {
+        <button
+          type="button"
+          class="btn btn-primary"
+          [disabled]="actionLoading()"
+          (click)="completeInspection()"
+        >
+          @if (actionLoading()) {
+            Finalisation...
+          } @else {
+            Marquer terminée
+          }
+        </button>
+      }
+    </div>
+  </div>
+
+  @if (loading()) {
+    <div class="state-card loading-state">
+      <div class="spinner"></div>
+      <h3>Chargement de l’inspection...</h3>
+      <p>Veuillez patienter pendant la récupération des données.</p>
+    </div>
+  } @else {
+    @if (errorMsg()) {
+      <div class="alert alert-error">
+        <span>{{ errorMsg() }}</span>
+        <button type="button" class="btn btn-light btn-sm" (click)="retry()">
+          Réessayer
+        </button>
+      </div>
+    }
+
+    @if (inspection(); as current) {
+      <div class="content-grid">
+        <section class="main-panel">
+          <div class="section-card hero-card">
+            <div class="hero-top">
+              <div>
+                <div class="hero-badges">
+                  <span class="badge badge-category">
+                    {{ categoryLabel(checklistCategory(current)) }}
+                  </span>
+
+                  <span class="status-badge" [class]="statusClass(current.status)">
+                    {{ statusLabel(current.status) }}
+                  </span>
+                </div>
+
+                <h2>{{ checklistTitle(current) }}</h2>
+                <p>{{ checklistDescription(current) }}</p>
+              </div>
+
+              <div class="score-box" [class]="scoreClass(scoreValue(current))">
+                <span class="score-box__label">Score</span>
+                <strong class="score-box__value">{{ scoreValue(current) }}%</strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="section-card">
+            <div class="section-head">
+              <div>
+                <h3>Informations générales</h3>
+                <p>Résumé de l’exécution et de son contexte.</p>
+              </div>
+            </div>
+
+            <div class="info-grid">
+              <div class="info-item">
+                <span class="label">Agent</span>
+                <strong>{{ agentName(current) }}</strong>
+              </div>
+
+              <div class="info-item">
+                <span class="label">Zone</span>
+                <strong>{{ zoneName(current) }}</strong>
+              </div>
+
+              <div class="info-item">
+                <span class="label">Date de démarrage</span>
+                <strong>{{ displayDate(current.startedAt || current.createdAt) }}</strong>
+              </div>
+
+              <div class="info-item">
+                <span class="label">Date de fin</span>
+                <strong>{{ displayDate(current.completedAt) }}</strong>
+              </div>
+
+              <div class="info-item">
+                <span class="label">Réponses</span>
+                <strong>{{ responseCount() }}</strong>
+              </div>
+
+              <div class="info-item">
+                <span class="label">Taux de remplissage</span>
+                <strong>{{ completionRate() }}%</strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="section-card">
+            <div class="section-head">
+              <div>
+                <h3>Notes</h3>
+                <p>Remarques globales liées à cette inspection.</p>
+              </div>
+            </div>
+
+            <div class="notes-box">
+              {{ current.notes?.trim() || 'Aucune note ajoutée.' }}
+            </div>
+          </div>
+
+          <div class="section-card">
+            <div class="section-head">
+              <div>
+                <h3>Réponses de l’inspection</h3>
+                <p>Questions, réponses, commentaires et preuves photo.</p>
+              </div>
+            </div>
+
+            @if (!responses().length) {
+              <div class="empty-box">
+                <p>Aucune réponse enregistrée pour cette inspection.</p>
+              </div>
+            } @else {
+              <div class="responses-list">
+                @for (response of responses(); track trackByResponse($index, response)) {
+                  <div class="response-card">
+                    <div class="response-card__head">
+                      <div>
+                        <h4>{{ responseLabel(response) }}</h4>
+                        <span class="mini-badge">
+                          {{ responseType(response) }}
+                        </span>
+                      </div>
+
+                      <div
+                        class="response-value"
+                        [class.is-empty]="!hasResponseValue(response)"
+                      >
+                        {{ responseValue(response) }}
+                      </div>
+                    </div>
+
+                    @if (hasComment(response)) {
+                      <div class="response-section">
+                        <span class="response-section__label">Commentaire</span>
+                        <p>{{ response.comment }}</p>
+                      </div>
+                    }
+
+                    @if (hasPhoto(response)) {
+                      <div class="response-section">
+                        <span class="response-section__label">Photo</span>
+                        <div class="photo-preview">
+                          <img
+                            [src]="response.photo!"
+                            alt="Preuve inspection"
+                          />
+                          <button
+                            type="button"
+                            class="btn btn-light btn-sm"
+                            (click)="openPhoto(response.photo)"
+                          >
+                            Ouvrir
+                          </button>
+                        </div>
+                      </div>
+                    }
+                  </div>
+                }
+              </div>
+            }
+          </div>
+        </section>
+
+        <aside class="side-panel">
+          <div class="section-card sticky-card">
+            <div class="section-head">
+              <div>
+                <h3>Résumé rapide</h3>
+                <p>Vue synthétique de cette inspection.</p>
+              </div>
+            </div>
+
+            <div class="summary-list">
+              <div class="summary-row">
+                <span>Statut</span>
+                <strong>{{ statusLabel(current.status) }}</strong>
+              </div>
+
+              <div class="summary-row">
+                <span>Score</span>
+                <strong>{{ scoreValue(current) }}%</strong>
+              </div>
+
+              <div class="summary-row">
+                <span>Agent</span>
+                <strong>{{ agentName(current) }}</strong>
+              </div>
+
+              <div class="summary-row">
+                <span>Zone</span>
+                <strong>{{ zoneName(current) }}</strong>
+              </div>
+
+              <div class="summary-row">
+                <span>Réponses</span>
+                <strong>{{ responseCount() }}</strong>
+              </div>
+
+              <div class="summary-row">
+                <span>Remplissage</span>
+                <strong>{{ completionRate() }}%</strong>
+              </div>
+            </div>
+          </div>
+        </aside>
+      </div>
+    } @else {
+      <div class="state-card empty-state">
+        <h3>Inspection introuvable</h3>
+        <p>Impossible d’afficher cette inspection.</p>
+
+        <div class="state-actions">
+          <button type="button" class="btn btn-light" (click)="goBack()">
+            Retour à la liste
+          </button>
+        </div>
+      </div>
+    }
+  }
+</div>

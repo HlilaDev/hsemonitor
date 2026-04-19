@@ -1,0 +1,406 @@
+.inventories-page {
+  padding: 1rem;
+  background: #f6f8fc;
+  min-height: 100%;
+  color: #1f2937;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+
+  .eyebrow {
+    margin: 0 0 0.25rem;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #2563eb;
+  }
+
+  h1 {
+    margin: 0;
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: #0f172a;
+  }
+
+  .subtitle {
+    margin: 0.3rem 0 0;
+    color: #64748b;
+    font-size: 0.92rem;
+  }
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.stat-card {
+  background: #fff;
+  border: 1px solid #e6ebf2;
+  border-radius: 16px;
+  padding: 0.85rem 1rem;
+
+  span {
+    display: block;
+    font-size: 0.78rem;
+    color: #64748b;
+    margin-bottom: 0.2rem;
+  }
+
+  strong {
+    font-size: 1.25rem;
+    color: #0f172a;
+    font-weight: 800;
+  }
+
+  &.warning strong {
+    color: #b45309;
+  }
+
+  &.danger strong {
+    color: #b91c1c;
+  }
+
+  &.info strong {
+    color: #1d4ed8;
+  }
+}
+
+.filters-card,
+.table-card,
+.pagination-bar {
+  background: #fff;
+  border: 1px solid #e6ebf2;
+  border-radius: 18px;
+}
+
+.filters-card {
+  padding: 0.8rem;
+  margin-bottom: 1rem;
+}
+
+.filters-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr auto auto;
+  gap: 0.65rem;
+  align-items: center;
+}
+
+.field input,
+.field select {
+  width: 100%;
+  height: 40px;
+  border: 1px solid #d9e1ec;
+  border-radius: 12px;
+  padding: 0 0.8rem;
+  font-size: 0.9rem;
+  background: #fff;
+  outline: none;
+
+  &:focus {
+    border-color: #2563eb;
+  }
+}
+
+.checkbox-field {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.88rem;
+  color: #334155;
+  white-space: nowrap;
+}
+
+.alert {
+  padding: 0.8rem 0.95rem;
+  border-radius: 14px;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+
+  &.alert-danger {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    color: #b91c1c;
+  }
+}
+
+.state-box {
+  background: #fff;
+  border: 1px solid #e6ebf2;
+  border-radius: 18px;
+  padding: 1rem;
+  font-size: 0.92rem;
+  color: #64748b;
+}
+
+.table-card {
+  overflow: hidden;
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+.inventory-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 980px;
+
+  th {
+    text-align: left;
+    font-size: 0.78rem;
+    font-weight: 800;
+    color: #334155;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    padding: 0.85rem 0.8rem;
+    border-bottom: 1px solid #edf2f7;
+    white-space: nowrap;
+  }
+
+  td {
+    padding: 0.8rem;
+    border-bottom: 1px solid #f1f5f9;
+    vertical-align: middle;
+    font-size: 0.9rem;
+    color: #1f2937;
+  }
+
+  tbody tr:hover {
+    background: #fafcff;
+  }
+}
+
+.article-cell {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  min-width: 220px;
+}
+
+.article-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  background: #eef4ff;
+  color: #1d4ed8;
+  flex-shrink: 0;
+
+  i {
+    font-size: 1rem;
+  }
+}
+
+.article-info {
+  h4 {
+    margin: 0 0 0.18rem;
+    font-size: 0.95rem;
+    font-weight: 800;
+    color: #0f172a;
+    line-height: 1.2;
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.82rem;
+    color: #64748b;
+    line-height: 1.2;
+  }
+}
+
+.qty-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 0.08rem;
+
+  strong {
+    font-size: 0.95rem;
+    color: #0f172a;
+  }
+
+  span {
+    font-size: 0.8rem;
+    color: #64748b;
+  }
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.32rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  white-space: nowrap;
+
+  &.success {
+    background: #ecfdf3;
+    color: #166534;
+  }
+
+  &.warning {
+    background: #fff7ed;
+    color: #b45309;
+  }
+
+  &.danger {
+    background: #fef2f2;
+    color: #b91c1c;
+  }
+
+  &.info {
+    background: #eff6ff;
+    color: #1d4ed8;
+  }
+
+  &.neutral {
+    background: #f1f5f9;
+    color: #334155;
+  }
+}
+
+.alerts-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  max-width: 180px;
+}
+
+.dash {
+  color: #94a3b8;
+}
+
+.actions-col {
+  width: 92px;
+  text-align: center;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  justify-content: center;
+}
+
+.icon-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 11px;
+  border: 1px solid #dbe3ee;
+  background: #fff;
+  color: #334155;
+  display: grid;
+  place-items: center;
+  text-decoration: none;
+  transition: 0.2s ease;
+
+  i {
+    font-size: 0.95rem;
+  }
+
+  &:hover {
+    background: #f8fafc;
+    border-color: #cbd5e1;
+  }
+}
+
+.pagination-bar {
+  margin-top: 1rem;
+  padding: 0.8rem 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+
+  p {
+    margin: 0;
+    color: #475569;
+    font-size: 0.92rem;
+  }
+}
+
+.pagination-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.page-btn,
+.btn {
+  height: 40px;
+  padding: 0 0.9rem;
+  border-radius: 12px;
+  border: 1px solid #dbe3ee;
+  background: #fff;
+  color: #334155;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: 0.2s ease;
+
+  &:hover:not(:disabled) {
+    background: #f8fafc;
+  }
+
+  &:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+}
+
+.page-btn.active,
+.btn.btn-primary {
+  background: #0f3b97;
+  color: #fff;
+  border-color: #0f3b97;
+}
+
+.btn.btn-light {
+  background: #fff;
+  color: #334155;
+}
+
+@media (max-width: 1100px) {
+  .stats-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .filters-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 700px) {
+  .inventories-page {
+    padding: 0.75rem;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .filters-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .page-header h1 {
+    font-size: 1.35rem;
+  }
+}

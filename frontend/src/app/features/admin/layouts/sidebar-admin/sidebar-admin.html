@@ -1,0 +1,53 @@
+<aside class="sidebar">
+  <!-- Top / Brand -->
+  <div class="brand">
+    <!-- ✅ whole brand clickable to /admin -->
+    <a class="brand-left" routerLink="/admin">
+      <div class="logo">
+        <img src="assets/images/logo.webp" alt="Logo" />
+      </div>
+
+      <div class="brand-text">
+        <div class="brand-title">Admin <span class="primary">Panel</span></div>
+        <div class="brand-subtitle">hseMonitor</div>
+      </div>
+    </a>
+
+    <!-- ❌ removed collapse button -->
+  </div>
+
+  <!-- Menu -->
+  <nav class="nav">
+    <div class="section">
+      <div class="section-title">
+        <span class="dots">...</span>
+        <span class="text">ADMIN MENU</span>
+      </div>
+
+      <ul class="menu">
+        @for (item of menu; track item.link) {
+          <li>
+            <a
+              class="item"
+              [routerLink]="item.link"
+              routerLinkActive="active"
+              [routerLinkActiveOptions]="{ exact: true }"
+            >
+              <i class="icon" [class]="item.icon"></i>
+              <span class="label">{{ item.label }}</span>
+              <i class="chev bi bi-chevron-right"></i>
+            </a>
+          </li>
+        }
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Bottom -->
+  <div class="bottom">
+    <div class="hint">
+      <i class="bi bi-shield-check"></i>
+      <span>Secure admin</span>
+    </div>
+  </div>
+</aside>

@@ -1,0 +1,375 @@
+<div class="page">
+  <div class="page-header">
+    <div class="title-wrap">
+      <div class="eyebrow">ADMIN / DEVICE MANAGEMENT</div>
+      <h1>Device Management</h1>
+      <p class="muted">
+        Manage device connectivity, MQTT configuration, maintenance actions,
+        firmware and remote commands.
+      </p>
+    </div>
+
+    <div class="header-actions">
+      <button class="btn ghost" (click)="onBack()">Back to devices</button>
+      <button
+        class="btn primary"
+        (click)="onAction('Ping device')"
+        [disabled]="loading() || !device()"
+      >
+        Ping Now
+      </button>
+    </div>
+  </div>
+
+  @if (loading()) {
+    <section class="card state-card">
+      <div class="spinner"></div>
+      <h3>Loading device...</h3>
+      <p>Fetching latest MQTT and connectivity information.</p>
+    </section>
+  } @else if (error()) {
+    <section class="card state-card error-state">
+      <h3>Unable to load device</h3>
+      <p>{{ error() }}</p>
+    </section>
+  } @else if (device(); as currentDevice) {
+    <div class="top-grid">
+      <section class="card hero-card">
+        <div class="hero-top">
+          <div class="hero-left">
+            <div class="device-icon">
+              <i class="bi bi-cpu"></i>
+            </div>
+
+            <div class="hero-info">
+              <div class="device-row">
+                <h2>{{ displayName() }}</h2>
+                <span class="status-badge" [ngClass]="getStatusClass(currentDevice.status)">
+                  {{ currentDevice.status || 'offline' }}
+                </span>
+              </div>
+
+              <div class="device-health">
+                <span class="health-pill" [ngClass]="getHeartbeatClass()">
+                  {{ heartbeatLabel() }}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="hero-stats">
+            <div class="stat">
+              <span>Uptime</span>
+              <strong>{{ formattedUptime() }}</strong>
+            </div>
+
+            <div class="stat">
+              <span>Signal</span>
+              <strong>
+                {{
+                  currentDevice.signal !== null && currentDevice.signal !== undefined
+                    ? currentDevice.signal + ' dBm'
+                    : '—'
+                }}
+              </strong>
+              <small [ngClass]="signalLevelClass()">{{ signalLabel() }}</small>
+            </div>
+
+            <div class="stat">
+              <span>Battery</span>
+              <strong>{{ batteryLabel() }}</strong>
+            </div>
+
+            <div class="stat">
+              <span>Last Heartbeat</span>
+              <strong>
+                {{
+                  lastHeartbeat()
+                    ? (lastHeartbeat() | date: 'yyyy-MM-dd HH:mm:ss')
+                    : '—'
+                }}
+              </strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="meta-grid">
+          <div>
+            <span>ID</span>
+            <strong>{{ currentDevice.deviceId }}</strong>
+          </div>
+
+          <div>
+            <span>Name</span>
+            <strong>{{ currentDevice.name || '—' }}</strong>
+          </div>
+
+          <div>
+            <span>Zone</span>
+            <strong>{{ zoneName() }}</strong>
+          </div>
+
+          <div>
+            <span>Firmware</span>
+            <strong>{{ currentDevice.firmware || '—' }}</strong>
+          </div>
+
+          <div>
+            <span>IP Address</span>
+            <strong>{{ currentDevice.ipAddress || '—' }}</strong>
+          </div>
+
+          <div>
+            <span>MAC</span>
+            <strong>{{ currentDevice.macAddress || '—' }}</strong>
+          </div>
+        </div>
+      </section>
+
+      <section class="card action-card">
+        <div class="card-head">
+          <h3>Quick Commands</h3>
+          <p>Most used remote actions</p>
+        </div>
+
+        <div class="action-grid">
+          <button
+            class="action-btn"
+            (click)="onAction('Restart device')"
+            [disabled]="!isOnline()"
+          >
+            <i class="bi bi-arrow-repeat"></i>
+            <span>Restart</span>
+          </button>
+
+          <button
+            class="action-btn"
+            (click)="onAction('Sync time')"
+            [disabled]="!isOnline()"
+          >
+            <i class="bi bi-clock-history"></i>
+            <span>Sync Time</span>
+          </button>
+
+          <button
+            class="action-btn"
+            (click)="onAction('Get instant reading')"
+            [disabled]="!isOnline()"
+          >
+            <i class="bi bi-activity"></i>
+            <span>Read Now</span>
+          </button>
+
+          <button
+            class="action-btn"
+            (click)="onAction('Run diagnostics')"
+            [disabled]="!isOnline()"
+          >
+            <i class="bi bi-heart-pulse"></i>
+            <span>Diagnostics</span>
+          </button>
+
+          <button
+            class="action-btn"
+            (click)="onAction('Capture snapshot')"
+            [disabled]="!isOnline()"
+          >
+            <i class="bi bi-camera"></i>
+            <span>Snapshot</span>
+          </button>
+
+          <button
+            class="action-btn danger-soft"
+            (click)="onAction('Factory reset')"
+            [disabled]="!isOnline()"
+          >
+            <i class="bi bi-exclamation-octagon"></i>
+            <span>Factory Reset</span>
+          </button>
+        </div>
+      </section>
+    </div>
+
+    <div class="health-grid">
+      @for (item of healthItems(); track item.label) {
+        <section class="card health-card">
+          <span class="health-label">{{ item.label }}</span>
+          <strong class="health-value" [ngClass]="item.state">{{ item.value }}</strong>
+        </section>
+      }
+    </div>
+
+    <div class="content-grid">
+      <section class="card">
+        <div class="card-head">
+          <h3>MQTT Configuration</h3>
+          <p>Broker communication and messaging settings</p>
+        </div>
+
+        <div class="form-grid">
+          <div class="field">
+            <label>Broker Host</label>
+            <input type="text" [value]="currentDevice.broker || ''" readonly />
+          </div>
+
+          <div class="field">
+            <label>Port</label>
+            <input type="number" [value]="currentDevice.port || 1883" readonly />
+          </div>
+
+          <div class="field">
+            <label>Sampling Interval (s)</label>
+            <input
+              type="number"
+              [value]="currentDevice.samplingInterval || 60"
+              readonly
+            />
+          </div>
+
+          <div class="field">
+            <label>Alert Threshold</label>
+            <input type="number" [value]="currentDevice.threshold || 75" readonly />
+          </div>
+        </div>
+
+        <div class="switch-list">
+          <button class="switch-item" [class.active]="mqttEnabled()" (click)="toggleMqtt()">
+            <div>
+              <strong>MQTT Enabled</strong>
+              <p>Allow device publish and subscribe communication</p>
+            </div>
+            <span class="switch-pill">{{ mqttEnabled() ? 'ON' : 'OFF' }}</span>
+          </button>
+
+          <button
+            class="switch-item"
+            [class.active]="autoReconnect()"
+            (click)="toggleReconnect()"
+          >
+            <div>
+              <strong>Auto Reconnect</strong>
+              <p>Reconnect automatically when broker is unavailable</p>
+            </div>
+            <span class="switch-pill">{{ autoReconnect() ? 'ON' : 'OFF' }}</span>
+          </button>
+
+          <button class="switch-item" [class.active]="alertMode()" (click)="toggleAlertMode()">
+            <div>
+              <strong>Alert Mode</strong>
+              <p>Publish critical alerts instantly</p>
+            </div>
+            <span class="switch-pill">{{ alertMode() ? 'ON' : 'OFF' }}</span>
+          </button>
+        </div>
+
+        <div class="section-actions">
+          <button class="btn ghost" (click)="onAction('Test broker')">Test Broker</button>
+          <button class="btn primary" (click)="onAction('Save MQTT settings')">
+            Save MQTT Settings
+          </button>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-head">
+          <h3>Connectivity & Network</h3>
+          <p>Technical info and communication health</p>
+        </div>
+
+        <div class="kv-list">
+          <div class="kv-item">
+            <span>Connection Status</span>
+            <strong [class.ok]="isOnline()" [class.danger]="!isOnline()">
+              {{ currentDevice.status || 'offline' }}
+            </strong>
+          </div>
+
+          <div class="kv-item">
+            <span>Heartbeat State</span>
+            <strong [ngClass]="getHeartbeatClass()">
+              {{ heartbeatLabel() }}
+            </strong>
+          </div>
+
+          <div class="kv-item">
+            <span>Wi-Fi RSSI</span>
+            <strong>
+              {{
+                currentDevice.signal !== null && currentDevice.signal !== undefined
+                  ? currentDevice.signal + ' dBm'
+                  : '—'
+              }}
+            </strong>
+          </div>
+
+          <div class="kv-item">
+            <span>Signal Quality</span>
+            <strong [ngClass]="signalLevelClass()">{{ signalLabel() }}</strong>
+          </div>
+
+          <div class="kv-item">
+            <span>Local IP</span>
+            <strong>{{ currentDevice.ipAddress || '—' }}</strong>
+          </div>
+
+          <div class="kv-item">
+            <span>Network Type</span>
+            <strong>{{ currentDevice.networkType || '—' }}</strong>
+          </div>
+
+          <div class="kv-item">
+            <span>MQTT Session</span>
+            <strong>Persistent</strong>
+          </div>
+
+          <div class="kv-item">
+            <span>Last Heartbeat</span>
+            <strong>
+              {{
+                lastHeartbeat()
+                  ? (lastHeartbeat() | date: 'yyyy-MM-dd HH:mm:ss')
+                  : 'Never'
+              }}
+            </strong>
+          </div>
+
+          <div class="kv-item">
+            <span>Zone Binding</span>
+            <strong>{{ zoneName() }}</strong>
+          </div>
+        </div>
+
+        <div class="section-actions">
+          <button class="btn ghost" (click)="onAction('Ping device')" [disabled]="!isOnline()">
+            Ping Device
+          </button>
+          <button class="btn ghost" (click)="onAction('Refresh status')">
+            Refresh Status
+          </button>
+        </div>
+      </section>
+    </div>
+  }
+</div>
+
+@if (showConfirmModal()) {
+  <div class="modal-backdrop" (click)="closeModal()">
+    <div class="modal-card" (click)="$event.stopPropagation()">
+      <h3>{{ confirmTitle() }}</h3>
+      <p>{{ confirmText() }}</p>
+
+      @if (actionError()) {
+        <div class="error-text">{{ actionError() }}</div>
+      }
+
+      <div class="modal-actions">
+        <button class="btn ghost" (click)="closeModal()" [disabled]="actionLoading()">
+          Cancel
+        </button>
+        <button class="btn primary" (click)="confirmAction()" [disabled]="actionLoading()">
+          {{ actionLoading() ? 'Sending...' : 'Confirm' }}
+        </button>
+      </div>
+    </div>
+  </div>
+}

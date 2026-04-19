@@ -1,0 +1,14 @@
+{
+  "HEADER": {
+    "SEARCH_PLACEHOLDER": "Rechercher...",
+    "USER": {
+      "ROLE": "Administrateur",
+      "PROFILE": "Profil",
+      "SETTINGS": "Paramètres",
+      "LOGOUT": "Déconnexion"
+    }
+  },
+  "FOOTER": {
+    "COPYRIGHT": "Copyright © {{year}} {{brand}}. Tous droits réservés."
+  }
+}

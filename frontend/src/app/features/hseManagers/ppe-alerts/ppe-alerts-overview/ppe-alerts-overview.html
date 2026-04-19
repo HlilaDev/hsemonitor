@@ -1,0 +1,251 @@
+<div class="page">
+  <div class="page-header">
+    <div>
+      <p class="eyebrow">Sécurité vision & alertes</p>
+      <h1>Vue d’ensemble des alertes PPE</h1>
+      <p class="subtitle">
+        Surveillez les alertes de non-conformité PPE envoyées par les caméras et
+        les devices intelligents.
+      </p>
+    </div>
+
+    <div class="header-actions">
+      <button type="button" class="btn btn-secondary" (click)="loadAlerts(true)">
+        @if (refreshing()) {
+          <span>Actualisation...</span>
+        } @else {
+          <span>Actualiser</span>
+        }
+      </button>
+    </div>
+  </div>
+
+  <div class="stats-grid">
+    <article class="stat-card">
+      <span class="stat-label">Total alertes</span>
+      <strong class="stat-value">{{ stats().total }}</strong>
+    </article>
+
+    <article class="stat-card">
+      <span class="stat-label">Ouvertes</span>
+      <strong class="stat-value">{{ stats().open }}</strong>
+    </article>
+
+    <article class="stat-card">
+      <span class="stat-label">Accusées</span>
+      <strong class="stat-value">{{ stats().acknowledged }}</strong>
+    </article>
+
+    <article class="stat-card">
+      <span class="stat-label">Résolues</span>
+      <strong class="stat-value">{{ stats().resolved }}</strong>
+    </article>
+
+    <article class="stat-card highlight">
+      <span class="stat-label">Sans casque</span>
+      <strong class="stat-value">{{ stats().noHelmet }}</strong>
+    </article>
+  </div>
+
+  <section class="filters-card">
+    <div class="filters-top">
+      <div class="field search-field">
+        <label for="search">Recherche</label>
+        <input
+          id="search"
+          type="text"
+          placeholder="Zone, device, type, caméra..."
+          [ngModel]="search()"
+          (ngModelChange)="onSearchChange($event)"
+        />
+      </div>
+
+      <div class="field">
+        <label for="status">Statut</label>
+        <select
+          id="status"
+          [ngModel]="selectedStatus()"
+          (ngModelChange)="onStatusChange($event)"
+        >
+          @for (option of statusOptions; track option.value) {
+            <option [value]="option.value">{{ option.label }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="type">Type</label>
+        <select
+          id="type"
+          [ngModel]="selectedType()"
+          (ngModelChange)="onTypeChange($event)"
+        >
+          @for (option of typeOptions; track option.value) {
+            <option [value]="option.value">{{ option.label }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="sort">Tri</label>
+        <select
+          id="sort"
+          [ngModel]="selectedSort()"
+          (ngModelChange)="onSortChange($event)"
+        >
+          <option value="newest">Plus récentes</option>
+          <option value="oldest">Plus anciennes</option>
+          <option value="confidence">Confiance max</option>
+        </select>
+      </div>
+
+      <div class="field actions-field">
+        <label>&nbsp;</label>
+        <button type="button" class="btn btn-light" (click)="clearFilters()">
+          Réinitialiser
+        </button>
+      </div>
+    </div>
+  </section>
+
+  @if (loading()) {
+    <div class="state-card">
+      <div class="spinner"></div>
+      <h3>Chargement des alertes PPE...</h3>
+      <p>Veuillez patienter pendant la récupération des alertes.</p>
+    </div>
+  } @else if (error()) {
+    <div class="state-card error">
+      <h3>Erreur de chargement</h3>
+      <p>{{ error() }}</p>
+      <button type="button" class="btn btn-primary" (click)="loadAlerts()">
+        Réessayer
+      </button>
+    </div>
+  } @else if (!filteredAlerts().length) {
+    <div class="state-card empty">
+      <h3>Aucune alerte PPE trouvée</h3>
+      <p>
+        Il n’y a aucune alerte correspondant aux filtres sélectionnés pour le
+        moment.
+      </p>
+    </div>
+  } @else {
+    <div class="table-card">
+      <div class="table-head">
+        <div>Type</div>
+        <div>Statut</div>
+        <div>Zone / Device</div>
+        <div>Confiance</div>
+        <div>Horodatage</div>
+        <div>Aperçu</div>
+        <div>Actions</div>
+      </div>
+
+      <div class="table-body">
+        @for (alert of filteredAlerts(); track trackById($index, alert)) {
+          <article class="table-row">
+            <div class="cell">
+              <div class="type-block">
+                <span class="badge" [class]="getTypeClass(alert.alertType)">
+                  {{ getTypeLabel(alert.alertType) }}
+                </span>
+                <span class="meta-text">{{ alert.label || 'Alerte PPE' }}</span>
+              </div>
+            </div>
+
+            <div class="cell">
+              <span class="badge" [class]="getStatusClass(alert.status)">
+                {{ getStatusLabel(alert.status) }}
+              </span>
+            </div>
+
+            <div class="cell">
+              <div class="entity-block">
+                <strong>{{ alert.zone?.name || 'Zone inconnue' }}</strong>
+                <span>{{ alert.device?.name || alert.deviceId || 'Device inconnu' }}</span>
+                <small>
+                  Caméra: {{ alert.cameraId || 'N/A' }} · Site:
+                  {{ alert.siteId || 'N/A' }}
+                </small>
+              </div>
+            </div>
+
+            <div class="cell">
+              <div class="confidence-block">
+                <strong>{{ getConfidencePercent(alert.confidence) }}%</strong>
+                <div class="confidence-bar">
+                  <div
+                    class="confidence-fill"
+                    [style.width.%]="getConfidencePercent(alert.confidence)"
+                  ></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="cell">
+              <div class="date-block">
+                <strong>{{ alert.timestamp | date: 'dd/MM/yyyy' }}</strong>
+                <span>{{ alert.timestamp | date: 'HH:mm:ss' }}</span>
+              </div>
+            </div>
+
+            <div class="cell">
+              @if (getPreviewUrl(alert); as previewUrl) {
+                <img
+                  class="preview-image"
+                  [src]="previewUrl"
+                  [alt]="alert.label || 'PPE preview'"
+                />
+              } @else {
+                <div class="preview-placeholder">Aucun snapshot</div>
+              }
+            </div>
+
+            <div class="cell">
+              <div class="row-actions">
+                <button
+                  type="button"
+                  class="btn btn-primary btn-sm"
+                  (click)="openDetails(alert)"
+                >
+                  Voir
+                </button>
+
+                @if (alert.status === 'open') {
+                  <button
+                    type="button"
+                    class="btn btn-outline btn-sm"
+                    (click)="markAs(alert, 'acknowledged')"
+                  >
+                    Accuser
+                  </button>
+                }
+
+                @if (alert.status !== 'resolved') {
+                  <button
+                    type="button"
+                    class="btn btn-success btn-sm"
+                    (click)="markAs(alert, 'resolved')"
+                  >
+                    Résoudre
+                  </button>
+                }
+
+                @if (alert.status !== 'false_positive') {
+                  <button
+                    type="button"
+                    class="btn btn-danger-soft btn-sm"
+                    (click)="markAs(alert, 'false_positive')"
+                  >
+                    Faux positif
+                  </button>
+                }
+              </div>
+            </div>
+          </article>
+        }
+      </div>
+    </div>
+  }
+</div>

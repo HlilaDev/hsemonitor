@@ -1,0 +1,372 @@
+<section class="inventory-item-page">
+  <div class="page-header">
+    <div>
+      <p class="eyebrow">HSE Inventory</p>
+      <h1>Détail de l’élément d’inventaire</h1>
+      <p class="subtitle">
+        Suivi complet de l’article, de ses mouvements, affectations et inspections.
+      </p>
+    </div>
+
+    <div class="header-actions">
+      <button class="btn btn-light" type="button" (click)="goBack()">
+        Retour
+      </button>
+
+      @if (item()) {
+        <button class="btn btn-primary" type="button" (click)="editItem()">
+          Modifier
+        </button>
+      }
+    </div>
+  </div>
+
+  @if (loading()) {
+    <div class="state-card">
+      Chargement de l’élément...
+    </div>
+  } @else if (errorMessage()) {
+    <div class="state-card error">
+      {{ errorMessage() }}
+    </div>
+  } @else if (item(); as currentItem) {
+    <div class="hero-card">
+      <div class="hero-main">
+        <div class="hero-icon">
+          <i class="bi bi-box-seam"></i>
+        </div>
+
+        <div class="hero-content">
+          <div class="hero-badges">
+            <span class="badge neutral">{{ getCategoryLabel(currentItem.category) }}</span>
+            <span class="badge" [ngClass]="getStatusClass(currentItem.status)">
+              {{ getStatusLabel(currentItem.status) }}
+            </span>
+            <span class="badge neutral">
+              {{ getConditionLabel(currentItem.condition) }}
+            </span>
+          </div>
+
+          <h2>{{ currentItem.name }}</h2>
+          <p>{{ currentItem.description || 'Aucune description disponible.' }}</p>
+
+          <div class="hero-meta">
+            <div class="meta-chip">
+              <span>Code</span>
+              <strong>{{ currentItem.inventoryCode || '—' }}</strong>
+            </div>
+
+            <div class="meta-chip">
+              <span>Quantité</span>
+              <strong>{{ currentItem.quantity || 0 }} {{ currentItem.unit || 'unit' }}</strong>
+            </div>
+
+            <div class="meta-chip">
+              <span>Zone</span>
+              <strong>{{ getZoneName(currentItem.zone) }}</strong>
+            </div>
+
+            <div class="meta-chip">
+              <span>Affecté à</span>
+              <strong>{{ getAssignedToName(currentItem) }}</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-side">
+        @if (hasImage(currentItem)) {
+          <img [src]="currentItem.imageUrl" [alt]="currentItem.name" />
+        } @else {
+          <div class="no-image">
+            <i class="bi bi-image"></i>
+            <span>Aucune image</span>
+          </div>
+        }
+      </div>
+    </div>
+
+    <div class="summary-grid">
+      <div class="summary-card">
+        <span>Mouvements</span>
+        <strong>{{ summary().movementCount }}</strong>
+      </div>
+
+      <div class="summary-card">
+        <span>Affectations</span>
+        <strong>{{ summary().assignmentCount }}</strong>
+      </div>
+
+      <div class="summary-card">
+        <span>Inspections</span>
+        <strong>{{ summary().inspectionCount }}</strong>
+      </div>
+
+      <div class="summary-card" [class.alert]="summary().hasAlerts">
+        <span>Alertes</span>
+        <strong>{{ summary().hasAlerts ? 'Oui' : 'Non' }}</strong>
+      </div>
+    </div>
+
+    <div class="details-card">
+      <div class="details-grid">
+        <div class="detail-item">
+          <span>Entreprise</span>
+          <strong>{{ getCompanyName(currentItem) }}</strong>
+        </div>
+        <div class="detail-item">
+          <span>Marque</span>
+          <strong>{{ currentItem.brand || '—' }}</strong>
+        </div>
+        <div class="detail-item">
+          <span>Modèle</span>
+          <strong>{{ currentItem.model || '—' }}</strong>
+        </div>
+        <div class="detail-item">
+          <span>Série</span>
+          <strong>{{ currentItem.serialNumber || '—' }}</strong>
+        </div>
+        <div class="detail-item">
+          <span>Fournisseur</span>
+          <strong>{{ currentItem.supplier || '—' }}</strong>
+        </div>
+        <div class="detail-item">
+          <span>Date achat</span>
+          <strong>{{ formatDate(currentItem.purchaseDate) }}</strong>
+        </div>
+        <div class="detail-item">
+          <span>Expiration</span>
+          <strong>{{ formatDate(currentItem.expiryDate) }}</strong>
+        </div>
+        <div class="detail-item">
+          <span>Prochaine inspection</span>
+          <strong>{{ formatDate(currentItem.nextInspectionDate) }}</strong>
+        </div>
+      </div>
+    </div>
+
+    <div class="tabs-card">
+      <div class="tabs-header">
+        <button
+          type="button"
+          class="tab-btn"
+          [class.active]="activeTab() === 'overview'"
+          (click)="setTab('overview')"
+        >
+          Vue générale
+        </button>
+
+        <button
+          type="button"
+          class="tab-btn"
+          [class.active]="activeTab() === 'movements'"
+          (click)="setTab('movements')"
+        >
+          Mouvements
+        </button>
+
+        <button
+          type="button"
+          class="tab-btn"
+          [class.active]="activeTab() === 'assignments'"
+          (click)="setTab('assignments')"
+        >
+          Affectations
+        </button>
+
+        <button
+          type="button"
+          class="tab-btn"
+          [class.active]="activeTab() === 'inspections'"
+          (click)="setTab('inspections')"
+        >
+          Inspections
+        </button>
+      </div>
+
+      <div class="tab-content">
+        @if (activeTab() === 'overview') {
+          <div class="overview-panel">
+            <div class="action-cards">
+              <button class="action-card" type="button" (click)="addMovement()">
+                <i class="bi bi-arrow-left-right"></i>
+                <div>
+                  <h4>Ajouter mouvement</h4>
+                  <p>Entrée, sortie, transfert ou ajustement.</p>
+                </div>
+              </button>
+
+              <button class="action-card" type="button" (click)="addAssignment()">
+                <i class="bi bi-person-check"></i>
+                <div>
+                  <h4>Affecter</h4>
+                  <p>Attribuer cet article à un employé ou une zone.</p>
+                </div>
+              </button>
+
+              <button class="action-card" type="button" (click)="addInspection()">
+                <i class="bi bi-clipboard-check"></i>
+                <div>
+                  <h4>Nouvelle inspection</h4>
+                  <p>Enregistrer un contrôle ou une vérification.</p>
+                </div>
+              </button>
+            </div>
+          </div>
+        }
+
+        @if (activeTab() === 'movements') {
+          <div class="section-head">
+            <div>
+              <h3>Mouvements</h3>
+              <p>Historique logistique de cet article.</p>
+            </div>
+
+            <button class="btn btn-primary" type="button" (click)="addMovement()">
+              Ajouter mouvement
+            </button>
+          </div>
+
+          @if (loadingRelated()) {
+            <div class="empty-box">Chargement des mouvements...</div>
+          } @else if (movements().length === 0) {
+            <div class="empty-box">Aucun mouvement enregistré.</div>
+          } @else {
+            <div class="list-table">
+              <div class="list-head">
+                <span>Type</span>
+                <span>Quantité</span>
+                <span>De</span>
+                <span>Vers</span>
+                <span>Employé</span>
+                <span>Date</span>
+              </div>
+
+              @for (movement of movements(); track trackMovement($index, movement)) {
+                <div class="list-row">
+                  <span>{{ getMovementTypeLabel(movement.movementType) }}</span>
+                  <span>{{ movement.quantity }} {{ movement.unit || '' }}</span>
+                  <span>{{ getZoneName(movement.fromZone) }}</span>
+                  <span>{{ getZoneName(movement.toZone) }}</span>
+                  <span>{{ getEmployeeName(movement.employee) }}</span>
+                  <span>{{ formatDate(movement.createdAt) }}</span>
+                </div>
+              }
+            </div>
+          }
+        }
+
+        @if (activeTab() === 'assignments') {
+          <div class="section-head">
+            <div>
+              <h3>Affectations</h3>
+              <p>Historique des affectations de cet article.</p>
+            </div>
+
+            <button class="btn btn-primary" type="button" (click)="addAssignment()">
+              Affecter
+            </button>
+          </div>
+
+          @if (loadingRelated()) {
+            <div class="empty-box">Chargement des affectations...</div>
+          } @else if (assignments().length === 0) {
+            <div class="empty-box">Aucune affectation enregistrée.</div>
+          } @else {
+            <div class="list-table">
+              <div class="list-head assignment-grid">
+                <span>Employé</span>
+                <span>Type</span>
+                <span>Statut</span>
+                <span>Date</span>
+                <span>Retour prévu</span>
+                <span>Retour réel</span>
+              </div>
+
+              @for (assignment of assignments(); track trackAssignment($index, assignment)) {
+                <div class="list-row assignment-grid">
+                  <span>{{ getEmployeeName(assignment.employee) }}</span>
+                  <span>{{ getAssignmentTypeLabel(assignment.assignmentType) }}</span>
+                  <span>{{ getAssignmentStatusLabel(assignment.status) }}</span>
+                  <span>{{ formatDate(assignment.assignedAt) }}</span>
+                  <span>{{ formatDate(assignment.expectedReturnDate) }}</span>
+                  <span>{{ formatDate(assignment.returnedAt) }}</span>
+                </div>
+              }
+            </div>
+          }
+        }
+
+        @if (activeTab() === 'inspections') {
+          <div class="section-head">
+            <div>
+              <h3>Inspections</h3>
+              <p>Historique des contrôles et vérifications.</p>
+            </div>
+
+            <button class="btn btn-primary" type="button" (click)="addInspection()">
+              Nouvelle inspection
+            </button>
+          </div>
+
+          @if (loadingRelated()) {
+            <div class="empty-box">Chargement des inspections...</div>
+          } @else if (inspections().length === 0) {
+            <div class="empty-box">Aucune inspection enregistrée.</div>
+          } @else {
+            <div class="list-table">
+              <div class="list-head inspection-grid">
+                <span>Date</span>
+                <span>Résultat</span>
+                <span>État</span>
+                <span>Inspecté par</span>
+                <span>Prochaine inspection</span>
+              </div>
+
+              @for (inspection of inspections(); track trackInspection($index, inspection)) {
+                <div class="list-row inspection-grid">
+                  <span>{{ formatDate(getInspectionDate(inspection)) }}</span>
+                  <span>{{ getInspectionStatusLabel(getInspectionStatusValue(inspection)) }}</span>
+                  <span>{{ getConditionLabel(getInspectionCondition(inspection)) }}</span>
+                  <span>{{ getUserName(inspection.inspectedBy) }}</span>
+                  <span>{{ formatDate(getInspectionNextDate(inspection)) }}</span>
+                </div>
+              }
+            </div>
+          }
+        }
+      </div>
+    </div>
+  }
+</section>
+
+<app-assign-inventory-model
+  [open]="isAssignModalOpen()"
+  [loading]="assignSubmitting()"
+  [item]="assignModalItem()"
+  [employees]="assignEmployees()"
+  [currentZoneEmployees]="currentZoneEmployees()"
+  [errorMessage]="assignErrorMessage()"
+  (close)="closeAssignModal()"
+  (assign)="submitAssignment($event)"
+></app-assign-inventory-model>
+
+<app-add-inventory-movement-model
+  [open]="isMovementModalOpen()"
+  [loading]="movementSubmitting()"
+  [errorMessage]="movementErrorMessage()"
+  [item]="movementModalItem()"
+  [employees]="movementEmployees()"
+  (close)="closeMovementModal()"
+  (save)="submitMovement($event)"
+></app-add-inventory-movement-model>
+
+<app-add-inventory-inspection-model
+  [open]="isInspectionModalOpen()"
+  [loading]="inspectionSubmitting()"
+  [errorMessage]="inspectionErrorMessage()"
+  [item]="inspectionModalItem()"
+  [zones]="inspectionZones()"
+  (close)="closeInspectionModal()"
+  (save)="submitInspection($event)"
+></app-add-inventory-inspection-model>

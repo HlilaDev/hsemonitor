@@ -1,0 +1,291 @@
+@if (open) {
+  <div class="movement-modal-backdrop" (click)="onOverlayClick($event)">
+    <div
+      class="movement-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="movementModalTitle"
+    >
+      <div class="modal-header">
+        <div>
+          <p class="eyebrow">Mouvement</p>
+          <h2 id="movementModalTitle">Ajouter mouvement</h2>
+
+          @if (item) {
+            <p class="subtitle">
+              {{ item.name }}
+              @if (item.inventoryCode) {
+                <span class="code">• {{ item.inventoryCode }}</span>
+              }
+            </p>
+          }
+        </div>
+
+        <button
+          class="icon-btn"
+          type="button"
+          (click)="onClose()"
+          [disabled]="loading"
+          aria-label="Fermer"
+        >
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+
+      <form class="modal-body" (ngSubmit)="onSubmit()">
+        @if (errorMessage) {
+          <div class="error-box">
+            {{ errorMessage }}
+          </div>
+        }
+
+        @if (zonesErrorMessage()) {
+          <div class="error-box">
+            {{ zonesErrorMessage() }}
+          </div>
+        }
+
+        <div class="selected-box">
+          <span>Zones disponibles</span>
+          <strong>{{ zones().length }}</strong>
+
+          <div class="selected-meta">
+            <span>{{ zonesSource() }}</span>
+            <span>Chargement: {{ zonesLoading() }}</span>
+          </div>
+
+          <div class="modal-actions" style="margin-top: 0.75rem;">
+            <button
+              class="btn btn-light"
+              type="button"
+              (click)="reloadZones()"
+              [disabled]="zonesLoading()"
+            >
+              Recharger zones
+            </button>
+          </div>
+        </div>
+
+        <div class="item-box">
+          <div class="item-meta">
+            <span>Article</span>
+            <strong>{{ item?.name || '—' }}</strong>
+          </div>
+
+          <div class="item-meta">
+            <span>Stock actuel</span>
+            <strong>{{ item?.quantity || 0 }} {{ item?.unit || 'piece' }}</strong>
+          </div>
+
+          <div class="item-meta">
+            <span>Zone actuelle</span>
+            <strong>{{ getItemZoneLabel() }}</strong>
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="movementType">
+              Type de mouvement <span class="required">*</span>
+            </label>
+
+            <select
+              id="movementType"
+              name="movementType"
+              [ngModel]="movementType()"
+              (ngModelChange)="onMovementTypeChange($event)"
+            >
+              @for (type of movementTypes; track type.value) {
+                <option [value]="type.value">{{ type.label }}</option>
+              }
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="quantity">
+              Quantité <span class="required">*</span>
+            </label>
+
+            <input
+              id="quantity"
+              type="number"
+              min="1"
+              name="quantity"
+              [ngModel]="quantity()"
+              (ngModelChange)="quantity.set(+$event)"
+            />
+
+            @if (submitted() && quantity() <= 0) {
+              <small class="error-text">
+                La quantité doit être supérieure à 0.
+              </small>
+            }
+          </div>
+
+          <div class="form-group">
+            <label for="unit">Unité</label>
+            <input
+              id="unit"
+              type="text"
+              name="unit"
+              [ngModel]="unit()"
+              (ngModelChange)="unit.set($event)"
+              placeholder="piece"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="employee">Employé concerné</label>
+            <select
+              id="employee"
+              name="employee"
+              [ngModel]="employee()"
+              (ngModelChange)="onEmployeeChange($event)"
+            >
+              <option value="">Aucun employé</option>
+
+              @for (emp of employees; track emp._id) {
+                <option [value]="emp._id">
+                  {{ getEmployeeLabel(emp) }}
+                </option>
+              }
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="fromZone">Zone source</label>
+            <select
+              id="fromZone"
+              name="fromZone"
+              [ngModel]="fromZone()"
+              (ngModelChange)="fromZone.set($event)"
+            >
+              <option value="">Sélectionner</option>
+
+              @for (zone of zones(); track zone._id) {
+                <option [value]="zone._id">
+                  {{ getZoneLabel(zone) }}
+                </option>
+              }
+            </select>
+
+            @if (zones().length === 0) {
+              <small class="error-text">Aucune zone disponible.</small>
+            }
+          </div>
+
+          <div class="form-group">
+            <label for="toZone">Zone destination</label>
+            <select
+              id="toZone"
+              name="toZone"
+              [ngModel]="toZone()"
+              (ngModelChange)="toZone.set($event)"
+            >
+              <option value="">Sélectionner</option>
+
+              @for (zone of zones(); track zone._id) {
+                <option [value]="zone._id">
+                  {{ getZoneLabel(zone) }}
+                </option>
+              }
+            </select>
+
+            @if (zones().length === 0) {
+              <small class="error-text">Aucune zone disponible.</small>
+            }
+          </div>
+
+          <div class="form-group full">
+            <label for="reason">Raison</label>
+            <input
+              id="reason"
+              type="text"
+              name="reason"
+              [ngModel]="reason()"
+              (ngModelChange)="reason.set($event)"
+              placeholder="Ex: transfert vers zone B, maintenance..."
+            />
+          </div>
+
+          <div class="form-group full">
+            <label for="reference">Référence</label>
+            <input
+              id="reference"
+              type="text"
+              name="reference"
+              [ngModel]="reference()"
+              (ngModelChange)="reference.set($event)"
+              placeholder="Bon, ticket, code interne..."
+            />
+          </div>
+
+          <div class="form-group full">
+            <label for="notes">Note</label>
+            <textarea
+              id="notes"
+              name="notes"
+              rows="4"
+              [ngModel]="notes()"
+              (ngModelChange)="notes.set($event)"
+              placeholder="Détails complémentaires..."
+            ></textarea>
+          </div>
+        </div>
+
+        @if (selectedEmployee()) {
+          <div class="selected-box">
+            <span>Employé sélectionné</span>
+            <strong>{{ selectedEmployee()?.fullName }}</strong>
+
+            <div class="selected-meta">
+              @if (selectedEmployee()?.employeeId) {
+                <span>{{ selectedEmployee()?.employeeId }}</span>
+              }
+              @if (selectedEmployee()?.department) {
+                <span>{{ selectedEmployee()?.department }}</span>
+              }
+              @if (selectedEmployee()?.jobTitle) {
+                <span>{{ selectedEmployee()?.jobTitle }}</span>
+              }
+              <span>Zone employé: {{ getEmployeeZoneLabel() }}</span>
+            </div>
+          </div>
+        }
+
+        @if (selectedFromZone() || selectedToZone()) {
+          <div class="selected-box">
+            <span>Zones sélectionnées</span>
+
+            @if (selectedFromZone()) {
+              <strong>Source : {{ selectedFromZone()?.name }}</strong>
+            }
+
+            @if (selectedToZone()) {
+              <strong>Destination : {{ selectedToZone()?.name }}</strong>
+            }
+          </div>
+        }
+
+        <div class="modal-actions">
+          <button
+            class="btn btn-light"
+            type="button"
+            (click)="onClose()"
+            [disabled]="loading"
+          >
+            Annuler
+          </button>
+
+          <button class="btn btn-primary" type="submit" [disabled]="loading">
+            @if (!loading) {
+              Enregistrer mouvement
+            } @else {
+              Enregistrement...
+            }
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+}

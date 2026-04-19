@@ -1,0 +1,128 @@
+<div class="page">
+  <div class="page-header">
+    <div>
+      <h2>Modifier utilisateur</h2>
+      <p class="muted">Mettre à jour les informations du compte.</p>
+    </div>
+
+    <a class="btn btn-outline-secondary" routerLink="/admin/users">← Retour</a>
+  </div>
+
+  <div class="card">
+    @if (errorMessage) {
+      <div class="alert alert-danger">{{ errorMessage }}</div>
+    }
+
+    @if (successMessage) {
+      <div class="alert alert-success">{{ successMessage }}</div>
+    }
+
+    @if (loadingUser) {
+      <div class="state muted">Chargement...</div>
+    } @else {
+      <form [formGroup]="form" (ngSubmit)="submit()">
+        <!-- First name -->
+        <div class="form-group">
+          <label class="form-label">Prénom <span class="req">*</span></label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="firstName"
+            [class.is-invalid]="firstName.touched && firstName.invalid"
+          />
+          @if (firstName.touched && firstName.errors?.['required']) {
+            <div class="invalid-feedback">Le prénom est obligatoire.</div>
+          }
+          @if (firstName.touched && firstName.errors?.['minlength']) {
+            <div class="invalid-feedback">Minimum 2 caractères.</div>
+          }
+        </div>
+
+        <!-- Last name -->
+        <div class="form-group">
+          <label class="form-label">Nom <span class="req">*</span></label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="lastName"
+            [class.is-invalid]="lastName.touched && lastName.invalid"
+          />
+          @if (lastName.touched && lastName.errors?.['required']) {
+            <div class="invalid-feedback">Le nom est obligatoire.</div>
+          }
+          @if (lastName.touched && lastName.errors?.['minlength']) {
+            <div class="invalid-feedback">Minimum 2 caractères.</div>
+          }
+        </div>
+
+        <!-- Email -->
+        <div class="form-group">
+          <label class="form-label">Email <span class="req">*</span></label>
+          <input
+            type="email"
+            class="form-control"
+            formControlName="email"
+            [class.is-invalid]="email.touched && email.invalid"
+          />
+          @if (email.touched && email.errors?.['required']) {
+            <div class="invalid-feedback">L’email est obligatoire.</div>
+          }
+          @if (email.touched && email.errors?.['email']) {
+            <div class="invalid-feedback">Email invalide.</div>
+          }
+        </div>
+
+        <!-- Role -->
+        <div class="form-group">
+          <label class="form-label">Rôle <span class="req">*</span></label>
+          <select class="form-select" formControlName="role">
+            <option value="operator">Operator</option>
+            <option value="hseManager">HSE Manager</option>
+            <option value="admin">Admin</option>
+          </select>
+        </div>
+
+        <!-- Password -->
+        <div class="divider"></div>
+        <h4 class="section-title">Changer le mot de passe (optionnel)</h4>
+        <p class="muted small">Laisse vide si tu ne veux pas changer le mot de passe.</p>
+
+        <div class="form-group">
+          <label class="form-label">Nouveau mot de passe</label>
+          <input
+            type="password"
+            class="form-control"
+            formControlName="password"
+            placeholder="Minimum 6 caractères"
+            [class.is-invalid]="passwordMismatch"
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Confirmer mot de passe</label>
+          <input
+            type="password"
+            class="form-control"
+            formControlName="confirmPassword"
+            placeholder="Confirmer le mot de passe"
+            [class.is-invalid]="passwordMismatch"
+          />
+          @if (passwordMismatch) {
+            <div class="invalid-feedback">Les mots de passe ne correspondent pas.</div>
+          }
+        </div>
+
+        <!-- Actions -->
+        <div class="actions">
+          <button class="btn btn-primary" type="submit" [disabled]="saving">
+            @if (!saving) { <span>Enregistrer</span> } @else { <span>Enregistrement...</span> }
+          </button>
+
+          <button class="btn btn-light" type="button" (click)="resetPasswords()" [disabled]="saving">
+            Reset Password
+          </button>
+        </div>
+      </form>
+    }
+  </div>
+</div>

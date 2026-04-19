@@ -1,0 +1,13 @@
+<div class="grid">
+  @for (w of widgets; track w.key) {
+    <app-stat-card
+      [title]="w.title"
+      [value]="w.value"
+      [subtitle]="w.subtitle"
+      [iconClass]="w.iconClass"
+      [variant]="w.variant"
+      [routerLink]="w.routerLink"
+      linkLabel="View Details"
+    />
+  }
+</div>

@@ -1,0 +1,174 @@
+<div class="inspection-list-page">
+  <div class="page-header">
+    <div class="page-header__content">
+      <h1>Inspections</h1>
+      <p>Consultez, filtrez et suivez les inspections créées sur le terrain.</p>
+    </div>
+
+    <button type="button" class="btn btn-primary" (click)="goToCreate()">
+      Nouvelle inspection
+    </button>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <span class="stat-card__label">Total inspections</span>
+      <strong class="stat-card__value">{{ totalCount() }}</strong>
+    </div>
+
+    <div class="stat-card">
+      <span class="stat-card__label">Brouillons</span>
+      <strong class="stat-card__value">{{ draftCount() }}</strong>
+    </div>
+
+    <div class="stat-card">
+      <span class="stat-card__label">En cours</span>
+      <strong class="stat-card__value">{{ inProgressCount() }}</strong>
+    </div>
+
+    <div class="stat-card">
+      <span class="stat-card__label">Terminées</span>
+      <strong class="stat-card__value">{{ completedCount() }}</strong>
+    </div>
+  </div>
+
+  <div class="filters-card">
+    <div class="filters-grid">
+      <div class="field-group">
+        <label for="search">Recherche</label>
+        <input
+          id="search"
+          type="text"
+          placeholder="Template, agent, zone..."
+          [value]="searchTerm()"
+          (input)="updateSearch($event)"
+        />
+      </div>
+
+      <div class="field-group">
+        <label for="status">Statut</label>
+        <select
+          id="status"
+          [value]="selectedStatus()"
+          (change)="updateStatus($event)"
+        >
+          <option value="all">Tous</option>
+          <option value="draft">Brouillon</option>
+          <option value="in_progress">En cours</option>
+          <option value="completed">Terminée</option>
+        </select>
+      </div>
+
+      <div class="filters-actions">
+        <button type="button" class="btn btn-light" (click)="clearFilters()">
+          Réinitialiser
+        </button>
+      </div>
+    </div>
+  </div>
+
+  @if (loading()) {
+    <div class="state-card loading-state">
+      <div class="spinner"></div>
+      <h3>Chargement des inspections...</h3>
+      <p>Veuillez patienter pendant la récupération des exécutions.</p>
+    </div>
+  } @else {
+    @if (errorMsg()) {
+      <div class="alert alert-error">
+        <span>{{ errorMsg() }}</span>
+        <button type="button" class="btn btn-light btn-sm" (click)="retry()">
+          Réessayer
+        </button>
+      </div>
+    }
+
+    @if (!filteredInspections().length) {
+      <div class="state-card empty-state">
+        <h3>Aucune inspection trouvée</h3>
+        <p>
+          Aucune inspection ne correspond aux filtres actuels ou aucune exécution
+          n’a encore été créée.
+        </p>
+
+        <div class="state-actions">
+          <button type="button" class="btn btn-primary" (click)="goToCreate()">
+            Créer une inspection
+          </button>
+        </div>
+      </div>
+    } @else {
+      <div class="table-card">
+        <div class="table-card__head">
+          <div>
+            <h2>Liste des inspections</h2>
+            <p>{{ filteredInspections().length }} inspection(s) affichée(s).</p>
+          </div>
+        </div>
+
+        <div class="table-wrapper">
+          <table class="inspection-table">
+            <thead>
+              <tr>
+                <th>Template</th>
+                <th>Agent</th>
+                <th>Zone</th>
+                <th>Statut</th>
+                <th>Score</th>
+                <th>Date</th>
+                <th class="actions-col">Action</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              @for (inspection of filteredInspections(); track trackByInspection($index, inspection)) {
+                <tr>
+                  <td>
+                    <div class="cell-primary">
+                      {{ templateTitle(inspection) }}
+                    </div>
+                  </td>
+
+                  <td>{{ agentName(inspection) }}</td>
+
+                  <td>{{ zoneName(inspection) }}</td>
+
+                  <td>
+                    <span
+                      class="status-badge"
+                      [class]="statusClass(inspection.status)"
+                    >
+                      {{ statusLabel(inspection.status) }}
+                    </span>
+                  </td>
+
+                  <td>
+                    <span
+                      class="score-badge"
+                      [class]="scoreClass(scoreValue(inspection))"
+                    >
+                      {{ scoreValue(inspection) }}%
+                    </span>
+                  </td>
+
+                  <td>{{ displayDate(inspection.startedAt || inspection.createdAt) }}</td>
+
+                  <td class="actions-col">
+                    <button
+                      type="button"
+                      class="icon-btn"
+                      (click)="openDetail(inspection._id)"
+                      title="Voir détail"
+                    >
+                      <span>👁</span>
+                    </button>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    }
+  }
+</div>

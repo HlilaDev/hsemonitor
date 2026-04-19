@@ -1,0 +1,207 @@
+<div class="page">
+  <div class="hero">
+    <div>
+      <div class="kicker">HSE Incidents</div>
+      <h1 class="title">Incidents Overview</h1>
+      <p class="subtitle">
+        Global overview of safety incidents, critical alerts, risk zones and operational response.
+      </p>
+    </div>
+
+    <div class="hero-actions">
+      <button class="btn ghost" type="button">
+        <i class="bi bi-funnel"></i>
+        Filter
+      </button>
+
+      <button class="btn primary" type="button">
+        <i class="bi bi-plus-lg"></i>
+        New Incident
+      </button>
+    </div>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-icon blue">
+        <i class="bi bi-exclamation-octagon"></i>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value">{{ totalIncidents() }}</div>
+        <div class="stat-label">Total Incidents</div>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon orange">
+        <i class="bi bi-hourglass-split"></i>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value">{{ openCount() }}</div>
+        <div class="stat-label">Open</div>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon yellow">
+        <i class="bi bi-search"></i>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value">{{ investigatingCount() }}</div>
+        <div class="stat-label">Investigating</div>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon red">
+        <i class="bi bi-shield-exclamation"></i>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value">{{ criticalCount() }}</div>
+        <div class="stat-label">Critical</div>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon green">
+        <i class="bi bi-check2-circle"></i>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value">{{ resolvedCount() }}</div>
+        <div class="stat-label">Resolved</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toolbar">
+    <button
+      class="filter-chip"
+      [class.active]="selectedFilter() === 'all'"
+      (click)="setFilter('all')"
+      type="button"
+    >
+      All
+    </button>
+
+    <button
+      class="filter-chip"
+      [class.active]="selectedFilter() === 'open'"
+      (click)="setFilter('open')"
+      type="button"
+    >
+      Open
+    </button>
+
+    <button
+      class="filter-chip"
+      [class.active]="selectedFilter() === 'investigating'"
+      (click)="setFilter('investigating')"
+      type="button"
+    >
+      Investigating
+    </button>
+
+    <button
+      class="filter-chip"
+      [class.active]="selectedFilter() === 'resolved'"
+      (click)="setFilter('resolved')"
+      type="button"
+    >
+      Resolved
+    </button>
+  </div>
+
+  <div class="content-grid">
+    <div class="card incidents-card">
+      <div class="card-header">
+        <div>
+          <h2>Recent Incidents</h2>
+          <p>{{ filteredIncidents().length }} incident(s) displayed</p>
+        </div>
+      </div>
+
+      <div class="incident-list">
+        @for (incident of filteredIncidents(); track incident.id) {
+          <div class="incident-item">
+            <div class="incident-main">
+              <div class="incident-top">
+                <div class="incident-id">{{ incident.id }}</div>
+                <div class="badges">
+                  <span class="badge severity" [class.low]="incident.severity === 'low'" [class.medium]="incident.severity === 'medium'" [class.high]="incident.severity === 'high'" [class.critical]="incident.severity === 'critical'">
+                    {{ severityLabel(incident.severity) }}
+                  </span>
+
+                  <span class="badge status" [class.open]="incident.status === 'open'" [class.investigating]="incident.status === 'investigating'" [class.resolved]="incident.status === 'resolved'">
+                    {{ statusLabel(incident.status) }}
+                  </span>
+                </div>
+              </div>
+
+              <h3>{{ incident.title }}</h3>
+
+              <div class="meta">
+                <span><i class="bi bi-geo-alt"></i> {{ incident.zone }}</span>
+                <span><i class="bi bi-tag"></i> {{ incident.category }}</span>
+                <span><i class="bi bi-clock"></i> {{ incident.reportedAt }}</span>
+              </div>
+            </div>
+
+            <div class="incident-side">
+              <div class="assigned-label">Assigned to</div>
+              <div class="assigned-value">{{ incident.assignedTo }}</div>
+              <button class="mini-btn" type="button">View Details</button>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+
+    <div class="side-column">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <h2>High Risk Zones</h2>
+            <p>Most monitored operational areas</p>
+          </div>
+        </div>
+
+        <div class="zone-list">
+          @for (zone of riskZones(); track zone.zone) {
+            <div class="zone-item">
+              <div>
+                <div class="zone-name">{{ zone.zone }}</div>
+                <div class="zone-sub">{{ zone.incidents }} incidents</div>
+              </div>
+
+              <span class="badge risk" [class.stable]="zone.risk === 'stable'" [class.warning]="zone.risk === 'warning'" [class.critical]="zone.risk === 'critical'">
+                {{ riskLabel(zone.risk) }}
+              </span>
+            </div>
+          }
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <h2>Activity Timeline</h2>
+            <p>Latest operational actions</p>
+          </div>
+        </div>
+
+        <div class="timeline">
+          @for (activity of activities(); track activity.time + activity.text) {
+            <div class="timeline-item">
+              <div class="timeline-dot" [class.create]="activity.type === 'create'" [class.update]="activity.type === 'update'" [class.resolve]="activity.type === 'resolve'"></div>
+
+              <div class="timeline-content">
+                <div class="timeline-time">{{ activity.time }}</div>
+                <div class="timeline-text">{{ activity.text }}</div>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

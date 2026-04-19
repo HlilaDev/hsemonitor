@@ -1,0 +1,310 @@
+<div class="page">
+  <div class="page-head">
+    <div class="left">
+      <button class="btn ghost" type="button" (click)="goBack()">
+        <i class="bi bi-arrow-left"></i>
+        Retour
+      </button>
+    </div>
+
+    <div class="right">
+      <button class="btn ghost" type="button" (click)="refresh()" [disabled]="loading">
+        <i class="bi bi-arrow-repeat"></i>
+        {{ loading ? 'Chargement...' : 'Actualiser' }}
+      </button>
+    </div>
+  </div>
+
+  @if (errorMsg) {
+    <div class="alert error">
+      <i class="bi bi-exclamation-triangle"></i>
+      <span>{{ errorMsg }}</span>
+    </div>
+  }
+
+  @if (successMsg) {
+    <div class="alert success">
+      <i class="bi bi-check-circle"></i>
+      <span>{{ successMsg }}</span>
+    </div>
+  }
+
+  @if (loading) {
+    <div class="loading-grid">
+      <div class="skeleton card large"></div>
+      <div class="skeleton card"></div>
+      <div class="skeleton card"></div>
+    </div>
+  } @else if (training; as t) {
+    <div class="hero card">
+      <div class="hero-top">
+        <div class="hero-left">
+          <div class="eyebrow">FORMATION AGENT</div>
+          <h1>{{ t.title }}</h1>
+
+          <div class="hero-badges">
+            <span class="chip">
+              <i class="bi bi-tags"></i>
+              {{ categoryLabel(t.category) }}
+            </span>
+
+            <span [class]="badgeClass(t.status)">
+              {{ statusLabel(t.status) }}
+            </span>
+
+            <span class="chip soft">
+              <i class="bi bi-people"></i>
+              {{ t.participants?.length ?? 0 }} participant(s)
+            </span>
+          </div>
+        </div>
+
+        <div class="hero-right">
+          <div class="meta-box">
+            <span class="meta-label">Créée par le manager</span>
+            <strong>{{ t.createdBy?.firstName || '—' }}</strong>
+            <small>{{ t.createdBy?.email || '' }}</small>
+          </div>
+        </div>
+      </div>
+
+      @if (t.description) {
+        <div class="hero-desc">
+          {{ t.description }}
+        </div>
+      }
+    </div>
+
+    <div class="content-grid">
+      <div class="main-col">
+        <div class="card info-card">
+          <div class="section-head">
+            <h3>Informations générales</h3>
+          </div>
+
+          <div class="info-grid">
+            <div class="info-item">
+              <span class="k"><i class="bi bi-calendar-event"></i> Début</span>
+              <span class="v">{{ formatDateTime(t.startDate) }}</span>
+            </div>
+
+            <div class="info-item">
+              <span class="k"><i class="bi bi-calendar-check"></i> Fin</span>
+              <span class="v">{{ t.endDate ? formatDateTime(t.endDate) : '—' }}</span>
+            </div>
+
+            <div class="info-item">
+              <span class="k"><i class="bi bi-building"></i> Formateur / provider</span>
+              <span class="v">{{ t.provider || '—' }}</span>
+            </div>
+
+            <div class="info-item">
+              <span class="k"><i class="bi bi-geo-alt"></i> Lieu</span>
+              <span class="v">{{ t.location || '—' }}</span>
+            </div>
+
+            <div class="info-item">
+              <span class="k"><i class="bi bi-diagram-3"></i> Société</span>
+              <span class="v">{{ t.company?.name || '—' }}</span>
+            </div>
+
+            <div class="info-item">
+              <span class="k"><i class="bi bi-clock-history"></i> Créée le</span>
+              <span class="v">{{ formatDate(t.createdAt) }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card participants-card">
+          <div class="section-head">
+            <div>
+              <h3>Participants et suivi terrain</h3>
+              <p>L’agent peut marquer la présence, l’absence et ajouter des commentaires.</p>
+            </div>
+
+            <div class="mini-stats">
+              <span class="stat-chip neutral">Prévu : {{ plannedCount() }}</span>
+              <span class="stat-chip ok">Présent : {{ presentCount() }}</span>
+              <span class="stat-chip danger">Absent : {{ absentCount() }}</span>
+            </div>
+          </div>
+
+          @if (!t.participants || t.participants.length === 0) {
+            <div class="empty-state">
+              <i class="bi bi-people"></i>
+              <p>Aucun participant enregistré pour cette formation.</p>
+            </div>
+          } @else {
+            <div class="participants-list">
+              @for (participant of t.participants; track participant._id || $index) {
+                <div class="participant-card">
+                  <div class="participant-top">
+                    <div class="participant-left">
+                      <div class="avatar">
+                        <i class="bi bi-person"></i>
+                      </div>
+
+                      <div class="participant-body">
+                        <div class="name-row">
+                          <strong>{{ employeeName(participant) }}</strong>
+                          <span [class]="participantBadgeClass(participant.status)">
+                            {{ participantStatusLabel(participant.status) }}
+                          </span>
+                        </div>
+
+                        <div class="sub">
+                          {{ employeeMeta(participant) }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="participant-form">
+                    <div class="field">
+                      <label>Statut du participant</label>
+                      <select [(ngModel)]="participant.status">
+                        @for (option of participantStatusOptions; track option.value) {
+                          <option [value]="option.value">
+                            {{ option.label }}
+                          </option>
+                        }
+                      </select>
+                    </div>
+
+                    <div class="field">
+                      <label>Score</label>
+                      <input
+                        type="number"
+                        min="0"
+                        max="100"
+                        [(ngModel)]="participant.score"
+                        placeholder="Ex: 80"
+                      />
+                    </div>
+
+                    <div class="field">
+                      <label>Validité</label>
+                      <input
+                        type="date"
+                        [ngModel]="toDateInputValue(participant.validUntil)"
+                        (ngModelChange)="participant.validUntil = $event"
+                      />
+                    </div>
+
+                    <div class="field full">
+                      <label>Commentaire / motif d’absence</label>
+                      <textarea
+                        rows="3"
+                        [(ngModel)]="participant.note"
+                        placeholder="Ex: absent justifié, arrivé en retard, participation correcte..."
+                      ></textarea>
+                    </div>
+
+                    <div class="participant-actions">
+                      <button
+                        class="btn primary"
+                        type="button"
+                        (click)="saveParticipant(participant)"
+                        [disabled]="participant.saving"
+                      >
+                        <i class="bi bi-floppy"></i>
+                        {{ participant.saving ? 'Enregistrement...' : 'Enregistrer' }}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              }
+            </div>
+          }
+        </div>
+      </div>
+
+      <div class="side-col">
+        <div class="card quick-card">
+          <div class="section-head">
+            <h3>Résumé</h3>
+          </div>
+
+          <div class="quick-list">
+            <div class="quick-item">
+              <span>Catégorie</span>
+              <strong>{{ categoryLabel(t.category) }}</strong>
+            </div>
+
+            <div class="quick-item">
+              <span>Statut actuel</span>
+              <strong>{{ statusLabel(t.status) }}</strong>
+            </div>
+
+            <div class="quick-item">
+              <span>Participants</span>
+              <strong>{{ t.participants?.length ?? 0 }}</strong>
+            </div>
+
+            <div class="quick-item">
+              <span>Lieu</span>
+              <strong>{{ t.location || '—' }}</strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="card actions-card">
+          <div class="section-head">
+            <h3>Mise à jour de la session</h3>
+          </div>
+
+          <div class="status-box">
+            <label>Nouveau statut</label>
+
+            <select [(ngModel)]="selectedStatus">
+              @for (option of statusOptions; track option.value) {
+                <option [value]="option.value">
+                  {{ option.label }}
+                </option>
+              }
+            </select>
+
+            <button
+              class="btn primary block"
+              type="button"
+              (click)="updateTrainingStatus()"
+              [disabled]="savingStatus"
+            >
+              <i class="bi bi-check2-square"></i>
+              {{ savingStatus ? 'Mise à jour...' : 'Mettre à jour le statut' }}
+            </button>
+          </div>
+
+          <div class="helper-box">
+            <h4>Utilisation conseillée</h4>
+            <ul>
+              <li><strong>Planifiée</strong> : avant la tenue de la formation</li>
+              <li><strong>Terminée</strong> : après la session terrain</li>
+              <li><strong>Annulée</strong> : session non réalisée</li>
+            </ul>
+          </div>
+
+          <div class="action-stack">
+            <button class="btn ghost block" type="button" (click)="markAllPlanned()">
+              <i class="bi bi-arrow-counterclockwise"></i>
+              Remettre tous les participants à “prévu”
+            </button>
+
+            <button class="btn ghost block" type="button" (click)="goBack()">
+              <i class="bi bi-list-ul"></i>
+              Retour à la liste
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  } @else {
+    <div class="empty-state card">
+      <i class="bi bi-journal-x"></i>
+      <p>Formation introuvable.</p>
+      <button class="btn ghost" type="button" (click)="goBack()">
+        Retour
+      </button>
+    </div>
+  }
+</div>

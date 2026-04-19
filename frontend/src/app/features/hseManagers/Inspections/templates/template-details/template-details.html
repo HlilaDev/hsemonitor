@@ -1,0 +1,87 @@
+<section class="page">
+  <div class="page-head">
+    <div>
+      <span class="eyebrow">MANAGER INSPECTIONS</span>
+      <h1>Détail du template</h1>
+      <p>Consultez les informations du template sélectionné.</p>
+    </div>
+
+    <button class="btn ghost" type="button" (click)="goBack()">
+      Retour
+    </button>
+  </div>
+
+  @if (loading()) {
+    <div class="state-card loading">
+      <div class="spinner"></div>
+      <h3>Chargement du template...</h3>
+      <p>Veuillez patienter pendant la récupération des données.</p>
+    </div>
+  } @else if (errorMsg()) {
+    <div class="state-card error">
+      <h3>Erreur</h3>
+      <p>{{ errorMsg() }}</p>
+    </div>
+  } @else if (template(); as currentTemplate) {
+    <div class="details-card">
+      <div class="details-grid">
+        <div class="detail-block">
+          <span class="label">Titre</span>
+          <strong>{{ currentTemplate.title }}</strong>
+        </div>
+
+        <div class="detail-block">
+          <span class="label">Catégorie</span>
+          <strong>{{ categoryLabel(currentTemplate.category) }}</strong>
+        </div>
+
+        <div class="detail-block">
+          <span class="label">Statut</span>
+          <span [class]="statusClass()">
+            {{ statusLabel() }}
+          </span>
+        </div>
+
+        <div class="detail-block">
+          <span class="label">Créé par</span>
+          <strong>{{ createdByLabel() }}</strong>
+        </div>
+
+        <div class="detail-block">
+          <span class="label">Date création</span>
+          <strong>{{ formatDate(currentTemplate.createdAt) }}</strong>
+        </div>
+
+        <div class="detail-block full">
+          <span class="label">Description</span>
+          <p>{{ currentTemplate.description || 'Aucune description.' }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="items-card">
+      <div class="items-head">
+        <div>
+          <h3>Items du template</h3>
+          <p>{{ items().length }} item(s)</p>
+        </div>
+      </div>
+
+      @if (items().length > 0) {
+        <div class="items-list">
+          @for (item of items(); track item._id || $index) {
+            <app-template-item
+              [item]="item"
+              [index]="$index"
+              [readonly]="true"
+            />
+          }
+        </div>
+      } @else {
+        <div class="empty-state">
+          Aucun item trouvé pour ce template.
+        </div>
+      }
+    </div>
+  }
+</section>

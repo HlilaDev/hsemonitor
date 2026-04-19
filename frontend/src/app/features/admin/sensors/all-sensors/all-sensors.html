@@ -1,0 +1,154 @@
+<div class="page">
+  <div class="header">
+    <div>
+      <h2>All Sensors</h2>
+      <p class="muted">Liste des capteurs + filtres</p>
+    </div>
+
+    <a class="btn primary" routerLink="/admin/sensors/add">
+      <i class="bi bi-plus-lg"></i>
+      Ajouter
+    </a>
+  </div>
+
+  <!-- Filters -->
+  <div class="card filters">
+    <div class="field">
+      <label>Recherche</label>
+      <input
+        class="input"
+        type="text"
+        placeholder="Nom..."
+        [ngModel]="q()"
+        (ngModelChange)="q.set($event)"
+        (keyup.enter)="onSearch()"
+      />
+    </div>
+
+    <div class="field">
+      <label>Zone (id)</label>
+      <input
+        class="input"
+        type="text"
+        placeholder="Zone ID"
+        [ngModel]="zone()"
+        (ngModelChange)="zone.set($event)"
+        (keyup.enter)="onSearch()"
+      />
+    </div>
+
+    <div class="field">
+      <label>Type</label>
+      <select class="input" [ngModel]="type()" (ngModelChange)="type.set($event)">
+        <option value="">Tous</option>
+        <option value="temperature">Température</option>
+        <option value="gas">Gas</option>
+        <option value="humidity">Humidité</option>
+        <option value="noise">Bruit</option>
+        <option value="motion">Motion</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>Status</label>
+      <select class="input" [ngModel]="status()" (ngModelChange)="status.set($event)">
+        <option value="">Tous</option>
+        <option value="online">Online</option>
+        <option value="offline">Offline</option>
+        <option value="maintenance">Maintenance</option>
+      </select>
+    </div>
+
+    <div class="actions">
+      <button class="btn" (click)="onSearch()" [disabled]="loading()">
+        <i class="bi bi-search"></i> Filtrer
+      </button>
+      <button class="btn ghost" (click)="clearFilters()" [disabled]="loading()">
+        Réinitialiser
+      </button>
+    </div>
+  </div>
+
+  <!-- Table -->
+  <div class="card">
+    <div *ngIf="error()" class="alert error">
+      <i class="bi bi-exclamation-triangle"></i>
+      {{ error() }}
+    </div>
+
+    <div *ngIf="loading()" class="loading">
+      <span class="spinner"></span>
+      Chargement...
+    </div>
+
+    <div class="table-wrap" *ngIf="!loading()">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Nom</th>
+            <th>Type</th>
+            <th>Device</th>
+            <th>Zone</th>
+            <th>Threshold</th>
+            <th>Unit</th>
+            <th>Status</th>
+            <th class="right">Actions</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let s of pagedSensors()">
+            <td class="strong">{{ s.name }}</td>
+            <td>{{ s.type }}</td>
+
+            <!-- ✅ nom du device populé -->
+            <td>{{ deviceName(s) }}</td>
+
+            <td>{{ zoneName(s) }}</td>
+            <td>{{ s.threshold ?? '—' }}</td>
+            <td>{{ s.unit ?? '—' }}</td>
+
+            <td>
+              <span class="badge" [class]="badgeClass(s.status)">
+                {{ s.status }}
+              </span>
+            </td>
+
+            <td class="right actions-cell">
+              <a class="btn xs" [routerLink]="['/admin/sensors', s._id]" title="Voir">
+                <i class="bi bi-eye"></i>
+              </a>
+              <a class="btn xs" [routerLink]="['/admin/sensors/edit', s._id]" title="Modifier">
+                <i class="bi bi-pencil"></i>
+              </a>
+              <button class="btn xs" (click)="toggleStatus(s)" [disabled]="loading()" title="Toggle status">
+                <i class="bi bi-wifi"></i>
+              </button>
+              <button class="btn xs danger" (click)="deleteSensor(s)" [disabled]="loading()" title="Supprimer">
+                <i class="bi bi-trash"></i>
+              </button>
+            </td>
+          </tr>
+
+          <tr *ngIf="pagedSensors().length === 0">
+            <td colspan="8" class="empty">Aucun capteur trouvé.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination -->
+    <div class="pager" *ngIf="!loading()">
+      <div class="muted">Total : <b>{{ total() }}</b></div>
+      <div class="pager-actions">
+        <button class="btn" (click)="prev()" [disabled]="page() <= 1">
+          <i class="bi bi-chevron-left"></i>
+        </button>
+        <span class="muted">Page {{ page() }} / {{ pages() }}</span>
+        <button class="btn" (click)="next()" [disabled]="page() >= pages()">
+          <i class="bi bi-chevron-right"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

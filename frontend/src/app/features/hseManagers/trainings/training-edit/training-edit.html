@@ -1,0 +1,288 @@
+<div class="page">
+  <div class="page-head">
+    <div>
+      <h2>Modifier la formation</h2>
+      <p class="muted">
+        Mets à jour les informations de la formation et la liste des participants.
+      </p>
+    </div>
+
+    <div class="head-actions">
+      <button class="btn ghost" type="button" (click)="cancel()">
+        <i class="bi bi-arrow-left"></i>
+        Retour
+      </button>
+    </div>
+  </div>
+
+  @if (error()) {
+    <div class="alert error">
+      <i class="bi bi-exclamation-triangle"></i>
+      <span>{{ error() }}</span>
+    </div>
+  }
+
+  @if (isLoading()) {
+    <div class="loading-grid">
+      <div class="skeleton card large"></div>
+      <div class="skeleton card"></div>
+    </div>
+  } @else {
+    <form class="layout" [formGroup]="form" (ngSubmit)="save()">
+      <div class="main-col">
+        <div class="card section">
+          <div class="section-head">
+            <h3>Informations générales</h3>
+          </div>
+
+          <div class="grid two">
+            <div class="field full">
+              <label for="title">Titre *</label>
+              <input
+                id="title"
+                class="input"
+                type="text"
+                formControlName="title"
+                placeholder="Ex: Formation sécurité incendie"
+              />
+              @if (fieldInvalid('title')) {
+                <small class="err">
+                  Le titre est obligatoire et doit contenir au moins 3 caractères.
+                </small>
+              }
+            </div>
+
+            <div class="field full">
+              <label for="description">Description</label>
+              <textarea
+                id="description"
+                class="textarea"
+                rows="4"
+                formControlName="description"
+                placeholder="Décris l'objectif de la formation..."
+              ></textarea>
+            </div>
+
+            <div class="field">
+              <label for="category">Catégorie *</label>
+              <select id="category" class="select" formControlName="category">
+                @for (item of categories; track item) {
+                  <option [value]="item">{{ item }}</option>
+                }
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="status">Statut *</label>
+              <select id="status" class="select" formControlName="status">
+                @for (item of statuses; track item) {
+                  <option [value]="item">{{ item }}</option>
+                }
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="provider">Provider</label>
+              <input
+                id="provider"
+                class="input"
+                type="text"
+                formControlName="provider"
+                placeholder="Ex: organisme externe"
+              />
+            </div>
+
+            <div class="field">
+              <label for="location">Lieu</label>
+              <input
+                id="location"
+                class="input"
+                type="text"
+                formControlName="location"
+                placeholder="Ex: Salle HSE / Site A"
+              />
+            </div>
+
+            <div class="field">
+              <label for="startDate">Date début *</label>
+              <input
+                id="startDate"
+                class="input"
+                type="date"
+                formControlName="startDate"
+              />
+              @if (fieldInvalid('startDate')) {
+                <small class="err">La date de début est obligatoire.</small>
+              }
+            </div>
+
+            <div class="field">
+              <label for="endDate">Date fin</label>
+              <input
+                id="endDate"
+                class="input"
+                type="date"
+                formControlName="endDate"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div class="card section">
+          <div class="section-head">
+            <h3>Participants</h3>
+          </div>
+
+          <div class="field full">
+            <label for="participantsSelect">Sélectionner des employés</label>
+            <select
+              id="participantsSelect"
+              class="select multi"
+              multiple
+              (change)="onEmployeesSelectChange($event)"
+            >
+              @for (employee of employees(); track employee._id) {
+                <option
+                  [value]="employee._id"
+                  [selected]="selectedEmployeeIds().includes(employee._id)"
+                >
+                  {{ employeeLabel(employee) }}
+                </option>
+              }
+            </select>
+            <small class="hint">
+              Maintiens Ctrl ou Cmd pour sélectionner plusieurs employés.
+            </small>
+          </div>
+
+          @if (participantsFA.length === 0) {
+            <div class="empty">
+              <i class="bi bi-people"></i>
+              <p>Aucun participant sélectionné.</p>
+            </div>
+          } @else {
+            <div class="participants-stack" formArrayName="participants">
+              @for (group of participantsFA.controls; track $index; let i = $index) {
+                <div class="participant-card" [formGroupName]="i">
+                  <div class="participant-top">
+                    <div>
+                      <div class="participant-name">
+                        {{ employeeLabelById(group.get('employee')?.value) }}
+                      </div>
+                      <div class="participant-id">
+                        Employé lié à la formation
+                      </div>
+                    </div>
+
+                    <button
+                      class="icon-btn danger"
+                      type="button"
+                      (click)="removeParticipantById(group.get('employee')?.value)"
+                      title="Retirer"
+                    >
+                      <i class="bi bi-trash"></i>
+                    </button>
+                  </div>
+
+                  <div class="grid two compact">
+                    <div class="field">
+                      <label>Statut participant</label>
+                      <select class="select" formControlName="status">
+                        @for (status of participantStatuses; track status) {
+                          <option [value]="status">{{ statusLabel(status) }}</option>
+                        }
+                      </select>
+                    </div>
+
+                    <div class="field">
+                      <label>Score</label>
+                      <input
+                        class="input"
+                        type="number"
+                        min="0"
+                        max="100"
+                        formControlName="score"
+                        placeholder="0 - 100"
+                      />
+                    </div>
+
+                    <div class="field">
+                      <label>Validité jusqu'au</label>
+                      <input
+                        class="input"
+                        type="date"
+                        formControlName="validUntil"
+                      />
+                    </div>
+
+                    <div class="field">
+                      <label>Note</label>
+                      <input
+                        class="input"
+                        type="text"
+                        formControlName="note"
+                        placeholder="Observation, résultat..."
+                      />
+                    </div>
+                  </div>
+                </div>
+              }
+            </div>
+          }
+        </div>
+      </div>
+
+      <div class="side-col">
+        <div class="card side-card">
+          <div class="section-head">
+            <h3>Résumé</h3>
+          </div>
+
+          <div class="summary-list">
+            <div class="summary-item">
+              <span>Participants</span>
+              <strong>{{ participantsFA.length }}</strong>
+            </div>
+
+            <div class="summary-item">
+              <span>Statut</span>
+              <strong>{{ form.get('status')?.value || '-' }}</strong>
+            </div>
+
+            <div class="summary-item">
+              <span>Catégorie</span>
+              <strong>{{ form.get('category')?.value || '-' }}</strong>
+            </div>
+
+            <div class="summary-item">
+              <span>Date début</span>
+              <strong>{{ form.get('startDate')?.value || '-' }}</strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="card side-card">
+          <div class="section-head">
+            <h3>Actions</h3>
+          </div>
+
+          <div class="actions-stack">
+            <button
+              class="btn primary block"
+              type="submit"
+              [disabled]="isSaving()"
+            >
+              <i class="bi bi-check2-circle"></i>
+              {{ isSaving() ? 'Enregistrement...' : 'Enregistrer les modifications' }}
+            </button>
+
+            <button class="btn ghost block" type="button" (click)="cancel()">
+              <i class="bi bi-x-circle"></i>
+              Annuler
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  }
+</div>

@@ -1,0 +1,198 @@
+<div class="page">
+  <section class="hero">
+    <div class="hero__content">
+      <div>
+        <p class="eyebrow">Supervision HSE</p>
+        <h1>Vue d’ensemble des observations</h1>
+        <p class="subtitle">
+          Suivez toutes les observations remontées par les agents sur les différentes zones.
+        </p>
+      </div>
+
+      <div class="hero__actions">
+        <button class="btn btn-secondary" type="button" (click)="refresh()">
+          Actualiser
+        </button>
+
+        <button class="btn btn-primary" type="button">
+          Exporter
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <section class="stats">
+    <article class="stat-card">
+      <div class="stat-card__label">Total observations</div>
+      <div class="stat-card__value">{{ stats().total }}</div>
+      <div class="stat-card__hint">Toutes zones confondues</div>
+    </article>
+
+    <article class="stat-card">
+      <div class="stat-card__label">Observations ouvertes</div>
+      <div class="stat-card__value">{{ stats().open }}</div>
+      <div class="stat-card__hint">À traiter rapidement</div>
+    </article>
+
+    <article class="stat-card">
+      <div class="stat-card__label">Critiques</div>
+      <div class="stat-card__value">{{ stats().critical }}</div>
+      <div class="stat-card__hint">Niveau de risque élevé</div>
+    </article>
+
+    <article class="stat-card">
+      <div class="stat-card__label">Clôturées</div>
+      <div class="stat-card__value">{{ stats().closed }}</div>
+      <div class="stat-card__hint">Traitées par les équipes</div>
+    </article>
+  </section>
+
+  <section class="panel filters">
+    <div class="panel__header">
+      <div>
+        <h2>Filtres et recherche</h2>
+        <p>Affinez les résultats selon la gravité, le statut, la zone ou l’agent.</p>
+      </div>
+    </div>
+
+    <div class="filters__grid">
+      <div class="field field--search">
+        <label for="search">Recherche</label>
+        <input
+          id="search"
+          type="text"
+          placeholder="Titre, description, zone, agent..."
+          [ngModel]="search()"
+          (ngModelChange)="search.set($event)"
+        />
+      </div>
+
+      <div class="field">
+        <label for="status">Statut</label>
+        <select
+          id="status"
+          [ngModel]="selectedStatus()"
+          (ngModelChange)="selectedStatus.set($event)"
+        >
+          <option value="all">Tous</option>
+          <option value="open">Ouverte</option>
+          <option value="in_progress">En cours</option>
+          <option value="closed">Clôturée</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="severity">Gravité</label>
+        <select
+          id="severity"
+          [ngModel]="selectedSeverity()"
+          (ngModelChange)="selectedSeverity.set($event)"
+        >
+          <option value="all">Toutes</option>
+          <option value="low">Faible</option>
+          <option value="medium">Moyenne</option>
+          <option value="high">Élevée</option>
+          <option value="critical">Critique</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="zone">Zone</label>
+        <select
+          id="zone"
+          [ngModel]="selectedZone()"
+          (ngModelChange)="selectedZone.set($event)"
+        >
+          <option *ngFor="let zone of zones()" [value]="zone">
+            {{ zone === 'all' ? 'Toutes les zones' : zone }}
+          </option>
+        </select>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel table-panel">
+    <div class="panel__header">
+      <div>
+        <h2>Liste des observations</h2>
+        <p>{{ filteredObservations().length }} résultat(s) affiché(s)</p>
+      </div>
+    </div>
+
+    <div class="alert error" *ngIf="error()">
+      {{ error() }}
+    </div>
+
+    <div class="table-wrap" *ngIf="!loading() && filteredObservations().length; else tableStateTpl">
+      <table class="observations-table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Observation</th>
+            <th>Agent</th>
+            <th>Zone</th>
+            <th>Gravité</th>
+            <th>Statut</th>
+            <th>Images</th>
+            <th class="actions-col">Action</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let item of filteredObservations(); trackBy: trackById">
+            <td class="date-cell">
+              {{ item.createdAt | date:'dd/MM/yyyy, HH:mm' }}
+            </td>
+
+            <td class="observation-cell">
+              <div class="observation-title">{{ item.title }}</div>
+              <div class="observation-desc">{{ item.description }}</div>
+            </td>
+
+            <td>
+              <span class="agent-chip">{{ item.agentName }}</span>
+            </td>
+
+            <td>{{ item.zone }}</td>
+
+            <td>
+              <span class="badge severity" [ngClass]="item.severity">
+                {{ getSeverityLabel(item.severity) }}
+              </span>
+            </td>
+
+            <td>
+              <span class="badge status" [ngClass]="item.status">
+                {{ getStatusLabel(item.status) }}
+              </span>
+            </td>
+
+            <td>{{ item.imagesCount }} image(s)</td>
+
+            <td class="actions-col">
+              <button class="link-btn" type="button" (click)="viewDetails(item)">
+                Voir
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <ng-template #tableStateTpl>
+      <div class="empty-state" *ngIf="loading(); else emptyState">
+        <div class="empty-state__icon">⏳</div>
+        <h3>Chargement des observations...</h3>
+        <p>Les données sont en cours de récupération depuis la base.</p>
+      </div>
+    </ng-template>
+
+    <ng-template #emptyState>
+      <div class="empty-state">
+        <div class="empty-state__icon">📝</div>
+        <h3>Aucune observation trouvée</h3>
+        <p>Essayez de modifier les filtres ou la recherche pour afficher plus de résultats.</p>
+      </div>
+    </ng-template>
+  </section>
+</div>

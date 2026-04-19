@@ -1,0 +1,125 @@
+{
+  "DEVICES": {
+    "TITLE": "Devices",
+    "LIST_TITLE": "Devices",
+    "SUBTITLE": "Liste des devices avec filtres",
+    "ADD_LABEL": "Ajouter un device",
+    "ADD_BTN": "Ajouter",
+    "ADD_TITLE": "Ajouter un device",
+    "ADD_SUBTITLE": "Créez un nouveau device et affectez-le à une zone.",
+    "EMPTY": "Aucun device trouvé.",
+    "COLUMNS": {
+      "DEVICE_ID": "ID Device",
+      "NAME": "Nom",
+      "ZONE": "Zone",
+      "SENSORS": "Capteurs",
+      "STATUS": "Statut",
+      "ACTIONS": "Actions"
+    },
+    "FILTERS": {
+      "SEARCH": "Recherche",
+      "SEARCH_PH": "Nom ou ID device...",
+      "ZONE": "Zone",
+      "ZONE_PH": "Nom ou ID zone",
+      "STATUS": "Statut",
+      "ALL": "Tous"
+    },
+    "FORM": {
+      "DEVICE_ID": "ID du device",
+      "DEVICE_ID_PH": "Ex : esp8266-01",
+      "NAME": "Nom du device",
+      "NAME_PH": "Ex : ESP Zone A",
+      "ZONE": "Zone",
+      "SELECT_ZONE": "Sélectionner une zone",
+      "SENSORS": "Capteurs",
+      "SENSORS_PH": "Ex : température, humidité, gaz",
+      "SENSORS_HELP": "Saisissez les capteurs séparés par des virgules.",
+      "STATUS": "Statut",
+      "DESCRIPTION": "Description",
+      "DESC_PH": "Décrivez ce device..."
+    },
+    "DETAIL": {
+      "KICKER": "Devices",
+      "TITLE": "Détails du device",
+      "SUBTITLE": "Détails du device + liste des capteurs liés.",
+      "MANAGEMENT": "Management",
+      "OVERVIEW": "Vue d'ensemble",
+      "LAST_SEEN": "Dernière activité",
+      "CREATED": "Créé le",
+      "SENSORS": "Capteurs",
+      "LOADING_SENSORS": "Chargement des capteurs...",
+      "NO_SENSORS": "Aucun capteur lié à ce device.",
+      "NOT_FOUND": "Device introuvable.",
+      "SENSORS_LOAD_ERROR": "Erreur lors du chargement des capteurs liés."
+    },
+    "STATUS": {
+      "online": "En ligne",
+      "offline": "Hors ligne",
+      "maintenance": "Maintenance"
+    },
+    "VALIDATION": {
+      "DEVICE_ID_REQUIRED": "L'ID du device est requis.",
+      "DEVICE_ID_MIN": "L'ID du device doit contenir au moins 3 caractères.",
+      "ZONE_REQUIRED": "La zone est requise."
+    },
+    "MESSAGES": {
+      "LOAD_ERROR": "Erreur lors du chargement des devices.",
+      "CREATE_SUCCESS": "Device ajouté avec succès.",
+      "CREATE_ERROR": "Erreur lors de l'ajout du device.",
+      "DELETE_CONFIRM": "Voulez-vous vraiment supprimer ce device ?",
+      "DELETE_SUCCESS": "Device supprimé avec succès.",
+      "DELETE_ERROR": "Erreur lors de la suppression du device."
+    },
+    "ERROR": {
+      "LOAD": "Erreur lors du chargement des devices.",
+      "DELETE": "Erreur lors de la suppression du device.",
+      "MISSING_ID": "ID device manquant dans la route.",
+      "LOAD_ONE": "Erreur lors du chargement du device."
+    },
+    "CONFIRM_DELETE": "Voulez-vous vraiment supprimer ce device ?"
+  },
+  "SENSORS": {
+    "TITLE": "Capteurs",
+    "SUBTITLE": "Liste des capteurs",
+    "COLUMNS": {
+      "NAME": "Nom",
+      "TYPE": "Type",
+      "ZONE": "Zone",
+      "STATUS": "Statut",
+      "THRESHOLD": "Seuil"
+    },
+    "TYPE": {
+      "temperature": "Température",
+      "humidity": "Humidité",
+      "gas": "Gaz",
+      "smoke": "Fumée",
+      "motion": "Mouvement",
+      "pressure": "Pression",
+      "light": "Luminosité",
+      "sound": "Son",
+      "vibration": "Vibration",
+      "other": "Autre"
+    },
+    "STATUS": {
+      "online": "En ligne",
+      "offline": "Hors ligne",
+      "maintenance": "Maintenance"
+    }
+  },
+  "COMMON": {
+    "LOADING": "Chargement...",
+    "RETRY": "Réessayer",
+    "EDIT": "Modifier",
+    "DELETE": "Supprimer",
+    "VIEW": "Voir",
+    "BACK": "Retour",
+    "SAVE": "Enregistrer",
+    "SAVING": "Enregistrement...",
+    "CANCEL": "Annuler",
+    "FILTER": "Filtrer",
+    "RESET": "Réinitialiser",
+    "TOTAL": "Total",
+    "PAGE": "Page",
+    "EMPTY_VALUE": "—"
+  }
+}

@@ -1,0 +1,219 @@
+<div class="page">
+  <!-- Header -->
+  <div class="header">
+    <div class="title">
+      <h2>Reports</h2>
+      <p class="muted">
+        Gérer les rapports HSE (création, suivi, export PDF, métriques).
+      </p>
+    </div>
+
+    <div class="actions">
+      <button class="btn ghost" (click)="refresh()" [disabled]="loading()">
+        <i class="bi bi-arrow-repeat"></i>
+        Rafraîchir
+      </button>
+
+      <button class="btn primary" routerLink="/manager/reports/create">
+        <i class="bi bi-plus-lg"></i>
+        Nouveau rapport
+      </button>
+    </div>
+  </div>
+
+  <!-- Alert -->
+  <div *ngIf="error()" class="alert error">
+    <i class="bi bi-exclamation-triangle"></i>
+    {{ error() }}
+  </div>
+
+  <!-- Filters -->
+  <div class="card filters">
+    <!-- Search -->
+    <div class="field grow">
+      <label>Recherche</label>
+      <div class="input-wrap">
+        <i class="bi bi-search"></i>
+        <input
+          class="input"
+          type="text"
+          placeholder="Titre, zone, type..."
+          [value]="q()"
+          (input)="setQ($any($event.target).value)"
+        />
+      </div>
+    </div>
+
+    <!-- Type -->
+    <div class="field">
+      <label>Type</label>
+      <select class="select" [value]="type()" (change)="setType($any($event.target).value)">
+        <option value="all">Tous</option>
+        <option value="weekly">Weekly</option>
+        <option value="monthly">Monthly</option>
+        <option value="yearly">Yearly</option>
+        <option value="audit">Audit</option>
+        <option value="custom">Custom</option>
+      </select>
+    </div>
+
+    <!-- Zone -->
+    <div class="field">
+      <label>Zone</label>
+      <select class="select" [value]="zoneId()" (change)="setZone($any($event.target).value)">
+        <option value="all">Toutes</option>
+        <option *ngFor="let z of zones()" [value]="z._id">{{ z.name }}</option>
+      </select>
+    </div>
+
+    <!-- Sort -->
+    <div class="field">
+      <label>Tri</label>
+      <select class="select" [value]="sort()" (change)="setSort($any($event.target).value)">
+        <option value="date_desc">Date (récent → ancien)</option>
+        <option value="date_asc">Date (ancien → récent)</option>
+        <option value="title_asc">Titre (A → Z)</option>
+        <option value="title_desc">Titre (Z → A)</option>
+      </select>
+    </div>
+
+    <!-- Reset -->
+    <div class="field">
+      <label>&nbsp;</label>
+      <button class="btn ghost" (click)="reset()">
+        <i class="bi bi-x-circle"></i>
+        Reset
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading skeleton -->
+  <div *ngIf="loading()" class="grid">
+    <div class="card skeleton" *ngFor="let _ of [1,2,3,4,5,6]">
+      <div class="s-line w80"></div>
+      <div class="s-row">
+        <div class="s-pill"></div>
+        <div class="s-pill"></div>
+      </div>
+      <div class="s-line w60"></div>
+      <div class="s-line w40"></div>
+      <div class="s-line w80"></div>
+    </div>
+  </div>
+
+  <!-- Grid -->
+  <div *ngIf="!loading() && filtered().length" class="grid">
+    <div class="card training" *ngFor="let r of filtered()">
+      <div class="top">
+        <div>
+          <div class="t-title">
+            {{ r.title || ('Report ' + (r.type | uppercase)) }}
+          </div>
+
+          <div class="t-sub">
+            <span class="chip">
+              <i class="bi bi-calendar3"></i>
+              {{ formatPeriod(r.startDate, r.endDate) }}
+            </span>
+
+            <!-- ✅ FIX: no r.zone.name directly -->
+            <span class="chip" *ngIf="zoneName(r.zone) !== '—'">
+              <i class="bi bi-geo-alt"></i>
+              {{ zoneName(r.zone) }}
+            </span>
+
+            <span class="chip" *ngIf="r.isAutomatic">
+              <i class="bi bi-cpu"></i>
+              Auto
+            </span>
+
+            <span class="chip" *ngIf="!r.isAutomatic">
+              <i class="bi bi-person"></i>
+              Manuel
+            </span>
+          </div>
+        </div>
+
+        <div class="right">
+          <!-- type badge (reuse trainings badge classes) -->
+          <span class="badge" [ngClass]="badgeClass(r.type)">
+            {{ r.type }}
+          </span>
+
+          <button class="icon-btn" title="Voir" [routerLink]="['/manager/reports', r._id]">
+            <i class="bi bi-eye"></i>
+          </button>
+
+          <button class="icon-btn" title="Modifier" [routerLink]="['/manager/reports', r._id, 'edit']">
+            <i class="bi bi-pencil"></i>
+          </button>
+
+          <button class="icon-btn danger" title="Supprimer" (click)="remove(r)">
+            <i class="bi bi-trash"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- mid metrics -->
+      <div class="mid">
+        <div class="row">
+          <span class="k"><i class="bi bi-exclamation-octagon"></i> Incidents</span>
+          <span class="v">{{ r.metrics?.totalIncidents ?? 0 }}</span>
+        </div>
+
+        <div class="row">
+          <span class="k"><i class="bi bi-clipboard-check"></i> Observations</span>
+          <span class="v">{{ r.metrics?.totalObservations ?? 0 }}</span>
+        </div>
+
+        <div class="row">
+          <span class="k"><i class="bi bi-shield-check"></i> Compliance</span>
+          <span class="v">{{ (r.metrics?.complianceRate ?? 0) | number:'1.0-2' }}%</span>
+        </div>
+
+        <div class="row">
+          <span class="k"><i class="bi bi-person-badge"></i> Généré par</span>
+          <span class="v">{{ userName(r.generatedBy) }}</span>
+        </div>
+      </div>
+
+      <!-- export -->
+      <div class="desc" *ngIf="r.exportUrl; else noExport">
+        <i class="bi bi-file-earmark-pdf"></i>
+        Export disponible :
+        <a [href]="r.exportUrl" target="_blank" rel="noopener">ouvrir PDF</a>
+      </div>
+
+      <ng-template #noExport>
+        <div class="desc">
+          <i class="bi bi-info-circle"></i>
+          Aucun export PDF pour ce rapport.
+        </div>
+      </ng-template>
+
+      <div class="bottom">
+        <button class="btn ghost small" (click)="recalcMetrics(r)">
+          <i class="bi bi-arrow-clockwise"></i>
+          Recalcul métriques
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty -->
+  <div *ngIf="!loading() && !filtered().length" class="card empty">
+    <div class="icon">
+      <i class="bi bi-file-earmark-text"></i>
+    </div>
+
+    <div class="txt">
+      <h3>Aucun rapport</h3>
+      <p class="muted">Crée ton premier rapport ou change les filtres.</p>
+
+      <button class="btn primary" routerLink="/manager/reports/create">
+        <i class="bi bi-plus-lg"></i>
+        Créer un rapport
+      </button>
+    </div>
+  </div>
+</div>

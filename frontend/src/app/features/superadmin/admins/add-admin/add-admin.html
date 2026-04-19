@@ -1,0 +1,219 @@
+<div class="page">
+  <div class="page-header">
+    <div class="title-block">
+      <span class="eyebrow">Super Admin / Gestion</span>
+      <h2>Ajouter un admin</h2>
+      <p class="muted">Créer un nouvel administrateur et le lier à une company.</p>
+    </div>
+
+    <div class="header-actions">
+      <a class="btn btn-light" routerLink="/superadmin/admins">
+        <span>←</span>
+        Retour
+      </a>
+    </div>
+  </div>
+
+  <div class="top-grid">
+    <div class="preview-card">
+      <div class="preview-avatar">
+        {{ fullNamePreview() ? fullNamePreview().charAt(0) : 'A' }}
+      </div>
+
+      <div class="preview-content">
+        <span class="preview-label">Aperçu</span>
+        <h3>{{ fullNamePreview() || 'Nouvel Admin' }}</h3>
+        <p>{{ email() || 'email@company.com' }}</p>
+      </div>
+    </div>
+
+    <div class="mini-stat">
+      <span class="mini-label">Rôle</span>
+      <strong>Admin</strong>
+    </div>
+
+    <div class="mini-stat">
+      <span class="mini-label">Statut</span>
+      <strong>{{ isActive() ? 'Actif' : 'Inactif' }}</strong>
+    </div>
+  </div>
+
+  @if (errorMessage()) {
+    <div class="alert-error">
+      {{ errorMessage() }}
+    </div>
+  }
+
+  @if (successMessage()) {
+    <div class="alert-success">
+      {{ successMessage() }}
+    </div>
+  }
+
+  <form class="form-card" (ngSubmit)="submit()">
+    <div class="section-head">
+      <div>
+        <h3>Informations administrateur</h3>
+        <p>Renseignez les informations principales du compte admin.</p>
+      </div>
+    </div>
+
+    <div class="form-grid">
+      <div class="field">
+        <label for="firstName">Prénom <span>*</span></label>
+        <input
+          id="firstName"
+          type="text"
+          placeholder="Ex: Ali"
+          [ngModel]="firstName()"
+          (ngModelChange)="firstName.set($event)"
+          name="firstName"
+        />
+      </div>
+
+      <div class="field">
+        <label for="lastName">Nom <span>*</span></label>
+        <input
+          id="lastName"
+          type="text"
+          placeholder="Ex: Salah"
+          [ngModel]="lastName()"
+          (ngModelChange)="lastName.set($event)"
+          name="lastName"
+        />
+      </div>
+
+      <div class="field field-full">
+        <label for="email">Email <span>*</span></label>
+        <input
+          id="email"
+          type="email"
+          placeholder="admin@company.com"
+          [ngModel]="email()"
+          (ngModelChange)="email.set($event)"
+          name="email"
+        />
+      </div>
+
+      <div class="field">
+        <label for="password">Mot de passe <span>*</span></label>
+        <div class="password-wrap">
+          <input
+            id="password"
+            [type]="showPassword() ? 'text' : 'password'"
+            placeholder="Créer un mot de passe"
+            [ngModel]="password()"
+            (ngModelChange)="password.set($event)"
+            name="password"
+          />
+          <button
+            type="button"
+            class="toggle-btn"
+            (click)="showPassword.set(!showPassword())"
+          >
+            {{ showPassword() ? 'Hide' : 'Show' }}
+          </button>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="confirmPassword">Confirmer le mot de passe <span>*</span></label>
+        <div class="password-wrap">
+          <input
+            id="confirmPassword"
+            [type]="showConfirmPassword() ? 'text' : 'password'"
+            placeholder="Confirmer le mot de passe"
+            [ngModel]="confirmPassword()"
+            (ngModelChange)="confirmPassword.set($event)"
+            name="confirmPassword"
+          />
+          <button
+            type="button"
+            class="toggle-btn"
+            (click)="showConfirmPassword.set(!showConfirmPassword())"
+          >
+            {{ showConfirmPassword() ? 'Hide' : 'Show' }}
+          </button>
+        </div>
+
+        @if (confirmPassword() && password() !== confirmPassword()) {
+          <small class="field-error">Les mots de passe ne correspondent pas.</small>
+        }
+      </div>
+
+<div class="field field-full">
+  <label for="companyId">Company <span>*</span></label>
+  <select
+    id="companyId"
+    [ngModel]="companyId()"
+    (ngModelChange)="companyId.set($event)"
+    name="companyId"
+    [disabled]="loadingCompanies()"
+  >
+    <option value="">
+      @if (loadingCompanies()) {
+        Chargement des companies...
+      } @else {
+        Sélectionner une company
+      }
+    </option>
+
+    @for (company of companies(); track company._id) {
+      <option [value]="company._id">{{ company.name }}</option>
+    }
+  </select>
+
+  @if (companyId()) {
+    <small class="selected-company-hint">
+      Company sélectionnée : {{ selectedCompanyName() }}
+    </small>
+  }
+</div>
+
+      <div class="field field-full">
+        <div class="check-row">
+          <label class="switch">
+            <input
+              type="checkbox"
+              [ngModel]="isActive()"
+              (ngModelChange)="isActive.set($event)"
+              name="isActive"
+            />
+            <span class="slider"></span>
+          </label>
+
+          <div class="check-text">
+            <strong>Compte actif</strong>
+            <p>L’administrateur pourra se connecter immédiatement.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="button" class="btn btn-light" routerLink="/superadmin/admins">
+        Annuler
+      </button>
+
+      <button
+        type="button"
+        class="btn btn-outline"
+        (click)="resetForm()"
+      >
+        Reset
+      </button>
+
+      <button
+        type="submit"
+        class="btn btn-primary"
+        [disabled]="loading() || formInvalid()"
+      >
+        @if (loading()) {
+          <span>Création...</span>
+        } @else {
+          <span>Créer Admin</span>
+        }
+      </button>
+    </div>
+  </form>
+</div>

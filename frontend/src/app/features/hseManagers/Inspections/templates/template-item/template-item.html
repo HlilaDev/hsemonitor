@@ -1,0 +1,64 @@
+<div
+  class="item-card"
+  (mouseenter)="onMouseEnter()"
+  (mouseleave)="onMouseLeave()"
+>
+  <div class="item-main">
+    <div class="item-order">
+      <span>#{{ index + 1 }}</span>
+    </div>
+
+    <div class="item-content">
+      <div class="item-top">
+        <h4>{{ item.label }}</h4>
+
+        <div class="chips">
+          <span class="chip type">{{ typeLabel() }}</span>
+          <span class="chip required" [class.optional]="!item.isRequired">
+            {{ requiredLabel() }}
+          </span>
+        </div>
+      </div>
+
+      <div class="item-meta">
+        <span>Ordre: {{ item.order ?? index }}</span>
+
+        @if (item._id) {
+          <span>ID lié</span>
+        }
+
+        @if (item.updatedAt) {
+          <span>Mis à jour</span>
+        }
+      </div>
+    </div>
+  </div>
+
+  @if (!readonly) {
+    <div class="item-actions" [class.visible]="hovered()">
+      <button
+        class="icon-btn"
+        type="button"
+        title="Modifier"
+        (click)="onEdit()"
+        [disabled]="editing || deleting"
+      >
+        <i class="bi bi-pencil-square"></i>
+      </button>
+
+      <button
+        class="icon-btn danger"
+        type="button"
+        title="Supprimer"
+        (click)="onRemove()"
+        [disabled]="deleting || editing"
+      >
+        @if (deleting) {
+          <i class="bi bi-hourglass-split"></i>
+        } @else {
+          <i class="bi bi-trash"></i>
+        }
+      </button>
+    </div>
+  }
+</div>

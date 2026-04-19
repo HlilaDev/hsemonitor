@@ -1,0 +1,116 @@
+{
+  "ZONES": {
+    "TITLE": "Zones",
+    "ADD_BTN": "Add Zone",
+    "EMPTY": "No zones found.",
+    "EDIT_TITLE": "Edit Zone",
+    "EDIT_SUBTITLE": "Update this zone's information.",
+    "COLUMNS": {
+      "NAME": "Name",
+      "DESCRIPTION": "Description",
+      "RISK": "Risk Level",
+      "ACTIVE": "Active"
+    },
+    "FORM": {
+      "NAME": "Zone Name",
+      "NAME_PH": "Example: Production Zone A",
+      "DESCRIPTION": "Description",
+      "DESC_PH": "Describe this zone...",
+      "RISK": "Risk Level",
+      "ACTIVE": "Active Zone",
+      "ACTIVE_HELP": "Disable this option to temporarily hide the zone."
+    },
+    "RISK": {
+      "low": "Low",
+      "medium": "Medium",
+      "high": "High"
+    },
+    "RISK_LEVELS": {
+      "LOW": "Low",
+      "MEDIUM": "Medium",
+      "HIGH": "High",
+      "CRITICAL": "Critical",
+      "UNKNOWN": "Unknown"
+    },
+    "VALIDATION": {
+      "NAME_REQUIRED": "Zone name is required.",
+      "NAME_MIN": "The name must contain at least 3 characters."
+    },
+    "MESSAGES": {
+      "LOAD_ERROR": "Error while loading zones.",
+      "DETAIL_LOAD_ERROR": "Error while loading the zone.",
+      "UPDATE_SUCCESS": "Zone updated successfully.",
+      "UPDATE_ERROR": "Error while updating the zone.",
+      "DELETE_CONFIRM": "Are you sure you want to delete this zone?",
+      "DELETE_SUCCESS": "Zone deleted successfully.",
+      "DELETE_ERROR": "Error while deleting the zone.",
+      "TOGGLE_SUCCESS": "Zone status updated successfully.",
+      "TOGGLE_ERROR": "Error while updating the zone status."
+    },
+    "OVERVIEW": {
+      "KICKER": "Zones",
+      "TITLE": "Zones Overview",
+      "SUBTITLE": "Quickly monitor the status, risk, and activity of each zone.",
+      "ALL_ZONES": "All Zones",
+      "EMPTY": "No zone matches the filters.",
+      "FILTERS": {
+        "SEARCH": "Search",
+        "SEARCH_PH": "Name, code, or description...",
+        "STATUS": "Status",
+        "RISK": "Risk",
+        "ALL": "All"
+      },
+      "STATS": {
+        "TOTAL": "Total Zones",
+        "ACTIVE": "Active Zones",
+        "WARNING": "Zones on Alert",
+        "ALERTS": "Alerts"
+      },
+      "CARD": {
+        "EMPLOYEES": "Employees",
+        "DEVICES": "Devices",
+        "SENSORS": "Sensors",
+        "ALERTS": "Alerts",
+        "TEMPERATURE": "Temperature",
+        "HUMIDITY": "Humidity"
+      },
+      "STATUS": {
+        "active": "Active",
+        "inactive": "Inactive",
+        "warning": "Alert"
+      },
+      "RISK": {
+        "low": "Low",
+        "medium": "Medium",
+        "high": "High"
+      }
+    },
+    "DETAIL": {
+      "TITLE": "Zone Details",
+      "SUBTITLE": "View the information, environment, and resources linked to this zone.",
+      "ENVIRONMENT": "Environment",
+      "CREATED_AT": "Created At",
+      "UPDATED_AT": "Updated At",
+      "DEVICES": "Devices",
+      "SENSORS": "Sensors",
+      "EMPLOYEES": "Employees",
+      "NO_DEVICES": "No devices in this zone.",
+      "NO_SENSORS": "No sensors in this zone.",
+      "NO_EMPLOYEES": "No employees assigned to this zone.",
+      "NOT_FOUND": "Zone not found."
+    }
+  },
+  "COMMON": {
+    "LOADING": "Loading...",
+    "RETRY": "Retry",
+    "ACTIONS": "Actions",
+    "EDIT": "Edit",
+    "DELETE": "Delete",
+    "BACK": "Back",
+    "SAVE": "Save",
+    "SAVING": "Saving...",
+    "CANCEL": "Cancel",
+    "VIEW": "View",
+    "RESET": "Reset"
+  }
+}

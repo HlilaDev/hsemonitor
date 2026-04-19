@@ -1,0 +1,602 @@
+<div class="page">
+  @if (loading()) {
+    <div class="state-card loading">
+      <div class="spinner"></div>
+      <h3>Chargement de l’observation...</h3>
+      <p>Veuillez patienter pendant la récupération des données.</p>
+    </div>
+  } @else {
+    @if (!error()) {
+      @if (observation(); as obs) {
+        <div class="topbar">
+          <button class="back-btn" type="button" (click)="goBack()">
+            <span>←</span>
+            Retour aux observations
+          </button>
+
+          <div class="topbar-actions">
+            <button class="refresh-btn" type="button" (click)="refresh()">
+              Actualiser
+            </button>
+          </div>
+        </div>
+
+        <section class="hero">
+          <div class="hero__content">
+            <div class="hero__left">
+              <p class="eyebrow">Observation HSE</p>
+
+              <div class="title-row">
+                <h1>{{ obs.title }}</h1>
+
+                <div class="badges">
+                  <span class="badge severity" [ngClass]="obs.severity">
+                    {{ getSeverityLabel(obs.severity) }}
+                  </span>
+
+                  <span class="badge status" [ngClass]="obs.status">
+                    {{ getStatusLabel(obs.status) }}
+                  </span>
+
+                  @if (obs.assignedTo) {
+                    <span class="badge assigned">Affectée</span>
+                  } @else {
+                    <span class="badge unassigned">Non affectée</span>
+                  }
+                </div>
+              </div>
+
+              <p class="hero__desc">
+                {{ obs.description }}
+              </p>
+
+              <div class="hero__meta">
+                <div class="meta-chip">
+                  <span class="label">Zone</span>
+                  <strong>{{ zoneName() }}</strong>
+                </div>
+
+                <div class="meta-chip">
+                  <span class="label">Déclarée par</span>
+                  <strong>{{ reporterName() }}</strong>
+                </div>
+
+                <div class="meta-chip">
+                  <span class="label">Affectée à</span>
+                  <strong>{{ assignedToName() }}</strong>
+                </div>
+
+                <div class="meta-chip">
+                  <span class="label">Traité par</span>
+                  <strong>{{ resolvedByName() }}</strong>
+                </div>
+
+                <div class="meta-chip">
+                  <span class="label">Créée le</span>
+                  <strong>{{ obs.createdAt | date:'dd/MM/yyyy HH:mm' }}</strong>
+                </div>
+
+                <div class="meta-chip">
+                  <span class="label">Images observation</span>
+                  <strong>{{ imageCount() }}</strong>
+                </div>
+
+                <div class="meta-chip">
+                  <span class="label">Preuves traitement</span>
+                  <strong>{{ resolutionImageCount() }}</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="content-grid">
+          <div class="main-column">
+            <article class="panel">
+              <div class="panel__header">
+                <div>
+                  <h2>Détails de l’observation</h2>
+                  <p>Informations détaillées déclarées par l’agent.</p>
+                </div>
+              </div>
+
+              <div class="details-grid">
+                <div class="detail-card">
+                  <span class="detail-label">Identifiant</span>
+                  <strong>{{ obs._id }}</strong>
+                </div>
+
+                <div class="detail-card">
+                  <span class="detail-label">Zone</span>
+                  <strong>{{ zoneName() }}</strong>
+                </div>
+
+                <div class="detail-card">
+                  <span class="detail-label">Déclarée par</span>
+                  <strong>{{ reporterName() }}</strong>
+                </div>
+
+                <div class="detail-card">
+                  <span class="detail-label">Email déclarant</span>
+                  <strong>{{ reporterEmail() }}</strong>
+                </div>
+
+                <div class="detail-card">
+                  <span class="detail-label">Gravité</span>
+                  <strong>{{ getSeverityLabel(obs.severity) }}</strong>
+                </div>
+
+                <div class="detail-card">
+                  <span class="detail-label">Statut</span>
+                  <strong>{{ getStatusLabel(obs.status) }}</strong>
+                </div>
+
+                <div class="detail-card">
+                  <span class="detail-label">Affectée à</span>
+                  <strong>{{ assignedToName() }}</strong>
+                </div>
+
+                <div class="detail-card">
+                  <span class="detail-label">Email agent affecté</span>
+                  <strong>{{ assignedToEmail() }}</strong>
+                </div>
+
+                <div class="detail-card">
+                  <span class="detail-label">Affectée par</span>
+                  <strong>{{ assignedByName() }}</strong>
+                </div>
+
+                <div class="detail-card">
+                  <span class="detail-label">Date d’affectation</span>
+                  <strong>{{ assignedAtLabel() }}</strong>
+                </div>
+
+                <div class="detail-card">
+                  <span class="detail-label">Créée le</span>
+                  <strong>{{ obs.createdAt | date:'dd/MM/yyyy HH:mm' }}</strong>
+                </div>
+
+                <div class="detail-card">
+                  <span class="detail-label">Dernière mise à jour</span>
+                  <strong>{{ obs.updatedAt | date:'dd/MM/yyyy HH:mm' }}</strong>
+                </div>
+              </div>
+
+              <div class="description-box">
+                <h3>Description complète</h3>
+                <p>{{ obs.description }}</p>
+              </div>
+            </article>
+
+            <article class="panel">
+              <div class="panel__header">
+                <div>
+                  <h2>Preuves visuelles de l’observation</h2>
+                  <p>{{ imageCount() }} image(s) associée(s) à cette observation.</p>
+                </div>
+              </div>
+
+              @if (hasImages()) {
+                <div class="gallery">
+                  @if (selectedImage(); as image) {
+                    <div class="gallery__preview">
+                      <img [src]="getImageUrl(image.url)" alt="Image observation" />
+                    </div>
+                  }
+
+                  <div class="gallery__thumbs">
+                    @for (img of obs.images ?? []; track trackByImage($index, img); let i = $index) {
+                      <button
+                        type="button"
+                        class="thumb"
+                        [class.active]="selectedImageIndex() === i"
+                        (click)="selectImage(i)"
+                      >
+                        <img [src]="getImageUrl(img.url)" alt="Miniature observation" />
+                        <span>{{ img.uploadedAt | date:'dd/MM HH:mm' }}</span>
+                      </button>
+                    }
+                  </div>
+                </div>
+              } @else {
+                <div class="empty-box">
+                  <div class="empty-icon">🖼️</div>
+                  <h3>Aucune image disponible</h3>
+                  <p>Cette observation ne contient pas encore de preuves visuelles.</p>
+                </div>
+              }
+            </article>
+
+            <article class="panel">
+              <div class="panel__header">
+                <div>
+                  <h2>Traitement réalisé par l’agent</h2>
+                  <p>Consulter le commentaire de traitement et les images envoyées par l’agent.</p>
+                </div>
+              </div>
+
+              @if (hasResolutionData()) {
+                <div class="treatment-wrap">
+                  <div class="treatment-grid">
+                    <div class="treatment-card">
+                      <span class="treatment-label">Traité par</span>
+                      <strong>{{ resolvedByName() }}</strong>
+                    </div>
+
+                    <div class="treatment-card">
+                      <span class="treatment-label">Date du traitement</span>
+                      <strong>{{ resolvedAtLabel() }}</strong>
+                    </div>
+
+                    <div class="treatment-card">
+                      <span class="treatment-label">Statut actuel</span>
+                      <strong>{{ getStatusLabel(obs.status) }}</strong>
+                    </div>
+
+                    <div class="treatment-card">
+                      <span class="treatment-label">Images de preuve</span>
+                      <strong>{{ resolutionImageCount() }}</strong>
+                    </div>
+                  </div>
+
+                  <div class="treatment-note">
+                    <h3>Commentaire de traitement</h3>
+                    <p>
+                      {{ obs.resolutionComment || 'Aucun commentaire de traitement fourni par l’agent.' }}
+                    </p>
+                  </div>
+
+                  <div class="treatment-media">
+                    <div class="section-mini-title">
+                      Images de preuve du traitement
+                    </div>
+
+                    @if (hasResolutionImages()) {
+                      <div class="gallery">
+                        @if (selectedResolutionImage(); as image) {
+                          <div class="gallery__preview treatment-preview">
+                            <img [src]="getImageUrl(image.url)" alt="Image de traitement" />
+                          </div>
+                        }
+
+                        <div class="gallery__thumbs">
+                          @for (img of obs.resolutionImages ?? []; track trackByImage($index, img); let i = $index) {
+                            <button
+                              type="button"
+                              class="thumb"
+                              [class.active]="selectedResolutionImageIndex() === i"
+                              (click)="selectResolutionImage(i)"
+                            >
+                              <img [src]="getImageUrl(img.url)" alt="Miniature traitement" />
+                              <span>{{ img.uploadedAt | date:'dd/MM HH:mm' }}</span>
+                            </button>
+                          }
+                        </div>
+                      </div>
+                    } @else {
+                      <div class="empty-box compact">
+                        <div class="empty-icon">📷</div>
+                        <h3>Aucune image de traitement</h3>
+                        <p>L’agent n’a pas encore ajouté d’images de preuve.</p>
+                      </div>
+                    }
+                  </div>
+
+                  @if (hasValidationData()) {
+                    <div class="validation-box">
+                      <div class="validation-head">
+                        <h3>Retour de validation</h3>
+                        <span class="validation-badge">Manager</span>
+                      </div>
+
+                      <div class="validation-grid">
+                        <div class="treatment-card">
+                          <span class="treatment-label">Validé par</span>
+                          <strong>{{ validatedByName() }}</strong>
+                        </div>
+
+                        <div class="treatment-card">
+                          <span class="treatment-label">Date de validation</span>
+                          <strong>{{ validatedAtLabel() }}</strong>
+                        </div>
+                      </div>
+
+                      <p class="validation-comment">
+                        {{ obs.validationComment || 'Aucun commentaire de validation.' }}
+                      </p>
+                    </div>
+                  }
+                </div>
+              } @else {
+                <div class="empty-box">
+                  <div class="empty-icon">🛠️</div>
+                  <h3>Aucun traitement soumis</h3>
+                  <p>L’agent n’a pas encore transmis de commentaire ou d’images de traitement.</p>
+                </div>
+              }
+            </article>
+          </div>
+
+          <aside class="side-column">
+            @if (canShowAssignment()) {
+              <article class="panel side-panel">
+                <div class="panel__header">
+                  <div>
+                    <h2>Affectation</h2>
+                    <p>Attribuer cette observation à un agent.</p>
+                  </div>
+                </div>
+
+                <div class="assign-box">
+                  <div class="assign-form">
+                    <label for="agentSelect">Choisir un agent</label>
+
+                    <div class="select-wrap">
+                      <select
+                        id="agentSelect"
+                        [value]="selectedAgentId()"
+                        [disabled]="agentsLoading() || assigning()"
+                        (change)="onSelectedAgentChange($event)"
+                      >
+                        <option value="">Sélectionner un agent</option>
+
+                        @for (agent of agents(); track trackByAgent($index, agent)) {
+                          <option [value]="agent._id">
+                            {{ agent.firstName }} {{ agent.lastName }}
+                            @if (agent.email) {
+                              — {{ agent.email }}
+                            }
+                          </option>
+                        }
+                      </select>
+                    </div>
+
+                    @if (agentsLoading()) {
+                      <p class="form-message">Chargement des agents...</p>
+                    }
+
+                    @if (agentsError()) {
+                      <p class="form-message error">{{ agentsError() }}</p>
+                    }
+
+                    @if (selectedAgentName()) {
+                      <div class="selected-agent-box">
+                        <span>Agent sélectionné</span>
+                        <strong>{{ selectedAgentName() }}</strong>
+                      </div>
+                    }
+
+                    @if (assignError()) {
+                      <p class="form-message error">{{ assignError() }}</p>
+                    }
+
+                    @if (assignSuccess()) {
+                      <p class="form-message success">{{ assignSuccess() }}</p>
+                    }
+
+                    <button
+                      class="primary-btn full-btn"
+                      type="button"
+                      [disabled]="assigning() || agentsLoading() || !selectedAgentId()"
+                      (click)="assignObservation()"
+                    >
+                      @if (assigning()) {
+                        Affectation...
+                      } @else {
+                        Affecter à cet agent
+                      }
+                    </button>
+                  </div>
+                </div>
+              </article>
+            }
+
+            @if (canReviewValidation()) {
+              <article class="panel side-panel">
+                <div class="panel__header">
+                  <div>
+                    <h2>Validation du traitement</h2>
+                    <p>Valider ou refuser le traitement soumis par l’agent.</p>
+                  </div>
+                </div>
+
+                <div class="review-box">
+                  <div class="review-status">
+                    <span class="review-status__label">Statut actuel</span>
+                    <strong>{{ getStatusLabel(obs.status) }}</strong>
+                  </div>
+
+                  <div class="review-form">
+                    <label for="reviewComment">Commentaire du manager</label>
+                    <textarea
+                      id="reviewComment"
+                      rows="5"
+                      [value]="reviewComment()"
+                      [disabled]="validating() || rejecting()"
+                      placeholder="Ajouter un commentaire de validation ou de refus..."
+                      (input)="onReviewComment(($any($event.target).value || '').trimStart())"
+                    ></textarea>
+
+                    @if (reviewError()) {
+                      <p class="form-message error">{{ reviewError() }}</p>
+                    }
+
+                    @if (reviewSuccess()) {
+                      <p class="form-message success">{{ reviewSuccess() }}</p>
+                    }
+
+                    <div class="review-actions">
+                      <button
+                        class="secondary-btn reject-btn"
+                        type="button"
+                        [disabled]="validating() || rejecting()"
+                        (click)="rejectObservation()"
+                      >
+                        @if (rejecting()) {
+                          Refus...
+                        } @else {
+                          Refuser
+                        }
+                      </button>
+
+                      <button
+                        class="primary-btn approve-btn"
+                        type="button"
+                        [disabled]="validating() || rejecting()"
+                        (click)="approveObservation()"
+                      >
+                        @if (validating()) {
+                          Validation...
+                        } @else {
+                          Valider
+                        }
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </article>
+            }
+
+            <article class="panel side-panel">
+              <div class="panel__header">
+                <div>
+                  <h2>Résumé rapide</h2>
+                  <p>Vue synthétique de cette observation.</p>
+                </div>
+              </div>
+
+              <div class="summary-list">
+                <div class="summary-item">
+                  <span>Gravité</span>
+                  <strong>{{ getSeverityLabel(obs.severity) }}</strong>
+                </div>
+
+                <div class="summary-item">
+                  <span>Statut</span>
+                  <strong>{{ getStatusLabel(obs.status) }}</strong>
+                </div>
+
+                <div class="summary-item">
+                  <span>Zone</span>
+                  <strong>{{ zoneName() }}</strong>
+                </div>
+
+                <div class="summary-item">
+                  <span>Déclarant</span>
+                  <strong>{{ reporterName() }}</strong>
+                </div>
+
+                <div class="summary-item">
+                  <span>Affectée à</span>
+                  <strong>{{ assignedToName() }}</strong>
+                </div>
+
+                <div class="summary-item">
+                  <span>Traité par</span>
+                  <strong>{{ resolvedByName() }}</strong>
+                </div>
+
+                <div class="summary-item">
+                  <span>Images observation</span>
+                  <strong>{{ imageCount() }}</strong>
+                </div>
+
+                <div class="summary-item">
+                  <span>Preuves traitement</span>
+                  <strong>{{ resolutionImageCount() }}</strong>
+                </div>
+              </div>
+            </article>
+
+            <article class="panel side-panel">
+              <div class="panel__header">
+                <div>
+                  <h2>Chronologie</h2>
+                  <p>Historique principal.</p>
+                </div>
+              </div>
+
+              <div class="timeline">
+                <div class="timeline-item">
+                  <div class="timeline-dot created"></div>
+                  <div class="timeline-content">
+                    <strong>Observation créée</strong>
+                    <p>{{ obs.createdAt | date:'dd/MM/yyyy HH:mm' }}</p>
+                  </div>
+                </div>
+
+                @if (obs.assignedTo) {
+                  <div class="timeline-item">
+                    <div class="timeline-dot assigned"></div>
+                    <div class="timeline-content">
+                      <strong>Observation affectée</strong>
+                      <p>
+                        À {{ assignedToName() }}
+                        @if (obs.assignedAt) {
+                          — {{ obs.assignedAt | date:'dd/MM/yyyy HH:mm' }}
+                        }
+                      </p>
+                    </div>
+                  </div>
+                }
+
+                @if (obs.resolvedAt || obs.resolutionComment || resolutionImageCount() > 0) {
+                  <div class="timeline-item">
+                    <div class="timeline-dot progress"></div>
+                    <div class="timeline-content">
+                      <strong>Traitement soumis par l’agent</strong>
+                      <p>
+                        {{ resolvedByName() }}
+                        @if (obs.resolvedAt) {
+                          — {{ obs.resolvedAt | date:'dd/MM/yyyy HH:mm' }}
+                        }
+                      </p>
+                    </div>
+                  </div>
+                }
+
+                @if (obs.validatedAt || obs.validationComment) {
+                  <div class="timeline-item">
+                    <div class="timeline-dot review"></div>
+                    <div class="timeline-content">
+                      <strong>Validation du traitement</strong>
+                      <p>
+                        {{ validatedByName() }}
+                        @if (obs.validatedAt) {
+                          — {{ obs.validatedAt | date:'dd/MM/yyyy HH:mm' }}
+                        }
+                      </p>
+                    </div>
+                  </div>
+                }
+
+                @if (obs.status === 'closed') {
+                  <div class="timeline-item">
+                    <div class="timeline-dot closed"></div>
+                    <div class="timeline-content">
+                      <strong>Observation clôturée</strong>
+                      <p>{{ obs.updatedAt | date:'dd/MM/yyyy HH:mm' }}</p>
+                    </div>
+                  </div>
+                }
+              </div>
+            </article>
+          </aside>
+        </section>
+      } @else {
+        <div class="state-card empty">
+          <div class="state-icon">📝</div>
+          <h3>Observation introuvable</h3>
+          <p>Aucune donnée n’a été trouvée pour cette observation.</p>
+        </div>
+      }
+    } @else {
+      <div class="state-card error">
+        <div class="state-icon">⚠️</div>
+        <h3>Erreur</h3>
+        <p>{{ error() }}</p>
+        <button class="primary-btn" type="button" (click)="refresh()">Réessayer</button>
+      </div>
+    }
+  }
+</div>

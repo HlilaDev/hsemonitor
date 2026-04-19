@@ -1,0 +1,186 @@
+<div class="page">
+  <!-- Header -->
+  <div class="header">
+    <div>
+      <h2 class="title">{{ 'ZONES.TITLE' | translate }}</h2>
+      <p class="muted">{{ 'ZONES.SUBTITLE' | translate }}</p>
+    </div>
+
+    <a class="btn primary" [routerLink]="['/admin/zones/add']">
+      <i class="bi bi-plus-lg"></i>
+      {{ 'ZONES.ADD_BTN' | translate }}
+    </a>
+  </div>
+
+  <!-- Filters -->
+  <div class="card filters">
+    <div class="field">
+      <label>{{ 'ZONES.FILTERS.SEARCH' | translate }}</label>
+      <input
+        class="input"
+        type="text"
+        [placeholder]="'ZONES.FILTERS.SEARCH_PH' | translate"
+        [ngModel]="q()"
+        (ngModelChange)="q.set($event)"
+        (keyup.enter)="onSearch()"
+      />
+    </div>
+
+    <div class="field">
+      <label>{{ 'ZONES.FILTERS.RISK' | translate }}</label>
+      <select
+        class="input"
+        [ngModel]="risk()"
+        (ngModelChange)="risk.set($event)"
+      >
+        <option value="">{{ 'ZONES.FILTERS.ALL' | translate }}</option>
+        <option value="low">{{ 'ZONES.RISK.low' | translate }}</option>
+        <option value="medium">{{ 'ZONES.RISK.medium' | translate }}</option>
+        <option value="high">{{ 'ZONES.RISK.high' | translate }}</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>{{ 'ZONES.FILTERS.STATUS' | translate }}</label>
+      <select
+        class="input"
+        [ngModel]="activeFilter()"
+        (ngModelChange)="activeFilter.set($event)"
+      >
+        <option value="">{{ 'ZONES.FILTERS.ALL' | translate }}</option>
+        <option value="active">{{ 'COMMON.ACTIVE' | translate }}</option>
+        <option value="inactive">{{ 'COMMON.INACTIVE' | translate }}</option>
+      </select>
+    </div>
+
+    <div class="actions">
+      <button class="btn" (click)="onSearch()" [disabled]="loading">
+        <i class="bi bi-search"></i>
+        {{ 'COMMON.FILTER' | translate }}
+      </button>
+
+      <button class="btn ghost" (click)="clearFilters()" [disabled]="loading">
+        {{ 'COMMON.RESET' | translate }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Table -->
+  <div class="card">
+    @if (errorMessageKey) {
+      <div class="alert error">
+        <i class="bi bi-exclamation-triangle"></i>
+        {{ errorMessageKey | translate }}
+      </div>
+    }
+
+    @if (loading) {
+      <div class="loading">
+        <span class="spinner"></span>
+        {{ 'COMMON.LOADING' | translate }}
+      </div>
+    } @else {
+      <div class="table-wrap">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>{{ 'ZONES.COLUMNS.NAME' | translate }}</th>
+              <th>{{ 'ZONES.COLUMNS.DESCRIPTION' | translate }}</th>
+              <th style="width: 140px">{{ 'ZONES.COLUMNS.RISK' | translate }}</th>
+              <th class="center" style="width: 120px">{{ 'ZONES.COLUMNS.ACTIVE' | translate }}</th>
+              <th class="right" style="width: 170px">{{ 'COMMON.ACTIONS' | translate }}</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            @for (z of pagedZones(); track trackById($index, z)) {
+              <tr>
+                <td class="strong">{{ z.name || '—' }}</td>
+                <td>{{ z.description || '—' }}</td>
+
+                <td>
+                  <span class="badge" [class]="riskClass(z)">
+                    {{ riskKey(z) | translate }}
+                  </span>
+                </td>
+
+                <td class="center">
+                  <span
+                    class="badge"
+                    [class.ok]="z.isActive"
+                    [class.bad]="!z.isActive"
+                  >
+                    {{
+                      z.isActive
+                        ? ('COMMON.ACTIVE' | translate)
+                        : ('COMMON.INACTIVE' | translate)
+                    }}
+                  </span>
+                </td>
+
+                <td class="right actions-cell">
+                  <button
+                    class="btn xs"
+                    type="button"
+                    (click)="toggleActive(z)"
+                    [title]="z.isActive ? ('COMMON.DISABLE' | translate) : ('COMMON.ENABLE' | translate)"
+                  >
+                    <i class="bi" [ngClass]="z.isActive ? 'bi-toggle-on' : 'bi-toggle-off'"></i>
+                  </button>
+
+                  <a
+                    class="btn xs"
+                    [routerLink]="['/admin/zones/edit', getRowId(z)]"
+                    [title]="'COMMON.EDIT' | translate"
+                  >
+                    <i class="bi bi-pencil"></i>
+                  </a>
+
+                  <button
+                    class="btn xs danger"
+                    type="button"
+                    (click)="deleteZone(z)"
+                    [title]="'COMMON.DELETE' | translate"
+                  >
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </td>
+              </tr>
+            }
+
+            @if (pagedZones().length === 0) {
+              <tr>
+                <td colspan="5" class="empty">
+                  {{ 'ZONES.EMPTY' | translate }}
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+
+    <!-- Pagination -->
+    @if (!loading) {
+      <div class="pager">
+        <div class="muted">
+          {{ 'COMMON.TOTAL' | translate }} : <b>{{ total() }}</b>
+        </div>
+
+        <div class="pager-actions">
+          <button class="btn" (click)="prev()" [disabled]="page() <= 1">
+            <i class="bi bi-chevron-left"></i>
+          </button>
+
+          <span class="muted">
+            {{ 'COMMON.PAGE' | translate }} {{ page() }} / {{ pages() }}
+          </span>
+
+          <button class="btn" (click)="next()" [disabled]="page() >= pages()">
+            <i class="bi bi-chevron-right"></i>
+          </button>
+        </div>
+      </div>
+    }
+  </div>
+</div>

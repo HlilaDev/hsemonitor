@@ -1,0 +1,239 @@
+<div class="page">
+  <div class="page-header">
+    <div>
+      <h2>Monitoring Dashboard</h2>
+      <p class="muted">
+        Vue globale en temps réel des zones, devices et remontées capteurs.
+      </p>
+    </div>
+
+    <div class="header-actions">
+      <a class="btn ghost" routerLink="/manager/monitoring/history">
+        <i class="bi bi-clock-history"></i>
+        Historique
+      </a>
+
+      <button class="btn primary" type="button" (click)="refresh()">
+        <i class="bi bi-arrow-clockwise"></i>
+        Actualiser
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="error() && !isLoading()" class="alert error">
+    <i class="bi bi-exclamation-triangle"></i>
+    <span>{{ error() }}</span>
+  </div>
+
+  <div *ngIf="isLoading()" class="loading-card">
+    <div class="loader"></div>
+    <p>Chargement du dashboard monitoring...</p>
+  </div>
+
+  <ng-container *ngIf="!isLoading() && latestReadings().length > 0">
+
+    <!-- KPI -->
+    <div class="stats-grid">
+      <div class="stat-card devices">
+        <div class="stat-icon">
+          <i class="bi bi-cpu"></i>
+        </div>
+        <div class="stat-body">
+          <span class="label">Devices actifs</span>
+          <strong>{{ totalDevices() }}</strong>
+        </div>
+      </div>
+
+      <div class="stat-card online">
+        <div class="stat-icon">
+          <i class="bi bi-wifi"></i>
+        </div>
+        <div class="stat-body">
+          <span class="label">En ligne</span>
+          <strong>{{ onlineDevices() }}</strong>
+        </div>
+      </div>
+
+      <div class="stat-card offline">
+        <div class="stat-icon">
+          <i class="bi bi-wifi-off"></i>
+        </div>
+        <div class="stat-body">
+          <span class="label">Hors ligne</span>
+          <strong>{{ offlineDevices() }}</strong>
+        </div>
+      </div>
+
+      <div class="stat-card zones">
+        <div class="stat-icon">
+          <i class="bi bi-geo-alt"></i>
+        </div>
+        <div class="stat-body">
+          <span class="label">Zones actives</span>
+          <strong>{{ activeZones() }}</strong>
+        </div>
+      </div>
+
+      <div class="stat-card temperature">
+        <div class="stat-icon">
+          <i class="bi bi-thermometer-half"></i>
+        </div>
+        <div class="stat-body">
+          <span class="label">Température moyenne</span>
+          <strong>{{ averageTemperature() !== null ? (averageTemperature() + ' °C') : '—' }}</strong>
+        </div>
+      </div>
+
+      <div class="stat-card humidity">
+        <div class="stat-icon">
+          <i class="bi bi-droplet-half"></i>
+        </div>
+        <div class="stat-body">
+          <span class="label">Humidité moyenne</span>
+          <strong>{{ averageHumidity() !== null ? (averageHumidity() + ' %') : '—' }}</strong>
+        </div>
+      </div>
+    </div>
+
+    <!-- Charts + Alerts -->
+    <div class="overview-grid">
+      <div class="panel-card">
+        <div class="panel-head">
+          <div>
+            <h3>Tendance température</h3>
+            <span>Vue globale du système</span>
+          </div>
+        </div>
+
+        <div class="chart-placeholder">
+          <i class="bi bi-graph-up-arrow"></i>
+          <p>Graphique global température à intégrer ici</p>
+        </div>
+      </div>
+
+      <div class="panel-card">
+        <div class="panel-head">
+          <div>
+            <h3>Alertes et anomalies</h3>
+            <span>Détection rapide des situations critiques</span>
+          </div>
+        </div>
+
+        <div class="alerts-list" *ngIf="alerts().length > 0; else noAlerts">
+          <div
+            class="alert-item"
+            *ngFor="let alert of alerts()"
+            [ngClass]="getAlertClass(alert.level)">
+            <div class="alert-badge">{{ alert.level }}</div>
+            <div class="alert-body">
+              <strong>{{ alert.title }}</strong>
+              <p>{{ alert.message }}</p>
+            </div>
+          </div>
+        </div>
+
+        <ng-template #noAlerts>
+          <div class="empty-state">
+            <i class="bi bi-shield-check"></i>
+            <p>Aucune alerte active pour le moment.</p>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+
+    <!-- Latest by zone -->
+    <div class="panel-card">
+      <div class="panel-head">
+        <div>
+          <h3>Dernières lectures par zone</h3>
+          <span>Résumé par zone avec accès aux détails</span>
+        </div>
+      </div>
+
+      <div class="zones-grid">
+        <div class="zone-card" *ngFor="let zone of latestZones()">
+          <div class="zone-card-head">
+            <div>
+              <h4>{{ zone.zoneName || zone.zoneId }}</h4>
+              <small>{{ zone.deviceCount }} device{{ zone.deviceCount > 1 ? 's' : '' }}</small>
+            </div>
+
+            <a
+              class="zone-link"
+              [routerLink]="['/manager/monitoring/zone', getZoneRouteId(zone)]">
+              Ouvrir
+            </a>
+          </div>
+
+          <div class="zone-values">
+            <div class="mini-stat">
+              <span>Température</span>
+              <strong>{{ getTemperature(zone.latestReading) }}</strong>
+            </div>
+            <div class="mini-stat">
+              <span>Humidité</span>
+              <strong>{{ getHumidity(zone.latestReading) }}</strong>
+            </div>
+            <div class="mini-stat">
+              <span>Dernière lecture</span>
+              <strong>{{ zone.latestReading.ts | date:'HH:mm:ss' }}</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Latest by device -->
+    <div class="panel-card">
+      <div class="panel-head">
+        <div>
+          <h3>Dernières lectures par device</h3>
+          <span>Monitoring instantané par équipement</span>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Device</th>
+              <th>Zone</th>
+              <th>Statut</th>
+              <th>Capteur</th>
+              <th>Valeurs</th>
+              <th>Date</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr *ngFor="let item of latestReadings()">
+              <td>{{ getDeviceLabel(item) }}</td>
+              <td>{{ getZoneLabel(item) }}</td>
+              <td>
+                <span
+                  class="status-badge"
+                  [ngClass]="getStatusClass(getDeviceStatus(item))">
+                  {{ getDeviceStatus(item) }}
+                </span>
+              </td>
+              <td>
+                <span class="sensor-chip">{{ item.sensorType }}</span>
+              </td>
+              <td>{{ formatValues(item) }}</td>
+              <td>{{ item.ts | date:'dd/MM/yyyy HH:mm:ss' }}</td>
+              <td>
+                <a
+                  class="action-link"
+                  [routerLink]="['/manager/monitoring/device', getDeviceRouteId(item)]">
+                  Voir détail
+                </a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </ng-container>
+</div>

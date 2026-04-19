@@ -1,0 +1,125 @@
+{
+  "DEVICES": {
+    "TITLE": "Geräte",
+    "LIST_TITLE": "Geräte",
+    "SUBTITLE": "Liste der Geräte mit Filtern",
+    "ADD_LABEL": "Gerät hinzufügen",
+    "ADD_BTN": "Hinzufügen",
+    "ADD_TITLE": "Gerät hinzufügen",
+    "ADD_SUBTITLE": "Erstellen Sie ein neues Gerät und weisen Sie es einer Zone zu.",
+    "EMPTY": "Keine Geräte gefunden.",
+    "COLUMNS": {
+      "DEVICE_ID": "Geräte-ID",
+      "NAME": "Name",
+      "ZONE": "Zone",
+      "SENSORS": "Sensoren",
+      "STATUS": "Status",
+      "ACTIONS": "Aktionen"
+    },
+    "FILTERS": {
+      "SEARCH": "Suche",
+      "SEARCH_PH": "Gerätename oder Geräte-ID...",
+      "ZONE": "Zone",
+      "ZONE_PH": "Zonenname oder Zonen-ID",
+      "STATUS": "Status",
+      "ALL": "Alle"
+    },
+    "FORM": {
+      "DEVICE_ID": "Geräte-ID",
+      "DEVICE_ID_PH": "Bsp.: esp8266-01",
+      "NAME": "Gerätename",
+      "NAME_PH": "Bsp.: ESP Zone A",
+      "ZONE": "Zone",
+      "SELECT_ZONE": "Zone auswählen",
+      "SENSORS": "Sensoren",
+      "SENSORS_PH": "Bsp.: Temperatur, Luftfeuchtigkeit, Gas",
+      "SENSORS_HELP": "Geben Sie die Sensoren durch Kommas getrennt ein.",
+      "STATUS": "Status",
+      "DESCRIPTION": "Beschreibung",
+      "DESC_PH": "Beschreiben Sie dieses Gerät..."
+    },
+    "DETAIL": {
+      "KICKER": "Geräte",
+      "TITLE": "Gerätedetails",
+      "SUBTITLE": "Gerätedetails + Liste der verknüpften Sensoren.",
+      "MANAGEMENT": "Verwaltung",
+      "OVERVIEW": "Übersicht",
+      "LAST_SEEN": "Letzte Aktivität",
+      "CREATED": "Erstellt am",
+      "SENSORS": "Sensoren",
+      "LOADING_SENSORS": "Sensoren werden geladen...",
+      "NO_SENSORS": "Keine Sensoren mit diesem Gerät verknüpft.",
+      "NOT_FOUND": "Gerät nicht gefunden.",
+      "SENSORS_LOAD_ERROR": "Fehler beim Laden der verknüpften Sensoren."
+    },
+    "STATUS": {
+      "online": "Online",
+      "offline": "Offline",
+      "maintenance": "Wartung"
+    },
+    "VALIDATION": {
+      "DEVICE_ID_REQUIRED": "Die Geräte-ID ist erforderlich.",
+      "DEVICE_ID_MIN": "Die Geräte-ID muss mindestens 3 Zeichen enthalten.",
+      "ZONE_REQUIRED": "Die Zone ist erforderlich."
+    },
+    "MESSAGES": {
+      "LOAD_ERROR": "Fehler beim Laden der Geräte.",
+      "CREATE_SUCCESS": "Gerät erfolgreich hinzugefügt.",
+      "CREATE_ERROR": "Fehler beim Hinzufügen des Geräts.",
+      "DELETE_CONFIRM": "Möchten Sie dieses Gerät wirklich löschen?",
+      "DELETE_SUCCESS": "Gerät erfolgreich gelöscht.",
+      "DELETE_ERROR": "Fehler beim Löschen des Geräts."
+    },
+    "ERROR": {
+      "LOAD": "Fehler beim Laden der Geräte.",
+      "DELETE": "Fehler beim Löschen des Geräts.",
+      "MISSING_ID": "Fehlende Geräte-ID in der Route.",
+      "LOAD_ONE": "Fehler beim Laden des Geräts."
+    },
+    "CONFIRM_DELETE": "Möchten Sie dieses Gerät wirklich löschen?"
+  },
+  "SENSORS": {
+    "TITLE": "Sensoren",
+    "SUBTITLE": "Sensorliste",
+    "COLUMNS": {
+      "NAME": "Name",
+      "TYPE": "Typ",
+      "ZONE": "Zone",
+      "STATUS": "Status",
+      "THRESHOLD": "Schwellenwert"
+    },
+    "TYPE": {
+      "temperature": "Temperatur",
+      "humidity": "Luftfeuchtigkeit",
+      "gas": "Gas",
+      "smoke": "Rauch",
+      "motion": "Bewegung",
+      "pressure": "Druck",
+      "light": "Licht",
+      "sound": "Ton",
+      "vibration": "Vibration",
+      "other": "Andere"
+    },
+    "STATUS": {
+      "online": "Online",
+      "offline": "Offline",
+      "maintenance": "Wartung"
+    }
+  },
+  "COMMON": {
+    "LOADING": "Wird geladen...",
+    "RETRY": "Erneut versuchen",
+    "EDIT": "Bearbeiten",
+    "DELETE": "Löschen",
+    "VIEW": "Ansehen",
+    "BACK": "Zurück",
+    "SAVE": "Speichern",
+    "SAVING": "Wird gespeichert...",
+    "CANCEL": "Abbrechen",
+    "FILTER": "Filtern",
+    "RESET": "Zurücksetzen",
+    "TOTAL": "Gesamt",
+    "PAGE": "Seite",
+    "EMPTY_VALUE": "—"
+  }
+}

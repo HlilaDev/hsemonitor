@@ -1,0 +1,275 @@
+<div class="page">
+  <div class="topbar">
+    <a class="back-btn" routerLink="/manager/audits">
+      <i class="bi bi-arrow-left"></i>
+      Back to audits
+    </a>
+
+    <div class="top-actions">
+      <a class="btn light" [routerLink]="['/manager/audits/edit', audit()._id]">
+        <i class="bi bi-pencil-square"></i>
+        Edit
+      </a>
+
+      <button class="btn primary" type="button">
+        <i class="bi bi-download"></i>
+        Export
+      </button>
+    </div>
+  </div>
+
+  <div class="hero-card">
+    <div class="hero-main">
+      <div class="eyebrow">Audit Details</div>
+
+      <div class="title-row">
+        <h1>{{ audit().title }}</h1>
+
+        <div class="badges">
+          <span class="badge type">{{ audit().type }}</span>
+          <span class="badge" [ngClass]="audit().status">{{ audit().status }}</span>
+        </div>
+      </div>
+
+      <p class="hero-desc">{{ audit().description }}</p>
+
+      <div class="hero-meta">
+        <div class="meta-chip">
+          <i class="bi bi-upc-scan"></i>
+          <span>{{ audit()._id }}</span>
+        </div>
+
+        <div class="meta-chip">
+          <i class="bi bi-geo-alt"></i>
+          <span>{{ audit().zoneName }}</span>
+        </div>
+
+        <div class="meta-chip">
+          <i class="bi bi-person-badge"></i>
+          <span>{{ audit().auditorName }}</span>
+        </div>
+
+        <div class="meta-chip">
+          <i class="bi bi-calendar-event"></i>
+          <span>{{ formatDate(audit().scheduledDate) }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-score">
+      <div class="score-ring">
+        <div class="score-value">{{ audit().score ?? 0 }}%</div>
+      </div>
+      <div class="score-label">{{ getScoreLabel(audit().score) }}</div>
+      <small>Final audit performance</small>
+    </div>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-icon blue">
+        <i class="bi bi-search"></i>
+      </div>
+      <div class="stat-content">
+        <span>Total Findings</span>
+        <strong>{{ findingsCount() }}</strong>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon green">
+        <i class="bi bi-check2-circle"></i>
+      </div>
+      <div class="stat-content">
+        <span>Resolved / Closed</span>
+        <strong>{{ resolvedCount() }}</strong>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon orange">
+        <i class="bi bi-hourglass-split"></i>
+      </div>
+      <div class="stat-content">
+        <span>Open / In progress</span>
+        <strong>{{ openCount() }}</strong>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon purple">
+        <i class="bi bi-bar-chart-line"></i>
+      </div>
+      <div class="stat-content">
+        <span>Correction Progress</span>
+        <strong>{{ progressValue() }}%</strong>
+      </div>
+    </div>
+  </div>
+
+  <div class="content-grid">
+    <div class="main-column">
+      <div class="card">
+        <div class="card-head">
+          <h2>Audit Summary</h2>
+          <span>Main operational and timeline information</span>
+        </div>
+
+        <div class="summary-grid">
+          <div class="summary-item">
+            <label>Audit Type</label>
+            <strong>{{ audit().type }}</strong>
+          </div>
+
+          <div class="summary-item">
+            <label>Status</label>
+            <strong>{{ audit().status }}</strong>
+          </div>
+
+          <div class="summary-item">
+            <label>Zone</label>
+            <strong>{{ audit().zoneName }}</strong>
+          </div>
+
+          <div class="summary-item">
+            <label>Auditor</label>
+            <strong>{{ audit().auditorName }}</strong>
+          </div>
+
+          <div class="summary-item">
+            <label>Scheduled Date</label>
+            <strong>{{ formatDate(audit().scheduledDate) }}</strong>
+          </div>
+
+          <div class="summary-item">
+            <label>Completed Date</label>
+            <strong>{{ formatDate(audit().completedDate) }}</strong>
+          </div>
+
+          <div class="summary-item">
+            <label>Created At</label>
+            <strong>{{ formatDate(audit().createdAt) }}</strong>
+          </div>
+
+          <div class="summary-item">
+            <label>Last Updated</label>
+            <strong>{{ formatDate(audit().updatedAt) }}</strong>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <h2>Findings</h2>
+          <span>{{ findingsCount() }} finding(s) recorded during this audit</span>
+        </div>
+
+        <div class="findings-list">
+          <div class="finding-item" *ngFor="let finding of audit().findings">
+            <div class="finding-icon" [ngClass]="finding.severity">
+              <i [class]="getSeverityIcon(finding.severity)"></i>
+            </div>
+
+            <div class="finding-main">
+              <div class="finding-top">
+                <h3>{{ finding.title }}</h3>
+
+                <div class="finding-badges">
+                  <span class="pill severity" [ngClass]="finding.severity">
+                    {{ finding.severity }}
+                  </span>
+                  <span class="pill status" [ngClass]="finding.status">
+                    {{ finding.status }}
+                  </span>
+                </div>
+              </div>
+
+              <p>{{ finding.description }}</p>
+
+              <div class="finding-meta">
+                <span>
+                  <i class="bi bi-person"></i>
+                  {{ finding.assignedTo || '-' }}
+                </span>
+                <span>
+                  <i class="bi bi-calendar3"></i>
+                  {{ formatDate(finding.dueDate) }}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <aside class="side-column">
+      <div class="card side-card">
+        <div class="card-head">
+          <h2>Score Insight</h2>
+          <span>Inspection performance summary</span>
+        </div>
+
+        <div class="score-panel">
+          <div class="big-score">{{ audit().score ?? 0 }}%</div>
+          <div class="score-state">{{ getScoreLabel(audit().score) }}</div>
+
+          <div class="score-progress">
+            <div class="bar">
+              <div class="fill" [style.width.%]="audit().score ?? 0"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card side-card">
+        <div class="card-head">
+          <h2>Attachments</h2>
+          <span>{{ audit().attachments.length }} linked file(s)</span>
+        </div>
+
+        <div class="attachments-list">
+          <a
+            class="attachment-item"
+            *ngFor="let file of audit().attachments"
+            [href]="file.url"
+          >
+            <div class="attachment-icon">
+              <i [class]="getAttachmentIcon(file.type)"></i>
+            </div>
+
+            <div class="attachment-main">
+              <strong>{{ file.name }}</strong>
+              <small>{{ file.type }}</small>
+            </div>
+
+            <i class="bi bi-box-arrow-up-right open-icon"></i>
+          </a>
+        </div>
+      </div>
+
+      <div class="card side-card">
+        <div class="card-head">
+          <h2>Corrective Progress</h2>
+          <span>Based on findings resolution</span>
+        </div>
+
+        <div class="progress-summary">
+          <div class="mini-row">
+            <span>Resolved</span>
+            <strong>{{ resolvedCount() }}</strong>
+          </div>
+
+          <div class="mini-row">
+            <span>Pending</span>
+            <strong>{{ openCount() }}</strong>
+          </div>
+
+          <div class="mini-row total">
+            <span>Progress</span>
+            <strong>{{ progressValue() }}%</strong>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>

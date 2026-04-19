@@ -1,0 +1,183 @@
+<div class="add-company-page">
+  <section class="hero-card">
+    <div class="hero-content">
+      <div>
+        <span class="eyebrow">Super Admin</span>
+        <h1>Add New Company</h1>
+        <p>
+          Register a new company in your HSE intelligent platform and configure
+          its main profile information.
+        </p>
+      </div>
+
+      <a class="btn light" routerLink="/super/companies">
+        <i class="bi bi-arrow-left"></i>
+        <span>Back to list</span>
+      </a>
+    </div>
+  </section>
+
+  @if (errorMessage()) {
+    <div class="alert error">
+      <i class="bi bi-exclamation-triangle"></i>
+      <span>{{ errorMessage() }}</span>
+    </div>
+  }
+
+  @if (successMessage()) {
+    <div class="alert success">
+      <i class="bi bi-check-circle"></i>
+      <span>{{ successMessage() }}</span>
+    </div>
+  }
+
+  <section class="form-card">
+    <div class="card-head">
+      <div>
+        <h2>Company Information</h2>
+        <p>Fill in the details below to create a new company.</p>
+      </div>
+    </div>
+
+    <form class="company-form" (ngSubmit)="onSubmit()">
+      <div class="form-grid">
+        <div class="field full">
+          <label>Company Name <span>*</span></label>
+          <input
+            class="input"
+            type="text"
+            placeholder="Enter company name"
+            [ngModel]="form().name"
+            (ngModelChange)="updateField('name', $event)"
+            name="name"
+          />
+        </div>
+
+        <div class="field">
+          <label>Industry</label>
+          <input
+            class="input"
+            type="text"
+            placeholder="Industry sector"
+            [ngModel]="form().industry"
+            (ngModelChange)="updateField('industry', $event)"
+            name="industry"
+          />
+        </div>
+
+        <div class="field">
+          <label>Logo URL</label>
+          <input
+            class="input"
+            type="text"
+            placeholder="https://example.com/logo.png"
+            [ngModel]="form().logoUrl"
+            (ngModelChange)="updateField('logoUrl', $event)"
+            name="logoUrl"
+          />
+        </div>
+
+        <div class="field">
+          <label>Country</label>
+          <input
+            class="input"
+            type="text"
+            placeholder="Country"
+            [ngModel]="form().address?.country"
+            (ngModelChange)="updateAddressField('country', $event)"
+            name="country"
+          />
+        </div>
+
+        <div class="field">
+          <label>City</label>
+          <input
+            class="input"
+            type="text"
+            placeholder="City"
+            [ngModel]="form().address?.city"
+            (ngModelChange)="updateAddressField('city', $event)"
+            name="city"
+          />
+        </div>
+
+        <div class="field">
+          <label>Street</label>
+          <input
+            class="input"
+            type="text"
+            placeholder="Street"
+            [ngModel]="form().address?.street"
+            (ngModelChange)="updateAddressField('street', $event)"
+            name="street"
+          />
+        </div>
+
+        <div class="field">
+          <label>Postal Code</label>
+          <input
+            class="input"
+            type="text"
+            placeholder="Postal code"
+            [ngModel]="form().address?.postalCode"
+            (ngModelChange)="updateAddressField('postalCode', $event)"
+            name="postalCode"
+          />
+        </div>
+
+        <div class="field">
+          <label>Contact Email</label>
+          <input
+            class="input"
+            type="email"
+            placeholder="contact@company.com"
+            [ngModel]="form().contacts?.email"
+            (ngModelChange)="updateContactField('email', $event)"
+            name="contactEmail"
+          />
+        </div>
+
+        <div class="field">
+          <label>Contact Phone</label>
+          <input
+            class="input"
+            type="text"
+            placeholder="+216 xx xxx xxx"
+            [ngModel]="form().contacts?.phone"
+            (ngModelChange)="updateContactField('phone', $event)"
+            name="contactPhone"
+          />
+        </div>
+
+        <div class="field full">
+          <label>Status</label>
+          <select
+            class="select"
+            [ngModel]="form().isActive"
+            (ngModelChange)="updateField('isActive', $event)"
+            name="isActive"
+          >
+            <option [ngValue]="true">Active</option>
+            <option [ngValue]="false">Inactive</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <a class="btn ghost" routerLink="/super/companies">
+          Cancel
+        </a>
+
+        <button class="btn primary" type="submit" [disabled]="loading()">
+          @if (loading()) {
+            <span class="mini-spinner"></span>
+            <span>Creating...</span>
+          } @else {
+            <i class="bi bi-building-add"></i>
+            <span>Create Company</span>
+          }
+        </button>
+      </div>
+    </form>
+  </section>
+</div>

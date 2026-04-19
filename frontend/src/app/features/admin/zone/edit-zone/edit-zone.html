@@ -1,0 +1,104 @@
+<div class="page">
+
+  <div class="page-header">
+    <div>
+      <h2>{{ 'ZONES.EDIT_TITLE' | translate }}</h2>
+      <p class="muted">{{ 'ZONES.EDIT_SUBTITLE' | translate }}</p>
+    </div>
+
+    <a class="btn btn-outline-secondary" routerLink="/admin/zones">
+      ← {{ 'COMMON.BACK' | translate }}
+    </a>
+  </div>
+
+  @if (loading) {
+    <p>{{ 'COMMON.LOADING' | translate }}</p>
+  }
+
+  @if (!loading) {
+    <div class="card">
+      @if (errorKey) {
+        <div class="alert alert-danger">{{ errorKey | translate }}</div>
+      }
+
+      @if (successKey) {
+        <div class="alert alert-success">{{ successKey | translate }}</div>
+      }
+
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+        <!-- NAME -->
+        <div class="form-group">
+          <label class="form-label">
+            {{ 'ZONES.FORM.NAME' | translate }} <span class="req">*</span>
+          </label>
+
+          <input
+            type="text"
+            class="form-control"
+            formControlName="name"
+            [placeholder]="'ZONES.FORM.NAME_PH' | translate"
+            [class.is-invalid]="name.touched && name.invalid"
+          />
+
+          @if (name.touched && name.errors?.['required']) {
+            <div class="invalid-feedback">{{ 'ZONES.VALIDATION.NAME_REQUIRED' | translate }}</div>
+          }
+          @if (name.touched && name.errors?.['minlength']) {
+            <div class="invalid-feedback">{{ 'ZONES.VALIDATION.NAME_MIN' | translate }}</div>
+          }
+        </div>
+
+        <!-- DESCRIPTION -->
+        <div class="form-group">
+          <label class="form-label">{{ 'ZONES.FORM.DESCRIPTION' | translate }}</label>
+
+          <textarea
+            class="form-control"
+            rows="3"
+            formControlName="description"
+            [placeholder]="'ZONES.FORM.DESC_PH' | translate"
+          ></textarea>
+        </div>
+
+        <!-- RISK -->
+        <div class="form-group">
+          <label class="form-label">
+            {{ 'ZONES.FORM.RISK' | translate }} <span class="req">*</span>
+          </label>
+
+          <select class="form-select" formControlName="riskLevel">
+            <option value="low">{{ 'ZONES.RISK.low' | translate }}</option>
+            <option value="medium">{{ 'ZONES.RISK.medium' | translate }}</option>
+            <option value="high">{{ 'ZONES.RISK.high' | translate }}</option>
+          </select>
+        </div>
+
+        <!-- ACTIVE -->
+        <div class="form-group switch-row">
+          <div>
+            <label class="form-label">{{ 'ZONES.FORM.ACTIVE' | translate }}</label>
+            <div class="muted small">{{ 'ZONES.FORM.ACTIVE_HELP' | translate }}</div>
+          </div>
+
+          <label class="switch">
+            <input type="checkbox" formControlName="isActive" />
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <!-- ACTIONS -->
+        <div class="actions">
+          <button class="btn btn-success" type="submit" [disabled]="saving">
+            @if (!saving) { {{ 'COMMON.SAVE' | translate }} }
+            @else { {{ 'COMMON.SAVING' | translate }} }
+          </button>
+
+          <a class="btn btn-light" routerLink="/admin/zones">
+            {{ 'COMMON.CANCEL' | translate }}
+          </a>
+        </div>
+      </form>
+    </div>
+  }
+</div>

@@ -1,0 +1,15 @@
+<div class="dashboard-container" [class.sidebar-collapsed]="layout.sidebarCollapsed()">
+          <app-sidebar-admin></app-sidebar-admin>
+
+  <div class="main-content">
+  
+        <app-header-admin class="header"></app-header-admin>
+
+
+    <div class="content-area">
+      <router-outlet></router-outlet>
+    </div>
+
+    <app-footer class="footer"></app-footer>
+  </div>
+</div>

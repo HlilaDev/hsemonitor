@@ -1,0 +1,211 @@
+<div class="create-execution-page">
+  <div class="page-header">
+    <div class="page-header__content">
+      <h1>Nouvelle inspection</h1>
+      <p>
+        Sélectionnez un template, définissez un titre puis lancez une nouvelle
+        exécution d’inspection.
+      </p>
+    </div>
+
+    <button type="button" class="btn btn-light" (click)="goBack()">
+      Retour
+    </button>
+  </div>
+
+  @if (loading()) {
+    <div class="state-card loading-state">
+      <div class="spinner"></div>
+      <h3>Chargement des templates...</h3>
+      <p>Veuillez patienter pendant la récupération des données.</p>
+    </div>
+  } @else {
+    @if (errorMsg()) {
+      <div class="alert alert-error">
+        <span>{{ errorMsg() }}</span>
+        <button type="button" class="btn btn-light btn-sm" (click)="retry()">
+          Réessayer
+        </button>
+      </div>
+    }
+
+    @if (!hasTemplates()) {
+      <div class="state-card empty-state">
+        <h3>Aucun template disponible</h3>
+        <p>
+          Aucun template actif n’a été trouvé. Créez d’abord un template
+          d’inspection.
+        </p>
+
+        <div class="state-actions">
+          <button type="button" class="btn btn-light" (click)="goBack()">
+            Retour à la liste
+          </button>
+        </div>
+      </div>
+    } @else {
+      <div class="content-grid">
+        <section class="main-panel">
+          <div class="section-card">
+            <div class="section-head">
+              <div>
+                <h2>Choisir un template</h2>
+                <p>
+                  Cliquez sur un template pour préparer une nouvelle inspection.
+                </p>
+              </div>
+            </div>
+
+            <div class="template-grid">
+              @for (template of templates(); track trackByTemplate($index, template)) {
+                <button
+                  type="button"
+                  class="template-card"
+                  [class.active]="selectedTemplateId() === template._id"
+                  (click)="selectTemplate(template._id)"
+                >
+                  <div class="template-card__top">
+                    <h3>{{ templateTitle(template) }}</h3>
+                    <span class="badge">
+                      {{ categoryLabel(template.category) }}
+                    </span>
+                  </div>
+
+                  <p class="template-card__desc">
+                    {{ templateDescription(template) }}
+                  </p>
+
+                  <div class="template-card__meta">
+                    <span>{{ template.items?.length || 0 }} items</span>
+                    <span>{{ template.isActive !== false ? 'Actif' : 'Inactif' }}</span>
+                  </div>
+                </button>
+              }
+            </div>
+          </div>
+
+          <div class="section-card">
+            <div class="section-head">
+              <div>
+                <h2>Informations générales</h2>
+                <p>Définissez le titre de cette inspection.</p>
+              </div>
+            </div>
+
+            <div class="field-group">
+              <label for="title">Titre de l’inspection</label>
+              <input
+                id="title"
+                type="text"
+                placeholder="Ex: Inspection sécurité zone A"
+                [value]="title()"
+                (input)="updateTitle($event)"
+              />
+            </div>
+          </div>
+
+          <div class="section-card">
+            <div class="section-head">
+              <div>
+                <h2>Notes initiales</h2>
+                <p>
+                  Ajoutez des remarques de contexte avant de lancer l’inspection.
+                </p>
+              </div>
+            </div>
+
+            <div class="field-group">
+              <label for="notes">Notes</label>
+              <textarea
+                id="notes"
+                rows="6"
+                placeholder="Ajouter une note..."
+                [value]="notes()"
+                (input)="updateNotes($event)"
+              ></textarea>
+            </div>
+          </div>
+        </section>
+
+        <aside class="side-panel">
+          <div class="section-card sticky-card">
+            <div class="section-head">
+              <div>
+                <h2>Résumé</h2>
+                <p>Vérifiez les informations avant de créer l’exécution.</p>
+              </div>
+            </div>
+
+            @if (selectedTemplate(); as template) {
+              <div class="summary-block">
+                <div class="summary-item">
+                  <span class="label">Template</span>
+                  <strong>{{ templateTitle(template) }}</strong>
+                </div>
+
+                <div class="summary-item">
+                  <span class="label">Catégorie</span>
+                  <strong>{{ categoryLabel(template.category) }}</strong>
+                </div>
+
+                <div class="summary-item">
+                  <span class="label">Description</span>
+                  <span>{{ templateDescription(template) }}</span>
+                </div>
+
+                <div class="summary-item">
+                  <span class="label">Titre de l’inspection</span>
+                  <strong>
+                    {{ title().trim() || 'Non défini' }}
+                  </strong>
+                </div>
+
+                <div class="summary-stats">
+                  <div class="stat-card">
+                    <span class="stat-value">{{ selectedTemplateItemsCount() }}</span>
+                    <span class="stat-label">Items</span>
+                  </div>
+
+                  <div class="stat-card">
+                    <span class="stat-value">
+                      {{ template.isActive !== false ? 'Oui' : 'Non' }}
+                    </span>
+                    <span class="stat-label">Actif</span>
+                  </div>
+                </div>
+              </div>
+            } @else {
+              <div class="summary-empty">
+                <p>Aucun template sélectionné.</p>
+              </div>
+            }
+
+            <div class="action-bar">
+              <button
+                type="button"
+                class="btn btn-primary"
+                [disabled]="!canSubmit()"
+                (click)="createExecution()"
+              >
+                @if (submitting()) {
+                  Création...
+                } @else {
+                  Créer inspection
+                }
+              </button>
+
+              <button
+                type="button"
+                class="btn btn-light"
+                [disabled]="submitting()"
+                (click)="goBack()"
+              >
+                Annuler
+              </button>
+            </div>
+          </div>
+        </aside>
+      </div>
+    }
+  }
+</div>

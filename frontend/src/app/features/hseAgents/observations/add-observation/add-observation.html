@@ -1,0 +1,87 @@
+<div class="page">
+  <div class="card">
+
+    <div class="head">
+      <h2>Ajouter une observation</h2>
+      <p>Déclare une situation à risque ou une anomalie dans une zone.</p>
+    </div>
+
+    <div *ngIf="errorMsg()" class="alert error">{{ errorMsg() }}</div>
+    <div *ngIf="successMsg()" class="alert success">{{ successMsg() }}</div>
+
+    <form [formGroup]="form" (ngSubmit)="submit()" class="form">
+
+      <div class="grid">
+
+        <!-- Titre -->
+        <div class="field">
+          <label>Titre</label>
+          <input formControlName="title" placeholder="Ex: Manque d'extincteur" />
+          <small *ngIf="form.controls.title.touched && form.controls.title.invalid">
+            Titre requis (min 3 caractères)
+          </small>
+        </div>
+
+        <!-- Zone -->
+        <div class="field">
+          <label>Zone</label>
+          <select formControlName="zone" (change)="onZoneChange($event)">
+            <option *ngFor="let z of zones()" [value]="z._id || z.id">
+              {{ z.name }}
+            </option>
+          </select>
+          <small *ngIf="form.controls.zone.touched && form.controls.zone.invalid">
+            Zone requise
+          </small>
+        </div>
+
+        <!-- Gravité -->
+        <div class="field">
+          <label>Gravité</label>
+          <select formControlName="severity">
+            <option *ngFor="let s of severityOptions" [value]="s">{{ s }}</option>
+          </select>
+        </div>
+
+        <!-- Statut -->
+        <div class="field">
+          <label>Statut</label>
+          <select formControlName="status">
+            <option *ngFor="let st of statusOptions" [value]="st">{{ st }}</option>
+          </select>
+        </div>
+
+        <!-- Description -->
+        <div class="field full">
+          <label>Description</label>
+          <textarea
+            formControlName="description"
+            rows="5"
+            placeholder="Décris l'observation..."
+          ></textarea>
+          <small *ngIf="form.controls.description.touched && form.controls.description.invalid">
+            Description requise (min 5 caractères)
+          </small>
+        </div>
+
+        <!-- Upload images -->
+        <div class="field full">
+          <label>Images</label>
+          <input type="file" multiple accept="image/*" (change)="onFilesSelected($event)" />
+          <small *ngIf="selectedFiles().length > 0">
+            {{ selectedFiles().length }} image(s) sélectionnée(s)
+          </small>
+        </div>
+
+      </div>
+
+      <div class="actions">
+        <button class="btn" type="submit" [disabled]="!canSubmit()">
+          {{ loading() ? 'Enregistrement...' : "Créer l'observation" }}
+        </button>
+        <a class="link" routerLink="/agent/observations">Annuler</a>
+      </div>
+
+    </form>
+  </div>
+</div>

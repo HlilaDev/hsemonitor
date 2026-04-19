@@ -1,0 +1,253 @@
+<div class="message-detail-page">
+  @if (loading()) {
+    <div class="state-card loading">
+      <div class="spinner"></div>
+      <h3>Chargement du message...</h3>
+      <p>Veuillez patienter pendant la récupération des informations.</p>
+    </div>
+  } @else if (error()) {
+    <div class="state-card error">
+      <div class="state-icon">
+        <i class="bi bi-exclamation-triangle"></i>
+      </div>
+      <h3>Impossible de charger le message</h3>
+      <p>{{ error() }}</p>
+      <a routerLink="/shared/operational-messages" class="btn btn-dark">
+        Retour à la liste
+      </a>
+    </div>
+  } @else {
+    <div class="page-shell">
+      <div class="page-header">
+        <div class="header-left">
+          <a routerLink="/shared/operational-messages" class="back-link">
+            <i class="bi bi-arrow-left"></i>
+            <span>Retour</span>
+          </a>
+
+          <div class="title-block">
+            <div class="mini-label">Message opérationnel</div>
+            <h1>{{ message().subject }}</h1>
+
+            <div class="header-badges">
+              <span class="badge priority" [class]="priorityClass(message().priority)">
+                {{ priorityLabel() }}
+              </span>
+
+              <span class="badge status" [class]="statusClass(message().status)">
+                {{ statusLabel() }}
+              </span>
+
+              @if (message().requiresAcknowledgement) {
+                <span class="badge ack">
+                  Accusé requis
+                </span>
+              }
+            </div>
+          </div>
+        </div>
+
+        <div class="header-actions">
+          @if (message().status !== 'acknowledged' && message().requiresAcknowledgement) {
+            <button class="btn btn-primary" type="button" (click)="markAsAcknowledged()">
+              <i class="bi bi-check2-circle"></i>
+              Confirmer
+            </button>
+          }
+
+          @if (message().status !== 'archived') {
+            <button class="btn btn-light" type="button" (click)="archiveMessage()">
+              <i class="bi bi-archive"></i>
+              Archiver
+            </button>
+          }
+        </div>
+      </div>
+
+      <div class="content-grid">
+        <div class="main-column">
+          <section class="card hero-card">
+            <div class="hero-top">
+              <div>
+                <p class="hero-title">{{ message().title }}</p>
+                <h2>{{ message().subject }}</h2>
+              </div>
+
+              <div class="hero-id">
+                <span>Réf</span>
+                <strong>#{{ message().id }}</strong>
+              </div>
+            </div>
+
+            <div class="hero-meta">
+              <div class="meta-item">
+                <span class="label">Catégorie</span>
+                <strong>{{ message().category }}</strong>
+              </div>
+
+              <div class="meta-item">
+                <span class="label">Zone</span>
+                <strong>{{ message().zone }}</strong>
+              </div>
+
+              <div class="meta-item">
+                <span class="label">Device</span>
+                <strong>{{ message().device }}</strong>
+              </div>
+
+              <div class="meta-item">
+                <span class="label">Destinataires</span>
+                <strong>{{ recipientsCount() }}</strong>
+              </div>
+            </div>
+          </section>
+
+          <section class="card">
+            <div class="section-head">
+              <h3>Contenu du message</h3>
+            </div>
+
+            <div class="message-body">
+              @for (paragraph of message().content.split('\n\n'); track $index) {
+                <p>{{ paragraph }}</p>
+              }
+            </div>
+          </section>
+
+          <section class="card">
+            <div class="section-head">
+              <h3>Pièces jointes</h3>
+              <span class="section-count">{{ message().attachments.length }}</span>
+            </div>
+
+            @if (message().attachments.length > 0) {
+              <div class="attachments-list">
+                @for (attachment of message().attachments; track attachment.id) {
+                  <div class="attachment-item">
+                    <div class="attachment-icon">
+                      <i [class]="attachmentIcon(attachment.type)"></i>
+                    </div>
+
+                    <div class="attachment-info">
+                      <div class="attachment-name">{{ attachment.name }}</div>
+                      <div class="attachment-meta">{{ attachment.size }}</div>
+                    </div>
+
+                    <button class="attachment-btn" type="button">
+                      <i class="bi bi-download"></i>
+                    </button>
+                  </div>
+                }
+              </div>
+            } @else {
+              <div class="empty-block">
+                Aucune pièce jointe disponible.
+              </div>
+            }
+          </section>
+
+          <section class="card">
+            <div class="section-head">
+              <h3>Historique d’activité</h3>
+            </div>
+
+            <div class="timeline">
+              @for (item of message().activity; track item.id) {
+                <div class="timeline-item">
+                  <div class="timeline-icon">
+                    <i [class]="activityIcon(item.type)"></i>
+                  </div>
+
+                  <div class="timeline-content">
+                    <div class="timeline-top">
+                      <strong>{{ item.description }}</strong>
+                      <span>{{ item.date | date:'dd/MM/yyyy HH:mm' }}</span>
+                    </div>
+                    <div class="timeline-author">{{ item.author }}</div>
+                  </div>
+                </div>
+              }
+            </div>
+          </section>
+        </div>
+
+        <aside class="side-column">
+          <section class="card side-card">
+            <div class="section-head">
+              <h3>Informations</h3>
+            </div>
+
+            <div class="info-list">
+              <div class="info-row">
+                <span>Auteur</span>
+                <strong>{{ message().author.fullName }}</strong>
+              </div>
+
+              <div class="info-row">
+                <span>Rôle</span>
+                <strong>{{ message().author.role }}</strong>
+              </div>
+
+              <div class="info-row">
+                <span>Email</span>
+                <strong>{{ message().author.email }}</strong>
+              </div>
+
+              <div class="info-row">
+                <span>Créé le</span>
+                <strong>{{ message().createdAt | date:'dd/MM/yyyy HH:mm' }}</strong>
+              </div>
+
+              <div class="info-row">
+                <span>Mis à jour</span>
+                <strong>{{ message().updatedAt | date:'dd/MM/yyyy HH:mm' }}</strong>
+              </div>
+
+              @if (message().sentAt) {
+                <div class="info-row">
+                  <span>Envoyé le</span>
+                  <strong>{{ message().sentAt | date:'dd/MM/yyyy HH:mm' }}</strong>
+                </div>
+              }
+            </div>
+          </section>
+
+          <section class="card side-card">
+            <div class="section-head">
+              <h3>Destinataires</h3>
+            </div>
+
+            <div class="chips-list">
+              @for (recipient of message().recipients; track recipient) {
+                <span class="chip">{{ recipient }}</span>
+              }
+            </div>
+          </section>
+
+          <section class="card side-card quick-actions">
+            <div class="section-head">
+              <h3>Actions rapides</h3>
+            </div>
+
+            <div class="quick-actions-list">
+              <button class="quick-btn" type="button">
+                <i class="bi bi-pencil-square"></i>
+                Modifier
+              </button>
+
+              <button class="quick-btn" type="button">
+                <i class="bi bi-send"></i>
+                Renvoyer
+              </button>
+
+              <button class="quick-btn danger" type="button">
+                <i class="bi bi-trash3"></i>
+                Supprimer
+              </button>
+            </div>
+          </section>
+        </aside>
+      </div>
+    </div>
+  }
+</div>

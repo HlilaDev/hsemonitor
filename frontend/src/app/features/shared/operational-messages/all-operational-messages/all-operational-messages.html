@@ -1,0 +1,280 @@
+<section class="messages-page">
+  <div class="page-header">
+    <div>
+      <p class="eyebrow">HSE Communication</p>
+      <h1>Messages Opérationnels</h1>
+      <p class="subtitle">
+        Gérez les messages envoyés vers les écrans, devices et zones connectées.
+      </p>
+    </div>
+
+    <div class="header-actions">
+      <button type="button" class="btn btn-refresh" (click)="loadMessages()">
+        <i class="bi bi-arrow-clockwise"></i>
+        <span>Actualiser</span>
+      </button>
+
+      <button type="button" class="btn btn-primary"  >
+        <i class="bi bi-plus-lg"></i>
+        <span>Nouveau message</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="stats-grid">
+    <article class="stat-card">
+      <div class="stat-icon purple">
+        <i class="bi bi-file-earmark-text"></i>
+      </div>
+      <div class="stat-content">
+        <span>Draft</span>
+        <strong>{{ draftCount() }}</strong>
+      </div>
+    </article>
+
+    <article class="stat-card">
+      <div class="stat-icon blue">
+        <i class="bi bi-send"></i>
+      </div>
+      <div class="stat-content">
+        <span>Sent</span>
+        <strong>{{ sentCount() }}</strong>
+      </div>
+    </article>
+
+    <article class="stat-card">
+      <div class="stat-icon green">
+        <i class="bi bi-badge-hd"></i>
+      </div>
+      <div class="stat-content">
+        <span>Displayed</span>
+        <strong>{{ displayedCount() }}</strong>
+      </div>
+    </article>
+
+    <article class="stat-card">
+      <div class="stat-icon red">
+        <i class="bi bi-exclamation-triangle"></i>
+      </div>
+      <div class="stat-content">
+        <span>Critical</span>
+        <strong>{{ criticalCount() }}</strong>
+      </div>
+    </article>
+  </div>
+
+  <div class="toolbar-card">
+    <div class="toolbar-row">
+      <div class="search-box">
+        <i class="bi bi-search"></i>
+        <input
+          type="text"
+          [value]="search()"
+          (input)="onSearchChange($any($event.target).value)"
+          placeholder="Rechercher par titre ou contenu..."
+        />
+      </div>
+
+      <div class="filters">
+        <select
+          [value]="selectedStatus()"
+          (change)="onStatusChange($any($event.target).value)"
+        >
+          @for (option of statusOptions; track option.value) {
+            <option [value]="option.value">{{ option.label }}</option>
+          }
+        </select>
+
+        <select
+          [value]="selectedTargetType()"
+          (change)="onTargetTypeChange($any($event.target).value)"
+        >
+          @for (option of targetTypeOptions; track option.value) {
+            <option [value]="option.value">{{ option.label }}</option>
+          }
+        </select>
+
+        <button type="button" class="btn btn-primary" (click)="applyFilters()">
+          <i class="bi bi-funnel"></i>
+          <span>Filtrer</span>
+        </button>
+
+        <button type="button" class="btn btn-light" (click)="resetFilters()">
+          <i class="bi bi-x-circle"></i>
+          <span>Reset</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  @if (error()) {
+    <div class="alert-box error">
+      <i class="bi bi-exclamation-octagon"></i>
+      <span>{{ error() }}</span>
+    </div>
+  }
+
+  <div class="table-card">
+    <div class="table-header">
+      <div>
+        <h2>Liste des messages</h2>
+        <p>{{ total() }} message(s) trouvé(s)</p>
+      </div>
+    </div>
+
+    @if (loading()) {
+      <div class="state-box loading-state">
+        <div class="spinner"></div>
+        <p>Chargement des messages...</p>
+      </div>
+    } @else if (!items().length) {
+      <div class="state-box empty-state">
+        <i class="bi bi-inbox"></i>
+        <h3>Aucun message trouvé</h3>
+        <p>Essayez de modifier les filtres ou ajoutez un nouveau message.</p>
+      </div>
+    } @else {
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Message</th>
+              <th>Type</th>
+              <th>Priorité</th>
+              <th>Cible</th>
+              <th>Statut</th>
+              <th>Créé par</th>
+              <th>Date</th>
+              <th class="actions-col">Actions</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            @for (item of items(); track trackByMessageId($index, item)) {
+              <tr>
+                <td>
+                  <div class="message-main">
+                    <button
+                      type="button"
+                      class="message-title-btn"
+                      (click)="goToDetail(item)"
+                      [title]="item.title || 'Sans titre'"
+                    >
+                      {{ item.title || 'Sans titre' }}
+                    </button>
+
+                    <p>{{ item.content }}</p>
+                  </div>
+                </td>
+
+                <td>
+                  <span class="badge type" [attr.data-type]="item.messageType">
+                    {{ item.messageType }}
+                  </span>
+                </td>
+
+                <td>
+                  <span class="badge priority" [attr.data-priority]="item.priority">
+                    {{ item.priority }}
+                  </span>
+                </td>
+
+                <td>
+                  <span class="target-chip">
+                    {{ getTargetLabel(item) }}
+                  </span>
+                </td>
+
+                <td>
+                  <span class="badge status" [attr.data-status]="item.status">
+                    {{ item.status }}
+                  </span>
+                </td>
+
+                <td>{{ getCreatedByLabel(item) }}</td>
+
+                <td>
+                  @if (item.createdAt) {
+                    {{ item.createdAt | date: 'dd/MM/yyyy HH:mm' }}
+                  } @else {
+                    -
+                  }
+                </td>
+
+                <td class="actions-col">
+                  <div class="row-actions">
+                    <button
+                      type="button"
+                      class="icon-btn info"
+                      title="Voir détail"
+                      [disabled]="actionLoadingId() === item._id"
+                      (click)="goToDetail(item)"
+                    >
+                      <i class="bi bi-eye"></i>
+                    </button>
+
+                    <button
+                      type="button"
+                      class="icon-btn success"
+                      title="Publier"
+                      [disabled]="actionLoadingId() === item._id"
+                      (click)="publishMessage(item)"
+                    >
+                      <i class="bi bi-send-check"></i>
+                    </button>
+
+                    <button
+                      type="button"
+                      class="icon-btn warning"
+                      title="Annuler"
+                      [disabled]="actionLoadingId() === item._id"
+                      (click)="cancelMessage(item)"
+                    >
+                      <i class="bi bi-pause-circle"></i>
+                    </button>
+
+                    <button
+                      type="button"
+                      class="icon-btn danger"
+                      title="Supprimer"
+                      [disabled]="actionLoadingId() === item._id"
+                      (click)="deleteMessage(item)"
+                    >
+                      <i class="bi bi-trash3"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <div class="pagination-bar">
+        <button
+          type="button"
+          class="btn btn-light"
+          [disabled]="page() <= 1"
+          (click)="goToPage(page() - 1)"
+        >
+          <i class="bi bi-chevron-left"></i>
+          <span>Précédent</span>
+        </button>
+
+        <div class="page-indicator">
+          Page <strong>{{ page() }}</strong> / {{ totalPages() }}
+        </div>
+
+        <button
+          type="button"
+          class="btn btn-light"
+          [disabled]="page() >= totalPages()"
+          (click)="goToPage(page() + 1)"
+        >
+          <span>Suivant</span>
+          <i class="bi bi-chevron-right"></i>
+        </button>
+      </div>
+    }
+  </div>
+</section>

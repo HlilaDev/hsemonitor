@@ -1,0 +1,44 @@
+{
+  "SIDEBAR": {
+    "SECTIONS": {
+      "ADMIN": "ADMIN MENU",
+      "MANAGER": "MANAGER MENU",
+      "AGENT": "AGENT MENU"
+    },
+    "MENU": {
+      "DASHBOARD": "Dashboard",
+      "ZONES": "Zones",
+      "DEVICES": "Devices",
+      "SENSORS": "Sensors",
+      "EMPLOYEES": "Employees",
+      "USERS": "Users",
+      "SETTINGS": "Settings",
+
+      "OBSERVATIONS": "Observations",
+      "INCIDENTS": "Incidents",
+      "TRAINING": "Training",
+      "TEAM": "Team",
+      "MONITORING": "Monitoring",
+            "INVENTORIES":"Inventories",
+            "OPMESSAGES" :"operational messages",
+            "INSPECTIONS":"Inspections",
+
+
+      "AUDITS":"Audits",
+      "ALERTS": "Alerts",
+      "REPORTS": "Reports"
+    },
+    "HINT": {
+      "SECURE_ADMIN": "Secure administration",
+      "MANAGER": "HSE management",
+      "AGENT": "Field HSE agent"
+    }
+  },
+
+  "BRAND": {
+    "SUBTITLE": "hseMonitor",
+    "ADMIN": { "TITLE": "Admin", "ACCENT": "Panel" },
+    "MANAGER": { "TITLE": "HSE", "ACCENT": "Manager" },
+    "AGENT": { "TITLE": "HSE", "ACCENT": "Agent" }
+  }
+}

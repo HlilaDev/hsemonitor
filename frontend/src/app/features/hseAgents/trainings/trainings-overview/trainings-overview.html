@@ -1,0 +1,269 @@
+<section class="page">
+  <div class="head">
+    <div>
+      <div class="eyebrow">HSE AGENT TRAININGS</div>
+      <h2>Vue d’ensemble des formations</h2>
+      <p>
+        Suivez les formations planifiées par le manager, consultez les sessions
+        à venir et accédez rapidement au traitement terrain.
+      </p>
+    </div>
+
+    <div class="head-actions">
+      <button class="btn ghost" type="button" (click)="fetchTrainings()" [disabled]="loading()">
+        <i class="bi bi-arrow-repeat"></i>
+        {{ loading() ? 'Chargement...' : 'Actualiser' }}
+      </button>
+
+      <button class="btn" type="button" (click)="goToAllTrainings()">
+        <i class="bi bi-journal-text"></i>
+        Voir toutes les formations
+      </button>
+    </div>
+  </div>
+
+  @if (errorMsg()) {
+    <div class="alert error">
+      <i class="bi bi-exclamation-triangle"></i>
+      <span>{{ errorMsg() }}</span>
+    </div>
+  }
+
+  <div class="summary">
+    <div class="summary-card">
+      <span class="summary-label">Planifiées</span>
+      <strong>{{ plannedCount() }}</strong>
+      <small>Sessions à préparer</small>
+    </div>
+
+    <div class="summary-card">
+      <span class="summary-label">Terminées</span>
+      <strong>{{ completedCount() }}</strong>
+      <small>Sessions clôturées</small>
+    </div>
+
+    <div class="summary-card">
+      <span class="summary-label">Annulées</span>
+      <strong>{{ cancelledCount() }}</strong>
+      <small>Sessions interrompues</small>
+    </div>
+
+    <div class="summary-card">
+      <span class="summary-label">Participants</span>
+      <strong>{{ participantCount() }}</strong>
+      <small>Total des employés inscrits</small>
+    </div>
+  </div>
+
+  <div class="toolbar">
+    <div class="field field-search">
+      <label>Recherche</label>
+      <input
+        type="text"
+        [value]="q()"
+        (input)="q.set(($any($event.target).value || ''))"
+        placeholder="Titre, description, lieu, provider..."
+      />
+    </div>
+
+    <div class="field">
+      <label>Statut</label>
+      <select [value]="status()" (change)="status.set($any($event.target).value)">
+        @for (option of statusOptions; track option.value) {
+          <option [value]="option.value">{{ option.label }}</option>
+        }
+      </select>
+    </div>
+
+    <div class="field">
+      <label>Catégorie</label>
+      <select [value]="category()" (change)="category.set($any($event.target).value)">
+        @for (option of categoryOptions; track option.value) {
+          <option [value]="option.value">{{ option.label }}</option>
+        }
+      </select>
+    </div>
+
+    <div class="field">
+      <label>Tri</label>
+      <select [value]="sort()" (change)="sort.set($any($event.target).value)">
+        <option value="startDate_asc">Date début ↑</option>
+        <option value="startDate_desc">Date début ↓</option>
+        <option value="title_asc">Titre A → Z</option>
+        <option value="title_desc">Titre Z → A</option>
+      </select>
+    </div>
+
+    <div class="toolbar-actions">
+      <button class="btn ghost full" type="button" (click)="resetFilters()">
+        Réinitialiser
+      </button>
+    </div>
+  </div>
+
+  @if (loading()) {
+    <div class="state loading">
+      Chargement des formations...
+    </div>
+  } @else {
+    <div class="boards">
+      <div class="board">
+        <div class="board-head">
+          <div>
+            <h3>Prochaines sessions</h3>
+            <p>Les formations à venir à suivre sur le terrain.</p>
+          </div>
+          <span class="pill">{{ upcomingItems().length }}</span>
+        </div>
+
+        @if (upcomingItems().length) {
+          <div class="training-list">
+            @for (item of upcomingItems(); track item._id) {
+              <button class="training-card" type="button" (click)="goToTraining(item._id)">
+                <div class="training-top">
+                  <div class="training-title-wrap">
+                    <h4>{{ item.title }}</h4>
+                    <div class="chips">
+                      <span class="chip">{{ categoryLabel(item.category) }}</span>
+                      <span [class]="trainingBadgeClass(item.status)">
+                        {{ updateStatusLabel(item.status) }}
+                      </span>
+                    </div>
+                  </div>
+
+                  <i class="bi bi-chevron-right"></i>
+                </div>
+
+                <div class="meta-grid">
+                  <div class="meta-item">
+                    <span class="meta-label">Début</span>
+                    <strong>{{ formatDateTime(item.startDate) }}</strong>
+                  </div>
+
+                  <div class="meta-item">
+                    <span class="meta-label">Lieu</span>
+                    <strong>{{ item.location || '—' }}</strong>
+                  </div>
+
+                  <div class="meta-item">
+                    <span class="meta-label">Participants</span>
+                    <strong>{{ getParticipantsCount(item) }}</strong>
+                  </div>
+
+                  <div class="meta-item">
+                    <span class="meta-label">Présents/validés</span>
+                    <strong>{{ getPresentCount(item) }}</strong>
+                  </div>
+                </div>
+
+                @if (item.description) {
+                  <p class="desc">{{ item.description }}</p>
+                }
+              </button>
+            }
+          </div>
+        } @else {
+          <div class="state empty">
+            Aucune session à venir.
+          </div>
+        }
+      </div>
+
+      <div class="board">
+        <div class="board-head">
+          <div>
+            <h3>Formations récentes terminées</h3>
+            <p>Sessions déjà finalisées par les agents.</p>
+          </div>
+          <span class="pill success">{{ recentCompletedItems().length }}</span>
+        </div>
+
+        @if (recentCompletedItems().length) {
+          <div class="training-list compact">
+            @for (item of recentCompletedItems(); track item._id) {
+              <button class="training-card compact" type="button" (click)="goToTraining(item._id)">
+                <div class="compact-head">
+                  <h4>{{ item.title }}</h4>
+                  <span [class]="trainingBadgeClass(item.status)">
+                    {{ updateStatusLabel(item.status) }}
+                  </span>
+                </div>
+
+                <div class="compact-meta">
+                  <span><i class="bi bi-calendar-check"></i> {{ formatDate(item.endDate || item.startDate) }}</span>
+                  <span><i class="bi bi-geo-alt"></i> {{ item.location || '—' }}</span>
+                  <span><i class="bi bi-people"></i> {{ getParticipantsCount(item) }} participant(s)</span>
+                </div>
+              </button>
+            }
+          </div>
+        } @else {
+          <div class="state empty">
+            Aucune formation terminée pour le moment.
+          </div>
+        }
+      </div>
+    </div>
+
+    <div class="table-section">
+      <div class="section-head">
+        <div>
+          <h3>Liste filtrée</h3>
+          <p>{{ visibleItems().length }} formation(s) visible(s) après filtres.</p>
+        </div>
+      </div>
+
+      @if (visibleItems().length) {
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Titre</th>
+                <th>Catégorie</th>
+                <th>Début</th>
+                <th>Lieu</th>
+                <th>Participants</th>
+                <th>Statut</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              @for (item of visibleItems(); track item._id) {
+                <tr>
+                  <td class="title-col">
+                    <div class="title-main">{{ item.title }}</div>
+                    <div class="title-desc">
+                      {{ item.description || '—' }}
+                    </div>
+                  </td>
+
+                  <td>{{ categoryLabel(item.category) }}</td>
+                  <td>{{ formatDateTime(item.startDate) }}</td>
+                  <td>{{ item.location || '—' }}</td>
+                  <td>{{ getParticipantsCount(item) }}</td>
+
+                  <td>
+                    <span [class]="trainingBadgeClass(item.status)">
+                      {{ updateStatusLabel(item.status) }}
+                    </span>
+                  </td>
+
+                  <td class="actions-col">
+                    <button class="icon-link" type="button" (click)="goToTraining(item._id)">
+                      <i class="bi bi-eye"></i>
+                    </button>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      } @else {
+        <div class="state empty">
+          Aucune formation trouvée pour ces filtres.
+        </div>
+      }
+    </div>
+  }
+</section>

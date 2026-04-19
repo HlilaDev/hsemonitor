@@ -1,0 +1,404 @@
+<div class="page">
+  <div class="topbar">
+    <button class="btn ghost" type="button" (click)="back()">
+      <i class="bi bi-arrow-left"></i>
+      {{ 'COMMON.BACK' | translate }}
+    </button>
+
+    @if (!loading() && employee()) {
+      <div class="actions">
+        <button class="btn dark" type="button" [disabled]="saving()" (click)="toggleEmployeeStatus()">
+          <i
+            class="bi"
+            [class.bi-toggle-on]="employee()?.isActive"
+            [class.bi-toggle-off]="!employee()?.isActive"
+          ></i>
+          {{
+            employee()?.isActive
+              ? ('EMPLOYEES.PROFILE.DEACTIVATE' | translate)
+              : ('EMPLOYEES.PROFILE.ACTIVATE' | translate)
+          }}
+        </button>
+
+        <button class="btn primary" type="button" [disabled]="saving()" (click)="toggleEdit()">
+          <i class="bi" [class.bi-pencil]="!editMode()" [class.bi-x-lg]="editMode()"></i>
+          {{ editMode() ? ('COMMON.CANCEL' | translate) : ('COMMON.EDIT' | translate) }}
+        </button>
+
+        <button class="btn danger" type="button" [disabled]="saving()" (click)="deleteEmployee()">
+          <i class="bi bi-trash"></i>
+          {{ 'COMMON.DELETE' | translate }}
+        </button>
+      </div>
+    }
+  </div>
+
+  @if (loading()) {
+    <div class="state">
+      <span class="spinner"></span>
+      {{ 'COMMON.LOADING' | translate }}
+    </div>
+  } @else if (error()) {
+    <div class="state error">
+      <i class="bi bi-exclamation-triangle"></i>
+      {{ error()! | translate }}
+    </div>
+  } @else if (employee(); as e) {
+    <section class="hero-card">
+      <div class="hero-left">
+        <div class="photo-wrap">
+          @if (profileImage()) {
+            <img class="photo" [src]="profileImage()" [alt]="e.fullName" />
+          } @else {
+            <div class="avatar">{{ initials() }}</div>
+          }
+        </div>
+
+        <div class="hero-info">
+          <div class="eyebrow">{{ 'EMPLOYEES.TITLE' | translate }}</div>
+          <h1 class="name">{{ e.fullName }}</h1>
+
+          <div class="meta">
+            <span class="chip" [class.ok]="e.isActive" [class.no]="!e.isActive">
+              {{ statusKey() | translate }}
+            </span>
+
+            <span class="chip">
+              <i class="bi bi-geo-alt"></i>
+              {{ zoneLabel() }}
+            </span>
+
+            <span class="chip">
+              <i class="bi bi-building"></i>
+              {{ value(e.department) }}
+            </span>
+
+            <span class="chip">
+              <i class="bi bi-briefcase"></i>
+              {{ value(e.jobTitle) }}
+            </span>
+          </div>
+
+          <p class="hero-desc">
+            {{ 'EMPLOYEES.PROFILE.SUBTITLE' | translate }}
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="stats-grid">
+      <article class="stat-card">
+        <div class="stat-icon primary">
+          <i class="bi bi-mortarboard"></i>
+        </div>
+        <div class="stat-content">
+          <span>Trainings</span>
+          <strong>{{ trainings().length }}</strong>
+          <small>Formations liées à cet employé</small>
+        </div>
+      </article>
+
+      <article class="stat-card">
+        <div class="stat-icon dark">
+          <i class="bi bi-box-seam"></i>
+        </div>
+        <div class="stat-content">
+          <span>Inventaires actifs</span>
+          <strong>{{ activeAssignmentsCount() }}</strong>
+          <small>Équipements actuellement affectés</small>
+        </div>
+      </article>
+
+      <article class="stat-card">
+        <div class="stat-icon danger">
+          <i class="bi bi-exclamation-circle"></i>
+        </div>
+        <div class="stat-content">
+          <span>Affectations en retard</span>
+          <strong>{{ overdueAssignmentsCount() }}</strong>
+          <small>Retours attendus dépassés</small>
+        </div>
+      </article>
+    </section>
+
+    <div class="content-grid">
+      <div class="left-col">
+        @if (!editMode()) {
+          <section class="card info-card">
+            <div class="card-title">
+              <i class="bi bi-person-vcard"></i>
+              {{ 'EMPLOYEES.PROFILE.PERSONAL_INFO' | translate }}
+            </div>
+
+            <div class="kv-grid">
+              <div class="kv-item">
+                <span>{{ 'EMPLOYEES.COLUMNS.FULL_NAME' | translate }}</span>
+                <strong>{{ value(e.fullName) }}</strong>
+              </div>
+
+              <div class="kv-item">
+                <span>{{ 'EMPLOYEES.COLUMNS.MATRICULE' | translate }}</span>
+                <strong>{{ value(e.employeeId) }}</strong>
+              </div>
+
+              <div class="kv-item">
+                <span>{{ 'EMPLOYEES.COLUMNS.DEPARTMENT' | translate }}</span>
+                <strong>{{ value(e.department) }}</strong>
+              </div>
+
+              <div class="kv-item">
+                <span>{{ 'EMPLOYEES.COLUMNS.JOB' | translate }}</span>
+                <strong>{{ value(e.jobTitle) }}</strong>
+              </div>
+
+              <div class="kv-item">
+                <span>{{ 'EMPLOYEES.FORM.PHONE' | translate }}</span>
+                <strong>{{ value(e.phone) }}</strong>
+              </div>
+
+              <div class="kv-item">
+                <span>{{ 'EMPLOYEES.COLUMNS.HIRE_DATE' | translate }}</span>
+                <strong>{{ e.hireDate ? (e.hireDate | date:'yyyy-MM-dd') : '—' }}</strong>
+              </div>
+
+              <div class="kv-item">
+                <span>{{ 'EMPLOYEES.FORM.ZONE' | translate }}</span>
+                <strong>{{ zoneLabel() }}</strong>
+              </div>
+
+              <div class="kv-item">
+                <span>{{ 'EMPLOYEES.PROFILE.CREATED_AT' | translate }}</span>
+                <strong>{{ e.createdAt ? (e.createdAt | date:'yyyy-MM-dd HH:mm') : '—' }}</strong>
+              </div>
+            </div>
+          </section>
+        } @else {
+          <section class="card form-card">
+            <div class="card-title">
+              <i class="bi bi-pencil-square"></i>
+              {{ 'EMPLOYEES.EDIT_TITLE' | translate }}
+            </div>
+
+            <form [formGroup]="form" (ngSubmit)="save()">
+              <div class="fields">
+                <label>
+                  <span>{{ 'EMPLOYEES.FORM.FULL_NAME' | translate }} *</span>
+                  <input formControlName="fullName" [placeholder]="'EMPLOYEES.FORM.FULL_NAME_PH' | translate" />
+                  @if (form.controls.fullName.touched && form.controls.fullName.invalid) {
+                    <small class="hint error">
+                      {{ 'EMPLOYEES.VALIDATION.FULL_NAME_REQUIRED' | translate }}
+                    </small>
+                  }
+                </label>
+
+                <label>
+                  <span>{{ 'EMPLOYEES.FORM.EMPLOYEE_ID' | translate }}</span>
+                  <input formControlName="employeeId" [placeholder]="'EMPLOYEES.FORM.EMPLOYEE_ID_PH' | translate" />
+                </label>
+
+                <label>
+                  <span>{{ 'EMPLOYEES.FORM.DEPARTMENT' | translate }}</span>
+                  <input formControlName="department" [placeholder]="'EMPLOYEES.FORM.DEPARTMENT_PH' | translate" />
+                </label>
+
+                <label>
+                  <span>{{ 'EMPLOYEES.FORM.JOB_TITLE' | translate }}</span>
+                  <input formControlName="jobTitle" [placeholder]="'EMPLOYEES.FORM.JOB_TITLE_PH' | translate" />
+                </label>
+
+                <label>
+                  <span>{{ 'EMPLOYEES.FORM.ZONE' | translate }}</span>
+                  <input formControlName="zone" [placeholder]="'EMPLOYEES.PROFILE.ZONE_ID_PH' | translate" />
+                </label>
+
+                <label>
+                  <span>{{ 'EMPLOYEES.FORM.PHONE' | translate }}</span>
+                  <input formControlName="phone" [placeholder]="'EMPLOYEES.FORM.PHONE_PH' | translate" />
+                </label>
+
+                <label>
+                  <span>{{ 'EMPLOYEES.FORM.HIRE_DATE' | translate }}</span>
+                  <input type="date" formControlName="hireDate" />
+                </label>
+
+                <label class="toggle">
+                  <input type="checkbox" formControlName="isActive" />
+                  <span>{{ 'EMPLOYEES.FORM.ACTIVE' | translate }}</span>
+                </label>
+              </div>
+
+              <div class="form-actions">
+                <button class="btn ghost" type="button" [disabled]="saving()" (click)="toggleEdit()">
+                  {{ 'COMMON.CANCEL' | translate }}
+                </button>
+
+                <button class="btn primary" type="submit" [disabled]="saving()">
+                  {{ saving() ? ('COMMON.SAVING' | translate) : ('EMPLOYEES.SAVE_CHANGES' | translate) }}
+                </button>
+              </div>
+            </form>
+          </section>
+        }
+
+        <section class="card trainings-card">
+          <div class="card-title">
+            <i class="bi bi-mortarboard"></i>
+            {{ 'EMPLOYEES.PROFILE.TRAININGS' | translate }}
+            <span class="count">({{ trainings().length }})</span>
+          </div>
+
+          @if (trainings().length > 0) {
+            <div class="training-list">
+              @for (t of trainings(); track t._id || $index) {
+                <div class="training-item">
+                  <div class="training-main">
+                    <div class="training-title">{{ value(t.title) }}</div>
+
+                    <div class="training-meta">
+                      <span class="mini-chip" [ngClass]="trainingBadgeClass(t.status)">
+                        {{ ('STATUS.' + (t.status || 'scheduled').toLowerCase()) | translate }}
+                      </span>
+
+                      <span class="muted">
+                        {{ t.date ? (t.date | date:'yyyy-MM-dd') : '—' }}
+                      </span>
+
+                      @if (t.score !== null && t.score !== undefined) {
+                        <span class="muted">
+                          Score: {{ t.score }}%
+                        </span>
+                      }
+
+                      @if (t.certificate) {
+                        <span class="muted">
+                          Certifié
+                        </span>
+                      }
+                    </div>
+                  </div>
+                </div>
+              }
+            </div>
+          } @else {
+            <div class="empty-box">
+              <i class="bi bi-journal-x"></i>
+              <span>{{ 'EMPLOYEES.PROFILE.NO_TRAININGS' | translate }}</span>
+            </div>
+          }
+        </section>
+      </div>
+
+      <div class="right-col">
+        <section class="card side-card">
+          <div class="card-title">
+            <i class="bi bi-person-lines-fill"></i>
+            Résumé rapide
+          </div>
+
+          <div class="side-list">
+            <div class="side-item">
+              <span>Nom complet</span>
+              <strong>{{ value(e.fullName) }}</strong>
+            </div>
+
+            <div class="side-item">
+              <span>Matricule</span>
+              <strong>{{ value(e.employeeId) }}</strong>
+            </div>
+
+            <div class="side-item">
+              <span>Département</span>
+              <strong>{{ value(e.department) }}</strong>
+            </div>
+
+            <div class="side-item">
+              <span>Poste</span>
+              <strong>{{ value(e.jobTitle) }}</strong>
+            </div>
+
+            <div class="side-item">
+              <span>Téléphone</span>
+              <strong>{{ value(e.phone) }}</strong>
+            </div>
+
+            <div class="side-item">
+              <span>Zone</span>
+              <strong>{{ zoneLabel() }}</strong>
+            </div>
+          </div>
+        </section>
+
+        <section class="card inventory-card">
+          <div class="inventory-head">
+            <div class="card-title no-margin">
+              <i class="bi bi-box-seam"></i>
+              Inventaires affectés
+              <span class="count">({{ inventoryAssignments().length }})</span>
+            </div>
+          </div>
+
+          @if (inventoryLoading()) {
+            <div class="inline-state">
+              <span class="spinner"></span>
+              Chargement des affectations...
+            </div>
+          } @else if (inventoryError()) {
+            <div class="inline-state error-lite">
+              <i class="bi bi-exclamation-triangle"></i>
+              {{ inventoryError() }}
+            </div>
+          } @else if (inventoryAssignments().length > 0) {
+            <div class="assignment-list">
+              @for (assignment of inventoryAssignments(); track assignment._id || $index) {
+                <article class="assignment-item">
+                  <div class="assignment-top">
+                    <div class="assignment-main">
+                      <div class="assignment-name">
+                        {{ inventoryItemName(assignment) }}
+                      </div>
+
+                      <div class="assignment-code">
+                        Code: {{ inventoryItemCode(assignment) }}
+                      </div>
+                    </div>
+
+                    <span class="mini-chip" [ngClass]="inventoryStatusClass(assignment.status)">
+                      {{ inventoryStatusLabel(assignment.status) }}
+                    </span>
+                  </div>
+
+                  <div class="assignment-grid simplified">
+                    <div class="assignment-meta-item">
+                      <span>Affectée le</span>
+                      <strong>
+                        {{ assignment.assignedAt ? (assignment.assignedAt | date:'yyyy-MM-dd') : '—' }}
+                      </strong>
+                    </div>
+
+                    <div class="assignment-meta-item">
+                      <span>Retour prévu</span>
+                      <strong>
+                        {{ assignment.expectedReturnDate ? (assignment.expectedReturnDate | date:'yyyy-MM-dd') : '—' }}
+                      </strong>
+                    </div>
+                  </div>
+
+                  @if (assignment.notes) {
+                    <div class="assignment-note">
+                      {{ assignment.notes }}
+                    </div>
+                  }
+                </article>
+              }
+            </div>
+          } @else {
+            <div class="empty-box">
+              <i class="bi bi-box"></i>
+              <span>Aucun inventaire affecté à cet employé.</span>
+            </div>
+          }
+        </section>
+      </div>
+    </div>
+  }
+</div>

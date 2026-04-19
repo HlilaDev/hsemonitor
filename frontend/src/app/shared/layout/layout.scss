@@ -1,0 +1,73 @@
+:root {
+  --sidebar-w: 280px;
+  --sidebar-w-collapsed: 86px;
+  --header-h: 70px;
+}
+
+/* Conteneur principal (pas de scroll global) */
+.dashboard-container {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  background-color: #f8f9fa;
+}
+
+/* Sidebar (la largeur est contrôlée ici) */
+.dashboard-container app-sidebar.sidebar {
+  width: var(--sidebar-w);
+  height: 100%;
+  flex-shrink: 0;
+  overflow: hidden;
+  z-index: 1000;
+  box-shadow: 4px 0 10px rgba(0, 0, 0, 0.02);
+  transition: width 0.2s ease;
+}
+
+/* Sidebar collapsed */
+.dashboard-container.sidebar-collapsed app-sidebar.sidebar {
+  width: var(--sidebar-w-collapsed);
+}
+
+/* Colonne droite */
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-width: 0;
+
+  /* ✅ le scroll se fait ici */
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* Header sticky */
+app-header.header {
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  height: var(--header-h);
+  flex: 0 0 auto;
+}
+
+/* Zone du contenu */
+.content-area {
+  flex: 1 1 auto;
+  padding: 30px;
+  background-color: #f4f7fa;
+  min-width: 0;
+}
+
+/* Footer */
+app-footer.footer {
+  flex: 0 0 auto;
+  width: 100%;
+}
+
+/* Optionnel responsive */
+@media (max-width: 992px) {
+  .dashboard-container app-sidebar.sidebar {
+    width: var(--sidebar-w-collapsed);
+  }
+}

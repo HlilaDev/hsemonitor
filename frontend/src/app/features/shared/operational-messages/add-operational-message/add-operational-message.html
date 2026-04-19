@@ -1,0 +1,263 @@
+<section class="add-message-page">
+  <div class="page-header">
+    <div>
+      <p class="eyebrow">HSE Communication</p>
+      <h1>Nouveau message opérationnel</h1>
+      <p class="subtitle">
+        Créez un message à envoyer vers un device, une zone ou en diffusion générale.
+      </p>
+    </div>
+
+    <button type="button" class="btn btn-light" (click)="goBack()">
+      <i class="bi bi-arrow-left"></i>
+      <span>Retour</span>
+    </button>
+  </div>
+
+  <div class="top-stats">
+    <div class="mini-card">
+      <span>Devices chargés</span>
+      <strong>{{ devices().length }}</strong>
+    </div>
+
+    <div class="mini-card">
+      <span>Devices online</span>
+      <strong>{{ onlineDevicesCount() }}</strong>
+    </div>
+
+    <div class="mini-card">
+      <span>Zones chargées</span>
+      <strong>{{ zones().length }}</strong>
+    </div>
+  </div>
+
+  @if (error()) {
+    <div class="alert-box error">
+      <i class="bi bi-exclamation-octagon"></i>
+      <span>{{ error() }}</span>
+    </div>
+  }
+
+  @if (success()) {
+    <div class="alert-box success">
+      <i class="bi bi-check-circle"></i>
+      <span>{{ success() }}</span>
+    </div>
+  }
+
+  <form class="form-card" [formGroup]="form" (ngSubmit)="submit()">
+    <div class="form-grid">
+      <div class="field full">
+        <label for="title">Titre</label>
+        <input
+          id="title"
+          type="text"
+          formControlName="title"
+          placeholder="Ex: Alerte sécurité zone A"
+        />
+      </div>
+
+      <div class="field full">
+        <label for="content">Contenu du message <span>*</span></label>
+        <textarea
+          id="content"
+          rows="5"
+          formControlName="content"
+          placeholder="Ex: Port du casque obligatoire dans cette zone."
+        ></textarea>
+
+        <div class="field-meta">
+          <small>{{ contentLength() }}/500</small>
+          @if (fieldInvalid('content')) {
+            <small class="error-text">Le contenu est obligatoire.</small>
+          }
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="messageType">Type de message <span>*</span></label>
+        <select id="messageType" formControlName="messageType">
+          @for (option of messageTypeOptions; track option.value) {
+            <option [value]="option.value">{{ option.label }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="priority">Priorité <span>*</span></label>
+        <select id="priority" formControlName="priority">
+          @for (option of priorityOptions; track option.value) {
+            <option [value]="option.value">{{ option.label }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="targetType">Type de cible <span>*</span></label>
+        <select id="targetType" formControlName="targetType">
+          @for (option of targetTypeOptions; track option.value) {
+            <option [value]="option.value">{{ option.label }}</option>
+          }
+        </select>
+      </div>
+
+      @if (targetType() === 'device') {
+        <div class="field">
+          <label for="targetDevice">Device cible <span>*</span></label>
+          <select id="targetDevice" formControlName="targetDevice">
+            <option value="">Sélectionner un device</option>
+            @for (device of devices(); track device._id || device.deviceId) {
+              <option [value]="device._id || ''">
+                {{ getDeviceLabel(device) }} ({{ device.deviceId }})
+              </option>
+            }
+          </select>
+
+          @if (fieldInvalid('targetDevice')) {
+            <small class="error-text">Le device est obligatoire.</small>
+          }
+        </div>
+      }
+
+      @if (targetType() === 'zone') {
+        <div class="field">
+          <label for="targetZone">Zone cible <span>*</span></label>
+          <select id="targetZone" formControlName="targetZone">
+            <option value="">Sélectionner une zone</option>
+            @for (zone of zones(); track zone._id) {
+              <option [value]="zone._id">
+                {{ getZoneLabel(zone) }}
+              </option>
+            }
+          </select>
+
+          @if (fieldInvalid('targetZone')) {
+            <small class="error-text">La zone est obligatoire.</small>
+          }
+        </div>
+      }
+
+      @if (targetType() === 'broadcast') {
+        <div class="field full info-card">
+          <div class="inline-info">
+            <i class="bi bi-broadcast"></i>
+            <div>
+              <strong>Diffusion générale</strong>
+              <p>
+                Ce message sera envoyé à tous les écrans / devices concernés.
+              </p>
+            </div>
+          </div>
+        </div>
+      }
+
+      <div class="field">
+        <label for="displayMode">Mode d’affichage <span>*</span></label>
+        <select id="displayMode" formControlName="displayMode">
+          @for (option of displayModeOptions; track option.value) {
+            <option [value]="option.value">{{ option.label }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="durationSeconds">Durée (secondes) <span>*</span></label>
+        <input
+          id="durationSeconds"
+          type="number"
+          min="1"
+          max="3600"
+          formControlName="durationSeconds"
+          placeholder="10"
+        />
+
+        @if (fieldInvalid('durationSeconds')) {
+          <small class="error-text">
+            La durée doit être entre 1 et 3600 secondes.
+          </small>
+        }
+      </div>
+
+      <div class="field">
+        <label for="scheduledAt">Planifié pour</label>
+        <input
+          id="scheduledAt"
+          type="datetime-local"
+          formControlName="scheduledAt"
+        />
+      </div>
+
+      <div class="field">
+        <label for="expiresAt">Expire le</label>
+        <input
+          id="expiresAt"
+          type="datetime-local"
+          formControlName="expiresAt"
+        />
+      </div>
+
+      <div class="field full">
+        <label for="notes">Notes</label>
+        <textarea
+          id="notes"
+          rows="4"
+          formControlName="notes"
+          placeholder="Notes internes, contexte, consignes..."
+        ></textarea>
+      </div>
+    </div>
+
+    @if (loadingReferences()) {
+      <div class="loading-box">
+        <span class="spinner"></span>
+        <p>Chargement des devices et zones...</p>
+      </div>
+    }
+
+    <div class="preview-card">
+      <div class="preview-header">
+        <h2>Aperçu du message</h2>
+        <span class="preview-badge" [attr.data-type]="form.get('messageType')?.value">
+          {{ form.get('messageType')?.value || 'info' }}
+        </span>
+      </div>
+
+      <div class="preview-body">
+        <h3>{{ form.get('title')?.value || 'Sans titre' }}</h3>
+        <p>{{ form.get('content')?.value || 'Votre message apparaîtra ici...' }}</p>
+
+        <div class="preview-meta">
+          <span class="meta-chip">
+            Priorité: {{ form.get('priority')?.value || 'normal' }}
+          </span>
+          <span class="meta-chip">
+            Cible: {{ form.get('targetType')?.value || 'device' }}
+          </span>
+          <span class="meta-chip">
+            Mode: {{ form.get('displayMode')?.value || 'once' }}
+          </span>
+          <span class="meta-chip">
+            Durée: {{ form.get('durationSeconds')?.value || 10 }} s
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="button" class="btn btn-light" (click)="goBack()">
+        <i class="bi bi-x-lg"></i>
+        <span>Annuler</span>
+      </button>
+
+      <button type="submit" class="btn btn-primary" [disabled]="loading()">
+        @if (loading()) {
+          <span class="btn-spinner"></span>
+          <span>Création...</span>
+        } @else {
+          <i class="bi bi-save2"></i>
+          <span>Créer le message</span>
+        }
+      </button>
+    </div>
+  </form>
+</section>

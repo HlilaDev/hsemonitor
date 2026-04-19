@@ -1,0 +1,51 @@
+.page {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 16px;
+
+  h2 {
+    margin: 0;
+    font-weight: 800;
+    font-size: 28px;
+  }
+
+  .muted {
+    margin-top: 6px;
+    color: #6b7280;
+  }
+}
+
+.card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  padding: 18px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
+}
+
+.form-group {
+  margin-bottom: 14px;
+}
+
+.form-label {
+  font-weight: 700;
+  margin-bottom: 6px;
+  display: inline-block;
+}
+
+.req {
+  color: #ef4444;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 18px;
+}

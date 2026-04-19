@@ -1,0 +1,137 @@
+{
+  "ZONES": {
+    "TITLE": "Zones",
+    "SUBTITLE": "Gérez les zones industrielles et leur niveau de risque.",
+    "ADD_BTN": "Ajouter une zone",
+    "EMPTY": "Aucune zone trouvée.",
+    "EDIT_TITLE": "Modifier la zone",
+    "EDIT_SUBTITLE": "Mettez à jour les informations de cette zone.",
+    "COLUMNS": {
+      "NAME": "Nom",
+      "DESCRIPTION": "Description",
+      "RISK": "Niveau de risque",
+      "ACTIVE": "Active"
+    },
+    "FORM": {
+      "NAME": "Nom de la zone",
+      "NAME_PH": "Ex : Zone de production A",
+      "DESCRIPTION": "Description",
+      "DESC_PH": "Décrivez cette zone...",
+      "RISK": "Niveau de risque",
+      "ACTIVE": "Zone active",
+      "ACTIVE_HELP": "Désactivez cette option pour masquer temporairement la zone."
+    },
+    "FILTERS": {
+      "SEARCH": "Recherche",
+      "SEARCH_PH": "Rechercher par nom ou description...",
+      "RISK": "Niveau de risque",
+      "STATUS": "Statut",
+      "ALL": "Tous"
+    },
+    "RISK": {
+      "low": "Faible",
+      "medium": "Moyen",
+      "high": "Élevé"
+    },
+    "RISK_LEVELS": {
+      "LOW": "Faible",
+      "MEDIUM": "Moyen",
+      "HIGH": "Élevé",
+      "CRITICAL": "Critique",
+      "UNKNOWN": "Inconnu"
+    },
+    "VALIDATION": {
+      "NAME_REQUIRED": "Le nom de la zone est requis.",
+      "NAME_MIN": "Le nom doit contenir au moins 3 caractères."
+    },
+    "ERROR": {
+      "LOAD": "Erreur lors du chargement des zones.",
+      "DELETE": "Erreur lors de la suppression de la zone.",
+      "TOGGLE_ACTIVE": "Erreur lors de la mise à jour du statut de la zone."
+    },
+    "CONFIRM_DELETE": "Voulez-vous vraiment supprimer cette zone ?",
+    "MESSAGES": {
+      "LOAD_ERROR": "Erreur lors du chargement des zones.",
+      "DETAIL_LOAD_ERROR": "Erreur lors du chargement de la zone.",
+      "UPDATE_SUCCESS": "Zone mise à jour avec succès.",
+      "UPDATE_ERROR": "Erreur lors de la mise à jour de la zone.",
+      "DELETE_CONFIRM": "Voulez-vous vraiment supprimer cette zone ?",
+      "DELETE_SUCCESS": "Zone supprimée avec succès.",
+      "DELETE_ERROR": "Erreur lors de la suppression de la zone.",
+      "TOGGLE_SUCCESS": "Statut de la zone mis à jour avec succès.",
+      "TOGGLE_ERROR": "Erreur lors de la mise à jour du statut de la zone."
+    },
+    "OVERVIEW": {
+      "KICKER": "Zones",
+      "TITLE": "Vue d'ensemble des zones",
+      "SUBTITLE": "Surveillez rapidement l'état, le risque et l'activité de chaque zone.",
+      "ALL_ZONES": "Toutes les zones",
+      "EMPTY": "Aucune zone ne correspond aux filtres.",
+      "FILTERS": {
+        "SEARCH": "Recherche",
+        "SEARCH_PH": "Nom, code ou description...",
+        "STATUS": "Statut",
+        "RISK": "Risque",
+        "ALL": "Tous"
+      },
+      "STATS": {
+        "TOTAL": "Total zones",
+        "ACTIVE": "Zones actives",
+        "WARNING": "Zones en alerte",
+        "ALERTS": "Alertes"
+      },
+      "CARD": {
+        "EMPLOYEES": "Employés",
+        "DEVICES": "Devices",
+        "SENSORS": "Capteurs",
+        "ALERTS": "Alertes",
+        "TEMPERATURE": "Température",
+        "HUMIDITY": "Humidité"
+      },
+      "STATUS": {
+        "active": "Active",
+        "inactive": "Inactive",
+        "warning": "Alerte"
+      },
+      "RISK": {
+        "low": "Faible",
+        "medium": "Moyen",
+        "high": "Élevé"
+      }
+    },
+    "DETAIL": {
+      "TITLE": "Détails de la zone",
+      "SUBTITLE": "Consultez les informations, l'environnement et les ressources liées à cette zone.",
+      "ENVIRONMENT": "Environnement",
+      "CREATED_AT": "Créée le",
+      "UPDATED_AT": "Mise à jour le",
+      "DEVICES": "Devices",
+      "SENSORS": "Capteurs",
+      "EMPLOYEES": "Employés",
+      "NO_DEVICES": "Aucun device dans cette zone.",
+      "NO_SENSORS": "Aucun capteur dans cette zone.",
+      "NO_EMPLOYEES": "Aucun employé affecté à cette zone.",
+      "NOT_FOUND": "Zone introuvable."
+    }
+  },
+  "COMMON": {
+    "LOADING": "Chargement...",
+    "RETRY": "Réessayer",
+    "ACTIONS": "Actions",
+    "EDIT": "Modifier",
+    "DELETE": "Supprimer",
+    "BACK": "Retour",
+    "SAVE": "Enregistrer",
+    "SAVING": "Enregistrement...",
+    "CANCEL": "Annuler",
+    "VIEW": "Voir",
+    "RESET": "Réinitialiser",
+    "FILTER": "Filtrer",
+    "TOTAL": "Total",
+    "PAGE": "Page",
+    "ACTIVE": "Active",
+    "INACTIVE": "Inactive",
+    "ENABLE": "Activer",
+    "DISABLE": "Désactiver"
+  }
+}

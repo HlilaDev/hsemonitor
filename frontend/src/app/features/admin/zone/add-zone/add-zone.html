@@ -1,0 +1,99 @@
+<div class="page">
+  <div class="page-header">
+    <div>
+      <h2>Ajouter une zone</h2>
+      <p class="muted">Créer une nouvelle zone HSE.</p>
+    </div>
+
+    <a class="btn btn-outline-secondary" routerLink="/admin/zones">← Retour</a>
+  </div>
+
+  <div class="card">
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+      @if (errorMessage) {
+        <div class="alert alert-danger">{{ errorMessage }}</div>
+      }
+
+      @if (successMessage) {
+        <div class="alert alert-success">{{ successMessage }}</div>
+      }
+
+      <!-- Name -->
+      <div class="form-group">
+        <label class="form-label">
+          Nom de la zone <span class="req">*</span>
+        </label>
+
+        <input
+          type="text"
+          class="form-control"
+          formControlName="name"
+          placeholder="Ex: Atelier production"
+          [class.is-invalid]="name.touched && name.invalid"
+        />
+
+        @if (name.touched && name.errors?.['required']) {
+          <div class="invalid-feedback">Le nom est obligatoire.</div>
+        }
+        @if (name.touched && name.errors?.['minlength']) {
+          <div class="invalid-feedback">Le nom doit contenir au moins 3 caractères.</div>
+        }
+      </div>
+
+      <!-- Description -->
+      <div class="form-group">
+        <label class="form-label">Description</label>
+        <textarea
+          class="form-control"
+          formControlName="description"
+          rows="3"
+          placeholder="Détails sur la zone..."
+        ></textarea>
+      </div>
+
+      <!-- Risk Level -->
+      <div class="form-group">
+        <label class="form-label">
+          Niveau de risque <span class="req">*</span>
+        </label>
+
+        <select class="form-select" formControlName="riskLevel">
+          <option value="low">Low</option>
+          <option value="medium">Medium</option>
+          <option value="high">High</option>
+        </select>
+      </div>
+
+      <!-- Active -->
+      <div class="form-group switch-row">
+        <div>
+          <label class="form-label">Zone active</label>
+          <div class="muted small">Désactive une zone sans la supprimer.</div>
+        </div>
+
+        <label class="switch">
+          <input type="checkbox" formControlName="isActive" />
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <!-- Actions -->
+      <div class="actions">
+        <button class="btn btn-primary" type="submit" [disabled]="loading">
+          @if (!loading) { <span>Créer la zone</span> }
+          @else { <span>Création...</span> }
+        </button>
+
+        <button
+          class="btn btn-light"
+          type="button"
+          (click)="form.reset({ riskLevel: 'medium', isActive: true })"
+          [disabled]="loading"
+        >
+          Réinitialiser
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

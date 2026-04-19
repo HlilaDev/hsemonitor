@@ -1,0 +1,217 @@
+<div class="page">
+  <div class="page-header">
+    <div>
+      <a class="back-link" routerLink="/manager/monitoring">
+        <i class="bi bi-arrow-left"></i>
+        Retour au monitoring
+      </a>
+
+      <h2>Monitoring de la zone</h2>
+      <p class="muted">
+        Vue agrégée des devices, dernières lectures et état global de la zone.
+      </p>
+    </div>
+
+    <button class="btn-refresh" type="button" (click)="refresh()">
+      <i class="bi bi-arrow-clockwise"></i>
+      Actualiser
+    </button>
+  </div>
+
+  <div *ngIf="error() && !isLoading()" class="alert error">
+    <i class="bi bi-exclamation-triangle"></i>
+    <span>{{ error() }}</span>
+  </div>
+
+  <div *ngIf="isLoading()" class="loading-card">
+    <div class="loader"></div>
+    <p>Chargement du monitoring de la zone...</p>
+  </div>
+
+  <ng-container *ngIf="!isLoading() && items().length > 0">
+    <!-- HERO -->
+    <div class="hero-card">
+      <div class="hero-main">
+        <div class="hero-icon">
+          <i class="bi bi-geo-alt"></i>
+        </div>
+
+        <div class="hero-content">
+          <h3>{{ zoneName() || zoneId() }}</h3>
+          <div class="meta-list">
+            <span><strong>Zone ID :</strong> {{ zoneId() }}</span>
+            <span><strong>Devices surveillés :</strong> {{ totalDevices() }}</span>
+            <span><strong>Dernière remontée :</strong> {{ lastSync() | date:'dd/MM/yyyy HH:mm:ss' }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-side">
+        <span class="zone-chip">
+          {{ totalDevices() }} device{{ totalDevices() > 1 ? 's' : '' }}
+        </span>
+      </div>
+    </div>
+
+    <!-- KPIs -->
+    <div class="stats-grid">
+      <div class="stat-card devices">
+        <div class="stat-icon">
+          <i class="bi bi-cpu"></i>
+        </div>
+        <div class="stat-body">
+          <span class="label">Devices</span>
+          <strong>{{ totalDevices() }}</strong>
+        </div>
+      </div>
+
+      <div class="stat-card online">
+        <div class="stat-icon">
+          <i class="bi bi-wifi"></i>
+        </div>
+        <div class="stat-body">
+          <span class="label">En ligne</span>
+          <strong>{{ onlineDevices() }}</strong>
+        </div>
+      </div>
+
+      <div class="stat-card temperature">
+        <div class="stat-icon">
+          <i class="bi bi-thermometer-half"></i>
+        </div>
+        <div class="stat-body">
+          <span class="label">Température moyenne</span>
+          <strong>{{ averageTemperature() !== null ? (averageTemperature() + ' °C') : '—' }}</strong>
+        </div>
+      </div>
+
+      <div class="stat-card humidity">
+        <div class="stat-icon">
+          <i class="bi bi-droplet-half"></i>
+        </div>
+        <div class="stat-body">
+          <span class="label">Humidité moyenne</span>
+          <strong>{{ averageHumidity() !== null ? (averageHumidity() + ' %') : '—' }}</strong>
+        </div>
+      </div>
+    </div>
+
+    <!-- Charts placeholders -->
+    <div class="charts-grid">
+      <div class="panel-card">
+        <div class="panel-head">
+          <h3>Tendance globale température</h3>
+          <span>Zone entière</span>
+        </div>
+        <div class="chart-placeholder">
+          <i class="bi bi-graph-up-arrow"></i>
+          <p>Graphique global température à intégrer ici</p>
+        </div>
+      </div>
+
+      <div class="panel-card">
+        <div class="panel-head">
+          <h3>Tendance globale humidité</h3>
+          <span>Zone entière</span>
+        </div>
+        <div class="chart-placeholder">
+          <i class="bi bi-bar-chart-line"></i>
+          <p>Graphique global humidité à intégrer ici</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Devices in zone -->
+    <div class="panel-card">
+      <div class="panel-head">
+        <div>
+          <h3>Dernières lectures par device</h3>
+          <span>Une ligne par device surveillé dans la zone</span>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Device</th>
+              <th>Statut</th>
+              <th>Capteur</th>
+              <th>Température</th>
+              <th>Humidité</th>
+              <th>Gaz</th>
+              <th>Dernière lecture</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr *ngFor="let item of items()">
+              <td>
+                <div class="device-cell">
+                  <strong>{{ getDeviceLabel(item) }}</strong>
+                </div>
+              </td>
+
+              <td>
+                <span
+                  class="status-badge"
+                  [ngClass]="getStatusClass(getDeviceStatus(item))">
+                  {{ getDeviceStatus(item) }}
+                </span>
+              </td>
+
+              <td>
+                <span class="sensor-chip">{{ item.sensorType }}</span>
+              </td>
+
+              <td>{{ getTemperature(item) }}</td>
+              <td>{{ getHumidity(item) }}</td>
+              <td>{{ getGas(item) }}</td>
+              <td>{{ item.ts | date:'dd/MM/yyyy HH:mm:ss' }}</td>
+
+              <td>
+                <a
+                  class="action-link"
+                  [routerLink]="['/manager/monitoring/device', typeof item.device === 'string' ? item.raw?.deviceId : item.device.deviceId]">
+                  Voir détail
+                </a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Summary cards -->
+    <div class="devices-grid">
+      <div class="device-card" *ngFor="let item of items()">
+        <div class="device-card-head">
+          <h4>{{ getDeviceLabel(item) }}</h4>
+          <span class="status-dot" [ngClass]="getStatusClass(getDeviceStatus(item))"></span>
+        </div>
+
+        <div class="device-card-body">
+          <div class="mini-row">
+            <span>Capteur</span>
+            <strong>{{ item.sensorType }}</strong>
+          </div>
+          <div class="mini-row">
+            <span>Valeurs</span>
+            <strong>{{ formatValues(item) }}</strong>
+          </div>
+          <div class="mini-row">
+            <span>Lecture</span>
+            <strong>{{ item.ts | date:'HH:mm:ss' }}</strong>
+          </div>
+        </div>
+
+        <a
+          class="device-card-link"
+          [routerLink]="['/manager/monitoring/device', typeof item.device === 'string' ? item.raw?.deviceId : item.device.deviceId]">
+          Ouvrir le device
+        </a>
+      </div>
+    </div>
+  </ng-container>
+</div>

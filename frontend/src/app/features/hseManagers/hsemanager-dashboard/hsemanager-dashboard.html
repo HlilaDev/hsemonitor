@@ -1,0 +1,266 @@
+<div class="dashboard-page">
+  <div class="hero">
+    <div class="hero-copy">
+      <div class="eyebrow">HSE MANAGER</div>
+      <h1>Safety command center</h1>
+      <p>
+        Pilot zones, incidents, training progress and field activity from one dashboard.
+      </p>
+    </div>
+
+    <div class="hero-side">
+      <div class="hero-pill">
+        <i class="bi bi-shield-check"></i>
+        Compliance {{ complianceRate() }}%
+      </div>
+      <div class="hero-pill soft">
+        <i class="bi bi-broadcast-pin"></i>
+        Devices online {{ devicesOnline() }}/{{ devicesTotal() }}
+      </div>
+    </div>
+  </div>
+
+  <div class="stats-grid">
+    @for (card of stats(); track trackById($index, { id: card.label })) {
+      <div class="stat-card" [class]="card.tone">
+        <div class="stat-icon">
+          <i [class]="card.icon"></i>
+        </div>
+
+        <div class="stat-content">
+          <div class="stat-label">{{ card.label }}</div>
+          <div class="stat-value">
+            {{ card.value }}{{ card.unit ?? '' }}
+          </div>
+          <div class="stat-trend" [class.down]="(card.trend ?? 0) < 0">
+            <i
+              class="bi"
+              [class.bi-arrow-up-right]="(card.trend ?? 0) >= 0"
+              [class.bi-arrow-down-right]="(card.trend ?? 0) < 0"
+            ></i>
+            {{ (card.trend ?? 0) | number:'1.0-0' }}%
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+
+  <div class="top-grid">
+    <div class="panel overview">
+      <div class="panel-head">
+        <div>
+          <h3>Operational overview</h3>
+          <p>Weekly safety activity snapshot</p>
+        </div>
+        <a routerLink="/manager/monitoring" class="link-btn">Open monitoring</a>
+      </div>
+
+      <div class="overview-kpis">
+        <div class="mini">
+          <span>High-risk zones</span>
+          <strong>{{ highRiskZones() }}</strong>
+        </div>
+        <div class="mini">
+          <span>Open incidents</span>
+          <strong>{{ openIncidentsCount() }}</strong>
+        </div>
+        <div class="mini">
+          <span>Open observations</span>
+          <strong>{{ openObservationsCount() }}</strong>
+        </div>
+      </div>
+
+      <div class="chart-card">
+        <div class="chart-header">
+          <span>Incidents this week</span>
+        </div>
+
+        <div class="bars">
+          @for (bar of chartBars(); track bar.label) {
+            <div class="bar-col">
+              <div class="bar-wrap">
+                <div class="bar" [style.height]="bar.height"></div>
+              </div>
+              <span>{{ bar.label }}</span>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+
+    <div class="panel live-alerts">
+      <div class="panel-head">
+        <div>
+          <h3>Live alerts</h3>
+          <p>Last important events</p>
+        </div>
+      </div>
+
+      <div class="alert-list">
+        @for (alert of alerts(); track trackById($index, alert)) {
+          <div class="alert-item">
+            <div class="alert-dot" [class]="severityClass(alert.level)"></div>
+
+            <div class="alert-copy">
+              <div class="alert-title">{{ alert.message }}</div>
+              <div class="alert-meta">
+                <span>{{ alert.zone }}</span>
+                <span>{{ alert.time }}</span>
+              </div>
+            </div>
+
+            <span class="pill" [class]="severityClass(alert.level)">
+              {{ alert.level }}
+            </span>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+
+  <div class="content-grid">
+    <div class="panel">
+      <div class="panel-head">
+        <div>
+          <h3>Zones status</h3>
+          <p>Environment and device connectivity</p>
+        </div>
+        <a routerLink="/manager/zones" class="link-btn">View all</a>
+      </div>
+
+      <div class="zone-list">
+        @for (zone of zones(); track trackById($index, zone)) {
+          <div class="zone-card">
+            <div class="zone-top">
+              <div>
+                <div class="zone-name">{{ zone.name }}</div>
+                <div class="zone-sub">
+                  {{ zone.devicesOnline }}/{{ zone.devicesTotal }} devices online
+                </div>
+              </div>
+
+              <span class="pill soft" [class]="riskClass(zone.risk)">
+                {{ zone.risk }}
+              </span>
+            </div>
+
+            <div class="zone-metrics">
+              <div class="metric">
+                <span>Temperature</span>
+                <strong>{{ zone.temperature }}°C</strong>
+              </div>
+              <div class="metric">
+                <span>Humidity</span>
+                <strong>{{ zone.humidity }}%</strong>
+              </div>
+            </div>
+
+            <div class="progress-line">
+              <div
+                class="progress-value"
+                [style.width.%]="(zone.devicesOnline / zone.devicesTotal) * 100"
+              ></div>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head">
+        <div>
+          <h3>Recent incidents</h3>
+          <p>Track escalation and resolution</p>
+        </div>
+        <a routerLink="/manager/incidents" class="link-btn">Manage</a>
+      </div>
+
+      <div class="incident-list">
+        @for (incident of incidents(); track trackById($index, incident)) {
+          <div class="incident-item">
+            <div class="incident-main">
+              <div class="incident-title">{{ incident.title }}</div>
+              <div class="incident-sub">
+                {{ incident.zone }} • {{ incident.date | date:'yyyy-MM-dd HH:mm' }}
+              </div>
+            </div>
+
+            <div class="incident-right">
+              <span class="pill soft" [class]="severityClass(incident.severity)">
+                {{ incident.severity }}
+              </span>
+              <span class="pill" [class]="incidentStatusClass(incident.status)">
+                {{ incident.status }}
+              </span>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head">
+        <div>
+          <h3>Training progress</h3>
+          <p>Completion status by program</p>
+        </div>
+        <a routerLink="/manager/trainings" class="link-btn">Open training</a>
+      </div>
+
+      <div class="training-list">
+        @for (training of trainings(); track trackById($index, training)) {
+          <div class="training-item">
+            <div class="training-top">
+              <div>
+                <div class="training-title">{{ training.title }}</div>
+                <div class="training-sub">{{ training.audience }}</div>
+              </div>
+              <strong>{{ training.completion }}%</strong>
+            </div>
+
+            <div class="progress-line lg">
+              <div
+                class="progress-value"
+                [style.width.%]="training.completion"
+              ></div>
+            </div>
+
+            <div class="training-footer">
+              <span>Due {{ training.dueDate | date:'yyyy-MM-dd' }}</span>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head">
+        <div>
+          <h3>Team activity</h3>
+          <p>Field and supervision status</p>
+        </div>
+        <a routerLink="/manager/team" class="link-btn">Team</a>
+      </div>
+
+      <div class="team-list">
+        @for (member of team(); track trackById($index, member)) {
+          <div class="team-item">
+            <div class="avatar">
+              {{ member.name.charAt(0) }}
+            </div>
+
+            <div class="team-copy">
+              <div class="team-name">{{ member.name }}</div>
+              <div class="team-role">{{ member.role }}</div>
+              <div class="team-task">{{ member.task }}</div>
+            </div>
+
+            <span class="pill" [class]="teamStatusClass(member.status)">
+              {{ member.status }}
+            </span>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+</div>

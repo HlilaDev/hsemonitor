@@ -1,0 +1,277 @@
+<div class="page">
+  <ng-container *ngIf="loading(); else loadedBlock">
+    <div class="skeleton-page">
+      <div class="skeleton-line w30"></div>
+      <div class="skeleton-line w55"></div>
+
+      <div class="card skeleton-hero">
+        <div class="skeleton-line w40"></div>
+        <div class="skeleton-pills">
+          <div class="skeleton-pill"></div>
+          <div class="skeleton-pill"></div>
+          <div class="skeleton-pill"></div>
+        </div>
+      </div>
+
+      <div class="edit-layout">
+        <div class="card skeleton-form">
+          <div class="skeleton-line w35"></div>
+          <div class="skeleton-line"></div>
+          <div class="skeleton-line"></div>
+          <div class="skeleton-line"></div>
+          <div class="skeleton-line w60"></div>
+        </div>
+
+        <div class="card skeleton-side">
+          <div class="skeleton-line w50"></div>
+          <div class="skeleton-line w70"></div>
+          <div class="skeleton-line w45"></div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-template #loadedBlock>
+    <div *ngIf="error()" class="alert error">
+      <i class="bi bi-exclamation-triangle"></i>
+      <span>{{ error() }}</span>
+    </div>
+
+    <div *ngIf="success()" class="alert success">
+      <i class="bi bi-check-circle"></i>
+      <span>{{ success() }}</span>
+    </div>
+
+    <ng-container *ngIf="report() as r; else missingBlock">
+      <div class="topbar">
+        <button class="btn ghost" (click)="goBack()">
+          <i class="bi bi-arrow-left"></i>
+          Retour
+        </button>
+
+        <div class="topbar-actions">
+          <a
+            class="btn ghost"
+            [routerLink]="['/manager/reports', r._id]"
+          >
+            <i class="bi bi-eye"></i>
+            Voir détail
+          </a>
+
+          <button
+            class="btn primary"
+            (click)="submit()"
+            [disabled]="saving()"
+          >
+            <i class="bi bi-save"></i>
+            {{ saving() ? 'Enregistrement...' : 'Enregistrer' }}
+          </button>
+        </div>
+      </div>
+
+      <div class="card hero">
+        <div class="hero-left">
+          <div class="eyebrow">Édition du rapport</div>
+          <h1>{{ r.title || ('Rapport ' + typeLabel(r.type)) }}</h1>
+
+          <div class="hero-meta">
+            <span class="badge" [ngClass]="badgeClass(form.value.type || r.type)">
+              {{ typeLabel(form.value.type || r.type) }}
+            </span>
+
+            <span class="chip" *ngIf="r.exportUrl">
+              <i class="bi bi-file-earmark-pdf"></i>
+              PDF disponible
+            </span>
+
+            <span class="chip">
+              <i class="bi bi-person-badge"></i>
+              {{ userName(r.generatedBy) }}
+            </span>
+          </div>
+        </div>
+
+        <div class="hero-right">
+          <div class="status-card">
+            <span class="status-label">Conformité actuelle</span>
+            <span class="status-value">
+              {{ metrics().complianceRate | number:'1.0-2' }}%
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="edit-layout">
+        <!-- form -->
+        <div class="card form-card">
+          <div class="section-title">
+            <i class="bi bi-pencil-square"></i>
+            Modifier les informations
+          </div>
+
+          <form class="form" [formGroup]="form" (ngSubmit)="submit()">
+            <div class="grid two">
+              <div class="field">
+                <label>Titre</label>
+                <input
+                  class="input"
+                  type="text"
+                  formControlName="title"
+                  placeholder="Ex: Rapport HSE zone A - semaine 12"
+                />
+              </div>
+
+              <div class="field">
+                <label>Type <span class="req">*</span></label>
+                <select class="select" formControlName="type">
+                  <option *ngFor="let opt of typeOptions" [value]="opt.value">
+                    {{ opt.label }}
+                  </option>
+                </select>
+                <div class="hint error" *ngIf="fieldInvalid('type')">
+                  Le type est obligatoire.
+                </div>
+              </div>
+            </div>
+
+            <div class="grid two">
+              <div class="field">
+                <label>Date début</label>
+                <input class="input" type="date" formControlName="startDate" />
+              </div>
+
+              <div class="field">
+                <label>Date fin</label>
+                <input class="input" type="date" formControlName="endDate" />
+              </div>
+            </div>
+
+            <div class="grid two">
+              <div class="field">
+                <label>Zone</label>
+                <select class="select" formControlName="zone">
+                  <option value="">Aucune zone</option>
+                  <option *ngFor="let z of zones()" [value]="z._id">
+                    {{ z.name }}
+                  </option>
+                </select>
+              </div>
+
+              <div class="field toggle-field">
+                <label>Mode de génération</label>
+
+                <label class="switch">
+                  <input type="checkbox" formControlName="isAutomatic" />
+                  <span class="slider"></span>
+                  <span class="switch-label">
+                    {{ form.value.isAutomatic ? 'Automatique' : 'Manuel' }}
+                  </span>
+                </label>
+              </div>
+            </div>
+
+            <div class="actions">
+              <button
+                type="button"
+                class="btn ghost"
+                (click)="resetForm()"
+                [disabled]="saving()"
+              >
+                <i class="bi bi-arrow-counterclockwise"></i>
+                Réinitialiser
+              </button>
+
+              <button
+                type="submit"
+                class="btn primary"
+                [disabled]="saving()"
+              >
+                <i class="bi bi-save"></i>
+                {{ saving() ? 'Enregistrement...' : 'Enregistrer les modifications' }}
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- side -->
+        <div class="side-column">
+          <div class="card side-card">
+            <div class="section-title">
+              <i class="bi bi-bar-chart-line"></i>
+              Métriques actuelles
+            </div>
+
+            <div class="metric-list">
+              <div class="metric-row">
+                <span class="k">
+                  <i class="bi bi-exclamation-octagon"></i>
+                  Incidents
+                </span>
+                <span class="v">{{ metrics().totalIncidents }}</span>
+              </div>
+
+              <div class="metric-row">
+                <span class="k">
+                  <i class="bi bi-clipboard-check"></i>
+                  Observations
+                </span>
+                <span class="v">{{ metrics().totalObservations }}</span>
+              </div>
+
+              <div class="metric-row">
+                <span class="k">
+                  <i class="bi bi-shield-check"></i>
+                  Compliance
+                </span>
+                <span class="v">{{ metrics().complianceRate | number:'1.0-2' }}%</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card side-card">
+            <div class="section-title">
+              <i class="bi bi-info-circle"></i>
+              Informations du rapport
+            </div>
+
+            <div class="info-list">
+              <div class="info-row">
+                <span class="k">Auteur</span>
+                <span class="v">{{ userName(r.generatedBy) }}</span>
+              </div>
+
+              <div class="info-row">
+                <span class="k">Zone actuelle</span>
+                <span class="v">{{ zoneName(r.zone) }}</span>
+              </div>
+
+              <div class="info-row">
+                <span class="k">PDF</span>
+                <span class="v">{{ r.exportUrl ? 'Disponible' : 'Aucun' }}</span>
+              </div>
+
+              <div class="info-row">
+                <span class="k">Mode</span>
+                <span class="v">{{ r.isAutomatic ? 'Automatique' : 'Manuel' }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+
+    <ng-template #missingBlock>
+      <div class="card empty-state">
+        <div class="empty-icon">
+          <i class="bi bi-file-earmark-x"></i>
+        </div>
+        <h3>Rapport introuvable</h3>
+        <p>Impossible de charger ce rapport pour modification.</p>
+        <button class="btn primary" routerLink="/manager/reports">
+          <i class="bi bi-arrow-left"></i>
+          Retour à la liste
+        </button>
+      </div>
+    </ng-template>
+  </ng-template>
+</div>

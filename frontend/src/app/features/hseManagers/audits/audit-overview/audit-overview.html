@@ -1,0 +1,183 @@
+<div class="page">
+  <div class="hero">
+    <div class="hero-text">
+      <div class="eyebrow">Audit Management</div>
+      <h1>Audit Overview</h1>
+      <p>
+        Track audit activity, monitor compliance progress, and review inspection
+        performance across all industrial zones.
+      </p>
+    </div>
+
+    <div class="hero-actions">
+      <a class="btn ghost" routerLink="/manager/audits">
+        <i class="bi bi-list-task"></i>
+        All audits
+      </a>
+
+      <a class="btn primary" routerLink="/manager/audits/add">
+        <i class="bi bi-plus-lg"></i>
+        New audit
+      </a>
+    </div>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-card soft-blue">
+      <div class="stat-icon"><i class="bi bi-clipboard-data"></i></div>
+      <div class="stat-content">
+        <span>Total Audits</span>
+        <strong>{{ totalAudits() }}</strong>
+        <small>All registered audits</small>
+      </div>
+    </div>
+
+    <div class="stat-card soft-green">
+      <div class="stat-icon"><i class="bi bi-check2-circle"></i></div>
+      <div class="stat-content">
+        <span>Completed</span>
+        <strong>{{ completedAudits() }}</strong>
+        <small>Audits closed successfully</small>
+      </div>
+    </div>
+
+    <div class="stat-card soft-orange">
+      <div class="stat-icon"><i class="bi bi-calendar-event"></i></div>
+      <div class="stat-content">
+        <span>Planned</span>
+        <strong>{{ plannedAudits() }}</strong>
+        <small>Upcoming inspections</small>
+      </div>
+    </div>
+
+    <div class="stat-card soft-purple">
+      <div class="stat-icon"><i class="bi bi-bar-chart-line"></i></div>
+      <div class="stat-content">
+        <span>Average Score</span>
+        <strong>{{ avgScore() }}%</strong>
+        <small>{{ totalFindings() }} total findings</small>
+      </div>
+    </div>
+  </div>
+
+  <div class="toolbar-card">
+    <div class="toolbar-top">
+      <div>
+        <h2>Audit Activity</h2>
+        <p>Search and filter audits by type, status, zone, or auditor.</p>
+      </div>
+    </div>
+
+    <div class="filters-grid">
+      <div class="search-box">
+        <i class="bi bi-search"></i>
+        <input
+          type="text"
+          [value]="q()"
+          (input)="q.set($any($event.target).value)"
+          placeholder="Search by title, zone, auditor..."
+        />
+      </div>
+
+      <div class="filter-block">
+        <label>Status</label>
+        <select [value]="selectedStatus()" (change)="setStatus($any($event.target).value)">
+          <option value="all">All statuses</option>
+          <option value="planned">Planned</option>
+          <option value="in_progress">In progress</option>
+          <option value="completed">Completed</option>
+          <option value="cancelled">Cancelled</option>
+        </select>
+      </div>
+
+      <div class="filter-block">
+        <label>Type</label>
+        <select [value]="selectedType()" (change)="setType($any($event.target).value)">
+          <option value="all">All types</option>
+          <option value="internal">Internal</option>
+          <option value="external">External</option>
+          <option value="safety">Safety</option>
+          <option value="environment">Environment</option>
+          <option value="compliance">Compliance</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="table-card">
+    <div class="table-head">
+      <div>
+        <h3>Audits List</h3>
+        <span>{{ filteredAudits().length }} result(s)</span>
+      </div>
+    </div>
+
+    <div *ngIf="filteredAudits().length; else emptyState" class="audit-list">
+      <div
+        class="audit-row"
+        *ngFor="let audit of filteredAudits(); trackBy: trackById"
+      >
+        <div class="main-info">
+          <div class="title-row">
+            <h4>{{ audit.title }}</h4>
+
+            <div class="badges">
+              <span class="badge type">{{ audit.type }}</span>
+              <span class="badge" [ngClass]="audit.status">{{ audit.status }}</span>
+            </div>
+          </div>
+
+          <p>{{ audit.description }}</p>
+
+          <div class="meta">
+            <span><i class="bi bi-geo-alt"></i> {{ audit.zoneName }}</span>
+            <span><i class="bi bi-person-badge"></i> {{ audit.auditorName }}</span>
+            <span><i class="bi bi-calendar3"></i> {{ formatDate(audit.scheduledDate) }}</span>
+          </div>
+        </div>
+
+        <div class="score-box">
+          <div class="score-value">{{ audit.score ?? 0 }}%</div>
+          <div class="progress">
+            <div class="progress-bar" [style.width.%]="audit.score ?? 0"></div>
+          </div>
+          <small>{{ getScoreLabel(audit.score) }}</small>
+        </div>
+
+        <div class="extra-info">
+          <div class="mini">
+            <span>Findings</span>
+            <strong>{{ audit.findingsCount }}</strong>
+          </div>
+          <div class="mini">
+            <span>Files</span>
+            <strong>{{ audit.attachmentsCount }}</strong>
+          </div>
+        </div>
+
+        <div class="actions">
+          <a class="icon-btn" [routerLink]="['/manager/audits', audit._id]" title="View details">
+            <i class="bi bi-eye"></i>
+          </a>
+          <a class="icon-btn" [routerLink]="['/manager/audits/edit', audit._id]" title="Edit audit">
+            <i class="bi bi-pencil-square"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <ng-template #emptyState>
+      <div class="empty-state">
+        <div class="empty-icon">
+          <i class="bi bi-inboxes"></i>
+        </div>
+        <h3>No audits found</h3>
+        <p>Try changing filters or create a new audit to get started.</p>
+        <a class="btn primary" routerLink="/manager/audits/add">
+          <i class="bi bi-plus-lg"></i>
+          Create audit
+        </a>
+      </div>
+    </ng-template>
+  </div>
+</div>

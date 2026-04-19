@@ -1,0 +1,110 @@
+{
+  "EMPLOYEES": {
+    "KICKER": "Personnel",
+    "TITLE": "Employés",
+    "SUBTITLE": "Liste des employés avec filtres",
+    "ADD_BTN": "Ajouter un employé",
+    "ADD_TITLE": "Ajouter un employé",
+    "EDIT_TITLE": "Modifier l'employé",
+    "LOADING_EMPLOYEE": "Chargement de l'employé...",
+    "LOADING_ZONES": "Chargement des zones...",
+    "SAVE_CHANGES": "Enregistrer les modifications",
+    "EMPTY": "Aucun employé trouvé.",
+    "STATS": {
+      "TOTAL": "Total des employés",
+      "ACTIVE": "Employés actifs",
+      "INACTIVE": "Employés inactifs",
+      "ASSIGNED_ZONE": "Affectés à une zone"
+    },
+    "COLUMNS": {
+      "NAME": "Nom complet",
+      "MATRICULE": "Matricule",
+      "EMPLOYEE_ID": "Matricule",
+      "FULL_NAME":"Nom Complet",
+      "ACTIVE":"Actif",
+            "ACTIONS":"Actions",
+      "DEPARTMENT": "Département",
+            "JOB": "la Poste",
+            "HIRE_DATE": "Date d'embauche",
+      "JOB_TITLE": "Poste",
+      "ZONE": "Zone",
+      "PHONE": "Téléphone",
+      "STATUS": "Statut"
+    },
+    "FILTERS": {
+      "SEARCH": "Recherche",
+      "SEARCH_PH": "Nom, matricule ou poste...",
+      "DEPARTMENT": "Département",
+      "DEPARTMENT_PH": "Nom du département...",
+      "ZONE": "Zone",
+      "ZONE_PH": "Nom de la zone...",
+      "STATUS": "Statut",
+      "ALL": "Tous"
+    },
+    "FORM": {
+      "FULL_NAME": "Nom complet",
+      "FULL_NAME_PH": "Ex : Ahmed Ben Ali",
+      "EMPLOYEE_ID": "ID employé (Matricule)",
+      "EMPLOYEE_ID_PH": "Ex : EMP-001",
+      "DEPARTMENT": "Département",
+      "DEPARTMENT_PH": "Ex : Production",
+      "JOB_TITLE": "Poste",
+      "JOB_TITLE_PH": "Ex : Technicien",
+      "ZONE": "Zone",
+      "SELECT_ZONE": "— Sélectionner une zone —",
+      "PHONE": "Téléphone",
+      "PHONE_PH": "+216 ...",
+      "HIRE_DATE": "Date d'embauche",
+      "ACTIVE": "Actif"
+    },
+    "STATUS": {
+      "ACTIVE": "Actif",
+      "INACTIVE": "Inactif"
+    },
+    "VALIDATION": {
+      "FULL_NAME_REQUIRED": "Le nom complet est requis (min 3 caractères)."
+    },
+    "ERROR": {
+      "LOAD": "Erreur lors du chargement des employés.",
+      "DELETE": "Erreur lors de la suppression de l'employé.",
+      "TOGGLE_ACTIVE": "Erreur lors de la mise à jour du statut de l'employé.",
+      "MISSING_ID": "ID employé manquant.",
+      "LOAD_ONE": "Erreur lors du chargement de l'employé.",
+      "UPDATE": "Erreur lors de la mise à jour de l'employé.",
+      "CREATE": "Erreur lors de la création de l'employé."
+    },
+    "CONFIRM_DELETE": "Voulez-vous vraiment supprimer cet employé ?",
+    "PROFILE": {
+      "SUBTITLE": "Consultez les informations du profil, l'état d'activité et l'historique des formations.",
+      "PERSONAL_INFO": "Informations personnelles",
+      "TRAININGS": "Formations suivies",
+      "NO_TRAININGS": "Aucune formation trouvée pour cet employé.",
+      "CREATED_AT": "Créé le",
+      "ACTIVATE": "Activer",
+      "DEACTIVATE": "Désactiver",
+      "SCORE": "Score",
+      "CERTIFIED": "Certifié",
+      "ZONE_ID_PH": "ObjectId de la zone"
+    }
+  },
+  "COMMON": {
+    "LOADING": "Chargement...",
+    "RETRY": "Réessayer",
+    "EDIT": "Modifier",
+    "DELETE": "Supprimer",
+    "VIEW": "Voir",
+    "BACK": "Retour",
+    "SAVE": "Enregistrer",
+    "SAVING": "Enregistrement...",
+    "CANCEL": "Annuler",
+    "FILTER": "Filtrer",
+    "RESET": "Réinitialiser",
+    "TOTAL": "Total",
+    "PAGE": "Page",
+    "ACTIONS": "Actions",
+    "ACTIVE": "Actif",
+    "INACTIVE": "Inactif",
+    "ENABLE": "Activer",
+    "DISABLE": "Désactiver"
+  }
+}
