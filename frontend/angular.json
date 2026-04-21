@@ -63,6 +63,13 @@
         },
         "serve": {
           "builder": "@angular/build:dev-server",
+          "options": {
+            "host": "0.0.0.0",
+            "allowedHosts": [
+              "hsemonitor.com",
+              "www.hsemonitor.com"
+            ]
+          },
           "configurations": {
             "production": {
               "buildTarget": "hsemonitor:build:production"
