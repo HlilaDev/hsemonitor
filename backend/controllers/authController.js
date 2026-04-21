@@ -12,11 +12,10 @@ const signToken = (user) => {
   );
 };
 
-// Cookie options
 const cookieOptions = {
   httpOnly: true,
   sameSite: "lax",
-  secure: false,
+  secure: true,
   maxAge: 7 * 24 * 60 * 60 * 1000,
 };
 
