@@ -1,5 +1,5 @@
 # Image de base
-FROM node:18
+FROM node:20
 
 # Dossier de travail
 WORKDIR /app
