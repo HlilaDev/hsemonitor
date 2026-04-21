@@ -9,6 +9,15 @@ export const routes: Routes = [
   // Auth
   { path: 'login', component: Login, canActivate: [guestGuard] },
 
+
+     // Guest pages
+  {
+    path: '',
+    loadChildren: () =>
+      import('./features/guest/guest.coutes')
+        .then(m => m.GUEST_ROUTES),
+  },
+
     // Super routes
   {
     path: 'super',
