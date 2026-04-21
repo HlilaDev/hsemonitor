@@ -65,10 +65,9 @@
           "builder": "@angular/build:dev-server",
           "options": {
             "host": "0.0.0.0",
-            "allowedHosts": [
-              "hsemonitor.com",
-              "www.hsemonitor.com"
-            ]
+"allowedHosts": [
+  "all"
+]
           },
           "configurations": {
             "production": {
