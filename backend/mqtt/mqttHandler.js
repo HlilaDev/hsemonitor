@@ -9,6 +9,27 @@ const { evaluateValues } = require("../services/alertRuleEngine");
 const { markDeviceOnline } = require("../services/deviceHeartbeatMonitor");
 const { getIo } = require("../socket/socket");
 
+function normalizeTimestamp(ts) {
+  if (!ts) return new Date();
+
+  const n = Number(ts);
+  if (!Number.isFinite(n)) return new Date();
+
+  // timestamp en secondes
+  if (n > 1000000000 && n < 1000000000000) {
+    return new Date(n * 1000);
+  }
+
+  // timestamp en millisecondes
+  if (n >= 1000000000000) {
+    return new Date(n);
+  }
+
+  // valeur invalide ou trop petite
+  return new Date();
+}
+
+
 function safeParse(payload) {
   const s = payload.toString().trim();
 
@@ -143,10 +164,25 @@ async function emitUserNotifications(userNotificationIds) {
   }
 }
 
-async function handleStatusMessage(deviceId, data) {
+async function handleStatusMessage(deviceId, data, packet = null) {
+  const seenAt = normalizeTimestamp(data.timestamp);
+
+  const ageMs = Date.now() - seenAt.getTime();
+  const isTooOld = ageMs > 2 * 60 * 1000;
+
+  if (packet?.retain && isTooOld) {
+    console.warn(`⚠️ Ignored retained stale status for ${deviceId}`);
+    return;
+  }
+
+  if (isTooOld) {
+    console.warn(`⚠️ Ignored stale status for ${deviceId}`);
+    return;
+  }
+
   const updatedDevice = await markDeviceOnline(deviceId, {
     status: data.status || "online",
-    lastSeen: data.timestamp ? new Date(data.timestamp) : new Date(),
+    lastSeen: seenAt,
     ipAddress: data.ipAddress || "",
     macAddress: data.macAddress || "",
     firmware: data.firmware || "",
@@ -214,7 +250,7 @@ async function handleTelemetryMessage(deviceId, data) {
 
 async function handlePpeAlertMessage(deviceId, data) {
   const device = await markDeviceOnline(deviceId, {
-    lastSeen: data.timestamp ? new Date(data.timestamp) : new Date(),
+    lastSeen: normalizeTimestamp(data.timestamp),
     status: "online",
   });
 
