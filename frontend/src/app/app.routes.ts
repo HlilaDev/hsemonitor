@@ -74,8 +74,7 @@ export const routes: Routes = [
     ],
   },
 
-  // Redirection par défaut
-  { path: '', redirectTo: 'login', pathMatch: 'full' },
+
 
   // Page non autorisée
   { path: '404', loadComponent: () => import('./shared/pages/not-found/not-found').then(m => m.NotFound) },
