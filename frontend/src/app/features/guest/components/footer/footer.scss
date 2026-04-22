@@ -1,0 +1,164 @@
+:host {
+  display: block;
+}
+
+.footer {
+  background: #0f172a;
+  color: #e2e8f0;
+  margin-top: 80px;
+}
+
+/* CONTAINER */
+.container {
+  width: min(1200px, calc(100% - 40px));
+  margin: 0 auto;
+}
+
+/* GRID */
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr 1.5fr;
+  gap: 30px;
+  padding: 60px 0;
+}
+
+/* BRAND */
+.footer-brand .logo {
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #2563eb, #3b82f6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  margin-bottom: 14px;
+}
+
+.footer-brand h3 {
+  margin: 0 0 10px;
+  font-size: 1.2rem;
+}
+
+.footer-brand p {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #94a3b8;
+  line-height: 1.7;
+}
+
+/* COL */
+.footer-col {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.footer-col h4 {
+  margin-bottom: 10px;
+  font-size: 0.95rem;
+  color: #cbd5f5;
+}
+
+.footer-col a {
+  color: #94a3b8;
+  font-size: 0.92rem;
+  transition: 0.2s;
+}
+
+.footer-col a:hover {
+  color: #ffffff;
+}
+
+/* CTA */
+.footer-cta {
+  background: #1e293b;
+  padding: 20px;
+  border-radius: 16px;
+  border: 1px solid #334155;
+}
+
+.footer-cta h4 {
+  margin: 0 0 10px;
+}
+
+.footer-cta p {
+  margin: 0 0 14px;
+  font-size: 0.9rem;
+  color: #94a3b8;
+}
+
+.btn-primary {
+  display: block;
+  text-align: center;
+  padding: 12px;
+  border-radius: 10px;
+  background: #2563eb;
+  color: white;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.btn-outline {
+  display: block;
+  text-align: center;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #475569;
+  color: #e2e8f0;
+}
+
+.btn-outline:hover {
+  background: #1e293b;
+}
+
+/* BOTTOM */
+.footer-bottom {
+  border-top: 1px solid #1e293b;
+  padding: 20px 0;
+}
+
+.bottom-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+
+.bottom-inner p {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #94a3b8;
+}
+
+.bottom-links {
+  display: flex;
+  gap: 16px;
+}
+
+.bottom-links a {
+  font-size: 0.85rem;
+  color: #94a3b8;
+}
+
+.bottom-links a:hover {
+  color: white;
+}
+
+/* RESPONSIVE */
+@media (max-width: 1000px) {
+  .footer-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .footer-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .bottom-inner {
+    flex-direction: column;
+    text-align: center;
+  }
+}

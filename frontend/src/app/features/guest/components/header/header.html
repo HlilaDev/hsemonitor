@@ -1,0 +1,55 @@
+<nav class="nav" [class.scrolled]="isScrolled()">
+  <div class="container">
+    <div class="nav-inner">
+
+      <!-- Brand -->
+      <a class="brand" routerLink="/">
+        <div class="logo" aria-hidden="true"></div>
+        <div class="brand-text">
+          <h1>HSE Monitor</h1>
+          <p>Plateforme intelligente HSE</p>
+        </div>
+      </a>
+
+      <!-- Desktop Nav Links -->
+      <div class="nav-links" role="navigation" aria-label="Navigation principale">
+        @for (link of navLinks; track link.anchor) {
+          <button class="nav-link" (click)="scrollTo(link.anchor)">
+            {{ link.label }}
+          </button>
+        }
+      </div>
+
+      <!-- Actions -->
+      <div class="nav-actions">
+        <a class="btn btn-dark" routerLink="/login">Connexion</a>
+        <a class="btn btn-primary" routerLink="/demo">Accéder à la démo →</a>
+      </div>
+
+      <!-- Hamburger (mobile) -->
+      <button
+        class="hamburger"
+        [class.open]="isMobileMenuOpen()"
+        (click)="toggleMobileMenu()"
+        aria-label="Menu"
+      >
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+
+    <!-- Mobile menu -->
+    @if (isMobileMenuOpen()) {
+      <div class="mobile-menu">
+        @for (link of navLinks; track link.anchor) {
+          <button class="nav-link" (click)="scrollTo(link.anchor)">
+            {{ link.label }}
+          </button>
+        }
+        <div class="mobile-actions">
+          <a class="btn btn-dark" routerLink="/login">Connexion</a>
+          <a class="btn btn-primary" routerLink="/demo">Accéder à la démo →</a>
+        </div>
+      </div>
+    }
+  </div>
+</nav>
