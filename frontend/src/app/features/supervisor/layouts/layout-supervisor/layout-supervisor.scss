@@ -1,99 +1,68 @@
-:root {
-  --sidebar-w: 280px;
-  --sidebar-w-collapsed: 86px;
-  --header-h: 70px;
+:host {
+  display: block;
+  height: 100vh;
+  width: 100%;
 }
 
-.hseagent-layout {
+.supervisor-layout {
   display: flex;
   height: 100vh;
   width: 100%;
   overflow: hidden;
-  background: #f4f7fa;
+  background: #f5f7fb;
 }
 
-/* own sidebar agent */
-.hseagent-layout app-hseagent-sidebar.sidebar {
-  display: block;
-  width: var(--sidebar-w);
-  min-width: var(--sidebar-w);
-  max-width: var(--sidebar-w);
+.supervisor-sidebar {
+  width: 280px;
+  min-width: 280px;
+  max-width: 280px;
   height: 100vh;
-  flex-shrink: 0;
   background: #ffffff;
-  border-right: 1px solid #eef2f7;
-  box-shadow: 4px 0 18px rgba(15, 23, 42, 0.04);
-  transition: width 0.22s ease, min-width 0.22s ease, max-width 0.22s ease;
+  border-right: 1px solid #e9eef5;
+  flex-shrink: 0;
   overflow: hidden;
-  z-index: 1000;
 }
 
-.hseagent-layout.sidebar-collapsed app-hseagent-sidebar.sidebar {
-  width: var(--sidebar-w-collapsed);
-  min-width: var(--sidebar-w-collapsed);
-  max-width: var(--sidebar-w-collapsed);
-}
-
-.main-content {
+.supervisor-main {
   flex: 1 1 auto;
   min-width: 0;
   height: 100vh;
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  background: #f4f7fa;
 }
 
-app-header.header {
-  position: sticky;
-  top: 0;
-  z-index: 20;
-  flex: 0 0 var(--header-h);
-  height: var(--header-h);
+.supervisor-header {
+  flex: 0 0 auto;
 }
 
-.content-area {
+.supervisor-content {
   flex: 1 1 auto;
-  min-height: 0;
+  min-width: 0;
   overflow-y: auto;
   overflow-x: hidden;
   padding: 24px;
-  background: #f4f7fa;
+  background: #f5f7fb;
 }
 
-app-footer.footer {
+.supervisor-footer {
   flex: 0 0 auto;
-  width: 100%;
-}
-
-/* scrollbar */
-.content-area::-webkit-scrollbar {
-  width: 8px;
-}
-
-.content-area::-webkit-scrollbar-thumb {
-  background: #d7deea;
-  border-radius: 999px;
-}
-
-.content-area::-webkit-scrollbar-track {
-  background: transparent;
 }
 
 @media (max-width: 992px) {
-  .hseagent-layout app-hseagent-sidebar.sidebar {
-    width: var(--sidebar-w-collapsed);
-    min-width: var(--sidebar-w-collapsed);
-    max-width: var(--sidebar-w-collapsed);
+  .supervisor-sidebar {
+    width: 88px;
+    min-width: 88px;
+    max-width: 88px;
   }
 
-  .content-area {
+  .supervisor-content {
     padding: 18px;
   }
 }
 
 @media (max-width: 576px) {
-  .content-area {
+  .supervisor-content {
     padding: 14px;
   }
 }

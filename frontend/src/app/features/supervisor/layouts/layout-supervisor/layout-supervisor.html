@@ -1,13 +1,13 @@
-<div class="hseagent-layout" [class.sidebar-collapsed]="layout.sidebarCollapsed()">
-  <app-sidebar-supervisor class="sidebar"></app-sidebar-supervisor>
+<div class="supervisor-layout">
+  <app-sidebar-supervisor class="supervisor-sidebar"></app-sidebar-supervisor>
 
-  <div class="main-content">
-    <app-header-supervisor class="header"></app-header-supervisor>
+  <div class="supervisor-main">
+    <app-header-supervisor class="supervisor-header"></app-header-supervisor>
 
-    <div class="content-area">
+    <main class="supervisor-content">
       <router-outlet></router-outlet>
-    </div>
+    </main>
 
-    <app-footer class="footer"></app-footer>
+    <app-footer class="supervisor-footer"></app-footer>
   </div>
 </div>
