@@ -5,15 +5,16 @@
     </button>
 
     <div class="search-bar">
+      <i class="bi bi-search search-icon"></i>
       <input type="text" [placeholder]="'HEADER.SEARCH_PLACEHOLDER' | translate" />
-      <i class="bi bi-search"></i>
     </div>
   </div>
 
   <div class="right-section">
-    <button class="icon-btn" type="button"><i class="bi bi-fullscreen"></i></button>
+    <button class="icon-btn" type="button">
+      <i class="bi bi-fullscreen"></i>
+    </button>
 
-    <!-- NOTIFICATIONS -->
     <div class="notification-wrapper">
       <button
         class="icon-btn badge-container"
@@ -102,12 +103,9 @@
       }
     </div>
 
-
-
-    <!-- LANGUAGE DROPDOWN -->
     <div class="lang-wrapper">
       <button
-        class="icon-btn"
+        class="icon-btn lang-btn"
         type="button"
         (click)="toggleLangMenu($event)"
         aria-haspopup="menu"
@@ -137,7 +135,6 @@
       }
     </div>
 
-    <!-- USER DROPDOWN -->
     <div class="user-wrapper">
       <button
         class="user-profile"
@@ -159,12 +156,12 @@
             </div>
           </div>
 
-          <a class="user-item" routerLink="/agent/profile" (click)="closeUserMenu()">
+          <a class="user-item" routerLink="/supervisor/profile" (click)="closeUserMenu()">
             {{ 'HEADER.USER.PROFILE' | translate }}
           </a>
 
-          <a class="user-item" routerLink="/agent/settings" (click)="closeUserMenu()">
-            {{ 'HEADER.USER.SETTINGS' | translate }}
+          <a class="user-item" routerLink="/supervisor/notifications" (click)="closeUserMenu()">
+            Notifications
           </a>
 
           <div class="divider"></div>

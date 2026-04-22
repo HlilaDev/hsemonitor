@@ -1,195 +1,99 @@
+import { CommonModule } from '@angular/common';
 import {
   Component,
   ElementRef,
+  EventEmitter,
   HostListener,
-  OnInit,
+  Output,
   inject,
 } from '@angular/core';
-import { NotificationStore } from '../../../../core/services/notifications/notification-store';
-import { LayoutService } from '../../../../core/services/layout/layout';
-import {
-  Lang,
-  LanguageService,
-} from '../../../../core/services/languages/language';
-import {
-  AuthServices,
-  User,
-} from '../../../../core/services/auth/auth-services';
 import { Router, RouterLink } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
-import { CommonModule } from '@angular/common';
-import { NotificationItem } from '../../../../core/services/notifications/notification-services';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { NotificationStore } from '../../../../core/store/notification.store';
 
 @Component({
   selector: 'app-header-supervisor',
-  imports: [CommonModule, TranslateModule, RouterLink],
+  standalone: true,
+  imports: [CommonModule, RouterLink, TranslateModule],
   templateUrl: './header-supervisor.html',
   styleUrl: './header-supervisor.scss',
 })
-export class HeaderSupervisor implements OnInit {
-  notificationStore = inject(NotificationStore);
-  layout = inject(LayoutService);
-  lang = inject(LanguageService);
-  private el = inject(ElementRef<HTMLElement>);
+export class HeaderSupervisor {
+  @Output() toggleSidebar = new EventEmitter<void>();
 
+  readonly notificationStore = inject(NotificationStore);
+  private readonly el = inject(ElementRef<HTMLElement>);
+  private readonly router = inject(Router);
+  private readonly translate = inject(TranslateService);
+
+  isNotificationOpen = false;
   isLangOpen = false;
   isUserOpen = false;
-  isNotificationOpen = false;
 
-  user: User | null = null;
-  isLoadingMe = false;
+  currentLang = 'EN';
 
-  constructor(
-    private authservices: AuthServices,
-    private router: Router
-  ) {}
+  avatarUrl = 'assets/images/default-avatar.png';
+  displayName = 'Supervisor User';
+  displayRole = 'SUPERVISOR';
 
-  ngOnInit(): void {
-    this.loadMe();
-    this.notificationStore.init();
+  lang = {
+    options: [
+      { code: 'FR', label: 'Français', flag: 'assets/flags/fr.png' },
+      { code: 'EN', label: 'English', flag: 'assets/flags/en.png' },
+      { code: 'DE', label: 'Deutsch', flag: 'assets/flags/de.png' },
+    ],
+    flagByCode: {
+      FR: 'assets/flags/fr.png',
+      EN: 'assets/flags/en.png',
+      DE: 'assets/flags/de.png',
+    } as Record<string, string>,
+  };
+
+  onToggleSidebar(): void {
+    this.toggleSidebar.emit();
   }
 
-  private loadMe(): void {
-    this.isLoadingMe = true;
-
-    this.authservices.me().subscribe({
-      next: (res: any) => {
-        this.user = res?.user ?? null;
-        this.isLoadingMe = false;
-      },
-      error: () => {
-        this.user = null;
-        this.isLoadingMe = false;
-        this.router.navigate(['/login']);
-      },
-    });
-  }
-
-  get currentLang(): Lang {
-    return this.lang.current;
-  }
-
-  get notifications(): NotificationItem[] {
-    return this.notificationStore.latestNotifications();
-  }
-
-  get unreadCount(): number {
-    return this.notificationStore.unreadCount();
-  }
-
-  toggleLangMenu(ev?: MouseEvent): void {
-    ev?.stopPropagation();
-    this.isLangOpen = !this.isLangOpen;
-
-    if (this.isLangOpen) {
-      this.isUserOpen = false;
-      this.isNotificationOpen = false;
-    }
-  }
-
-  chooseLang(code: Lang): void {
-    this.lang.setLang(code);
+  toggleNotificationMenu(event: Event): void {
+    event.stopPropagation();
+    this.isNotificationOpen = !this.isNotificationOpen;
     this.isLangOpen = false;
+    this.isUserOpen = false;
   }
 
-  toggleUserMenu(ev?: MouseEvent): void {
-    ev?.stopPropagation();
-    this.isUserOpen = !this.isUserOpen;
+  toggleLangMenu(event: Event): void {
+    event.stopPropagation();
+    this.isLangOpen = !this.isLangOpen;
+    this.isNotificationOpen = false;
+    this.isUserOpen = false;
+  }
 
-    if (this.isUserOpen) {
-      this.isLangOpen = false;
-      this.isNotificationOpen = false;
-    }
+  toggleUserMenu(event: Event): void {
+    event.stopPropagation();
+    this.isUserOpen = !this.isUserOpen;
+    this.isLangOpen = false;
+    this.isNotificationOpen = false;
   }
 
   closeUserMenu(): void {
     this.isUserOpen = false;
   }
 
-  toggleNotificationMenu(ev?: MouseEvent): void {
-    ev?.stopPropagation();
-    this.isNotificationOpen = !this.isNotificationOpen;
-
-    if (this.isNotificationOpen) {
-      this.isLangOpen = false;
-      this.isUserOpen = false;
-    }
+  chooseLang(code: string): void {
+    this.currentLang = code;
+    this.translate.use(code.toLowerCase());
+    this.isLangOpen = false;
   }
 
   markAllNotificationsRead(): void {
     this.notificationStore.markAllAsRead();
   }
 
-  openNotification(item: NotificationItem): void {
-    if (!item?._id) return;
-
-    if (!item.isRead) {
+  openNotification(item: any): void {
+    if (!item?.isRead) {
       this.notificationStore.markAsRead(item._id);
     }
-
     this.isNotificationOpen = false;
-
-    if (item.type === 'observation' && item.observation) {
-      const id =
-        typeof item.observation === 'string'
-          ? item.observation
-          : item.observation._id;
-      if (id) {
-        this.router.navigate(['/supervisor/observations', id]);
-        return;
-      }
-    }
-
-    if (item.type === 'incident' && item.incident) {
-      const id =
-        typeof item.incident === 'string' ? item.incident : item.incident._id;
-      if (id) {
-        this.router.navigate(['/supervisor/incidents', id]);
-        return;
-      }
-    }
-
-    if (item.type === 'audit' && item.audit) {
-      const id = typeof item.audit === 'string' ? item.audit : item.audit._id;
-      if (id) {
-        this.router.navigate(['/supervisor/audits', id]);
-        return;
-      }
-    }
-
-    if (item.type === 'training' && item.training) {
-      const id =
-        typeof item.training === 'string' ? item.training : item.training._id;
-      if (id) {
-        this.router.navigate(['/supervisor/trainings', id]);
-        return;
-      }
-    }
-
-    if (item.type === 'report' && item.report) {
-      const id =
-        typeof item.report === 'string' ? item.report : item.report._id;
-      if (id) {
-        this.router.navigate(['/supervisor/reports', id]);
-        return;
-      }
-    }
-
-    if (item.type === 'device' && item.device) {
-      const id =
-        typeof item.device === 'string' ? item.device : item.device._id;
-      if (id) {
-        this.router.navigate(['/supervisor/devices', id]);
-        return;
-      }
-    }
-
     this.router.navigate(['/supervisor/notifications']);
-  }
-
-  deleteNotification(id: string, ev?: MouseEvent): void {
-    ev?.stopPropagation();
-    this.notificationStore.deleteOne(id);
   }
 
   openNotificationsPage(): void {
@@ -197,75 +101,23 @@ export class HeaderSupervisor implements OnInit {
     this.router.navigate(['/supervisor/notifications']);
   }
 
-  trackByAlert(index: number, item: NotificationItem): string {
-    return item._id;
-  }
-
-  getZoneName(item: NotificationItem): string {
-    return this.notificationStore.getZoneName(item.zone);
-  }
-
-  getDeviceName(item: NotificationItem): string {
-    return this.notificationStore.getDeviceName(item.device);
-  }
-
-  getSeverityClass(item: NotificationItem): string {
-    return this.notificationStore.getSeverityClass(item.severity);
-  }
-
-  getNotificationTime(item: NotificationItem): string {
-    return this.notificationStore.getTime(item.createdAt);
+  trackByAlert(index: number, item: any): string {
+    return item?._id || String(index);
   }
 
   logout(): void {
-    this.authservices.logout().subscribe({
-      next: () => this.router.navigate(['/login']),
-      error: () => this.router.navigate(['/login']),
-    });
-  }
-
-  onToggleSidebar(): void {
-    this.layout.toggleSidebar();
+    this.closeUserMenu();
+    localStorage.removeItem('token');
+    this.router.navigate(['/login']);
   }
 
   @HostListener('document:click', ['$event'])
-  onDocClick(ev: MouseEvent): void {
-    const target = ev.target as Node;
+  onDocumentClick(event: MouseEvent): void {
+    const target = event.target as Node;
     if (!this.el.nativeElement.contains(target)) {
+      this.isNotificationOpen = false;
       this.isLangOpen = false;
       this.isUserOpen = false;
-      this.isNotificationOpen = false;
     }
-  }
-
-  @HostListener('document:keydown.escape')
-  onEsc(): void {
-    this.isLangOpen = false;
-    this.isUserOpen = false;
-    this.isNotificationOpen = false;
-  }
-
-  get displayName(): string {
-    return (
-      this.user?.fullName ||
-      `${this.user?.firstName || ''} ${this.user?.lastName || ''}`.trim() ||
-      '—'
-    );
-  }
-
-  get displayRole(): string {
-    return this.user?.role || '';
-  }
-
-  get avatarUrl(): string {
-    return 'assets/images/profile-pic.webp';
-  }
-
-  goToLive(): void {
-    this.router.navigate(['/supervisor/live']);
-  }
-
-  goToSettings(): void {
-    this.router.navigate(['/supervisor/settings']);
   }
 }
