@@ -1,1 +1,144 @@
-<p>supervisor-dashboard works!</p>
+<section class="supervisor-dashboard">
+  <div class="dashboard-hero">
+    <div class="hero-content">
+      <span class="badge">Supervisor Space</span>
+      <h1>Supervisor Dashboard</h1>
+      <p>
+        Vue globale des observations, inspections, incidents et activités
+        terrain pour superviser les opérations HSE en temps réel.
+      </p>
+    </div>
+
+    <div class="hero-card">
+      <div class="hero-card-header">
+        <span>Statut global</span>
+        <i class="bi bi-shield-check"></i>
+      </div>
+      <strong>System Operational</strong>
+      <p>Surveillance active des zones et suivi des indicateurs HSE.</p>
+    </div>
+  </div>
+
+  <div class="stats-grid">
+    @for (stat of stats; track stat.title) {
+      <article class="stat-card">
+        <div class="stat-top">
+          <div class="stat-icon">
+            <i [class]="stat.icon"></i>
+          </div>
+
+          <span class="trend" [class.positive]="stat.positive">
+            {{ stat.trend }}
+          </span>
+        </div>
+
+        <h3>{{ stat.title }}</h3>
+        <div class="stat-value">{{ stat.value }}</div>
+        <p>{{ stat.description }}</p>
+      </article>
+    }
+  </div>
+
+  <div class="dashboard-main-grid">
+    <section class="panel">
+      <div class="panel-header">
+        <div>
+          <h2>Quick Access</h2>
+          <p>Accès direct aux modules principaux du supervisor</p>
+        </div>
+      </div>
+
+      <div class="quick-actions-grid">
+        @for (action of quickActions; track action.route) {
+          <a class="quick-action-card" [routerLink]="action.route">
+            <div class="action-icon">
+              <i [class]="action.icon"></i>
+            </div>
+
+            <div class="action-content">
+              <h4>{{ action.title }}</h4>
+              <p>{{ action.subtitle }}</p>
+            </div>
+
+            <i class="bi bi-arrow-right-short action-arrow"></i>
+          </a>
+        }
+      </div>
+    </section>
+
+    <section class="panel side-panel">
+      <div class="panel-header">
+        <div>
+          <h2>Field Overview</h2>
+          <p>Résumé rapide de la supervision opérationnelle</p>
+        </div>
+      </div>
+
+      <div class="status-list">
+        @for (item of teamStatus; track item.label) {
+          <div class="status-item">
+            <span>{{ item.label }}</span>
+            <strong>{{ item.value }}</strong>
+          </div>
+        }
+      </div>
+    </section>
+  </div>
+
+  <div class="dashboard-bottom-grid">
+    <section class="panel">
+      <div class="panel-header">
+        <div>
+          <h2>Recent Activities</h2>
+          <p>Derniers événements enregistrés dans la supervision</p>
+        </div>
+      </div>
+
+      <div class="activity-list">
+        @for (activity of recentActivities; track activity.title + activity.time) {
+          <div class="activity-item">
+            <span class="activity-dot" [class]="activity.type"></span>
+
+            <div class="activity-content">
+              <h4>{{ activity.title }}</h4>
+              <p>{{ activity.description }}</p>
+            </div>
+
+            <span class="activity-time">{{ activity.time }}</span>
+          </div>
+        }
+      </div>
+    </section>
+
+    <section class="panel info-panel">
+      <div class="panel-header">
+        <div>
+          <h2>Supervisor Notes</h2>
+          <p>Bloc informatif de suivi</p>
+        </div>
+      </div>
+
+      <div class="notes-card">
+        <i class="bi bi-info-circle"></i>
+        <div>
+          <h4>Suivi quotidien</h4>
+          <p>
+            Vérifier les alertes critiques, contrôler les incidents ouverts et
+            confirmer l’avancement des audits planifiés.
+          </p>
+        </div>
+      </div>
+
+      <div class="notes-card">
+        <i class="bi bi-broadcast"></i>
+        <div>
+          <h4>Communication terrain</h4>
+          <p>
+            Maintenir la coordination entre agents, managers et responsables
+            HSE pour une meilleure réactivité.
+          </p>
+        </div>
+      </div>
+    </section>
+  </div>
+</section>
