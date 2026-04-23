@@ -9,7 +9,8 @@ import {
 } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { NotificationStore } from '../../../../core/store/notification.store';
+import { NotificationStore } from '../../../../core/services/notifications/notification-store';
+
 
 @Component({
   selector: 'app-header-supervisor',
