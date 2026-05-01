@@ -7,6 +7,11 @@ import {
   ReadingServices,
 } from '../../../../core/services/readings/reading';
 
+import {
+  AiPrediction,
+  AiPredictionServices,
+} from '../../../../core/services/ai/ai-prediction-services';
+
 type ZoneSummary = {
   zoneId: string;
   zoneName: string;
@@ -23,17 +28,26 @@ type ZoneSummary = {
 })
 export class MonitoringDashboard implements OnInit {
   private readingServices = inject(ReadingServices);
+  private aiPredictionServices = inject(AiPredictionServices);
 
   isLoading = signal(true);
   error = signal<string | null>(null);
 
   latestReadings = signal<ReadingItem[]>([]);
 
+  aiPrediction = signal<AiPrediction | null>(null);
+  isAiLoading = signal(false);
+  aiError = signal<string | null>(null);
+
+  selectedAiMode = signal<'global' | 'zone'>('global');
+  selectedAiZone = signal<string | null>(null);
+
   readonly totalDevices = computed(() => {
     const ids = new Set<string>();
 
     for (const item of this.latestReadings()) {
       const device = item.device;
+
       if (typeof device === 'string') {
         ids.add(device);
       } else if (device?._id) {
@@ -49,14 +63,22 @@ export class MonitoringDashboard implements OnInit {
   readonly onlineDevices = computed(() => {
     return this.latestReadings().filter((item) => {
       const device = item.device;
-      return typeof device !== 'string' && (device.status || '').toLowerCase() === 'online';
+
+      return (
+        typeof device !== 'string' &&
+        (device.status || '').toLowerCase() === 'online'
+      );
     }).length;
   });
 
   readonly offlineDevices = computed(() => {
     return this.latestReadings().filter((item) => {
       const device = item.device;
-      return typeof device !== 'string' && (device.status || '').toLowerCase() === 'offline';
+
+      return (
+        typeof device !== 'string' &&
+        (device.status || '').toLowerCase() === 'offline'
+      );
     }).length;
   });
 
@@ -65,6 +87,7 @@ export class MonitoringDashboard implements OnInit {
 
     for (const item of this.latestReadings()) {
       const zone = item.zone;
+
       if (typeof zone === 'string') {
         ids.add(zone);
       } else if (zone?._id) {
@@ -78,9 +101,10 @@ export class MonitoringDashboard implements OnInit {
   readonly averageTemperature = computed(() => {
     const values = this.latestReadings()
       .map((item) => this.readingServices.getTemperature(item))
-      .filter((v): v is number => typeof v === 'number');
+      .filter((value): value is number => typeof value === 'number');
 
     if (!values.length) return null;
+
     const avg = values.reduce((sum, value) => sum + value, 0) / values.length;
     return Number(avg.toFixed(1));
   });
@@ -88,9 +112,10 @@ export class MonitoringDashboard implements OnInit {
   readonly averageHumidity = computed(() => {
     const values = this.latestReadings()
       .map((item) => this.readingServices.getHumidity(item))
-      .filter((v): v is number => typeof v === 'number');
+      .filter((value): value is number => typeof value === 'number');
 
     if (!values.length) return null;
+
     const avg = values.reduce((sum, value) => sum + value, 0) / values.length;
     return Number(avg.toFixed(1));
   });
@@ -100,10 +125,9 @@ export class MonitoringDashboard implements OnInit {
 
     for (const item of this.latestReadings()) {
       const zone = item.zone;
+
       const zoneId =
-        typeof zone === 'string'
-          ? zone
-          : zone?._id || 'unknown-zone';
+        typeof zone === 'string' ? zone : zone?._id || 'unknown-zone';
 
       const zoneName = this.readingServices.getZoneName(zone);
 
@@ -118,14 +142,19 @@ export class MonitoringDashboard implements OnInit {
         const current = map.get(zoneId)!;
         current.deviceCount += 1;
 
-        if (new Date(item.ts).getTime() > new Date(current.latestReading.ts).getTime()) {
+        if (
+          new Date(item.ts).getTime() >
+          new Date(current.latestReading.ts).getTime()
+        ) {
           current.latestReading = item;
         }
       }
     }
 
-    return Array.from(map.values()).sort((a, b) =>
-      new Date(b.latestReading.ts).getTime() - new Date(a.latestReading.ts).getTime()
+    return Array.from(map.values()).sort(
+      (a, b) =>
+        new Date(b.latestReading.ts).getTime() -
+        new Date(a.latestReading.ts).getTime()
     );
   });
 
@@ -142,6 +171,7 @@ export class MonitoringDashboard implements OnInit {
       const temp = this.readingServices.getTemperature(item);
       const humidity = this.readingServices.getHumidity(item);
       const gas = this.readingServices.getGas(item);
+
       const status =
         typeof item.device !== 'string'
           ? (item.device.status || '').toLowerCase()
@@ -191,12 +221,19 @@ export class MonitoringDashboard implements OnInit {
     this.isLoading.set(true);
     this.error.set(null);
 
+    this.aiPrediction.set(null);
+    this.aiError.set(null);
+    this.selectedAiMode.set('global');
+    this.selectedAiZone.set(null);
+
     this.readingServices.getReadings({ page: 1, limit: 50 }).subscribe({
       next: (response) => {
-        this.latestReadings.set(response.items || []);
+        const items = response.items || [];
+
+        this.latestReadings.set(items);
         this.isLoading.set(false);
 
-        if (!response.items?.length) {
+        if (!items.length) {
           this.error.set('Aucune donnée de monitoring disponible.');
         }
       },
@@ -207,8 +244,79 @@ export class MonitoringDashboard implements OnInit {
     });
   }
 
+  selectAiMode(mode: 'global' | 'zone'): void {
+    this.selectedAiMode.set(mode);
+    this.aiPrediction.set(null);
+    this.aiError.set(null);
+
+    if (mode === 'global') {
+      this.selectedAiZone.set(null);
+    }
+  }
+
+  selectAiZone(zoneId: string): void {
+    this.selectedAiMode.set('zone');
+    this.selectedAiZone.set(zoneId);
+    this.aiPrediction.set(null);
+    this.aiError.set(null);
+  }
+
+  runAiPrediction(): void {
+    this.aiPrediction.set(null);
+    this.aiError.set(null);
+
+    if (this.selectedAiMode() === 'global') {
+      this.loadAiPrediction('global');
+      return;
+    }
+
+    const zoneId = this.selectedAiZone();
+
+    if (!zoneId || zoneId === 'unknown-zone') {
+      this.aiError.set('Veuillez choisir une zone avant de lancer l’analyse IA.');
+      return;
+    }
+
+    this.loadAiPrediction(zoneId);
+  }
+
+  private loadAiPrediction(zoneId: string): void {
+    this.isAiLoading.set(true);
+    this.aiError.set(null);
+
+    this.aiPredictionServices.predictZoneRisk(zoneId).subscribe({
+      next: (response) => {
+        this.aiPrediction.set(response.prediction);
+        this.isAiLoading.set(false);
+      },
+      error: () => {
+        this.aiError.set(
+          zoneId === 'global'
+            ? 'Impossible de charger la prédiction IA globale.'
+            : 'Impossible de charger la prédiction IA pour cette zone.'
+        );
+        this.isAiLoading.set(false);
+      },
+    });
+  }
+
   refresh(): void {
     this.loadDashboard();
+  }
+
+  getAiRiskLabel(level: string): string {
+    switch (level) {
+      case 'low':
+        return 'Faible';
+      case 'medium':
+        return 'Moyen';
+      case 'high':
+        return 'Élevé';
+      case 'critical':
+        return 'Critique';
+      default:
+        return level;
+    }
   }
 
   getStatusClass(status: string | null | undefined): string {
@@ -237,7 +345,11 @@ export class MonitoringDashboard implements OnInit {
 
   getDeviceStatus(item: ReadingItem): string {
     const device = item.device;
-    if (!device || typeof device === 'string') return 'unknown';
+
+    if (!device || typeof device === 'string') {
+      return 'unknown';
+    }
+
     return device.status || 'unknown';
   }
 
@@ -250,9 +362,12 @@ export class MonitoringDashboard implements OnInit {
   }
 
   getDeviceRouteId(item: ReadingItem): string {
-    if (item.raw?.deviceId) return item.raw.deviceId;
+    if (item.raw?.deviceId) {
+      return item.raw.deviceId;
+    }
 
     const device = item.device;
+
     if (typeof device !== 'string' && device?.deviceId) {
       return device.deviceId;
     }
@@ -281,13 +396,22 @@ export class MonitoringDashboard implements OnInit {
 
   formatValues(item: ReadingItem): string {
     const parts: string[] = [];
-    const t = this.readingServices.getTemperature(item);
-    const h = this.readingServices.getHumidity(item);
-    const g = this.readingServices.getGas(item);
 
-    if (t !== null) parts.push(`${t} °C`);
-    if (h !== null) parts.push(`${h} %`);
-    if (g !== null) parts.push(`Gaz: ${g}`);
+    const temperature = this.readingServices.getTemperature(item);
+    const humidity = this.readingServices.getHumidity(item);
+    const gas = this.readingServices.getGas(item);
+
+    if (temperature !== null) {
+      parts.push(`${temperature} °C`);
+    }
+
+    if (humidity !== null) {
+      parts.push(`${humidity} %`);
+    }
+
+    if (gas !== null) {
+      parts.push(`Gaz: ${gas}`);
+    }
 
     return parts.length ? parts.join(' / ') : '—';
   }

@@ -1,4 +1,5 @@
 <div class="page">
+  <!-- HEADER -->
   <div class="page-header">
     <div>
       <h2>Monitoring Dashboard</h2>
@@ -20,18 +21,19 @@
     </div>
   </div>
 
+  <!-- ERROR -->
   <div *ngIf="error() && !isLoading()" class="alert error">
     <i class="bi bi-exclamation-triangle"></i>
     <span>{{ error() }}</span>
   </div>
 
+  <!-- LOADING -->
   <div *ngIf="isLoading()" class="loading-card">
     <div class="loader"></div>
     <p>Chargement du dashboard monitoring...</p>
   </div>
 
   <ng-container *ngIf="!isLoading() && latestReadings().length > 0">
-
     <!-- KPI -->
     <div class="stats-grid">
       <div class="stat-card devices">
@@ -95,6 +97,129 @@
       </div>
     </div>
 
+    <!-- ================= AI PREDICTION ================= -->
+    <div class="ai-card">
+      <div class="ai-card-head">
+        <div>
+          <h3>Prédiction IA du risque HSE</h3>
+          <span>
+            Choisissez une analyse globale ou par zone, puis lancez manuellement la prédiction.
+          </span>
+        </div>
+      </div>
+
+      <div class="ai-control-panel">
+        <div class="ai-mode-selector">
+          <button
+            class="ai-zone-btn"
+            type="button"
+            [class.active]="selectedAiMode() === 'global'"
+            (click)="selectAiMode('global')">
+            <i class="bi bi-globe2"></i>
+            Global
+          </button>
+
+          <button
+            class="ai-zone-btn"
+            type="button"
+            [class.active]="selectedAiMode() === 'zone'"
+            (click)="selectAiMode('zone')">
+            <i class="bi bi-geo-alt"></i>
+            Par zone
+          </button>
+        </div>
+
+        <div
+          class="ai-zone-selector"
+          *ngIf="selectedAiMode() === 'zone' && latestZones().length > 0">
+          <button
+            class="ai-zone-btn"
+            type="button"
+            *ngFor="let zone of latestZones()"
+            [class.active]="selectedAiZone() === zone.zoneId"
+            (click)="selectAiZone(zone.zoneId)">
+            {{ zone.zoneName || zone.zoneId }}
+          </button>
+        </div>
+
+        <button
+          class="ai-run-btn"
+          type="button"
+          [disabled]="isAiLoading() || (selectedAiMode() === 'zone' && !selectedAiZone())"
+          (click)="runAiPrediction()">
+          <i class="bi bi-stars"></i>
+          Lancer l’analyse IA
+        </button>
+      </div>
+
+      <!-- EMPTY IA -->
+      <div *ngIf="!isAiLoading() && !aiPrediction() && !aiError()" class="ai-empty">
+        <i class="bi bi-cpu"></i>
+        <p>
+          Sélectionnez le type d’analyse puis cliquez sur le bouton pour obtenir la prédiction.
+        </p>
+      </div>
+
+      <!-- LOADING IA -->
+      <div *ngIf="isAiLoading()" class="ai-loading">
+        <div class="loader"></div>
+        <span>Analyse IA en cours...</span>
+      </div>
+
+      <!-- ERROR IA -->
+      <div *ngIf="aiError()" class="alert error">
+        <i class="bi bi-exclamation-triangle"></i>
+        <span>{{ aiError() }}</span>
+      </div>
+
+      <!-- RESULT IA -->
+      <ng-container *ngIf="!isAiLoading() && aiPrediction() as ai">
+        <div class="ai-main">
+          <div class="ai-score" [ngClass]="ai.riskLevel">
+            <strong>{{ ai.score }}%</strong>
+            <span>{{ getAiRiskLabel(ai.riskLevel) }}</span>
+          </div>
+
+          <div class="ai-summary">
+            <div class="ai-risk-badge" [ngClass]="ai.riskLevel">
+              Risque {{ getAiRiskLabel(ai.riskLevel) }}
+            </div>
+            <p>{{ ai.summary }}</p>
+          </div>
+        </div>
+
+        <div class="ai-grid">
+          <div class="ai-section">
+            <h4>Causes probables</h4>
+            <ul>
+              <li *ngFor="let cause of ai.probableCauses">
+                {{ cause }}
+              </li>
+            </ul>
+          </div>
+
+          <div class="ai-section">
+            <h4>Recommandations</h4>
+            <ul>
+              <li *ngFor="let rec of ai.recommendations">
+                {{ rec }}
+              </li>
+            </ul>
+          </div>
+
+          <div class="ai-section priority">
+            <h4>Actions prioritaires</h4>
+            <ul>
+              <li *ngFor="let action of ai.priorityActions">
+                {{ action }}
+              </li>
+            </ul>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+    <!-- ================================================= -->
+
     <!-- Charts + Alerts -->
     <div class="overview-grid">
       <div class="panel-card">
@@ -141,12 +266,11 @@
       </div>
     </div>
 
-    <!-- Latest by zone -->
+    <!-- ZONES -->
     <div class="panel-card">
       <div class="panel-head">
         <div>
           <h3>Dernières lectures par zone</h3>
-          <span>Résumé par zone avec accès aux détails</span>
         </div>
       </div>
 
@@ -155,7 +279,7 @@
           <div class="zone-card-head">
             <div>
               <h4>{{ zone.zoneName || zone.zoneId }}</h4>
-              <small>{{ zone.deviceCount }} device{{ zone.deviceCount > 1 ? 's' : '' }}</small>
+              <small>{{ zone.deviceCount }} devices</small>
             </div>
 
             <a
@@ -170,10 +294,12 @@
               <span>Température</span>
               <strong>{{ getTemperature(zone.latestReading) }}</strong>
             </div>
+
             <div class="mini-stat">
               <span>Humidité</span>
               <strong>{{ getHumidity(zone.latestReading) }}</strong>
             </div>
+
             <div class="mini-stat">
               <span>Dernière lecture</span>
               <strong>{{ zone.latestReading.ts | date:'HH:mm:ss' }}</strong>
@@ -183,13 +309,10 @@
       </div>
     </div>
 
-    <!-- Latest by device -->
+    <!-- DEVICES TABLE -->
     <div class="panel-card">
       <div class="panel-head">
-        <div>
-          <h3>Dernières lectures par device</h3>
-          <span>Monitoring instantané par équipement</span>
-        </div>
+        <h3>Dernières lectures par device</h3>
       </div>
 
       <div class="table-wrap">
@@ -210,6 +333,7 @@
             <tr *ngFor="let item of latestReadings()">
               <td>{{ getDeviceLabel(item) }}</td>
               <td>{{ getZoneLabel(item) }}</td>
+
               <td>
                 <span
                   class="status-badge"
@@ -217,11 +341,15 @@
                   {{ getDeviceStatus(item) }}
                 </span>
               </td>
+
               <td>
                 <span class="sensor-chip">{{ item.sensorType }}</span>
               </td>
+
               <td>{{ formatValues(item) }}</td>
+
               <td>{{ item.ts | date:'dd/MM/yyyy HH:mm:ss' }}</td>
+
               <td>
                 <a
                   class="action-link"
@@ -234,6 +362,5 @@
         </table>
       </div>
     </div>
-
   </ng-container>
 </div>
