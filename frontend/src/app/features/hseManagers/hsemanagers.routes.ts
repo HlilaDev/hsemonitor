@@ -1,8 +1,8 @@
 import { Routes } from '@angular/router';
 
 import { LiveStream } from '../../shared/live-stream/live-stream';
-import { IncidentsOverview } from '../../shared/incidents/incidents-overview/incidents-overview';
-import { IncidentDetails } from '../../shared/incidents/incident-details/incident-details';
+import { IncidentsOverview } from '../shared/incidents/incidents-overview/incidents-overview';
+import { IncidentDetails } from '../shared/incidents/incident-details/incident-details';
 import { NotificationsList } from '../../shared/notifications/notifications-list/notifications-list';
 import { TemperatureChart } from './temperature-chart/temperature-chart';
 import { Profile } from '../account/profile/profile';
@@ -40,8 +40,12 @@ export const HSEMANAGERS_ROUTES: Routes = [
           { path: 'profile', component:Profile
         },
                 //incidents
-          { path: 'incidents', component:IncidentsOverview
-        },
+           {
+        path: 'incidents',
+        loadChildren: () =>
+          import('../shared/incidents/incidents.routes')
+            .then(m => m.INCIDENTS_ROUTES),
+      },
                         //incidents
           { path: 'incidents/detail', component:IncidentDetails
         },

@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { NotificationsList } from '../../shared/notifications/notifications-list/notifications-list';
-import { IncidentsOverview } from '../../shared/incidents/incidents-overview/incidents-overview';
+import { IncidentsOverview } from '../shared/incidents/incidents-overview/incidents-overview';
 import { Profile } from '../account/profile/profile';
 
 export const SUPERVISOR_ROUTES: Routes = [
