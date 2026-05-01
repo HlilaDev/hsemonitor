@@ -22,6 +22,7 @@ const inventoryRoutes = require("./inventory");
 const displayMessageRoutes = require("./displayMessageRoutes");
 const checklistRoutes = require("./checklistRoutes");
 const ppeAlertRoutes = require("./ppeAlertRoutes");
+const aiPredictionRoutes = require("./aiPredictionRoutes");
 
 
 router.use("/display-messages", displayMessageRoutes);
@@ -42,6 +43,8 @@ router.use("/alert-rules", alertRuleRoutes);
 router.use('/notifications', notificationRoutes);
 router.use('/user-notifications', useNotificationRoutes);
 router.use("/checklists", checklistRoutes);
+
+router.use("/ai-predictions", aiPredictionRoutes);
 
 
 
