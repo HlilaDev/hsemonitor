@@ -1,130 +1,221 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule }      from '@angular/common';
-import { FormsModule }        from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 
-import { SensorServices, Sensor } from '../../../../core/services/sensors/sensor-services';
+import {
+  SensorServices,
+  Sensor,
+  Reading,
+  SensorStatus,
+} from '../../../../core/services/sensors/sensor-services';
 
-// ── History entry model ───────────────────────────────────────────
 export interface SensorHistoryEntry {
   timestamp: string | Date;
-  value?:    number;
-  status:    'online' | 'offline' | 'maintenance';
-  message?:  string;
+  value?: number;
+  unit?: string;
+  sensorType?: string;
+  status: SensorStatus;
+  message?: string;
 }
 
 @Component({
-  selector:    'app-sensor-details',
-  standalone:  true,
-  imports:     [CommonModule, RouterLink, FormsModule],
+  selector: 'app-sensor-details',
+  standalone: true,
+  imports: [CommonModule, RouterLink, FormsModule],
   templateUrl: './sensor-details.html',
-  styleUrls:   ['./sensor-details.scss'],
+  styleUrls: ['./sensor-details.scss'],
 })
 export class SensorDetails implements OnInit {
-
-  // ── State ────────────────────────────────────────────────────────
-  sensor:       Sensor | null = null;
-  isLoading     = true;
+  sensor: Sensor | null = null;
+  isLoading = true;
   errorMessage: string | null = null;
 
-  // Topic URL (editable field)
-  topicUrl  = '';
+  topicUrl = '';
   urlCopied = false;
 
-  // History
-  history:          SensorHistoryEntry[] = [];
-  isHistoryLoading  = false;
+  history: SensorHistoryEntry[] = [];
+  isHistoryLoading = false;
 
   constructor(
     private sensorService: SensorServices,
-    private route:         ActivatedRoute,
+    private route: ActivatedRoute
   ) {}
 
-  // ── Lifecycle ────────────────────────────────────────────────────
   ngOnInit(): void {
     const sensorId = this.route.snapshot.paramMap.get('id');
 
     if (!sensorId) {
       this.errorMessage = 'ID de capteur manquant';
-      this.isLoading    = false;
+      this.isLoading = false;
       return;
     }
 
     this.sensorService.getById(sensorId).subscribe({
       next: (data) => {
-        this.sensor    = data;
+        this.sensor = data;
         this.isLoading = false;
 
-        // Pre-fill topic URL as a suggested MQTT topic
-        this.topicUrl = `sensors/${data._id}/data`;
+        const deviceId = this.getDeviceId();
 
-        // Load history after sensor is loaded
-        this.loadHistory(sensorId);
+        this.topicUrl = deviceId
+          ? `hsemonitor/devices/${deviceId}/telemetry`
+          : 'Device ID manquant';
+
+        this.loadHistory();
       },
       error: () => {
         this.errorMessage = 'Impossible de récupérer les détails du capteur';
-        this.isLoading    = false;
+        this.isLoading = false;
       },
     });
   }
 
-  // ── History ───────────────────────────────────────────────────────
-  /**
-   * Replace this method body with your real API call, e.g.:
-   *   this.sensorService.getHistory(sensorId).subscribe(...)
-   *
-   * The mock data below is for development/demo purposes only.
-   */
-  private loadHistory(sensorId: string): void {
+  private loadHistory(): void {
+    const deviceId = this.getDeviceId();
+
+    if (!deviceId) {
+      this.history = [];
+      this.isHistoryLoading = false;
+      return;
+    }
+
     this.isHistoryLoading = true;
 
-    // TODO: replace with real service call
-    // this.sensorService.getHistory(sensorId).subscribe({
-    //   next:  (data) => { this.history = data; this.isHistoryLoading = false; },
-    //   error: ()     => { this.isHistoryLoading = false; },
-    // });
+    const sensorType = this.normalizeSensorType(this.sensor?.type ?? '');
 
-    // ── Mock data (remove when API is ready) ──────────────────────
-    setTimeout(() => {
-      this.history = [
-        { timestamp: new Date(),                             value: 24.3, status: 'online',      message: 'Lecture normale' },
-        { timestamp: new Date(Date.now() - 1 * 3600_000),   value: 24.1, status: 'online',      message: 'Lecture normale' },
-        { timestamp: new Date(Date.now() - 2 * 3600_000),   value: 28.9, status: 'maintenance', message: 'Seuil dépassé' },
-        { timestamp: new Date(Date.now() - 5 * 3600_000),   value: 0,    status: 'offline',     message: 'Connexion perdue' },
-        { timestamp: new Date(Date.now() - 8 * 3600_000),   value: 23.7, status: 'online',      message: 'Lecture normale' },
-        { timestamp: new Date(Date.now() - 12 * 3600_000),  value: 23.5, status: 'online',      message: 'Lecture normale' },
-      ];
-      this.isHistoryLoading = false;
-    }, 600);
-    // ─────────────────────────────────────────────────────────────
+    this.sensorService
+      .getHistoryByDevice(deviceId, sensorType, 10)
+      .subscribe({
+        next: (readings: Reading[]) => {
+          this.history = readings.map((reading) => ({
+            timestamp: reading.ts || reading.createdAt || new Date(),
+            value: this.extractReadingValue(reading),
+            unit: this.extractReadingUnit(reading),
+            sensorType: reading.sensorType,
+            status: this.sensor?.status ?? 'online',
+            message: this.getReadingMessage(reading),
+          }));
+
+          this.isHistoryLoading = false;
+        },
+        error: () => {
+          this.history = [];
+          this.isHistoryLoading = false;
+        },
+      });
   }
 
-  // ── Helpers ───────────────────────────────────────────────────────
+  private getDeviceId(): string | null {
+    if (!this.sensor) return null;
 
-  /** Safely resolves zone name whether zone is populated or a plain ID string. */
+    if (this.sensor.deviceId) {
+      return this.sensor.deviceId;
+    }
+
+    if (
+      this.sensor.device &&
+      typeof this.sensor.device === 'object' &&
+      this.sensor.device.deviceId
+    ) {
+      return this.sensor.device.deviceId;
+    }
+
+    return null;
+  }
+
+  private normalizeSensorType(type: string): string {
+    if (type === 'temperature' || type === 'humidity') return 'dht11';
+    if (type === 'gas') return 'gas';
+    return type;
+  }
+
+  private extractReadingValue(reading: Reading): number | undefined {
+    if (!reading) return undefined;
+
+    if (reading.sensorType === 'gas') {
+      return (
+        reading.values?.ppm ??
+        reading.values?.value ??
+        reading.values?.gas ??
+        reading.raw?.value
+      );
+    }
+
+    if (reading.sensorType === 'dht11') {
+      if (this.sensor?.type === 'humidity') {
+        return reading.values?.humidity;
+      }
+
+      return reading.values?.temperature;
+    }
+
+    return reading.values?.value ?? reading.raw?.value;
+  }
+
+  private extractReadingUnit(reading: Reading): string {
+    if (this.sensor?.unit) return this.sensor.unit;
+
+    if (reading.sensorType === 'gas') return 'ppm';
+    if (this.sensor?.type === 'humidity') return '%';
+    if (reading.sensorType === 'dht11') return '°C';
+
+    return '';
+  }
+
+  private getReadingMessage(reading: Reading): string {
+    if (reading.sensorType === 'gas') return 'Lecture gaz';
+
+    if (reading.sensorType === 'dht11') {
+      return this.sensor?.type === 'humidity'
+        ? 'Lecture humidité'
+        : 'Lecture température';
+    }
+
+    return 'Lecture normale';
+  }
+
   getZoneName(): string {
     if (!this.sensor?.zone) return '—';
-    if (typeof this.sensor.zone === 'object') return this.sensor.zone.name;
+
+    if (typeof this.sensor.zone === 'object') {
+      return this.sensor.zone.name;
+    }
+
     return this.sensor.zone;
   }
 
-  /** Copies the Topic URL field value to the clipboard. */
-  copyTopicUrl(): void {
-    if (!this.topicUrl) return;
+  getCurrentValue(): string {
+    if (!this.history.length) return '—';
 
-    navigator.clipboard.writeText(this.topicUrl).then(() => {
-      this.urlCopied = true;
-      setTimeout(() => (this.urlCopied = false), 2000);
-    }).catch(() => {
-      // Fallback for older browsers
-      const el = document.createElement('textarea');
-      el.value = this.topicUrl;
-      document.body.appendChild(el);
-      el.select();
-      document.execCommand('copy');
-      document.body.removeChild(el);
-      this.urlCopied = true;
-      setTimeout(() => (this.urlCopied = false), 2000);
-    });
+    const latest = this.history[0];
+
+    if (latest.value === undefined || latest.value === null) {
+      return '—';
+    }
+
+    return `${latest.value} ${latest.unit ?? ''}`;
+  }
+
+  copyTopicUrl(): void {
+    if (!this.topicUrl || this.topicUrl === 'Device ID manquant') return;
+
+    navigator.clipboard
+      .writeText(this.topicUrl)
+      .then(() => {
+        this.urlCopied = true;
+        setTimeout(() => (this.urlCopied = false), 2000);
+      })
+      .catch(() => {
+        const el = document.createElement('textarea');
+        el.value = this.topicUrl;
+        document.body.appendChild(el);
+        el.select();
+        document.execCommand('copy');
+        document.body.removeChild(el);
+
+        this.urlCopied = true;
+        setTimeout(() => (this.urlCopied = false), 2000);
+      });
   }
 }

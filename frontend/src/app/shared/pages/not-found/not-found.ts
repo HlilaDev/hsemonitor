@@ -1,6 +1,10 @@
 import { Component, inject } from '@angular/core';
 import { Location } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { catchError, of } from 'rxjs';
+
+import { AuthServices } from '../../../core/services/auth/auth-services';
+import { RoleRedirectServices } from '../../../core/services/redirect/role-redirect-services';
 
 @Component({
   selector: 'app-not-found',
@@ -11,5 +15,18 @@ import { RouterModule } from '@angular/router';
 })
 export class NotFound {
   private location = inject(Location);
-  goBack() { this.location.back(); }
+  private authService = inject(AuthServices);
+  private roleRedirect = inject(RoleRedirectServices);
+
+  goBack() {
+    this.location.back();
+  }
+
+  goHome() {
+    this.authService.me()
+      .pipe(catchError(() => of(null)))
+      .subscribe((res: { user: any; }) => {
+        this.roleRedirect.redirectByRole(res?.user ?? null);
+      });
+  }
 }

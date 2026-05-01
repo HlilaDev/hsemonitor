@@ -242,4 +242,9 @@ userNotifications: {
     },
   },
 
+    aiPredictions: {
+  zoneRisk: (zoneId: string) =>
+    `${BASE_API_URL}/ai-predictions/zone/${zoneId}`,
+},
+
 }

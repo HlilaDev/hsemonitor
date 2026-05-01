@@ -1,15 +1,25 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { API_URLS } from '../../config/api_urls'; 
+import { API_URLS } from '../../config/api_urls';
 import { Observable } from 'rxjs';
 
 export type SensorStatus = 'online' | 'offline' | 'maintenance';
 export type SensorType = 'temperature' | 'gas' | 'humidity' | 'noise' | 'motion';
 
+export interface SensorDevice {
+  _id: string;
+  name?: string;
+  deviceId: string;
+}
+
 export interface Sensor {
   _id: string;
   name: string;
-  deviceId: string;
+
+  // Selon backend ancien/nouveau
+  deviceId?: string;
+  device?: string | SensorDevice;
+
   imageUrl: string;
   type: SensorType | string;
   zone: string | { _id: string; name: string };
@@ -21,9 +31,40 @@ export interface Sensor {
   updatedAt?: string;
 }
 
+export interface Reading {
+  _id: string;
+  device?: string;
+  zone?: string;
+  deviceId?: string;
+  sensorType: string;
+  ts: string | Date;
+  createdAt?: string | Date;
+  updatedAt?: string | Date;
+
+  values: {
+    temperature?: number;
+    humidity?: number;
+    value?: number;
+    gas?: number;
+    ppm?: number;
+    unit?: string;
+    [key: string]: any;
+  };
+
+  raw?: {
+    deviceId?: string;
+    sensorType?: string;
+    value?: number;
+    unit?: string;
+    timestamp?: number;
+    [key: string]: any;
+  };
+}
+
 export interface CreateSensorDto {
   name: string;
-  deviceId: string;
+  deviceId?: string;
+  device?: string;
   type: SensorType | string;
   zone: string;
   threshold?: number | null;
@@ -32,6 +73,8 @@ export interface CreateSensorDto {
 
 export interface UpdateSensorDto {
   name?: string;
+  deviceId?: string;
+  device?: string;
   type?: SensorType | string;
   zone?: string;
   threshold?: number | null;
@@ -45,14 +88,12 @@ export interface UpdateSensorDto {
 export class SensorServices {
   private http = inject(HttpClient);
 
-  // ✅ CREATE
   create(dto: CreateSensorDto): Observable<Sensor> {
     return this.http.post<Sensor>(API_URLS.sensors.addSensor, dto, {
       withCredentials: true,
     });
   }
 
-  // ✅ LIST + filters
   list(filters?: {
     zone?: string;
     type?: string;
@@ -60,6 +101,7 @@ export class SensorServices {
     q?: string;
   }): Observable<Sensor[]> {
     let params = new HttpParams();
+
     if (filters?.zone) params = params.set('zone', filters.zone);
     if (filters?.type) params = params.set('type', filters.type);
     if (filters?.status) params = params.set('status', filters.status);
@@ -71,21 +113,18 @@ export class SensorServices {
     });
   }
 
-  // ✅ GET BY ID
   getById(id: string): Observable<Sensor> {
     return this.http.get<Sensor>(API_URLS.sensors.getSensorById + id, {
       withCredentials: true,
     });
   }
 
-  // ✅ UPDATE
   update(id: string, dto: UpdateSensorDto): Observable<Sensor> {
     return this.http.put<Sensor>(API_URLS.sensors.editSensor + id, dto, {
       withCredentials: true,
     });
   }
 
-  // ✅ UPDATE STATUS (PATCH /sensors/:id/status)
   updateStatus(id: string, status: SensorStatus): Observable<Sensor> {
     return this.http.patch<Sensor>(
       API_URLS.sensors.updateStatus(id),
@@ -94,10 +133,30 @@ export class SensorServices {
     );
   }
 
-  // ✅ DELETE
   delete(id: string): Observable<{ message: string }> {
-    return this.http.delete<{ message: string }>(API_URLS.sensors.deleteSensor + id, {
-      withCredentials: true,
-    });
+    return this.http.delete<{ message: string }>(
+      API_URLS.sensors.deleteSensor + id,
+      { withCredentials: true }
+    );
+  }
+
+  getHistoryByDevice(
+    deviceId: string,
+    sensorType?: string,
+    limit = 100
+  ): Observable<Reading[]> {
+    let params = new HttpParams().set('limit', String(limit));
+
+    if (sensorType) {
+      params = params.set('sensorType', sensorType);
+    }
+
+    return this.http.get<Reading[]>(
+      API_URLS.readings.historyByDevice(deviceId),
+      {
+        params,
+        withCredentials: true,
+      }
+    );
   }
 }
