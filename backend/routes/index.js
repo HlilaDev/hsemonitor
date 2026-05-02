@@ -23,8 +23,10 @@ const displayMessageRoutes = require("./displayMessageRoutes");
 const checklistRoutes = require("./checklistRoutes");
 const ppeAlertRoutes = require("./ppeAlertRoutes");
 const aiPredictionRoutes = require("./aiPredictionRoutes");
+const sessionLogRoutes = require("./sessionLogRoutes");
 
 
+router.use("/session-logs", sessionLogRoutes);
 router.use("/display-messages", displayMessageRoutes);
 router.use("/companies", companyRoutes);
 router.use("/users", userRoutes);

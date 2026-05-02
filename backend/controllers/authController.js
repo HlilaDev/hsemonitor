@@ -1,12 +1,19 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const crypto = require("crypto");
+
 const User = require("../models/userModel");
 const Company = require("../models/companyModel");
+const { createSessionLog } = require("../services/sessionLogService");
 
 // Helper: create JWT
-const signToken = (user) => {
+const signToken = (user, sessionId) => {
   return jwt.sign(
-    { id: user._id, role: user.role },
+    {
+      id: user._id,
+      role: user.role,
+      sessionId,
+    },
     process.env.JWT_SECRET,
     { expiresIn: process.env.JWT_EXPIRES_IN || "7d" }
   );
@@ -15,7 +22,7 @@ const signToken = (user) => {
 const cookieOptions = {
   httpOnly: true,
   sameSite: "lax",
-  secure: true,
+  secure: process.env.NODE_ENV === "production",
   maxAge: 7 * 24 * 60 * 60 * 1000,
 };
 
@@ -43,7 +50,6 @@ exports.register = async (req, res) => {
       return res.status(409).json({ message: "Email already in use" });
     }
 
-    // validate company if provided
     if (company) {
       const companyExists = await Company.findById(company);
       if (!companyExists) {
@@ -63,8 +69,18 @@ exports.register = async (req, res) => {
       company: company || null,
     });
 
-    const token = signToken(user);
+    const sessionId = crypto.randomUUID();
+    const token = signToken(user, sessionId);
+
     res.cookie("access_token", token, cookieOptions);
+
+    await createSessionLog({
+      req,
+      user,
+      status: "success",
+      reason: "Register success",
+      sessionId,
+    });
 
     const safeUser = await User.findById(user._id)
       .select("-password")
@@ -98,11 +114,22 @@ exports.login = async (req, res) => {
     }
 
     const ok = await bcrypt.compare(password, user.password);
+
     if (!ok) {
+      await createSessionLog({
+        req,
+        user,
+        status: "failed",
+        reason: "Wrong password",
+        sessionId: crypto.randomUUID(),
+      });
+
       return res.status(401).json({ message: "Invalid credentials" });
     }
 
-    const token = signToken(user);
+    const sessionId = crypto.randomUUID();
+    const token = signToken(user, sessionId);
+
     res.cookie("access_token", token, cookieOptions);
 
     const safeUser = {
@@ -117,6 +144,14 @@ exports.login = async (req, res) => {
       updatedAt: user.updatedAt,
     };
 
+    await createSessionLog({
+      req,
+      user,
+      status: "success",
+      reason: "Login success",
+      sessionId,
+    });
+
     return res.status(200).json({ user: safeUser });
   } catch (error) {
     return res.status(500).json({ message: error.message });
@@ -128,7 +163,7 @@ exports.logout = (req, res) => {
   res.clearCookie("access_token", {
     httpOnly: true,
     sameSite: "lax",
-    secure: false,
+    secure: process.env.NODE_ENV === "production",
   });
 
   return res.status(200).json({ message: "Logged out" });

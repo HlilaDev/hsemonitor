@@ -8,6 +8,11 @@
         linked to your account.
       </p>
     </div>
+
+    <button class="reload-btn" type="button" (click)="loadLogs()" [disabled]="loading()">
+      <i class="bi bi-arrow-clockwise" [class.spin]="loading()"></i>
+      Refresh
+    </button>
   </div>
 
   <div class="stats-grid">
@@ -78,15 +83,26 @@
     </div>
   </div>
 
+  <div *ngIf="errorMessage()" class="error-box">
+    <i class="bi bi-exclamation-triangle"></i>
+    <span>{{ errorMessage() }}</span>
+  </div>
+
   <div class="table-card">
     <div class="table-head">
       <div>
         <h3>Recent Sessions</h3>
-        <p>{{ filteredSessions().length }} log(s) found</p>
+        <p *ngIf="!loading()">{{ filteredSessions().length }} log(s) found</p>
+        <p *ngIf="loading()">Loading logs...</p>
       </div>
     </div>
 
-    <div class="table-wrap">
+    <div *ngIf="loading()" class="loading-state">
+      <i class="bi bi-arrow-repeat spin"></i>
+      <p>Loading session logs...</p>
+    </div>
+
+    <div class="table-wrap" *ngIf="!loading()">
       <table>
         <thead>
           <tr>
@@ -109,15 +125,17 @@
                 </div>
 
                 <div class="device-info">
-                  <strong>{{ session.deviceName }}</strong>
-                  <span *ngIf="session.current" class="current-badge">Current Session</span>
+                  <strong>{{ session.deviceName || 'Unknown Device' }}</strong>
+                  <span *ngIf="session.current" class="current-badge">
+                    Current Session
+                  </span>
                 </div>
               </div>
             </td>
 
-            <td>{{ session.browser }}</td>
-            <td>{{ session.ipAddress }}</td>
-            <td>{{ session.location }}</td>
+            <td>{{ session.browser || 'Unknown' }}</td>
+            <td>{{ session.ipAddress || 'Unknown IP' }}</td>
+            <td>{{ session.location || 'Unknown location' }}</td>
 
             <td>
               <span class="status-badge" [ngClass]="session.status">
@@ -126,8 +144,17 @@
               </span>
             </td>
 
-            <td>{{ session.loginAt }}</td>
-            <td>{{ session.lastActivity }}</td>
+            <td>{{ session.loginAt | date: 'medium' }}</td>
+
+            <td>
+              <ng-container *ngIf="session.status !== 'failed'; else failedReason">
+                {{ session.lastActivity | date: 'medium' }}
+              </ng-container>
+
+              <ng-template #failedReason>
+                {{ session.reason || 'Attempt blocked' }}
+              </ng-template>
+            </td>
           </tr>
 
           <tr *ngIf="filteredSessions().length === 0">

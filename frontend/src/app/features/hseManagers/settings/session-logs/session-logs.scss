@@ -51,6 +51,33 @@
   }
 }
 
+.reload-btn {
+  height: 42px;
+  padding: 0 16px;
+  border: 1px solid #dbe2ea;
+  border-radius: 14px;
+  background: #fff;
+  color: #2563eb;
+  font-size: 14px;
+  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: 0.2s ease;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.05);
+
+  &:hover {
+    background: #eff6ff;
+    border-color: #bfdbfe;
+  }
+
+  &:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+  }
+}
+
 /* stats */
 .stats-grid {
   display: grid;
@@ -112,7 +139,7 @@
   }
 }
 
-/* toolbar */
+/* cards */
 .toolbar-card,
 .table-card,
 .security-note {
@@ -123,6 +150,7 @@
   box-shadow: 0 14px 40px rgba(15, 23, 42, 0.06);
 }
 
+/* toolbar */
 .toolbar-card {
   padding: 18px;
   margin-bottom: 20px;
@@ -160,6 +188,10 @@
     color: #0f172a;
     transition: 0.2s ease;
 
+    &::placeholder {
+      color: #94a3b8;
+    }
+
     &:focus {
       border-color: #3b82f6;
       box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.12);
@@ -189,6 +221,21 @@
       box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.12);
     }
   }
+}
+
+/* error */
+.error-box {
+  margin-bottom: 20px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.22);
+  color: #dc2626;
+  font-size: 14px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 /* table */
@@ -234,6 +281,7 @@ table {
     color: #64748b;
     padding: 14px 16px;
     border-bottom: 1px solid #e2e8f0;
+    white-space: nowrap;
   }
 
   tbody td {
@@ -242,6 +290,7 @@ table {
     font-size: 14px;
     color: #334155;
     vertical-align: middle;
+    white-space: nowrap;
   }
 
   tbody tr:hover {
@@ -264,6 +313,7 @@ table {
   background: linear-gradient(135deg, #eff6ff, #dbeafe);
   color: #2563eb;
   font-size: 18px;
+  flex-shrink: 0;
 }
 
 .device-info {
@@ -274,6 +324,7 @@ table {
   strong {
     color: #0f172a;
     font-size: 14px;
+    font-weight: 800;
   }
 }
 
@@ -320,14 +371,15 @@ table {
   }
 }
 
-.empty-state {
-  padding: 26px 12px;
+.empty-state,
+.loading-state {
+  padding: 36px 12px;
   text-align: center;
   color: #64748b;
 
   i {
     display: block;
-    font-size: 28px;
+    font-size: 30px;
     margin-bottom: 10px;
     color: #94a3b8;
   }
@@ -335,6 +387,22 @@ table {
   p {
     margin: 0;
     font-size: 14px;
+  }
+}
+
+.loading-state {
+  i {
+    color: #2563eb;
+  }
+}
+
+.spin {
+  animation: spin 0.9s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
   }
 }
 
@@ -384,6 +452,15 @@ table {
 @media (max-width: 768px) {
   .logs-page {
     padding: 16px;
+  }
+
+  .page-header {
+    flex-direction: column;
+  }
+
+  .reload-btn {
+    width: 100%;
+    justify-content: center;
   }
 
   .stats-grid {

@@ -13,6 +13,10 @@ export const API_URLS ={
     me:`${BASE_API_URL}/auth/me`
     // verifyEmail:`${BASE_API_URL}/auth/verify-email`,
     },
+    sessionLogs: {
+  list: `${BASE_API_URL}/session-logs`,
+  me: `${BASE_API_URL}/session-logs/me`,
+},
 
 
       companies: `${BASE_API_URL}/companies`,
