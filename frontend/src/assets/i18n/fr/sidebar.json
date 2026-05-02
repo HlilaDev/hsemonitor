@@ -5,7 +5,8 @@
       "MANAGER": "MENU MANAGER",
       "AGENT": "MENU AGENT",
       "MANAGER_MAIN":"Surveillance & Alerts",
-      "HSE_MANAGEMENT":"Gestion HSE"
+      "HSE_MANAGEMENT":"Gestion HSE",
+      "HSE_MANAGEMENT_RESSOURCES":"Organisation & Ressources"
       
     },
     "MENU": {
