@@ -3,7 +3,10 @@
     "SECTIONS": {
       "ADMIN": "MENU ADMIN",
       "MANAGER": "MENU MANAGER",
-      "AGENT": "MENU AGENT"
+      "AGENT": "MENU AGENT",
+      "MANAGER_MAIN":"Surveillance & Alerts",
+      "HSE_MANAGEMENT":"Gestion HSE"
+      
     },
     "MENU": {
       "DASHBOARD": "Tableau de bord",
