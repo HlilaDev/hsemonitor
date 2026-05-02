@@ -1,19 +1,15 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, signal } from '@angular/core';
+import { Component, OnInit, computed, inject, signal } from '@angular/core';
+import { RouterLink } from '@angular/router';
 
-type IncidentSeverity = 'low' | 'medium' | 'high' | 'critical';
-type IncidentStatus = 'open' | 'investigating' | 'resolved';
+import {
+  IncidentEvent,
+  IncidentEventServices,
+  IncidentSeverity,
+  IncidentStatus,
+} from '../../../../core/services/incidentEvents/incident-event-services';
 
-interface IncidentItem {
-  id: string;
-  title: string;
-  zone: string;
-  category: string;
-  severity: IncidentSeverity;
-  status: IncidentStatus;
-  reportedAt: string;
-  assignedTo: string;
-}
+type IncidentFilter = 'all' | IncidentStatus;
 
 interface ZoneRisk {
   zone: string;
@@ -30,121 +26,156 @@ interface ActivityItem {
 @Component({
   selector: 'app-incidents-overview',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: './incidents-overview.html',
   styleUrl: './incidents-overview.scss',
 })
-export class IncidentsOverview {
-  selectedFilter = signal<'all' | IncidentStatus>('all');
+export class IncidentsOverview implements OnInit {
+  private incidentService = inject(IncidentEventServices);
 
-  incidents = signal<IncidentItem[]>([
-    {
-      id: 'INC-2026-001',
-      title: 'Helmet not worn in production line',
-      zone: 'Production Zone A',
-      category: 'PPE Violation',
-      severity: 'high',
-      status: 'open',
-      reportedAt: '2026-03-08 08:12',
-      assignedTo: 'HSE Agent 01',
-    },
-    {
-      id: 'INC-2026-002',
-      title: 'Gas level alert detected',
-      zone: 'Chemical Storage',
-      category: 'Sensor Alert',
-      severity: 'critical',
-      status: 'investigating',
-      reportedAt: '2026-03-08 07:45',
-      assignedTo: 'HSE Manager',
-    },
-    {
-      id: 'INC-2026-003',
-      title: 'Worker entered restricted area',
-      zone: 'Restricted Access Gate',
-      category: 'Unauthorized Access',
-      severity: 'medium',
-      status: 'resolved',
-      reportedAt: '2026-03-08 06:55',
-      assignedTo: 'Security Team',
-    },
-    {
-      id: 'INC-2026-004',
-      title: 'Smoke sensor abnormal reading',
-      zone: 'Workshop B',
-      category: 'Fire Risk',
-      severity: 'high',
-      status: 'investigating',
-      reportedAt: '2026-03-08 05:40',
-      assignedTo: 'Maintenance Team',
-    },
-    {
-      id: 'INC-2026-005',
-      title: 'Safety vest missing',
-      zone: 'Loading Area',
-      category: 'PPE Violation',
-      severity: 'low',
-      status: 'open',
-      reportedAt: '2026-03-08 04:20',
-      assignedTo: 'HSE Agent 02',
-    },
-  ]);
+  selectedFilter = signal<IncidentFilter>('all');
 
-  riskZones = signal<ZoneRisk[]>([
-    { zone: 'Chemical Storage', incidents: 9, risk: 'critical' },
-    { zone: 'Production Zone A', incidents: 6, risk: 'warning' },
-    { zone: 'Loading Area', incidents: 4, risk: 'warning' },
-    { zone: 'Workshop B', incidents: 2, risk: 'stable' },
-  ]);
+  isLoading = signal(false);
+  error = signal<string | null>(null);
 
-  activities = signal<ActivityItem[]>([
-    { time: '08:12', text: 'New PPE violation reported in Production Zone A', type: 'create' },
-    { time: '07:50', text: 'Gas alert assigned to HSE Manager', type: 'update' },
-    { time: '07:02', text: 'Restricted access incident resolved', type: 'resolve' },
-    { time: '06:10', text: 'Workshop smoke alert updated by Maintenance Team', type: 'update' },
-  ]);
+  incidents = signal<IncidentEvent[]>([]);
 
   filteredIncidents = computed(() => {
     const filter = this.selectedFilter();
-    if (filter === 'all') return this.incidents();
-    return this.incidents().filter((i) => i.status === filter);
+
+    if (filter === 'all') {
+      return this.incidents();
+    }
+
+    return this.incidents().filter((incident) => incident.status === filter);
   });
 
   totalIncidents = computed(() => this.incidents().length);
-  openCount = computed(() => this.incidents().filter((i) => i.status === 'open').length);
-  investigatingCount = computed(() => this.incidents().filter((i) => i.status === 'investigating').length);
-  resolvedCount = computed(() => this.incidents().filter((i) => i.status === 'resolved').length);
-  criticalCount = computed(() => this.incidents().filter((i) => i.severity === 'critical').length);
 
-  setFilter(filter: 'all' | IncidentStatus): void {
+  openCount = computed(() =>
+    this.incidents().filter((incident) => incident.status === 'open').length
+  );
+
+  investigatingCount = computed(() =>
+    this.incidents().filter((incident) =>
+      ['reviewed', 'in_progress'].includes(incident.status)
+    ).length
+  );
+
+  resolvedCount = computed(() =>
+    this.incidents().filter((incident) =>
+      ['closed', 'false_positive'].includes(incident.status)
+    ).length
+  );
+
+  criticalCount = computed(() =>
+    this.incidents().filter((incident) => incident.severity === 'critical')
+      .length
+  );
+
+riskZones = computed<ZoneRisk[]>(() => {
+  const map = new Map<string, number>();
+
+  for (const incident of this.incidents()) {
+    const zone = this.getZoneName(incident.zone);
+    map.set(zone, (map.get(zone) || 0) + 1);
+  }
+
+  return Array.from(map.entries())
+    .map(([zone, incidents]): ZoneRisk => {
+      const risk: ZoneRisk['risk'] =
+        incidents >= 5 ? 'critical' : incidents >= 2 ? 'warning' : 'stable';
+
+      return {
+        zone,
+        incidents,
+        risk,
+      };
+    })
+    .sort((a, b) => b.incidents - a.incidents)
+    .slice(0, 5);
+});
+
+  activities = computed<ActivityItem[]>(() => {
+    return this.incidents()
+      .slice(0, 6)
+      .map((incident) => {
+        const status = incident.status;
+
+        return {
+          time: this.formatTime(incident.updatedAt || incident.createdAt),
+          text: `${incident.title} — ${this.statusLabel(status)}`,
+          type:
+            status === 'closed' || status === 'false_positive'
+              ? 'resolve'
+              : status === 'open'
+              ? 'create'
+              : 'update',
+        };
+      });
+  });
+
+  ngOnInit(): void {
+    this.loadIncidents();
+  }
+
+  loadIncidents(): void {
+    this.isLoading.set(true);
+    this.error.set(null);
+
+    this.incidentService
+      .listIncidentEvents({
+        page: 1,
+        limit: 50,
+        sort: '-createdAt',
+      })
+      .subscribe({
+        next: (res) => {
+          this.incidents.set(res.items || []);
+          this.isLoading.set(false);
+        },
+        error: (err) => {
+          this.error.set(
+            err?.error?.message || 'Impossible de charger les incidents.'
+          );
+          this.isLoading.set(false);
+        },
+      });
+  }
+
+  setFilter(filter: IncidentFilter): void {
     this.selectedFilter.set(filter);
   }
 
-  severityLabel(value: IncidentSeverity): string {
+  severityLabel(value?: IncidentSeverity): string {
     switch (value) {
       case 'low':
-        return 'Low';
+        return 'Faible';
       case 'medium':
-        return 'Medium';
+        return 'Moyenne';
       case 'high':
-        return 'High';
+        return 'Élevée';
       case 'critical':
-        return 'Critical';
+        return 'Critique';
       default:
-        return value;
+        return 'Non définie';
     }
   }
 
-  statusLabel(value: IncidentStatus): string {
+  statusLabel(value?: IncidentStatus): string {
     switch (value) {
       case 'open':
-        return 'Open';
-      case 'investigating':
-        return 'Investigating';
-      case 'resolved':
-        return 'Resolved';
+        return 'Ouvert';
+      case 'reviewed':
+        return 'Révisé';
+      case 'in_progress':
+        return 'En cours';
+      case 'closed':
+        return 'Clôturé';
+      case 'false_positive':
+        return 'Faux positif';
       default:
-        return value;
+        return 'Inconnu';
     }
   }
 
@@ -153,11 +184,79 @@ export class IncidentsOverview {
       case 'stable':
         return 'Stable';
       case 'warning':
-        return 'Warning';
+        return 'Attention';
       case 'critical':
-        return 'Critical';
+        return 'Critique';
       default:
         return value;
     }
+  }
+
+  typeLabel(type?: string): string {
+    switch (type) {
+      case 'FALL':
+        return 'Chute';
+      case 'INJURY':
+        return 'Blessure';
+      case 'FIRE_ALERT':
+        return 'Incendie';
+      case 'LEAK':
+        return 'Fuite';
+      case 'WORK_ACCIDENT':
+        return 'Accident de travail';
+      case 'NO_HELMET':
+        return 'Casque absent';
+      case 'NO_VEST':
+        return 'Gilet absent';
+      case 'GAS_ALERT':
+        return 'Alerte gaz';
+      case 'TEMP_ALERT':
+        return 'Alerte température';
+      case 'MANUAL_REPORT':
+        return 'Signalement manuel';
+      default:
+        return type || 'Autre';
+    }
+  }
+
+  getZoneName(zone: any): string {
+    if (!zone) return 'Zone non définie';
+    if (typeof zone === 'string') return zone;
+    return zone.name || zone.label || 'Zone non définie';
+  }
+
+  getReportedBy(incident: IncidentEvent): string {
+    const user = incident.reportedBy;
+
+    if (!user) return 'Non assigné';
+    if (typeof user === 'string') return user;
+
+    return (
+      user.fullName ||
+      `${user.firstName || ''} ${user.lastName || ''}`.trim() ||
+      user.email ||
+      'Non assigné'
+    );
+  }
+
+  formatDate(value?: string): string {
+    if (!value) return '—';
+
+    return new Date(value).toLocaleString('fr-FR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+  }
+
+  formatTime(value?: string): string {
+    if (!value) return '—';
+
+    return new Date(value).toLocaleTimeString('fr-FR', {
+      hour: '2-digit',
+      minute: '2-digit',
+    });
   }
 }

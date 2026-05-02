@@ -8,6 +8,13 @@ export const INCIDENTS_ROUTES: Routes = [
       import('./incidents-overview/incidents-overview')
         .then(m => m.IncidentsOverview),
   },
+    {
+    path: 'add',
+   
+    loadComponent: () =>
+      import('./add-incident/add-incident')
+        .then(m => m.AddIncident),
+  },
   {
     path: ':id',
     loadComponent: () =>

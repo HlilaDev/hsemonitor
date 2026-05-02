@@ -33,7 +33,7 @@ router.use("/zones", zoneRoutes);
 router.use("/devices", deviceRoutes);
 router.use("/inventory", inventoryRoutes);
 router.use("/observations", observationRoutes);
-router.use("/incidentEvents", incidentEventRoutes);
+router.use("/incident-events", incidentEventRoutes);
 router.use("/reports", reportRoutes);
 router.use("/employees", employeeRoutes);
 router.use("/trainings", trainingRoutes);

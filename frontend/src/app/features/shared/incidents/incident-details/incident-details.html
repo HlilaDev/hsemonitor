@@ -4,277 +4,378 @@
       <div class="kicker">HSE Incident</div>
       <h1 class="title">Incident Details</h1>
       <p class="subtitle">
-        Detailed incident record with severity, response timeline, evidence and corrective actions.
+        Dossier détaillé de l’incident : gravité, zone, preuves, timeline et actions HSE.
       </p>
     </div>
 
     <div class="header-actions">
-      <button class="btn ghost" type="button">
+      <button class="btn ghost" type="button" (click)="goBack()">
         <i class="bi bi-arrow-left"></i>
         Back
       </button>
 
-      <button class="btn ghost" type="button">
-        <i class="bi bi-pencil"></i>
-        Edit
+      <button
+        class="btn ghost"
+        type="button"
+        *ngIf="incident()?.status === 'open'"
+        (click)="reviewIncident()"
+        [disabled]="isReviewing()"
+      >
+        <i class="bi bi-eye"></i>
+        {{ isReviewing() ? 'Review...' : 'Review' }}
       </button>
 
-      <button class="btn primary" type="button">
+      <button
+        class="btn primary"
+        type="button"
+        *ngIf="incident()?.status !== 'closed' && incident()?.status !== 'false_positive'"
+        (click)="resolveIncident()"
+        [disabled]="isResolving()"
+      >
         <i class="bi bi-shield-check"></i>
-        Resolve Incident
+        {{ isResolving() ? 'Resolving...' : 'Resolve Incident' }}
       </button>
     </div>
   </div>
 
-  <div class="hero-card">
-    <div class="hero-left">
-      <div class="incident-top">
-        <div class="incident-id">{{ incident().id }}</div>
-
-        <div class="badges">
-          <span
-            class="badge severity"
-            [class.low]="incident().severity === 'low'"
-            [class.medium]="incident().severity === 'medium'"
-            [class.high]="incident().severity === 'high'"
-            [class.critical]="incident().severity === 'critical'"
-          >
-            {{ severityLabel() }}
-          </span>
-
-          <span
-            class="badge status"
-            [class.open]="incident().status === 'open'"
-            [class.investigating]="incident().status === 'investigating'"
-            [class.resolved]="incident().status === 'resolved'"
-          >
-            {{ statusLabel() }}
-          </span>
-        </div>
-      </div>
-
-      <h2 class="incident-title">{{ incident().title }}</h2>
-      <p class="incident-desc">{{ incident().description }}</p>
-
-      <div class="meta-row">
-        <span><i class="bi bi-tag"></i> {{ incident().category }}</span>
-        <span><i class="bi bi-geo-alt"></i> {{ incident().zone }}</span>
-        <span><i class="bi bi-pin-map"></i> {{ incident().exactLocation }}</span>
-        <span><i class="bi bi-clock"></i> {{ incident().reportedAt }}</span>
-      </div>
-    </div>
-
-    <div class="hero-right">
-      <div class="risk-card">
-        <div class="risk-label">Risk Level</div>
-        <div class="risk-value">{{ severityLabel() }}</div>
-
-        <div class="risk-bar">
-          <div class="risk-fill" [style.width.%]="severityPercent()"></div>
-        </div>
-
-        <div class="risk-footer">
-          <span>Response time</span>
-          <strong>{{ incident().responseTime }}</strong>
-        </div>
-      </div>
-    </div>
+  <div class="alert error" *ngIf="error()">
+    <i class="bi bi-exclamation-triangle"></i>
+    {{ error() }}
   </div>
 
-  <div class="content-grid">
-    <div class="main-column">
-      <div class="card">
-        <div class="card-header">
-          <div>
-            <h3>Incident Overview</h3>
-            <p>Main incident information and operational assignment</p>
+  <div class="loading-card" *ngIf="isLoading()">
+    <div class="loader"></div>
+    <p>Chargement des détails de l’incident...</p>
+  </div>
+
+  <ng-container *ngIf="!isLoading() && incident() as inc">
+    <div class="hero-card">
+      <div class="hero-left">
+        <div class="incident-top">
+          <div class="incident-id">
+            INC-{{ inc._id.slice(-6).toUpperCase() }}
+          </div>
+
+          <div class="badges">
+            <span class="badge severity" [ngClass]="inc.severity">
+              {{ severityLabel(inc.severity) }}
+            </span>
+
+            <span class="badge status" [ngClass]="inc.status">
+              {{ statusLabel(inc.status) }}
+            </span>
           </div>
         </div>
 
-        <div class="details-grid">
-          <div class="detail-item">
-            <span class="label">Detected by</span>
-            <strong>{{ incident().detectedBy }}</strong>
-          </div>
+        <h2 class="incident-title">{{ inc.title }}</h2>
 
-          <div class="detail-item">
-            <span class="label">Assigned to</span>
-            <strong>{{ incident().assignedTo }}</strong>
-          </div>
+        <p class="incident-desc">
+          {{ inc.description || 'Aucune description fournie.' }}
+        </p>
 
-          <div class="detail-item">
-            <span class="label">Supervisor</span>
-            <strong>{{ incident().supervisor }}</strong>
-          </div>
+        <div class="meta-row">
+          <span>
+            <i class="bi bi-tag"></i>
+            {{ typeLabel(inc.type) }}
+          </span>
 
-          <div class="detail-item">
-            <span class="label">Workers involved</span>
-            <strong>{{ incident().workersInvolved }}</strong>
-          </div>
+          <span>
+            <i class="bi bi-geo-alt"></i>
+            {{ getZoneName(inc.zone) }}
+          </span>
 
-          <div class="detail-item">
-            <span class="label">Related device</span>
-            <strong>{{ incident().relatedDevice }}</strong>
-          </div>
+          <span>
+            <i class="bi bi-broadcast"></i>
+            {{ sourceLabel(inc.sourceType) }}
+          </span>
 
-          <div class="detail-item">
-            <span class="label">Related sensor / model</span>
-            <strong>{{ incident().relatedSensor }}</strong>
-          </div>
-
-          <div class="detail-item wide">
-            <span class="label">Last update</span>
-            <strong>{{ incident().lastUpdate }}</strong>
-          </div>
+          <span>
+            <i class="bi bi-clock"></i>
+            {{ formatDate(inc.createdAt) }}
+          </span>
         </div>
       </div>
 
-      <div class="card">
-        <div class="card-header">
-          <div>
-            <h3>Investigation Timeline</h3>
-            <p>Chronological log of incident response and follow-up actions</p>
+      <div class="hero-right">
+        <div class="risk-card">
+          <div class="risk-label">Risk Level</div>
+          <div class="risk-value">{{ severityLabel(inc.severity) }}</div>
+
+          <div class="risk-bar">
+            <div
+              class="risk-fill"
+              [style.width.%]="severityPercent(inc.severity)"
+            ></div>
+          </div>
+
+          <div class="risk-footer">
+            <span>Status</span>
+            <strong>{{ statusLabel(inc.status) }}</strong>
           </div>
         </div>
+      </div>
+    </div>
 
-        <div class="timeline">
-          @for (item of timeline(); track item.id) {
-            <div class="timeline-item">
-              <div class="timeline-icon" [class.report]="item.type === 'report'" [class.assign]="item.type === 'assign'" [class.update]="item.type === 'update'" [class.action]="item.type === 'action'" [class.resolved]="item.type === 'resolved'">
-                <i [class]="timelineIcon(item.type)"></i>
-              </div>
-
-              <div class="timeline-content">
-                <div class="timeline-head">
-                  <strong>{{ item.title }}</strong>
-                  <span>{{ item.time }}</span>
-                </div>
-                <p>{{ item.description }}</p>
-              </div>
+    <div class="content-grid">
+      <div class="main-column">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h3>Incident Overview</h3>
+              <p>Informations principales et contexte opérationnel</p>
             </div>
-          }
-        </div>
-      </div>
+          </div>
 
-      <div class="card">
-        <div class="card-header">
-          <div>
-            <h3>Recommended Actions</h3>
-            <p>Suggested safety improvements after incident review</p>
+          <div class="details-grid">
+            <div class="detail-item">
+              <span class="label">Source</span>
+              <strong>{{ sourceLabel(inc.sourceType) }}</strong>
+            </div>
+
+            <div class="detail-item">
+              <span class="label">Type</span>
+              <strong>{{ typeLabel(inc.type) }}</strong>
+            </div>
+
+            <div class="detail-item">
+              <span class="label">Zone</span>
+              <strong>{{ getZoneName(inc.zone) }}</strong>
+            </div>
+
+            <div class="detail-item">
+              <span class="label">Employé concerné</span>
+              <strong>{{ getEmployeeName(inc.employee) }}</strong>
+            </div>
+
+            <div class="detail-item">
+              <span class="label">Signalé par</span>
+              <strong>{{ getReportedBy(inc) }}</strong>
+            </div>
+
+            <div class="detail-item">
+              <span class="label">Priorité</span>
+              <strong>{{ priorityLabel(inc.priority) }}</strong>
+            </div>
+
+            <div class="detail-item">
+              <span class="label">Device lié</span>
+              <strong>{{ getDeviceName(inc.device) }}</strong>
+            </div>
+
+            <div class="detail-item">
+              <span class="label">Lecture liée</span>
+              <strong>{{ getReadingLabel(inc.reading) }}</strong>
+            </div>
+
+            <div class="detail-item wide">
+              <span class="label">Dernière mise à jour</span>
+              <strong>{{ formatDate(inc.updatedAt) }}</strong>
+            </div>
           </div>
         </div>
 
-        <div class="recommendations">
-          @for (rec of recommendations(); track rec) {
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h3>Investigation Timeline</h3>
+              <p>Chronologie des événements liés à cet incident</p>
+            </div>
+          </div>
+
+          <div class="timeline">
+            @for (item of timeline(); track item.id) {
+              <div class="timeline-item">
+                <div
+                  class="timeline-icon"
+                  [class.report]="item.type === 'report'"
+                  [class.update]="item.type === 'update'"
+                  [class.resolved]="item.type === 'resolve'"
+                  [class.assign]="item.type === 'review'"
+                >
+                  <i [class]="timelineIcon(item.type)"></i>
+                </div>
+
+                <div class="timeline-content">
+                  <div class="timeline-head">
+                    <strong>{{ item.title }}</strong>
+                    <span>{{ item.time }}</span>
+                  </div>
+                  <p>{{ item.description }}</p>
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+
+        <div class="card" *ngIf="recommendations().length > 0">
+          <div class="card-header">
+            <div>
+              <h3>Recommended Actions</h3>
+              <p>Recommandations HSE selon le type d’incident</p>
+            </div>
+          </div>
+
+          <div class="recommendations">
+            @for (rec of recommendations(); track rec) {
+              <div class="rec-item">
+                <i class="bi bi-check2-circle"></i>
+                <span>{{ rec }}</span>
+              </div>
+            }
+          </div>
+        </div>
+
+        <div class="card" *ngIf="inc.resolutionNote || inc.falsePositiveReason">
+          <div class="card-header">
+            <div>
+              <h3>Resolution</h3>
+              <p>Note de clôture ou justification du faux positif</p>
+            </div>
+          </div>
+
+          <div class="recommendations">
             <div class="rec-item">
               <i class="bi bi-check2-circle"></i>
-              <span>{{ rec }}</span>
+              <span>{{ inc.resolutionNote || inc.falsePositiveReason }}</span>
             </div>
-          }
+          </div>
+        </div>
+      </div>
+
+      <div class="side-column">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h3>Evidence</h3>
+              <p>Images, vidéos et preuves collectées</p>
+            </div>
+          </div>
+
+          <div class="evidence-list" *ngIf="evidences().length > 0">
+            @for (file of evidences(); track file.id) {
+              <div class="evidence-item">
+                <div class="evidence-icon">
+                  <i [class]="evidenceIcon(file.type)"></i>
+                </div>
+
+                <div class="evidence-body">
+                  <div class="evidence-name">{{ file.name }}</div>
+                  <div class="evidence-meta">{{ file.type }} • {{ file.size }}</div>
+                </div>
+
+                <a
+                  class="icon-btn"
+                  *ngIf="file.url"
+                  [href]="file.url"
+                  target="_blank"
+                  rel="noopener"
+                >
+                  <i class="bi bi-box-arrow-up-right"></i>
+                </a>
+              </div>
+            }
+          </div>
+
+          <div class="empty-state small" *ngIf="evidences().length === 0">
+            <p>Aucune preuve attachée.</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h3>Quick Status</h3>
+              <p>Résumé opérationnel de l’incident</p>
+            </div>
+          </div>
+
+          <div class="summary-list">
+            <div class="summary-row">
+              <span>Incident ID</span>
+              <strong>INC-{{ inc._id.slice(-6).toUpperCase() }}</strong>
+            </div>
+
+            <div class="summary-row">
+              <span>Status</span>
+              <strong>{{ statusLabel(inc.status) }}</strong>
+            </div>
+
+            <div class="summary-row">
+              <span>Severity</span>
+              <strong>{{ severityLabel(inc.severity) }}</strong>
+            </div>
+
+            <div class="summary-row">
+              <span>Priority</span>
+              <strong>{{ priorityLabel(inc.priority) }}</strong>
+            </div>
+
+            <div class="summary-row">
+              <span>Zone</span>
+              <strong>{{ getZoneName(inc.zone) }}</strong>
+            </div>
+
+            <div class="summary-row">
+              <span>Created</span>
+              <strong>{{ formatDate(inc.createdAt) }}</strong>
+            </div>
+
+            <div class="summary-row">
+              <span>Reviewed by</span>
+              <strong>{{ getReviewedBy(inc) }}</strong>
+            </div>
+
+            <div class="summary-row">
+              <span>Resolved by</span>
+              <strong>{{ getResolvedBy(inc) }}</strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h3>Actions</h3>
+              <p>Raccourcis opérationnels</p>
+            </div>
+          </div>
+
+          <div class="action-list">
+            <button
+              class="action-btn"
+              type="button"
+              *ngIf="inc.status === 'open'"
+              (click)="reviewIncident()"
+              [disabled]="isReviewing()"
+            >
+              <i class="bi bi-eye"></i>
+              Mark as reviewed
+            </button>
+
+            <button
+              class="action-btn"
+              type="button"
+              *ngIf="inc.status !== 'closed' && inc.status !== 'false_positive'"
+              (click)="resolveIncident()"
+              [disabled]="isResolving()"
+            >
+              <i class="bi bi-check2-circle"></i>
+              Close incident
+            </button>
+
+            <button
+              class="action-btn danger"
+              type="button"
+              *ngIf="inc.status !== 'closed' && inc.status !== 'false_positive'"
+              (click)="markAsFalsePositive()"
+              [disabled]="isResolving()"
+            >
+              <i class="bi bi-x-octagon"></i>
+              Mark false positive
+            </button>
+          </div>
         </div>
       </div>
     </div>
-
-    <div class="side-column">
-      <div class="card">
-        <div class="card-header">
-          <div>
-            <h3>Evidence</h3>
-            <p>Attached files and collected proof</p>
-          </div>
-        </div>
-
-        <div class="evidence-list">
-          @for (file of evidences(); track file.id) {
-            <div class="evidence-item">
-              <div class="evidence-icon">
-                <i [class]="evidenceIcon(file.type)"></i>
-              </div>
-
-              <div class="evidence-body">
-                <div class="evidence-name">{{ file.name }}</div>
-                <div class="evidence-meta">{{ file.type }} • {{ file.size }}</div>
-              </div>
-
-              <button class="icon-btn" type="button">
-                <i class="bi bi-download"></i>
-              </button>
-            </div>
-          }
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="card-header">
-          <div>
-            <h3>Quick Status</h3>
-            <p>Operational incident summary</p>
-          </div>
-        </div>
-
-        <div class="summary-list">
-          <div class="summary-row">
-            <span>Incident ID</span>
-            <strong>{{ incident().id }}</strong>
-          </div>
-
-          <div class="summary-row">
-            <span>Status</span>
-            <strong>{{ statusLabel() }}</strong>
-          </div>
-
-          <div class="summary-row">
-            <span>Severity</span>
-            <strong>{{ severityLabel() }}</strong>
-          </div>
-
-          <div class="summary-row">
-            <span>Zone</span>
-            <strong>{{ incident().zone }}</strong>
-          </div>
-
-          <div class="summary-row">
-            <span>Assigned agent</span>
-            <strong>{{ incident().assignedTo }}</strong>
-          </div>
-
-          <div class="summary-row">
-            <span>Response time</span>
-            <strong>{{ incident().responseTime }}</strong>
-          </div>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="card-header">
-          <div>
-            <h3>Actions</h3>
-            <p>Fast operational shortcuts</p>
-          </div>
-        </div>
-
-        <div class="action-list">
-          <button class="action-btn" type="button">
-            <i class="bi bi-person-plus"></i>
-            Reassign Incident
-          </button>
-
-          <button class="action-btn" type="button">
-            <i class="bi bi-file-earmark-text"></i>
-            Export Report
-          </button>
-
-          <button class="action-btn" type="button">
-            <i class="bi bi-camera-video"></i>
-            View Camera Capture
-          </button>
-
-          <button class="action-btn danger" type="button">
-            <i class="bi bi-exclamation-triangle"></i>
-            Escalate
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
+  </ng-container>
 </div>

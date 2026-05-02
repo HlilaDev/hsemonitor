@@ -1,0 +1,264 @@
+<div class="page">
+  <div class="hero">
+    <div>
+      <div class="kicker">Incident manuel</div>
+      <h1 class="title">Ajouter un incident</h1>
+      <p class="subtitle">
+        Déclarez un incident observé sur le terrain : chute, blessure, incendie,
+        fuite signalée ou accident de travail.
+      </p>
+    </div>
+
+    <div class="hero-actions">
+      <button class="btn ghost" type="button" routerLink="/manager/incidents">
+        <i class="bi bi-arrow-left"></i>
+        Retour
+      </button>
+
+      <button
+        class="btn primary"
+        type="button"
+        (click)="submit()"
+        [disabled]="isSubmitting()"
+      >
+        <i class="bi bi-check2-circle"></i>
+        {{ isSubmitting() ? 'Création...' : 'Créer incident' }}
+      </button>
+    </div>
+  </div>
+
+  <form class="form-grid" [formGroup]="form" (ngSubmit)="submit()">
+    <div class="card main-card">
+      <div class="card-header">
+        <div>
+          <h2>Informations de l’incident</h2>
+          <p>Décrivez clairement l’événement et son contexte.</p>
+        </div>
+      </div>
+
+      <div class="fields-grid one">
+        <div class="field">
+          <label>Titre de l’incident <b>*</b></label>
+          <input
+            type="text"
+            formControlName="title"
+            placeholder="Ex: Chute d’un employé dans la zone production"
+          />
+
+          <small class="error-text" *ngIf="fieldInvalid('title')">
+            Le titre est obligatoire.
+          </small>
+        </div>
+
+        <div class="field">
+          <label>Description <b>*</b></label>
+          <textarea
+            rows="6"
+            formControlName="description"
+            placeholder="Décrivez ce qui s’est passé, les causes possibles, les conséquences et les premières actions réalisées..."
+          ></textarea>
+
+          <small class="error-text" *ngIf="fieldInvalid('description')">
+            La description est obligatoire.
+          </small>
+        </div>
+      </div>
+
+      <div class="section">
+        <label class="section-label">Type d’incident</label>
+
+        <div class="type-grid">
+          @for (item of incidentTypes; track item.value) {
+            <button
+              type="button"
+              class="type-option"
+              [class.active]="form.controls.type.value === item.value"
+              (click)="selectType(item.value)"
+            >
+              <span class="type-icon" [ngClass]="item.severity">
+                <i class="bi" [ngClass]="item.icon"></i>
+              </span>
+
+              <span>
+                <strong>{{ item.label }}</strong>
+                <small>{{ item.value }}</small>
+              </span>
+            </button>
+          }
+        </div>
+      </div>
+
+      <div class="fields-grid">
+        <div class="field">
+          <label>Zone concernée <b>*</b></label>
+          <select formControlName="zone">
+            <option value="">Sélectionner une zone</option>
+
+            @for (zone of zones(); track zone._id) {
+              <option [value]="zone._id">{{ getZoneName(zone) }}</option>
+            }
+          </select>
+
+          <small *ngIf="isLoadingZones()">Chargement des zones...</small>
+          <small class="error-text" *ngIf="fieldInvalid('zone')">
+            La zone est obligatoire.
+          </small>
+        </div>
+
+        <div class="field">
+          <label>Employé concerné</label>
+          <select formControlName="employee" [disabled]="!form.controls.zone.value">
+            <option value="">
+              {{
+                form.controls.zone.value
+                  ? 'Aucun employé sélectionné'
+                  : 'Choisir une zone d’abord'
+              }}
+            </option>
+
+            @for (employee of employees(); track employee._id) {
+              <option [value]="employee._id">
+                {{ getEmployeeName(employee) }} — {{ getEmployeeInfo(employee) }}
+              </option>
+            }
+          </select>
+
+          <small *ngIf="isLoadingEmployees()">Chargement des employés...</small>
+          <small
+            *ngIf="
+              form.controls.zone.value &&
+              !isLoadingEmployees() &&
+              employees().length === 0
+            "
+          >
+            Aucun employé trouvé dans cette zone.
+          </small>
+        </div>
+
+        <div class="field">
+          <label>Gravité</label>
+          <select formControlName="severity">
+            <option value="low">Faible</option>
+            <option value="medium">Moyenne</option>
+            <option value="high">Élevée</option>
+            <option value="critical">Critique</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>Priorité</label>
+          <select formControlName="priority">
+            <option value="low">Faible</option>
+            <option value="normal">Normale</option>
+            <option value="high">Haute</option>
+            <option value="urgent">Urgente</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-column">
+      <div class="card preview-card">
+        <div class="card-header">
+          <div>
+            <h2>Aperçu</h2>
+            <p>Résumé du signalement</p>
+          </div>
+        </div>
+
+        <div class="preview-box">
+          <div class="preview-icon" [ngClass]="form.controls.severity.value">
+            <i class="bi bi-exclamation-octagon"></i>
+          </div>
+
+          <div class="preview-content">
+            <div class="incident-id">NOUVEL INCIDENT</div>
+            <h3>
+              {{
+                form.controls.title.value ||
+                  selectedType()?.label ||
+                  'Incident manuel'
+              }}
+            </h3>
+
+            <div class="badges">
+              <span class="badge severity" [ngClass]="form.controls.severity.value">
+                {{ form.controls.severity.value }}
+              </span>
+
+              <span class="badge priority">
+                {{ form.controls.priority.value }}
+              </span>
+
+              <span class="badge status">open</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="preview-meta">
+          <div>
+            <span>Source</span>
+            <strong>Manuel</strong>
+          </div>
+
+          <div>
+            <span>Date</span>
+            <strong>{{ today | date:'dd/MM/yyyy HH:mm' }}</strong>
+          </div>
+        </div>
+      </div>
+
+      <div class="card upload-card">
+        <div class="card-header">
+          <div>
+            <h2>Images</h2>
+            <p>Ajoutez plusieurs preuves visuelles.</p>
+          </div>
+        </div>
+
+        <label class="upload-box">
+          <input
+            type="file"
+            multiple
+            accept="image/*"
+            (change)="onImagesSelected($event)"
+          />
+
+          <i class="bi bi-cloud-arrow-up"></i>
+          <strong>Importer des images</strong>
+          <span>PNG, JPG, JPEG — maximum 6 images</span>
+        </label>
+
+        <div class="image-grid" *ngIf="imagePreviews().length > 0">
+          @for (img of imagePreviews(); track img; let i = $index) {
+            <div class="image-item">
+              <img [src]="img" alt="Incident image" />
+
+              <button type="button" (click)="removeImage(i)">
+                <i class="bi bi-x-lg"></i>
+              </button>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+
+    <div class="form-footer">
+      <div class="error" *ngIf="submitError()">
+        <i class="bi bi-exclamation-triangle"></i>
+        {{ submitError() }}
+      </div>
+
+      <div class="footer-actions">
+        <button class="btn ghost" type="button" (click)="reset()">
+          Réinitialiser
+        </button>
+
+        <button class="btn primary" type="submit" [disabled]="isSubmitting()">
+          <i class="bi bi-plus-lg"></i>
+          {{ isSubmitting() ? 'Création...' : 'Créer incident' }}
+        </button>
+      </div>
+    </div>
+  </form>
+</div>

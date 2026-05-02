@@ -51,12 +51,14 @@ export const API_URLS ={
 },
  //incidentEvents
 incidentEvents: {
-  create: `${BASE_URL}/incident-events`,
-  list: `${BASE_URL}/incident-events`,
-  byId: (id: string) => `${BASE_URL}/incident-events/${id}`,
-  update: (id: string) => `${BASE_URL}/incident-events/${id}`,
-  resolve: (id: string) => `${BASE_URL}/incident-events/${id}/resolve`,
-  delete: (id: string) => `${BASE_URL}/incident-events/${id}`,
+  create: `${BASE_API_URL}/incident-events`,
+  createAutomatic: `${BASE_API_URL}/incident-events/automatic`,
+  list: `${BASE_API_URL}/incident-events`,
+  byId: (id: string) => `${BASE_API_URL}/incident-events/${id}`,
+  update: (id: string) => `${BASE_API_URL}/incident-events/${id}`,
+  review: (id: string) => `${BASE_API_URL}/incident-events/${id}/review`,
+  resolve: (id: string) => `${BASE_API_URL}/incident-events/${id}/resolve`,
+  delete: (id: string) => `${BASE_API_URL}/incident-events/${id}`,
 },
 
     //Devices API
