@@ -86,7 +86,7 @@
   transition: padding 0.2s ease;
 
   &::-webkit-scrollbar {
-    width: 4px;
+    width: 8px;
   }
 
   &::-webkit-scrollbar-thumb {
@@ -138,8 +138,8 @@
 
   .label {
     flex: 1;
-    font-size: 14px;
-    font-weight: 500;
+    font-size: 12px;
+    font-weight: 400;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
