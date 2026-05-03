@@ -1,17 +1,22 @@
-import { Component, HostListener, signal } from '@angular/core';
+import { Component, HostListener, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { catchError, of } from 'rxjs';
+
+import { AuthServices, User } from '../../../../core/services/auth/auth-services';
+import { RoleRedirectServices } from '../../../../core/services/redirect/role-redirect-services';
 
 @Component({
   selector: 'app-header',
-  imports: [],
+  standalone: true,
+  imports: [CommonModule, RouterModule],
   templateUrl: './header.html',
-  styleUrl: './header.scss'
+  styleUrl: './header.scss',
 })
-export class Header {
-
-   isScrolled = signal(false);
+export class Header implements OnInit {
+  isScrolled = signal(false);
   isMobileMenuOpen = signal(false);
+  currentUser = signal<User | null>(null);
 
   navLinks = [
     { label: 'Plateforme', anchor: 'about' },
@@ -21,18 +26,40 @@ export class Header {
     { label: 'Offres', anchor: 'pricing' },
   ];
 
-  @HostListener('window:scroll')
-  onScroll() {
-    this.isScrolled.set(window.scrollY > 10);
+  constructor(
+    private authService: AuthServices,
+    private roleRedirect: RoleRedirectServices
+  ) {}
+
+  ngOnInit(): void {
+    this.authService
+      .me()
+      .pipe(catchError(() => of(null)))
+      .subscribe((res) => {
+        this.currentUser.set(res?.user ?? null);
+      });
   }
 
-  toggleMobileMenu() {
-    this.isMobileMenuOpen.update(v => !v);
+  isLoggedIn(): boolean {
+    return this.currentUser() !== null;
   }
 
-  scrollTo(anchor: string) {
-    document.getElementById(anchor)?.scrollIntoView({ behavior: 'smooth' });
+  goToPlatform(): void {
+    this.roleRedirect.redirectByRole(this.currentUser());
     this.isMobileMenuOpen.set(false);
   }
 
+  @HostListener('window:scroll')
+  onScroll(): void {
+    this.isScrolled.set(window.scrollY > 10);
+  }
+
+  toggleMobileMenu(): void {
+    this.isMobileMenuOpen.update((v) => !v);
+  }
+
+  scrollTo(anchor: string): void {
+    document.getElementById(anchor)?.scrollIntoView({ behavior: 'smooth' });
+    this.isMobileMenuOpen.set(false);
+  }
 }
