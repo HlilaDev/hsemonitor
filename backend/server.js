@@ -58,21 +58,20 @@ app.use(
         defaultSrc: ["'self'"],
         scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
         styleSrc: ["'self'", "'unsafe-inline'"],
-        imgSrc: ["'self'", "data:", "blob:", "https:"],
+        imgSrc: ["'self'", "data:", "blob:", "https:", "http:"],
         fontSrc: ["'self'", "data:"],
         connectSrc: [
           "'self'",
           "https://hsemonitor.com",
           "wss://hsemonitor.com",
-          "ws://hsemonitor.com",
         ],
-        mediaSrc: ["'self'", "blob:"],
+        mediaSrc: ["'self'", "blob:", "https:", "http:"],
         objectSrc: ["'none'"],
         frameAncestors: ["'none'"],
       },
     },
     crossOriginEmbedderPolicy: false,
-    crossOriginResourcePolicy: { policy: "cross-origin" },
+    crossOriginResourcePolicy: false,  
   })
 );
 
@@ -98,6 +97,12 @@ app.use((req, res, next) => {
   sanitize(req.query);
   sanitize(req.params);
 
+  next();
+});
+
+app.use('/uploads', (req, res, next) => {
+  res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
+  res.setHeader('Access-Control-Allow-Origin', '*');
   next();
 });
 
