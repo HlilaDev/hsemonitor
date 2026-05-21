@@ -70,9 +70,17 @@ app.use(
         frameAncestors: ["'none'"],
       },
     },
+
     crossOriginEmbedderPolicy: false,
-    crossOriginResourcePolicy: false,  
-    permissionsPolicy: false,
+    crossOriginResourcePolicy: false,
+
+    permissionsPolicy: {
+      features: {
+        camera: [],
+        microphone: [],
+        geolocation: [],
+      },
+    },
   })
 );
 
