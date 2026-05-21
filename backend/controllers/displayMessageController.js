@@ -423,22 +423,25 @@ exports.deleteDisplayMessage = async (req, res) => {
  */
 exports.publishDisplayMessage = async (req, res) => {
   try {
-   /* if (!canManageMessages(req.user)) {
-      return res.status(403).json({
-        message: "Only manager and supervisor can publish display messages",
-      });
-    } */
+    console.log("========== PUBLISH DISPLAY MESSAGE ==========");
+    console.log("Message ID:", req.params.id);
+    console.log("User:", req.user);
+    console.log("User company:", getCompanyId(req.user));
 
-    const existingMessage = await DisplayMessage.findOne({
-      _id: req.params.id,
-      company: getCompanyId(req.user),
-    });
+    const existingMessage = await DisplayMessage.findById(req.params.id);
+
+    console.log("Message found without company filter:", existingMessage ? "YES" : "NO");
 
     if (!existingMessage) {
       return res.status(404).json({
-        message: "Display message not found",
+        message: "Display message not found by ID",
       });
     }
+
+    console.log("Message company:", existingMessage.company);
+    console.log("Target type:", existingMessage.targetType);
+    console.log("Target device:", existingMessage.targetDevice);
+    console.log("Content:", existingMessage.content);
 
     if (!existingMessage.content || !String(existingMessage.content).trim()) {
       return res.status(400).json({
@@ -455,21 +458,29 @@ exports.publishDisplayMessage = async (req, res) => {
       });
     }
 
-    const { topic, payload } = await prepareMessageTransportData(existingMessage);
+    const { topic, payload, device } = await prepareMessageTransportData(existingMessage);
+
+    console.log("Device found:", device);
+    console.log("MQTT connected:", mqttClient.connected);
+    console.log("MQTT topic:", topic);
+    console.log("MQTT payload:", payload);
 
     await publishMqttMessage(topic, payload);
 
+    console.log("✅ MQTT message published successfully");
+
     existingMessage.status = "sent";
     existingMessage.sentAt = new Date();
-
     await existingMessage.save();
 
     return res.status(200).json({
       message: "Display message published successfully",
+      topic,
+      payload,
       item: existingMessage,
     });
   } catch (error) {
-    console.error("publishDisplayMessage error:", error);
+    console.error("❌ publishDisplayMessage error:", error);
 
     return res.status(500).json({
       message: "Failed to publish display message",

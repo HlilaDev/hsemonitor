@@ -21,7 +21,12 @@ router.post("/", protect, authorizeRoles("manager", "supervisor"), createDisplay
 router.put("/:id", protect, authorizeRoles("manager", "supervisor"), updateDisplayMessage);
 router.delete("/:id", protect, authorizeRoles("manager", "supervisor"), deleteDisplayMessage);
 
-router.patch("/:id/publish",  publishDisplayMessage);
+router.patch(
+  "/:id/publish",
+  protect,
+  authorizeRoles("manager", "supervisor"),
+  publishDisplayMessage
+);
 router.patch("/:id/cancel", protect, authorizeRoles("manager", "supervisor"), cancelDisplayMessage);
 
 module.exports = router;

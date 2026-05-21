@@ -1,25 +1,49 @@
-<div class="page">
-  <!-- Header -->
-  <div class="header">
+<div class="devices-page">
+  <section class="hero">
     <div>
-      <h2 class="title">{{ 'DEVICES.TITLE' | translate }}</h2>
-      <p class="muted">{{ 'DEVICES.SUBTITLE' | translate }}</p>
+      <p class="eyebrow">ADMIN · IOT MONITORING</p>
+      <h1>All Devices</h1>
+      <p>Supervision des appareils, zones, capteurs et états de connexion.</p>
     </div>
 
-    <a class="btn primary" [routerLink]="['/admin/devices/add']">
+    <a class="add-btn" routerLink="/admin/devices/add">
       <i class="bi bi-plus-lg"></i>
-      {{ 'DEVICES.ADD_BTN' | translate }}
+      Ajouter
     </a>
-  </div>
+  </section>
 
-  <!-- Filters -->
-  <div class="card filters">
+  <section class="stats-grid">
+    <div class="stat-card">
+      <span>Total devices</span>
+      <strong>{{ total() }}</strong>
+      <p>Appareils configurés</p>
+    </div>
+
+    <div class="stat-card online">
+      <span>Online</span>
+      <strong>{{ onlineCount() }}</strong>
+      <p>Actifs maintenant</p>
+    </div>
+
+    <div class="stat-card offline">
+      <span>Offline</span>
+      <strong>{{ offlineCount() }}</strong>
+      <p>À vérifier</p>
+    </div>
+
+    <div class="stat-card warning">
+      <span>Maintenance</span>
+      <strong>{{ maintenanceCount() }}</strong>
+      <p>Intervention requise</p>
+    </div>
+  </section>
+
+  <section class="filter-card">
     <div class="field">
-      <label>{{ 'DEVICES.FILTERS.SEARCH' | translate }}</label>
+      <label>Recherche</label>
       <input
-        class="input"
         type="text"
-        [placeholder]="'DEVICES.FILTERS.SEARCH_PH' | translate"
+        placeholder="Nom ou Device ID..."
         [ngModel]="q()"
         (ngModelChange)="q.set($event)"
         (keyup.enter)="onSearch()"
@@ -27,11 +51,10 @@
     </div>
 
     <div class="field">
-      <label>{{ 'DEVICES.FILTERS.ZONE' | translate }}</label>
+      <label>Zone</label>
       <input
-        class="input"
         type="text"
-        [placeholder]="'DEVICES.FILTERS.ZONE_PH' | translate"
+        placeholder="Zone ID / Nom"
         [ngModel]="zone()"
         (ngModelChange)="zone.set($event)"
         (keyup.enter)="onSearch()"
@@ -39,35 +62,30 @@
     </div>
 
     <div class="field">
-      <label>{{ 'DEVICES.FILTERS.STATUS' | translate }}</label>
-      <select
-        class="input"
-        [ngModel]="status()"
-        (ngModelChange)="status.set($event)"
-      >
-        <option value="">{{ 'DEVICES.FILTERS.ALL' | translate }}</option>
-        <option value="online">{{ 'DEVICES.STATUS.online' | translate }}</option>
-        <option value="offline">{{ 'DEVICES.STATUS.offline' | translate }}</option>
-        <option value="maintenance">{{ 'DEVICES.STATUS.maintenance' | translate }}</option>
+      <label>Status</label>
+      <select [ngModel]="status()" (ngModelChange)="status.set($event)">
+        <option value="">Tous</option>
+        <option value="online">Online</option>
+        <option value="offline">Offline</option>
+        <option value="maintenance">Maintenance</option>
       </select>
     </div>
 
-    <div class="actions">
-      <button class="btn" (click)="onSearch()" [disabled]="loading()">
+    <div class="filter-actions">
+      <button class="btn-filter" (click)="onSearch()" [disabled]="loading()">
         <i class="bi bi-search"></i>
-        {{ 'COMMON.FILTER' | translate }}
+        Filtrer
       </button>
 
-      <button class="btn ghost" (click)="clearFilters()" [disabled]="loading()">
-        {{ 'COMMON.RESET' | translate }}
+      <button class="btn-reset" (click)="clearFilters()" [disabled]="loading()">
+        Réinitialiser
       </button>
     </div>
-  </div>
+  </section>
 
-  <!-- Table -->
-  <div class="card">
+  <section class="table-card">
     @if (error()) {
-      <div class="alert error">
+      <div class="alert-error">
         <i class="bi bi-exclamation-triangle"></i>
         {{ error() }}
       </div>
@@ -75,71 +93,51 @@
 
     @if (loading()) {
       <div class="loading">
-        <span class="spinner"></span>
-        {{ 'COMMON.LOADING' | translate }}
+        <span></span>
+        Chargement...
       </div>
     } @else {
       <div class="table-wrap">
-        <table class="table">
+        <table>
           <thead>
             <tr>
-              <th style="width: 160px">{{ 'DEVICES.COLUMNS.DEVICE_ID' | translate }}</th>
-              <th>{{ 'DEVICES.COLUMNS.NAME' | translate }}</th>
-              <th style="width: 220px">{{ 'DEVICES.COLUMNS.ZONE' | translate }}</th>
-              <th style="width: 140px">{{ 'DEVICES.COLUMNS.SENSORS' | translate }}</th>
-              <th class="center" style="width: 140px">{{ 'DEVICES.COLUMNS.STATUS' | translate }}</th>
-              <th class="right">{{ 'DEVICES.COLUMNS.ACTIONS' | translate }}</th>
+              <th>Device ID</th>
+              <th>Nom</th>
+              <th>Zone</th>
+              <th>Capteurs</th>
+              <th>Dernière connexion</th>
+              <th>Status</th>
+              <th class="right">Actions</th>
             </tr>
           </thead>
 
           <tbody>
             @for (d of pagedDevices(); track trackByDevice($index, d)) {
               <tr>
-                <td>{{ d.deviceId }}</td>
-                <td class="strong">{{ d.name || '—' }}</td>
-
+                <td class="strong">{{ d.deviceId }}</td>
+                <td>{{ d.name || '—' }}</td>
                 <td>{{ getZoneName(d) }}</td>
-
+                <td>{{ getSensorsCount(d) }}</td>
+                <td>{{ formatLastSeen(d.lastSeen) }}</td>
                 <td>
-                  @if (getSensorsCount(d) > 0) {
-                    <span class="sensor-count">
-                      {{ getSensorsCount(d) }}
-                    </span>
-                  } @else {
-                    <span class="muted">0</span>
-                  }
-                </td>
-
-                <td class="center">
-                  <span class="badge" [class]="badgeClass(d.status)">
-                    {{ getStatusKey(d) | translate }}
+                  <span class="status-pill" [class]="badgeClass(d.status)">
+                    {{ d.status || 'offline' }}
                   </span>
                 </td>
-
-                <td class="right actions-cell">
-                  <a
-                    class="btn xs"
-                    [routerLink]="['/admin/devices', getRowId(d)]"
-                    [title]="'COMMON.VIEW' | translate"
-                  >
+                <td class="actions">
+                  <a class="icon-btn" [routerLink]="['/admin/devices', getRowId(d)]">
                     <i class="bi bi-eye"></i>
                   </a>
 
-                  <a
-                    class="btn xs"
-                    [routerLink]="['/admin/devices/edit', getRowId(d)]"
-                    [title]="'COMMON.EDIT' | translate"
-                  >
+                  <a class="icon-btn" [routerLink]="['/admin/devices/edit', getRowId(d)]">
                     <i class="bi bi-pencil"></i>
                   </a>
 
-                  <button
-                    class="btn xs danger"
-                    type="button"
-                    (click)="deleteDevice(getRowId(d))"
-                    [disabled]="loading()"
-                    [title]="'COMMON.DELETE' | translate"
-                  >
+                  <button class="icon-btn" (click)="restartDevice(getRowId(d))">
+                    <i class="bi bi-wifi"></i>
+                  </button>
+
+                  <button class="icon-btn danger" (click)="deleteDevice(getRowId(d))">
                     <i class="bi bi-trash"></i>
                   </button>
                 </td>
@@ -148,37 +146,28 @@
 
             @if (pagedDevices().length === 0) {
               <tr>
-                <td colspan="6" class="empty">
-                  {{ 'DEVICES.EMPTY' | translate }}
-                </td>
+                <td colspan="7" class="empty">Aucun device trouvé.</td>
               </tr>
             }
           </tbody>
         </table>
       </div>
-    }
 
-    <!-- Pagination -->
-    @if (!loading()) {
       <div class="pager">
-        <div class="muted">
-          {{ 'COMMON.TOTAL' | translate }} : <b>{{ total() }}</b>
-        </div>
+        <span>Total : <b>{{ filteredTotal() }}</b></span>
 
-        <div class="pager-actions">
-          <button class="btn" (click)="prev()" [disabled]="page() <= 1">
+        <div>
+          <button (click)="prev()" [disabled]="page() <= 1">
             <i class="bi bi-chevron-left"></i>
           </button>
 
-          <span class="muted">
-            {{ 'COMMON.PAGE' | translate }} {{ page() }} / {{ pages() }}
-          </span>
+          <span>Page {{ page() }} / {{ pages() }}</span>
 
-          <button class="btn" (click)="next()" [disabled]="page() >= pages()">
+          <button (click)="next()" [disabled]="page() >= pages()">
             <i class="bi bi-chevron-right"></i>
           </button>
         </div>
       </div>
     }
-  </div>
+  </section>
 </div>

@@ -54,7 +54,7 @@
         <input
           id="search"
           type="text"
-          placeholder="Zone, device, type, caméra..."
+          placeholder="Zone, type, statut..."
           [ngModel]="search()"
           (ngModelChange)="onSearchChange($event)"
         />
@@ -135,10 +135,9 @@
       <div class="table-head">
         <div>Type</div>
         <div>Statut</div>
-        <div>Zone / Device</div>
+        <div>Zone</div>
         <div>Confiance</div>
         <div>Horodatage</div>
-        <div>Aperçu</div>
         <div>Actions</div>
       </div>
 
@@ -147,10 +146,14 @@
           <article class="table-row">
             <div class="cell">
               <div class="type-block">
-                <span class="badge" [class]="getTypeClass(alert.alertType)">
-                  {{ getTypeLabel(alert.alertType) }}
-                </span>
-                <span class="meta-text">{{ alert.label || 'Alerte PPE' }}</span>
+                <div class="type-icon">
+                  <i class="bi bi-person-exclamation"></i>
+                </div>
+
+                <div>
+                  <strong>{{ getTypeLabel(alert.alertType) }}</strong>
+                  <span>Détection EPI</span>
+                </div>
               </div>
             </div>
 
@@ -163,11 +166,6 @@
             <div class="cell">
               <div class="entity-block">
                 <strong>{{ alert.zone?.name || 'Zone inconnue' }}</strong>
-                <span>{{ alert.device?.name || alert.deviceId || 'Device inconnu' }}</span>
-                <small>
-                  Caméra: {{ alert.cameraId || 'N/A' }} · Site:
-                  {{ alert.siteId || 'N/A' }}
-                </small>
               </div>
             </div>
 
@@ -191,54 +189,50 @@
             </div>
 
             <div class="cell">
-              @if (getPreviewUrl(alert); as previewUrl) {
-                <img
-                  class="preview-image"
-                  [src]="previewUrl"
-                  [alt]="alert.label || 'PPE preview'"
-                />
-              } @else {
-                <div class="preview-placeholder">Aucun snapshot</div>
-              }
-            </div>
-
-            <div class="cell">
               <div class="row-actions">
                 <button
                   type="button"
-                  class="btn btn-primary btn-sm"
+                  class="icon-btn view"
+                  title="Voir détails"
+                  aria-label="Voir détails"
                   (click)="openDetails(alert)"
                 >
-                  Voir
+                  <i class="bi bi-eye"></i>
                 </button>
 
                 @if (alert.status === 'open') {
                   <button
                     type="button"
-                    class="btn btn-outline btn-sm"
+                    class="icon-btn acknowledge"
+                    title="Accuser réception"
+                    aria-label="Accuser réception"
                     (click)="markAs(alert, 'acknowledged')"
                   >
-                    Accuser
+                    <i class="bi bi-check2"></i>
                   </button>
                 }
 
                 @if (alert.status !== 'resolved') {
                   <button
                     type="button"
-                    class="btn btn-success btn-sm"
+                    class="icon-btn resolve"
+                    title="Résoudre"
+                    aria-label="Résoudre"
                     (click)="markAs(alert, 'resolved')"
                   >
-                    Résoudre
+                    <i class="bi bi-check2-circle"></i>
                   </button>
                 }
 
                 @if (alert.status !== 'false_positive') {
                   <button
                     type="button"
-                    class="btn btn-danger-soft btn-sm"
+                    class="icon-btn false-positive"
+                    title="Marquer faux positif"
+                    aria-label="Marquer faux positif"
                     (click)="markAs(alert, 'false_positive')"
                   >
-                    Faux positif
+                    <i class="bi bi-x-lg"></i>
                   </button>
                 }
               </div>

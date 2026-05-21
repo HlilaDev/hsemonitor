@@ -5,6 +5,8 @@ export const URL_UPLOAD = `${environment.uploadUrl}/`;
 export const BASE_API_URL = environment.apiBaseUrl;
 
 export const API_URLS ={
+
+
     auth:{
     //Auth API
     register:`${BASE_API_URL}/auth/register`,
@@ -13,11 +15,33 @@ export const API_URLS ={
     me:`${BASE_API_URL}/auth/me`
     // verifyEmail:`${BASE_API_URL}/auth/verify-email`,
     },
+
     sessionLogs: {
   list: `${BASE_API_URL}/session-logs`,
   me: `${BASE_API_URL}/session-logs/me`,
 },
 
+  stats: {
+    incidents: `${BASE_API_URL}/stats/incidents`,
+    observations: `${BASE_API_URL}/stats/observations`,
+    overview: `${BASE_API_URL}/stats/hse-overview`,
+  },
+
+  aiWeeklyReports: {
+  generate: `${BASE_API_URL}/ai-weekly-reports/generate`,
+  list: `${BASE_API_URL}/ai-weekly-reports`,
+  details: (id: string) => `${BASE_API_URL}/ai-weekly-reports/${id}`,
+  delete: (id: string) => `${BASE_API_URL}/ai-weekly-reports/${id}`,
+},
+
+alertRules: {
+  list: `${BASE_API_URL}/alert-rules`,
+  create: `${BASE_API_URL}/alert-rules`,
+  byId: (id: string) => `${BASE_API_URL}/alert-rules/${id}`,
+  update: (id: string) => `${BASE_API_URL}/alert-rules/${id}`,
+  toggle: (id: string) => `${BASE_API_URL}/alert-rules/${id}/toggle`,
+  delete: (id: string) => `${BASE_API_URL}/alert-rules/${id}`,
+},
 
       companies: `${BASE_API_URL}/companies`,
       displayMessages: `${BASE_API_URL}/display-messages`,
@@ -53,7 +77,7 @@ export const API_URLS ={
   updateFinding: `${BASE_API_URL}/audits/`,
   deleteFinding: `${BASE_API_URL}/audits/`,
 },
- //incidentEvents
+// incidentEvents
 incidentEvents: {
   create: `${BASE_API_URL}/incident-events`,
   createAutomatic: `${BASE_API_URL}/incident-events/automatic`,
@@ -248,7 +272,7 @@ userNotifications: {
     },
   },
 
-    aiPredictions: {
+  aiPredictions: {
   zoneRisk: (zoneId: string) =>
     `${BASE_API_URL}/ai-predictions/zone/${zoneId}`,
 },

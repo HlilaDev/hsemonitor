@@ -1,53 +1,85 @@
 <div class="page">
-  <!-- Header -->
-  <div class="hero">
-    <div>
-      <div class="kicker">{{ 'EMPLOYEES.KICKER' | translate }}</div>
-      <h2 class="title">{{ 'EMPLOYEES.TITLE' | translate }}</h2>
-      <p class="muted">{{ 'EMPLOYEES.SUBTITLE' | translate }}</p>
+  <section class="hero-banner">
+    <div class="hero-content">
+      <p class="eyebrow">WORKFORCExxxxxx</p>
+      <h1>Employees</h1>
+      <p>Employee list with filters, status tracking and zone assignment overview.</p>
     </div>
 
-    <a class="btn primary" [routerLink]="['/manager/employees/add']">
-      <i class="bi bi-plus-lg"></i>
-      {{ 'EMPLOYEES.ADD_BTN' | translate }}
-    </a>
-  </div>
+    <div class="hero-actions">
+      <button class="btn hero-light" type="button" (click)="loadEmployees()" [disabled]="loading()">
+        <i class="bi bi-arrow-repeat"></i>
+        Actualiser
+      </button>
 
-  <!-- Stats -->
-  <div class="stats">
-    <div class="stat-card">
-      <span class="stat-label">{{ 'EMPLOYEES.STATS.TOTAL' | translate }}</span>
-      <strong class="stat-value">{{ total() }}</strong>
+      <a class="btn hero-primary" [routerLink]="['/manager/employees/add']">
+        <i class="bi bi-plus-lg"></i>
+        {{ 'EMPLOYEES.ADD_BTN' | translate }}
+      </a>
+    </div>
+  </section>
+
+  <section class="stats">
+    <div class="stat-card total">
+      <div class="stat-icon"><i class="bi bi-people"></i></div>
+      <div>
+        <span class="stat-label">{{ 'EMPLOYEES.STATS.TOTAL' | translate }}</span>
+        <strong class="stat-value">{{ totalEmployees() }}</strong>
+        <p>Employés enregistrés</p>
+      </div>
     </div>
 
-    <div class="stat-card">
-      <span class="stat-label">{{ 'EMPLOYEES.STATS.ACTIVE' | translate }}</span>
-      <strong class="stat-value">{{ activeCount() }}</strong>
+    <div class="stat-card active">
+      <div class="stat-icon"><i class="bi bi-person-check"></i></div>
+      <div>
+        <span class="stat-label">{{ 'EMPLOYEES.STATS.ACTIVE' | translate }}</span>
+        <strong class="stat-value">{{ activeCount() }}</strong>
+        <p>Comptes opérationnels</p>
+      </div>
     </div>
 
-    <div class="stat-card">
-      <span class="stat-label">{{ 'EMPLOYEES.STATS.INACTIVE' | translate }}</span>
-      <strong class="stat-value">{{ inactiveCount() }}</strong>
+    <div class="stat-card inactive">
+      <div class="stat-icon"><i class="bi bi-person-x"></i></div>
+      <div>
+        <span class="stat-label">{{ 'EMPLOYEES.STATS.INACTIVE' | translate }}</span>
+        <strong class="stat-value">{{ inactiveCount() }}</strong>
+        <p>Comptes désactivés</p>
+      </div>
     </div>
 
-    <div class="stat-card">
-      <span class="stat-label">{{ 'EMPLOYEES.STATS.ASSIGNED_ZONE' | translate }}</span>
-      <strong class="stat-value">{{ withZoneCount() }}</strong>
+    <div class="stat-card zone">
+      <div class="stat-icon"><i class="bi bi-geo-alt"></i></div>
+      <div>
+        <span class="stat-label">{{ 'EMPLOYEES.STATS.ASSIGNED_ZONE' | translate }}</span>
+        <strong class="stat-value">{{ withZoneCount() }}</strong>
+        <p>Affectés à une zone</p>
+      </div>
     </div>
-  </div>
 
-  <!-- Filters -->
+    <div class="stat-card departments">
+      <div class="stat-icon"><i class="bi bi-diagram-3"></i></div>
+      <div>
+        <span class="stat-label">Départements</span>
+        <strong class="stat-value">{{ departmentsCount() }}</strong>
+        <p>Unités distinctes</p>
+      </div>
+    </div>
+  </section>
+
   <div class="card filters">
     <div class="field">
       <label>{{ 'EMPLOYEES.FILTERS.SEARCH' | translate }}</label>
-      <input
-        class="input"
-        type="text"
-        [placeholder]="'EMPLOYEES.FILTERS.SEARCH_PH' | translate"
-        [ngModel]="q()"
-        (ngModelChange)="q.set($event)"
-        (keyup.enter)="onSearch()"
-      />
+      <div class="input-wrap">
+        <i class="bi bi-search"></i>
+        <input
+          class="input"
+          type="text"
+          [placeholder]="'EMPLOYEES.FILTERS.SEARCH_PH' | translate"
+          [ngModel]="q()"
+          (ngModelChange)="q.set($event)"
+          (keyup.enter)="onSearch()"
+        />
+      </div>
     </div>
 
     <div class="field">
@@ -76,11 +108,7 @@
 
     <div class="field">
       <label>{{ 'EMPLOYEES.FILTERS.STATUS' | translate }}</label>
-      <select
-        class="input"
-        [ngModel]="status()"
-        (ngModelChange)="status.set($event)"
-      >
+      <select class="input" [ngModel]="status()" (ngModelChange)="status.set($event)">
         <option value="">{{ 'EMPLOYEES.FILTERS.ALL' | translate }}</option>
         <option value="active">{{ 'COMMON.ACTIVE' | translate }}</option>
         <option value="inactive">{{ 'COMMON.INACTIVE' | translate }}</option>
@@ -88,19 +116,18 @@
     </div>
 
     <div class="actions">
-      <button class="btn" (click)="onSearch()" [disabled]="loading()">
+      <button class="btn filter-btn" type="button" (click)="onSearch()" [disabled]="loading()">
         <i class="bi bi-search"></i>
         {{ 'COMMON.FILTER' | translate }}
       </button>
 
-      <button class="btn ghost" (click)="clearFilters()" [disabled]="loading()">
+      <button class="btn ghost" type="button" (click)="clearFilters()" [disabled]="loading()">
         {{ 'COMMON.RESET' | translate }}
       </button>
     </div>
   </div>
 
-  <!-- Table -->
-  <div class="card">
+  <div class="card table-card">
     @if (error()) {
       <div class="alert error">
         <i class="bi bi-exclamation-triangle"></i>
@@ -132,7 +159,15 @@
           <tbody>
             @for (e of pagedEmployees(); track trackByEmployee($index, e)) {
               <tr>
-                <td class="strong">{{ e.fullName || '—' }}</td>
+                <td>
+                  <div class="employee-cell">
+                    <div class="avatar">{{ (e.fullName || '?').charAt(0) }}</div>
+                    <div>
+                      <strong>{{ e.fullName || '—' }}</strong>
+                      <small>{{ getJobTitle(e) }}</small>
+                    </div>
+                  </div>
+                </td>
                 <td>{{ e.employeeId || '—' }}</td>
                 <td>{{ getDepartment(e) }}</td>
                 <td>{{ getJobTitle(e) }}</td>
@@ -146,38 +181,19 @@
                 </td>
 
                 <td class="right actions-cell">
-                  <a
-                    class="btn xs"
-                    [routerLink]="['/manager/employees', getRowId(e)]"
-                    [title]="'COMMON.VIEW' | translate"
-                  >
+                  <a class="btn xs" [routerLink]="['/manager/employees', getRowId(e)]" [title]="'COMMON.VIEW' | translate">
                     <i class="bi bi-eye"></i>
                   </a>
 
-                  <a
-                    class="btn xs"
-                    [routerLink]="['/manager/employees/edit', getRowId(e)]"
-                    [title]="'COMMON.EDIT' | translate"
-                  >
+                  <a class="btn xs" [routerLink]="['/manager/employees/edit', getRowId(e)]" [title]="'COMMON.EDIT' | translate">
                     <i class="bi bi-pencil"></i>
                   </a>
 
-                  <button
-                    class="btn xs"
-                    type="button"
-                    (click)="toggleActive(e)"
-                    [title]="e.isActive ? ('COMMON.DISABLE' | translate) : ('COMMON.ENABLE' | translate)"
-                  >
+                  <button class="btn xs" type="button" (click)="toggleActive(e)" [title]="e.isActive ? ('COMMON.DISABLE' | translate) : ('COMMON.ENABLE' | translate)">
                     <i class="bi" [ngClass]="e.isActive ? 'bi-toggle-on' : 'bi-toggle-off'"></i>
                   </button>
 
-                  <button
-                    class="btn xs danger"
-                    type="button"
-                    (click)="deleteEmployee(e)"
-                    [disabled]="loading()"
-                    [title]="'COMMON.DELETE' | translate"
-                  >
+                  <button class="btn xs danger" type="button" (click)="deleteEmployee(e)" [disabled]="loading()" [title]="'COMMON.DELETE' | translate">
                     <i class="bi bi-trash"></i>
                   </button>
                 </td>
@@ -196,7 +212,6 @@
       </div>
     }
 
-    <!-- Pagination -->
     @if (!loading()) {
       <div class="pager">
         <div class="muted">
@@ -204,15 +219,13 @@
         </div>
 
         <div class="pager-actions">
-          <button class="btn" (click)="prev()" [disabled]="page() <= 1">
+          <button class="btn" type="button" (click)="prev()" [disabled]="page() <= 1">
             <i class="bi bi-chevron-left"></i>
           </button>
 
-          <span class="muted">
-            {{ 'COMMON.PAGE' | translate }} {{ page() }} / {{ pages() }}
-          </span>
+          <span class="muted">{{ 'COMMON.PAGE' | translate }} {{ page() }} / {{ pages() }}</span>
 
-          <button class="btn" (click)="next()" [disabled]="page() >= pages()">
+          <button class="btn" type="button" (click)="next()" [disabled]="page() >= pages()">
             <i class="bi bi-chevron-right"></i>
           </button>
         </div>

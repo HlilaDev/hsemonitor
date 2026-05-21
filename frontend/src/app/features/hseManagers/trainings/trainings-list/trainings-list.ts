@@ -44,6 +44,24 @@ export class TrainingsList {
   status = signal<TrainingStatus | 'all'>('all');
   sort = signal<SortKey>('startDate_desc');
 
+  totalTrainings = computed(() => this.trainings().length);
+
+  scheduledTrainings = computed(() =>
+    this.trainings().filter((t) => t.status === 'scheduled').length
+  );
+
+  completedTrainings = computed(() =>
+    this.trainings().filter((t) => t.status === 'completed').length
+  );
+
+  cancelledTrainings = computed(() =>
+    this.trainings().filter((t) => t.status === 'cancelled').length
+  );
+
+  totalParticipants = computed(() =>
+    this.trainings().reduce((sum, t) => sum + this.participantsCount(t), 0)
+  );
+
   filtered = computed(() => {
     const search = this.q().trim().toLowerCase();
     const category = this.category();
@@ -53,11 +71,12 @@ export class TrainingsList {
     let list = [...this.trainings()];
 
     if (search) {
-      list = list.filter((t) =>
-        (t.title || '').toLowerCase().includes(search) ||
-        (t.description || '').toLowerCase().includes(search) ||
-        (t.provider || '').toLowerCase().includes(search) ||
-        (t.location || '').toLowerCase().includes(search)
+      list = list.filter(
+        (t) =>
+          (t.title || '').toLowerCase().includes(search) ||
+          (t.description || '').toLowerCase().includes(search) ||
+          (t.provider || '').toLowerCase().includes(search) ||
+          (t.location || '').toLowerCase().includes(search)
       );
     }
 
@@ -135,11 +154,11 @@ export class TrainingsList {
   statusLabel(status: TrainingStatus): string {
     switch (status) {
       case 'scheduled':
-        return 'Prévu';
+        return 'Prévue';
       case 'completed':
-        return 'Terminé';
+        return 'Terminée';
       case 'cancelled':
-        return 'Annulé';
+        return 'Annulée';
     }
   }
 
@@ -161,7 +180,7 @@ export class TrainingsList {
     const date = new Date(value);
     if (Number.isNaN(date.getTime())) return '-';
 
-    return date.toLocaleDateString();
+    return date.toLocaleDateString('fr-FR');
   }
 
   goCreate(): void {

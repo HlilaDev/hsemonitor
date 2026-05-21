@@ -100,8 +100,10 @@ export class DeviceServices {
 
 
   // POST /devices/:id/restart
-  restartDevice(id: string): Observable<any> {
-    const base = this.byId(API_URLS.devices.restartDevice, id);
-    return this.http.post<any>(`${base}/restart`, {});
-  }
+restartDevice(id: string): Observable<any> {
+  return this.http.post<any>(
+    `${API_URLS.devices.restartDevice}${id}/restart`,
+    {}
+  );
+}
 }

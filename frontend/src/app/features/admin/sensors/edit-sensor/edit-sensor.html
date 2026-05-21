@@ -1,41 +1,56 @@
 <div class="page">
-  <div class="header">
+  <section class="hero">
     <div>
+      <span class="eyebrow">HSEMonitor · Capteurs IoT</span>
       <h2>Modifier un capteur</h2>
-      <p class="muted">Mettre à jour les informations du capteur sélectionné</p>
+      <p>Configure les informations du capteur et ajoute ses règles d’alerte.</p>
     </div>
 
-    <a class="btn ghost" routerLink="/admin/sensors">
+    <a class="btn light" routerLink="/admin/sensors">
       <i class="bi bi-arrow-left"></i>
       Retour
     </a>
-  </div>
+  </section>
 
-  <div class="card">
-    @if (error()) {
-      <div class="alert error">
-        <i class="bi bi-exclamation-triangle"></i>
-        {{ error() }}
-      </div>
-    }
+  @if (error()) {
+    <div class="alert error">
+      <i class="bi bi-exclamation-triangle"></i>
+      {{ error() }}
+    </div>
+  }
 
-    @if (loading()) {
-      <div class="state-box">
-        <span class="spinner"></span>
-        <span>Chargement du capteur...</span>
-      </div>
-    } @else {
-      <form class="form" [formGroup]="form" (ngSubmit)="submit()">
+  @if (success()) {
+    <div class="alert success">
+      <i class="bi bi-check-circle"></i>
+      {{ success() }}
+    </div>
+  }
+
+  @if (loading()) {
+    <div class="card loading-card">
+      <span class="spinner"></span>
+      <span>Chargement du capteur...</span>
+    </div>
+  } @else {
+    <div class="layout">
+      <form class="card form-card" [formGroup]="form" (ngSubmit)="submit()">
+        <div class="section-title">
+          <div>
+            <h3>Informations capteur</h3>
+            <p>Données générales utilisées par le monitoring IoT.</p>
+          </div>
+
+          <span class="status-pill" [class.online]="form.value.status === 'online'">
+            {{ form.value.status }}
+          </span>
+        </div>
+
         <div class="grid">
           <div class="field">
             <label>Nom *</label>
-            <input
-              class="input"
-              formControlName="name"
-              placeholder="Ex: Temp Sensor A1"
-            />
+            <input class="input" formControlName="name" placeholder="Ex: Température Zone B" />
             @if (fieldInvalid('name')) {
-              <div class="hint error">Nom requis (min 2 caractères)</div>
+              <div class="hint error">Nom requis, minimum 2 caractères.</div>
             }
           </div>
 
@@ -46,40 +61,29 @@
                 <option [value]="t.value">{{ t.label }}</option>
               }
             </select>
-            @if (fieldInvalid('type')) {
-              <div class="hint error">Type requis</div>
-            }
           </div>
 
           <div class="field">
             <label>Device</label>
-            <input class="input" [value]="deviceLabel()" disabled />
+            <input class="input readonly" [value]="deviceLabel()" disabled />
             <div class="hint">Le device n’est pas modifiable ici.</div>
           </div>
 
           <div class="field">
             <label>Zone</label>
-            <input class="input" [value]="zoneLabel()" disabled />
-            <div class="hint">La zone actuelle est dérivée du device.</div>
+            <input class="input readonly" [value]="zoneLabel()" disabled />
+            <div class="hint">Zone héritée du device.</div>
           </div>
 
           <div class="field">
-            <label>Threshold</label>
-            <input
-              class="input"
-              type="number"
-              formControlName="threshold"
-              placeholder="Ex: 80"
-            />
+            <label>Threshold simple</label>
+            <input class="input" type="number" formControlName="threshold" placeholder="Ex: 40" />
+            <div class="hint">Valeur indicative du capteur.</div>
           </div>
 
           <div class="field">
             <label>Unité</label>
-            <input
-              class="input"
-              formControlName="unit"
-              placeholder="Ex: °C, ppm, dB"
-            />
+            <input class="input" formControlName="unit" placeholder="°C, ppm, %, dB" />
           </div>
 
           <div class="field full">
@@ -89,27 +93,131 @@
                 <option [value]="s.value">{{ s.label }}</option>
               }
             </select>
-            @if (fieldInvalid('status')) {
-              <div class="hint error">Status requis</div>
-            }
           </div>
         </div>
 
         <div class="actions">
-          <a class="btn" routerLink="/admin/sensors">Annuler</a>
+          <button class="btn ghost" type="button" (click)="goBack()">Annuler</button>
 
           <button class="btn primary" type="submit" [disabled]="!canSubmit()">
             @if (!saving()) {
-              <span>Enregistrer</span>
+              <span>Enregistrer capteur</span>
             } @else {
-              <span class="inline">
-                <span class="spinner"></span>
-                Sauvegarde...
-              </span>
+              <span class="inline"><span class="spinner"></span> Sauvegarde...</span>
             }
           </button>
         </div>
       </form>
-    }
-  </div>
+
+      <aside class="card info-card">
+        <div class="icon-box">
+          <i class="bi bi-cpu"></i>
+        </div>
+        <h3>{{ sensor()?.name || 'Capteur' }}</h3>
+        <p>Les alert rules sont les vrais seuils utilisés par le backend.</p>
+
+        <div class="mini-row">
+          <span>Metric</span>
+          <strong>{{ form.value.type }}</strong>
+        </div>
+        <div class="mini-row">
+          <span>Rules actives</span>
+          <strong>{{ alertRules().length }}</strong>
+        </div>
+      </aside>
+    </div>
+
+    <section class="card rules-card">
+      <div class="section-title">
+        <div>
+          <h3>Ajouter alert rule / threshold</h3>
+          <p>Cette règle sera liée à ce capteur et utilisée par <b>alertRuleEngine</b>.</p>
+        </div>
+      </div>
+
+      <form class="rule-grid" [formGroup]="ruleForm" (ngSubmit)="createRule()">
+        <div class="field wide">
+          <label>Nom de la règle *</label>
+          <input class="input" formControlName="name" placeholder="Ex: High temperature zone B" />
+          @if (ruleFieldInvalid('name')) {
+            <div class="hint error">Nom requis.</div>
+          }
+        </div>
+
+        <div class="field">
+          <label>Opérateur</label>
+          <select class="input" formControlName="operator">
+            <option value=">">&gt;</option>
+            <option value=">=">&gt;=</option>
+            <option value="<">&lt;</option>
+            <option value="<=">&lt;=</option>
+            <option value="==">==</option>
+            <option value="!=">!=</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>Threshold *</label>
+          <input class="input" type="number" formControlName="threshold" placeholder="Ex: 40" />
+        </div>
+
+        <div class="field">
+          <label>Sévérité</label>
+          <select class="input" formControlName="severity">
+            <option value="info">Info</option>
+            <option value="warning">Warning</option>
+            <option value="critical">Critical</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>Cooldown sec</label>
+          <input class="input" type="number" formControlName="cooldownSec" />
+        </div>
+
+        <label class="switch-field">
+          <input type="checkbox" formControlName="isActive" />
+          <span>Active</span>
+        </label>
+
+        <button class="btn danger full" type="submit" [disabled]="!canCreateRule()">
+          @if (!ruleSaving()) {
+            <span><i class="bi bi-plus-circle"></i> Ajouter alert rule</span>
+          } @else {
+            <span class="inline"><span class="spinner"></span> Création...</span>
+          }
+        </button>
+      </form>
+
+      <div class="rules-list">
+        @if (alertRules().length === 0) {
+          <div class="empty">
+            <i class="bi bi-shield-exclamation"></i>
+            Aucune règle liée à ce capteur.
+          </div>
+        } @else {
+          @for (rule of alertRules(); track rule._id) {
+            <div class="rule-item">
+              <div>
+                <h4>{{ rule.name }}</h4>
+                <p>
+                  {{ rule.metric }} {{ rule.operator }} {{ rule.threshold }}
+                  · {{ rule.severity }} · cooldown {{ rule.cooldownSec }}s
+                </p>
+              </div>
+
+              <div class="rule-actions">
+                <button class="chip" type="button" (click)="toggleRule(rule)">
+                  {{ rule.isActive ? 'Active' : 'Inactive' }}
+                </button>
+                <button class="icon-btn" type="button" (click)="deleteRule(rule)">
+                  <i class="bi bi-trash"></i>
+                </button>
+              </div>
+            </div>
+          }
+        }
+      </div>
+    </section>
+  }
 </div>

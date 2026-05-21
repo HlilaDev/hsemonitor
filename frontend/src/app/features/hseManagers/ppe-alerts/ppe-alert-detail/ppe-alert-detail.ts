@@ -131,9 +131,38 @@ export class PpeAlertDetail implements OnInit {
     });
   }
 
-  getSnapshotUrl(path: string | undefined): string {
+getSnapshotUrl(path?: string): string {
   if (!path) return '';
-  return `${environment.apiBaseUrl}${path}`;
+
+  if (path.startsWith('http')) {
+    return path;
+  }
+
+  // backend retourne: /uploads/ppe-alerts/xxx.jpg
+  if (path.startsWith('/uploads/')) {
+    return `${environment.baseUrl}${path}`;
+  }
+
+  // si path = ppe-alerts/xxx.jpg
+  if (path.startsWith('ppe-alerts/')) {
+    return `${environment.uploadUrl}/${path}`;
+  }
+
+  return `${environment.uploadUrl}/${path}`;
+}
+
+retryImage(event: Event): void {
+  const img = event.target as HTMLImageElement;
+
+  if (img.dataset['retried'] === 'true') {
+    return;
+  }
+
+  img.dataset['retried'] = 'true';
+
+  setTimeout(() => {
+    img.src = img.src.split('?')[0] + '?t=' + Date.now();
+  }, 1000);
 }
 
   getStatusLabel(status: string): string {

@@ -47,9 +47,7 @@ export class AllEmployees {
         this.loading.set(false);
       },
       error: (err: Error) => {
-        this.error.set(
-          err?.message || this.t.instant('EMPLOYEES.ERROR.LOAD')
-        );
+        this.error.set(err?.message || this.t.instant('EMPLOYEES.ERROR.LOAD'));
         this.loading.set(false);
       },
     });
@@ -104,47 +102,42 @@ export class AllEmployees {
         phone.includes(q) ||
         jobTitle.includes(q);
 
-      const matchesDepartment =
-        !department || departmentValue.includes(department);
-
+      const matchesDepartment = !department || departmentValue.includes(department);
       const matchesZone = !zone || zoneName.includes(zone);
-
       const matchesStatus =
         !status ||
         (status === 'active' && e.isActive === true) ||
         (status === 'inactive' && e.isActive === false);
 
-      return (
-        matchesSearch &&
-        matchesDepartment &&
-        matchesZone &&
-        matchesStatus
-      );
+      return matchesSearch && matchesDepartment && matchesZone && matchesStatus;
     });
   });
 
   total = computed(() => this.filteredEmployees().length);
 
-  pages = computed(() =>
-    Math.max(1, Math.ceil(this.total() / this.pageSize()))
-  );
+  pages = computed(() => Math.max(1, Math.ceil(this.total() / this.pageSize())));
 
   pagedEmployees = computed(() => {
     const start = (this.page() - 1) * this.pageSize();
     return this.filteredEmployees().slice(start, start + this.pageSize());
   });
 
-  activeCount = computed(
-    () => this.employees().filter((e) => e.isActive).length
-  );
+  totalEmployees = computed(() => this.employees().length);
 
-  inactiveCount = computed(
-    () => this.employees().filter((e) => !e.isActive).length
-  );
+  activeCount = computed(() => this.employees().filter((e) => e.isActive).length);
+
+  inactiveCount = computed(() => this.employees().filter((e) => !e.isActive).length);
 
   withZoneCount = computed(
     () => this.employees().filter((e) => this.getZoneName(e) !== '—').length
   );
+
+  departmentsCount = computed(() => {
+    const values = this.employees()
+      .map((e) => e.department?.trim())
+      .filter(Boolean) as string[];
+    return new Set(values).size;
+  });
 
   onSearch(): void {
     this.page.set(1);
@@ -200,9 +193,7 @@ export class AllEmployees {
     const id = this.getRowId(employee);
     if (!id) return;
 
-    const confirmed = confirm(
-      this.t.instant('EMPLOYEES.CONFIRM_DELETE')
-    );
+    const confirmed = confirm(this.t.instant('EMPLOYEES.CONFIRM_DELETE'));
     if (!confirmed) return;
 
     this.employeeService.deleteEmployee(id).subscribe({

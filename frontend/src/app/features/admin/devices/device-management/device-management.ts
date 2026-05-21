@@ -58,7 +58,6 @@ export class DeviceManagement implements OnInit, OnDestroy {
 
   loading = signal(true);
   error = signal<string | null>(null);
-
   device = signal<DeviceDetails | null>(null);
 
   mqttEnabled = signal(true);
@@ -66,20 +65,14 @@ export class DeviceManagement implements OnInit, OnDestroy {
   alertMode = signal(true);
   autoReconnect = signal(true);
 
-  logs = signal<CommandLog[]>([
-    { time: '18:41', action: 'Ping device', status: 'success', source: 'Dashboard' },
-    { time: '18:37', action: 'Restart device', status: 'success', source: 'Dashboard' },
-    { time: '18:25', action: 'Update threshold', status: 'pending', source: 'Admin panel' },
-    { time: '17:58', action: 'Sync time', status: 'success', source: 'System' },
-    { time: '17:30', action: 'Factory reset request', status: 'failed', source: 'Dashboard' },
-  ]);
-
   selectedAction = signal<string>('None');
   showConfirmModal = signal(false);
   confirmTitle = signal('');
   confirmText = signal('');
   actionLoading = signal(false);
   actionError = signal<string | null>(null);
+
+  logs = signal<CommandLog[]>([]);
 
   zoneName = computed(() => {
     const current = this.device();
@@ -93,7 +86,6 @@ export class DeviceManagement implements OnInit, OnDestroy {
   displayName = computed(() => {
     const current = this.device();
     if (!current) return 'Device';
-
     return current.name?.trim() || current.deviceId || 'Device';
   });
 
@@ -105,7 +97,6 @@ export class DeviceManagement implements OnInit, OnDestroy {
   lastHeartbeat = computed(() => {
     const current = this.device();
     if (!current) return null;
-
     return current.lastSeen || current.timestamp || current.updatedAt || null;
   });
 
@@ -232,10 +223,7 @@ export class DeviceManagement implements OnInit, OnDestroy {
       return;
     }
 
-    if (showLoader) {
-      this.loading.set(true);
-    }
-
+    if (showLoader) this.loading.set(true);
     this.error.set(null);
 
     this.deviceService
@@ -243,42 +231,28 @@ export class DeviceManagement implements OnInit, OnDestroy {
       .pipe(finalize(() => this.loading.set(false)))
       .subscribe({
         next: (result) => {
+          const data = result as DeviceDetails;
+
           this.device.set({
-            ...result,
-            broker: (result as DeviceDetails).broker || 'broker.hivemq.com',
-            port: (result as DeviceDetails).port || 1883,
-            samplingInterval: (result as DeviceDetails).samplingInterval || 60,
-            threshold: (result as DeviceDetails).threshold || 75,
-            ipAddress: (result as DeviceDetails).ipAddress || '',
-            macAddress: (result as DeviceDetails).macAddress || '',
-            firmware: (result as DeviceDetails).firmware || '',
+            ...data,
+            broker: data.broker || 'broker.hivemq.com',
+            port: data.port || 1883,
+            samplingInterval: data.samplingInterval || 60,
+            threshold: data.threshold || 75,
+            ipAddress: data.ipAddress || '',
+            macAddress: data.macAddress || '',
+            firmware: data.firmware || '',
             uptime:
-              (result as DeviceDetails).uptime !== undefined &&
-              (result as DeviceDetails).uptime !== null
-                ? Number((result as DeviceDetails).uptime)
+              data.uptime !== undefined && data.uptime !== null
+                ? Number(data.uptime)
                 : undefined,
-            battery:
-              (result as DeviceDetails).battery !== undefined
-                ? (result as DeviceDetails).battery
-                : null,
-            signal:
-              (result as DeviceDetails).signal !== undefined
-                ? (result as DeviceDetails).signal
-                : null,
+            battery: data.battery !== undefined ? data.battery : null,
+            signal: data.signal !== undefined ? data.signal : null,
             memoryUsage:
-              (result as DeviceDetails).memoryUsage !== undefined
-                ? (result as DeviceDetails).memoryUsage
-                : null,
-            cpuTemp:
-              (result as DeviceDetails).cpuTemp !== undefined
-                ? (result as DeviceDetails).cpuTemp
-                : null,
-            networkType: (result as DeviceDetails).networkType || '',
-            lastSeen:
-              (result as DeviceDetails).lastSeen ||
-              (result as DeviceDetails).timestamp ||
-              result.updatedAt ||
-              '',
+              data.memoryUsage !== undefined ? data.memoryUsage : null,
+            cpuTemp: data.cpuTemp !== undefined ? data.cpuTemp : null,
+            networkType: data.networkType || '',
+            lastSeen: data.lastSeen || data.timestamp || data.updatedAt || '',
           });
         },
         error: (err) => {
@@ -290,23 +264,20 @@ export class DeviceManagement implements OnInit, OnDestroy {
   onAction(action: string) {
     const current = this.device();
 
+    if (!current) {
+      this.actionError.set('Device not loaded.');
+      return;
+    }
+
     if (!this.isOnline() && action !== 'Refresh status') {
-      this.logs.update((currentLogs) => [
-        {
-          time: 'Now',
-          action,
-          status: 'failed',
-          source: 'Dashboard',
-        },
-        ...currentLogs,
-      ]);
+      this.pushLog(action, 'failed', 'Dashboard');
       return;
     }
 
     this.selectedAction.set(action);
     this.confirmTitle.set(action);
     this.confirmText.set(
-      `This action will send a command to device ${current?.deviceId ?? this.deviceId}.`
+      `This action will send a command to device ${current.deviceId}.`
     );
     this.actionError.set(null);
     this.showConfirmModal.set(true);
@@ -315,6 +286,7 @@ export class DeviceManagement implements OnInit, OnDestroy {
   closeModal() {
     if (this.actionLoading()) return;
     this.showConfirmModal.set(false);
+    this.actionError.set(null);
   }
 
   confirmAction() {
@@ -337,8 +309,10 @@ export class DeviceManagement implements OnInit, OnDestroy {
   }
 
   restartDevice() {
-    if (!this.deviceId) {
-      this.actionError.set('Device id not found in route.');
+    const mongoId = this.device()?._id || this.deviceId;
+
+    if (!mongoId) {
+      this.actionError.set('Device MongoDB id not found.');
       return;
     }
 
@@ -346,12 +320,13 @@ export class DeviceManagement implements OnInit, OnDestroy {
     this.actionError.set(null);
 
     this.deviceService
-      .restartDevice(this.deviceId)
+      .restartDevice(mongoId)
       .pipe(finalize(() => this.actionLoading.set(false)))
       .subscribe({
         next: () => {
           this.pushLog('Restart device', 'success', 'Dashboard');
           this.showConfirmModal.set(false);
+          this.loadDevice(false);
         },
         error: (err) => {
           this.actionError.set(

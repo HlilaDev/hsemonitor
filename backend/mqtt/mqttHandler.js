@@ -3,6 +3,7 @@ const PpeAlert = require("../models/ppeAlertModel");
 const Notification = require("../models/notificationModel");
 const UserNotification = require("../models/UserNotificationModel");
 const User = require("../models/userModel");
+const Sensor = require("../models/sensorModel");
 
 const parsers = require("./parsers");
 const { evaluateValues } = require("../services/alertRuleEngine");
@@ -15,20 +16,16 @@ function normalizeTimestamp(ts) {
   const n = Number(ts);
   if (!Number.isFinite(n)) return new Date();
 
-  // timestamp en secondes
   if (n > 1000000000 && n < 1000000000000) {
     return new Date(n * 1000);
   }
 
-  // timestamp en millisecondes
   if (n >= 1000000000000) {
     return new Date(n);
   }
 
-  // valeur invalide ou trop petite
   return new Date();
 }
-
 
 function safeParse(payload) {
   const s = payload.toString().trim();
@@ -99,9 +96,7 @@ function getPpeTitle(violationType) {
 
 function getPpeMessage(device, zone, data) {
   const zoneName =
-    typeof zone === "object" && zone?.name
-      ? zone.name
-      : "Zone inconnue";
+    typeof zone === "object" && zone?.name ? zone.name : "Zone inconnue";
 
   const deviceName = device?.name || device?.deviceId || data.deviceId || "Device inconnu";
 
@@ -166,7 +161,6 @@ async function emitUserNotifications(userNotificationIds) {
 
 async function handleStatusMessage(deviceId, data, packet = null) {
   const seenAt = normalizeTimestamp(data.timestamp);
-
   const ageMs = Date.now() - seenAt.getTime();
   const isTooOld = ageMs > 2 * 60 * 1000;
 
@@ -203,12 +197,14 @@ async function handleStatusMessage(deviceId, data, packet = null) {
 
 async function handleTelemetryMessage(deviceId, data) {
   const sensorType = data.sensorType;
+
   if (!sensorType) {
     console.warn(`⚠️ Missing sensorType in telemetry payload for device: ${deviceId}`);
     return;
   }
 
   const parser = parsers[sensorType];
+
   if (!parser) {
     console.warn(`⚠️ No parser for sensorType: ${sensorType}`);
     return;
@@ -226,19 +222,30 @@ async function handleTelemetryMessage(deviceId, data) {
     return;
   }
 
+  const zoneId = device.zone?._id || device.zone || null;
+  const companyId = device.company?._id || device.company || null;
+
+  const sensor = await Sensor.findOne({
+    device: device._id,
+    type: sensorType,
+  });
+
   await Reading.create({
     device: device._id,
-    zone: device.zone,
+    company: companyId,
+    zone: zoneId,
     sensorType,
     values,
     raw,
   });
 
+
+
   const alerts = await evaluateValues({
     values,
     device,
-    zone: device.zone,
-    sensor: undefined,
+    zone: zoneId,
+    sensor: sensor?._id,
   });
 
   if (alerts.length) {
@@ -267,7 +274,6 @@ async function handlePpeAlertMessage(deviceId, data) {
   console.log("🦺 PPE payload:", data);
 
   const alertKey = buildAlertKey(data);
-
   const cooldownSeconds = 15;
   const since = new Date(Date.now() - cooldownSeconds * 1000);
 
@@ -363,6 +369,7 @@ async function handlePpeAlertMessage(deviceId, data) {
   await emitUserNotifications(insertedRows.map((row) => row._id));
 
   const io = getIo();
+
   if (io) {
     io.emit("ppe-alert:new", {
       _id: alert._id,

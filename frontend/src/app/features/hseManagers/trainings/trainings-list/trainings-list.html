@@ -1,22 +1,83 @@
 <div class="page">
-  <div class="header">
-    <div class="title">
-      <h2>Trainings</h2>
-      <p class="muted">Gérer les formations HSE (création, suivi, participants).</p>
+  <section class="hero-banner">
+    <div class="hero-content">
+      <p class="eyebrow">FORMATION HSE</p>
+      <h1>Vue d’ensemble des formations</h1>
+      <p>
+        Suivez, planifiez et pilotez toutes les formations HSE de vos équipes
+        depuis un seul espace.
+      </p>
     </div>
 
-    <div class="actions">
-      <button class="btn ghost" type="button" (click)="fetch()" [disabled]="isLoading()">
+    <div class="hero-actions">
+      <button class="btn hero-light" type="button" (click)="fetch()" [disabled]="isLoading()">
         <i class="bi bi-arrow-repeat"></i>
-        Rafraîchir
+        Actualiser
       </button>
 
-      <button class="btn primary" type="button" (click)="goCreate()">
+      <button class="btn hero-primary" type="button" (click)="goCreate()">
         <i class="bi bi-plus-lg"></i>
         Nouvelle formation
       </button>
     </div>
-  </div>
+  </section>
+
+  <section class="stats-grid">
+    <div class="stat-card total">
+      <div class="stat-icon">
+        <i class="bi bi-journal-text"></i>
+      </div>
+      <div>
+        <span class="stat-label">Total formations</span>
+        <strong class="stat-value">{{ totalTrainings() }}</strong>
+        <p>Formations enregistrées</p>
+      </div>
+    </div>
+
+    <div class="stat-card progress">
+      <div class="stat-icon">
+        <i class="bi bi-clock-history"></i>
+      </div>
+      <div>
+        <span class="stat-label">Formations prévues</span>
+        <strong class="stat-value">{{ scheduledTrainings() }}</strong>
+        <p>À suivre prochainement</p>
+      </div>
+    </div>
+
+    <div class="stat-card done">
+      <div class="stat-icon">
+        <i class="bi bi-check-circle"></i>
+      </div>
+      <div>
+        <span class="stat-label">Terminées</span>
+        <strong class="stat-value">{{ completedTrainings() }}</strong>
+        <p>Sessions finalisées</p>
+      </div>
+    </div>
+
+    <div class="stat-card danger">
+      <div class="stat-icon">
+        <i class="bi bi-x-circle"></i>
+      </div>
+      <div>
+        <span class="stat-label">Annulées</span>
+        <strong class="stat-value">{{ cancelledTrainings() }}</strong>
+        <p>Sessions non réalisées</p>
+      </div>
+    </div>
+
+    <div class="stat-card people">
+      <div class="stat-icon">
+        <i class="bi bi-people"></i>
+      </div>
+      <div>
+        <span class="stat-label">Participants</span>
+        <strong class="stat-value">{{ totalParticipants() }}</strong>
+        <p>Total inscriptions</p>
+      </div>
+    </div>
+  </section>
 
   @if (error()) {
     <div class="alert error">

@@ -24,8 +24,11 @@ const checklistRoutes = require("./checklistRoutes");
 const ppeAlertRoutes = require("./ppeAlertRoutes");
 const aiPredictionRoutes = require("./aiPredictionRoutes");
 const sessionLogRoutes = require("./sessionLogRoutes");
+const statsRoutes = require("./statsRoutes");
+const aiWeeklyReportRoutes = require("./ai/aiWeeklyReportRoutes");
 
-
+router.use("/ai-weekly-reports", aiWeeklyReportRoutes);
+router.use("/stats", statsRoutes);
 router.use("/session-logs", sessionLogRoutes);
 router.use("/display-messages", displayMessageRoutes);
 router.use("/companies", companyRoutes);
@@ -46,8 +49,6 @@ router.use('/notifications', notificationRoutes);
 router.use('/user-notifications', useNotificationRoutes);
 router.use("/checklists", checklistRoutes);
 
-router.use("/ai-predictions", aiPredictionRoutes);
-
 
 
 router.use("/ppe-alerts", ppeAlertRoutes);
@@ -55,6 +56,10 @@ router.use("/ppe-alerts", ppeAlertRoutes);
 router.use("/sensors", sensorsRoutes);
 router.use("/sensor-data", sensorDataRoutes);
 router.use("/readings", require("./readingRoutes"));
+
+
+
+router.use("/ai-predictions", aiPredictionRoutes); //localhost/ai-predictions/zones/AA12
 
 module.exports = router;
 

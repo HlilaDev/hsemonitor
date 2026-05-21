@@ -145,10 +145,11 @@
 
         @if (alert()!.snapshotPath) {
           <div class="snapshot-wrapper">
-            <img
-              [src]="getSnapshotUrl(alert()!.snapshotPath)"
-              [alt]="alert()!.label || 'Snapshot PPE'"
-            />
+          <img
+  [src]="getSnapshotUrl(alert()!.snapshotPath)"
+  [alt]="alert()!.label || 'Snapshot PPE'"
+  (error)="retryImage($event)"
+/>
           </div>
         } @else {
           <div class="empty-preview">

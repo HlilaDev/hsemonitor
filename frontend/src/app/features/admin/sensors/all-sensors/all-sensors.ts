@@ -23,20 +23,20 @@ export class AllSensors {
   loading = signal(false);
   error = signal<string | null>(null);
 
-  // filters
   q = signal('');
   zone = signal('');
   type = signal('');
   status = signal('');
 
-  // data
   sensors = signal<Sensor[]>([]);
-
-  // pagination côté client
   page = signal(1);
   pageSize = signal(10);
 
   total = computed(() => this.sensors().length);
+  onlineCount = computed(() => this.sensors().filter((s) => s.status === 'online').length);
+  offlineCount = computed(() => this.sensors().filter((s) => s.status === 'offline').length);
+  criticalThresholdCount = computed(() => this.sensors().filter((s) => Number(s.threshold) > 0).length);
+
   pages = computed(() => Math.max(1, Math.ceil(this.total() / this.pageSize())));
 
   pagedSensors = computed(() => {
@@ -94,7 +94,6 @@ export class AllSensors {
     if (this.page() < this.pages()) this.page.update((v) => v + 1);
   }
 
-  // ✅ device est un objet populé { name, deviceId } ou un string ID
   deviceName(s: Sensor): string {
     const d: any = (s as any).device;
     if (!d) return '—';
@@ -102,7 +101,6 @@ export class AllSensors {
     return String(d);
   }
 
-  // zone est un objet populé { name } ou un string ID
   zoneName(s: Sensor): string {
     const z: any = s.zone;
     if (!z) return '—';
@@ -133,8 +131,7 @@ export class AllSensors {
       )
       .subscribe((res) => {
         if (res === null) return;
-        const next = this.sensors().filter((x) => x._id !== s._id);
-        this.sensors.set(next);
+        this.sensors.set(this.sensors().filter((x) => x._id !== s._id));
         if (this.page() > this.pages()) this.page.set(this.pages());
       });
   }

@@ -12,15 +12,38 @@ const fs = require("fs");
 const { startDeviceHeartbeatMonitor } = require("./services/deviceHeartbeatMonitor");
 const { initSocket } = require("./socket/socketServer");
 
+const helmet = require("helmet");
+const rateLimit = require("express-rate-limit");
+
 const app = express();
 
-// ✅ Créer automatiquement le dossier uploads s'il n'existe pas
+app.disable("x-powered-by");
+app.set("trust proxy", 1);
+
 const uploadsDir = path.join(__dirname, "uploads");
 if (!fs.existsSync(uploadsDir)) {
   fs.mkdirSync(uploadsDir, { recursive: true });
 }
 
-// ✅ CORS
+const globalLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 500,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    success: false,
+    message: "Trop de requêtes. Réessayez plus tard.",
+  },
+});
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 10,
+  message: {
+    success: false,
+    message: "Trop de tentatives de connexion.",
+  },
+});
+
 app.use(
   cors({
     origin: process.env.CLIENT_URL || "http://localhost:4200",
@@ -28,28 +51,55 @@ app.use(
   })
 );
 
-app.use(express.json());
+/*
+app.use(
+  helmet({
+    contentSecurityPolicy: false,
+  })
+);   */
+
+//
+app.use(express.json({ limit: "1mb" }));
+app.use(express.urlencoded({ extended: true, limit: "1mb" }));
 app.use(cookieParser());
 
-// ✅ Servir les images statiquement
+app.use((req, res, next) => {
+  const sanitize = (obj) => {
+    if (!obj || typeof obj !== "object") return;
+
+    delete obj.__proto__;
+    delete obj.constructor;
+    delete obj.prototype;
+
+    for (const key of Object.keys(obj)) {
+      sanitize(obj[key]);
+    }
+  };
+
+  sanitize(req.body);
+  sanitize(req.query);
+  sanitize(req.params);
+
+  next();
+});
+
 app.use("/uploads", express.static(uploadsDir));
 
-// ✅ Route upload
-app.use("/api/upload", require("./routes/uploadRoutes"));
+app.use("/api/auth/login", authLimiter);
+app.use("/api/auth/register", authLimiter);
 
-// ✅ Routes API
+
+app.use("/api", globalLimiter);
+
+app.use("/api/upload", require("./routes/uploadRoutes"));
 app.use("/api", routes);
 
-// ✅ Connect DB
 connectDB();
 
-// ✅ MQTT
 require("./mqtt/mqttClient");
 
-// ✅ Create HTTP server
 const server = http.createServer(app);
 
-// ✅ Init Socket.IO
 initSocket(server);
 
 const port = process.env.PORT || 3001;
@@ -57,7 +107,5 @@ server.listen(port, "0.0.0.0", () => {
   console.log(`Server running on port ${port}`);
 });
 
-
-//offline devices Checker
 startDeviceHeartbeatMonitor();
 console.log("✅ Device heartbeat monitor started");

@@ -1,3 +1,4 @@
+//SaaS-ready
 const Device = require("../models/deviceModel");
 const Zone = require("../models/zoneModel");
 const Sensor = require("../models/sensorModel");

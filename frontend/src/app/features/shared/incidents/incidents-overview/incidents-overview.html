@@ -10,7 +10,7 @@
     </div>
 
     <div class="hero-actions">
-      <button class="btn ghost" type="button" (click)="loadIncidents()">
+      <button class="btn ghost" type="button" (click)="refreshPage()">
         <i class="bi bi-arrow-clockwise"></i>
         Actualiser
       </button>
@@ -38,9 +38,15 @@
         <div class="stat-icon blue">
           <i class="bi bi-exclamation-octagon"></i>
         </div>
+
         <div class="stat-content">
           <div class="stat-value">{{ totalIncidents() }}</div>
           <div class="stat-label">Total Incidents</div>
+
+          <div class="stat-trend" [ngClass]="trendClass(weeklyTrend())">
+            <i [class]="trendIcon(weeklyTrend())"></i>
+            {{ trendText(weeklyTrend()) }}
+          </div>
         </div>
       </div>
 
@@ -48,9 +54,15 @@
         <div class="stat-icon orange">
           <i class="bi bi-hourglass-split"></i>
         </div>
+
         <div class="stat-content">
           <div class="stat-value">{{ openCount() }}</div>
           <div class="stat-label">Open</div>
+
+          <div class="stat-trend" [ngClass]="trendClass(openTrend())">
+            <i [class]="trendIcon(openTrend())"></i>
+            {{ trendText(openTrend()) }}
+          </div>
         </div>
       </div>
 
@@ -58,9 +70,15 @@
         <div class="stat-icon yellow">
           <i class="bi bi-search"></i>
         </div>
+
         <div class="stat-content">
           <div class="stat-value">{{ investigatingCount() }}</div>
           <div class="stat-label">In Progress</div>
+
+          <div class="stat-trend" [ngClass]="trendClass(investigatingTrend())">
+            <i [class]="trendIcon(investigatingTrend())"></i>
+            {{ trendText(investigatingTrend()) }}
+          </div>
         </div>
       </div>
 
@@ -68,9 +86,15 @@
         <div class="stat-icon red">
           <i class="bi bi-shield-exclamation"></i>
         </div>
+
         <div class="stat-content">
           <div class="stat-value">{{ criticalCount() }}</div>
           <div class="stat-label">Critical</div>
+
+          <div class="stat-trend" [ngClass]="trendClass(criticalTrend())">
+            <i [class]="trendIcon(criticalTrend())"></i>
+            {{ trendText(criticalTrend()) }}
+          </div>
         </div>
       </div>
 
@@ -78,9 +102,15 @@
         <div class="stat-icon green">
           <i class="bi bi-check2-circle"></i>
         </div>
+
         <div class="stat-content">
           <div class="stat-value">{{ resolvedCount() }}</div>
           <div class="stat-label">Resolved</div>
+
+          <div class="stat-trend" [ngClass]="trendClass(closedTrend())">
+            <i [class]="trendIcon(closedTrend())"></i>
+            {{ trendText(closedTrend()) }}
+          </div>
         </div>
       </div>
     </div>

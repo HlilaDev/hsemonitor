@@ -14,6 +14,11 @@
         Rafraîchir
       </button>
 
+      <button class="btn ai" (click)="generateAiReport(false)" [disabled]="loading() || aiGenerating()">
+        <i class="bi bi-stars"></i>
+        Générer rapport IA
+      </button>
+
       <button class="btn primary" routerLink="/manager/reports/create">
         <i class="bi bi-plus-lg"></i>
         Nouveau rapport
@@ -29,7 +34,6 @@
 
   <!-- Filters -->
   <div class="card filters">
-    <!-- Search -->
     <div class="field grow">
       <label>Recherche</label>
       <div class="input-wrap">
@@ -44,7 +48,6 @@
       </div>
     </div>
 
-    <!-- Type -->
     <div class="field">
       <label>Type</label>
       <select class="select" [value]="type()" (change)="setType($any($event.target).value)">
@@ -57,7 +60,6 @@
       </select>
     </div>
 
-    <!-- Zone -->
     <div class="field">
       <label>Zone</label>
       <select class="select" [value]="zoneId()" (change)="setZone($any($event.target).value)">
@@ -66,7 +68,6 @@
       </select>
     </div>
 
-    <!-- Sort -->
     <div class="field">
       <label>Tri</label>
       <select class="select" [value]="sort()" (change)="setSort($any($event.target).value)">
@@ -77,7 +78,6 @@
       </select>
     </div>
 
-    <!-- Reset -->
     <div class="field">
       <label>&nbsp;</label>
       <button class="btn ghost" (click)="reset()">
@@ -116,7 +116,6 @@
               {{ formatPeriod(r.startDate, r.endDate) }}
             </span>
 
-            <!-- ✅ FIX: no r.zone.name directly -->
             <span class="chip" *ngIf="zoneName(r.zone) !== '—'">
               <i class="bi bi-geo-alt"></i>
               {{ zoneName(r.zone) }}
@@ -135,7 +134,6 @@
         </div>
 
         <div class="right">
-          <!-- type badge (reuse trainings badge classes) -->
           <span class="badge" [ngClass]="badgeClass(r.type)">
             {{ r.type }}
           </span>
@@ -154,7 +152,6 @@
         </div>
       </div>
 
-      <!-- mid metrics -->
       <div class="mid">
         <div class="row">
           <span class="k"><i class="bi bi-exclamation-octagon"></i> Incidents</span>
@@ -177,11 +174,10 @@
         </div>
       </div>
 
-      <!-- export -->
       <div class="desc" *ngIf="r.exportUrl; else noExport">
         <i class="bi bi-file-earmark-pdf"></i>
         Export disponible :
-        <a [href]="r.exportUrl" target="_blank" rel="noopener">ouvrir PDF</a>
+        <a [href]="getExportUrl(r.exportUrl)" target="_blank" rel="noopener">ouvrir PDF</a>
       </div>
 
       <ng-template #noExport>
@@ -214,6 +210,142 @@
         <i class="bi bi-plus-lg"></i>
         Créer un rapport
       </button>
+    </div>
+  </div>
+
+  <!-- AI Modal -->
+  <div class="modal-backdrop" *ngIf="showAiModal()">
+    <div class="ai-modal card">
+      <button class="modal-close" type="button" (click)="closeAiModal()">
+        <i class="bi bi-x-lg"></i>
+      </button>
+
+      <div *ngIf="aiGenerating()" class="ai-process">
+        <div class="ai-spinner"></div>
+        <h3>Génération du rapport IA...</h3>
+        <p class="muted">
+          Gemini analyse les incidents, observations, remarques, alertes IoT et zones de la semaine.
+        </p>
+      </div>
+
+      <div *ngIf="!aiGenerating() && aiReport()" class="ai-result">
+        <div class="ai-head">
+          <div>
+            <h3>{{ aiReport()?.title }}</h3>
+            <p class="muted">
+              {{ formatPeriod(aiReport()?.weekStart, aiReport()?.weekEnd) }}
+            </p>
+          </div>
+
+          <span class="risk-badge" [ngClass]="aiReport()?.riskLevel">
+            Risque {{ riskLabel(aiReport()?.riskLevel) }}
+          </span>
+        </div>
+
+        <div class="ai-stats">
+          <div>
+            <span>Incidents</span>
+            <strong>{{ aiReport()?.stats?.incidentsCount ?? 0 }}</strong>
+          </div>
+          <div>
+            <span>Observations</span>
+            <strong>{{ aiReport()?.stats?.observationsCount ?? 0 }}</strong>
+          </div>
+          <div>
+            <span>Alertes</span>
+            <strong>{{ aiReport()?.stats?.alertsCount ?? 0 }}</strong>
+          </div>
+          <div>
+            <span>Alertes critiques</span>
+            <strong>{{ aiReport()?.stats?.criticalAlertsCount ?? 0 }}</strong>
+          </div>
+        </div>
+
+        <div class="ai-summary">
+          {{ aiReport()?.summary }}
+        </div>
+
+        <div class="ai-sections">
+          <div class="ai-section" *ngIf="aiReport()?.sections?.incidents">
+            <h4>Incidents</h4>
+            <p>{{ aiReport()?.sections?.incidents }}</p>
+          </div>
+
+          <div class="ai-section" *ngIf="aiReport()?.sections?.observations">
+            <h4>Observations / Remarques</h4>
+            <p>{{ aiReport()?.sections?.observations }}</p>
+          </div>
+
+          <div class="ai-section" *ngIf="aiReport()?.sections?.alerts">
+            <h4>Alertes IoT</h4>
+            <p>{{ aiReport()?.sections?.alerts }}</p>
+          </div>
+
+          <div class="ai-section" *ngIf="aiReport()?.sections?.zones">
+            <h4>Zones à risque</h4>
+            <p>{{ aiReport()?.sections?.zones }}</p>
+          </div>
+
+          <div class="ai-section" *ngIf="aiReport()?.sections?.trends">
+            <h4>Tendances</h4>
+            <p>{{ aiReport()?.sections?.trends }}</p>
+          </div>
+
+          <div class="ai-section" *ngIf="aiReport()?.sections?.causes">
+            <h4>Causes probables</h4>
+            <p>{{ aiReport()?.sections?.causes }}</p>
+          </div>
+        </div>
+
+        <div class="ai-list" *ngIf="aiReport()?.recommendations?.length">
+          <h4>Recommandations IA</h4>
+
+          <div class="ai-item" *ngFor="let rec of aiReport()?.recommendations">
+            <div class="ai-item-top">
+              <strong>{{ rec.title }}</strong>
+              <span [ngClass]="rec.priority">{{ rec.priority }}</span>
+            </div>
+            <p>{{ rec.description }}</p>
+          </div>
+        </div>
+
+        <div class="ai-list" *ngIf="aiReport()?.actionPlan?.length">
+          <h4>Plan d’action</h4>
+
+          <div class="ai-item" *ngFor="let action of aiReport()?.actionPlan">
+            <div class="ai-item-top">
+              <strong>{{ action.action }}</strong>
+              <span [ngClass]="action.priority">{{ action.priority }}</span>
+            </div>
+            <p>
+              Responsable :
+              <b>{{ action.responsibleRole }}</b>
+            </p>
+          </div>
+        </div>
+
+ <div class="ai-actions">
+  <button class="btn ghost" (click)="closeAiModal()">
+    Fermer
+  </button>
+
+  <a
+    *ngIf="getAiPdfUrl()"
+    class="btn pdf"
+    [href]="getAiPdfUrl()"
+    target="_blank"
+    rel="noopener"
+  >
+    <i class="bi bi-file-earmark-pdf"></i>
+    Télécharger PDF
+  </a>
+
+  <button class="btn ai" (click)="regenerateAiReport()" [disabled]="aiGenerating()">
+    <i class="bi bi-arrow-clockwise"></i>
+    Régénérer
+  </button>
+</div>
+      </div>
     </div>
   </div>
 </div>

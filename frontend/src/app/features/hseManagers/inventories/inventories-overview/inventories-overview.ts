@@ -65,10 +65,7 @@ export class InventoriesOverview {
       const itemId = this.getInventoryItemId(assignment.inventoryItem);
       if (!itemId) continue;
 
-      if (!grouped.has(itemId)) {
-        grouped.set(itemId, []);
-      }
-
+      if (!grouped.has(itemId)) grouped.set(itemId, []);
       grouped.get(itemId)!.push(assignment);
     }
 
@@ -83,12 +80,71 @@ export class InventoriesOverview {
         sorted.find((assignment) => assignment.status === 'active') || sorted[0];
 
       const employeeName = this.getAssignmentEmployeeName(activeAssignment);
-      if (employeeName !== '-') {
-        map.set(itemId, employeeName);
-      }
+      if (employeeName !== '-') map.set(itemId, employeeName);
     }
 
     return map;
+  });
+
+  filteredInventories = computed(() => {
+    const search = this.q().trim().toLowerCase();
+    const category = this.categoryFilter();
+    const status = this.statusFilter();
+    const alertsOnly = this.onlyAlerts();
+
+    return this.inventories().filter((item) => {
+      const zoneName = this.getZoneName(item.zone).toLowerCase();
+      const assignedName = this.getAssignedDisplayName(item).toLowerCase();
+
+      const matchesSearch =
+        !search ||
+        (item.name || '').toLowerCase().includes(search) ||
+        (item.inventoryCode || '').toLowerCase().includes(search) ||
+        (item.subCategory || '').toLowerCase().includes(search) ||
+        (item.brand || '').toLowerCase().includes(search) ||
+        (item.model || '').toLowerCase().includes(search) ||
+        (item.serialNumber || '').toLowerCase().includes(search) ||
+        zoneName.includes(search) ||
+        assignedName.includes(search);
+
+      const matchesCategory = !category || item.category === category;
+      const matchesStatus = !status || item.status === status;
+
+      const isAlert =
+        this.isLowStock(item) ||
+        this.isExpired(item) ||
+        this.isNearInspection(item) ||
+        this.isNearMaintenance(item) ||
+        item.status === 'maintenance' ||
+        item.status === 'damaged' ||
+        item.status === 'out_of_service';
+
+      return matchesSearch && matchesCategory && matchesStatus && (!alertsOnly || isAlert);
+    });
+  });
+
+  totalPages = computed(() =>
+    Math.max(1, Math.ceil(this.filteredInventories().length / this.pageSize()))
+  );
+
+  paginatedInventories = computed(() => {
+    const page = this.currentPage();
+    const size = this.pageSize();
+    const start = (page - 1) * size;
+    return this.filteredInventories().slice(start, start + size);
+  });
+
+  stats = computed(() => {
+    const items = this.inventories();
+
+    return {
+      totalItems: items.length,
+      totalQuantity: items.reduce((sum, item) => sum + (item.quantity || 0), 0),
+      lowStock: items.filter((item) => this.isLowStock(item)).length,
+      expired: items.filter((item) => this.isExpired(item)).length,
+      assigned: items.filter((item) => item.status === 'assigned').length,
+      maintenance: items.filter((item) => item.status === 'maintenance').length,
+    };
   });
 
   constructor() {
@@ -137,65 +193,6 @@ export class InventoriesOverview {
       });
   }
 
-  filteredInventories = computed(() => {
-    const search = this.q().trim().toLowerCase();
-    const category = this.categoryFilter();
-    const status = this.statusFilter();
-    const alertsOnly = this.onlyAlerts();
-
-    return this.inventories().filter((item) => {
-      const zoneName = this.getZoneName(item.zone).toLowerCase();
-      const assignedName = this.getAssignedDisplayName(item).toLowerCase();
-
-      const matchesSearch =
-        !search ||
-        (item.name || '').toLowerCase().includes(search) ||
-        (item.inventoryCode || '').toLowerCase().includes(search) ||
-        (item.subCategory || '').toLowerCase().includes(search) ||
-        (item.brand || '').toLowerCase().includes(search) ||
-        (item.model || '').toLowerCase().includes(search) ||
-        (item.serialNumber || '').toLowerCase().includes(search) ||
-        zoneName.includes(search) ||
-        assignedName.includes(search);
-
-      const matchesCategory = !category || item.category === category;
-      const matchesStatus = !status || item.status === status;
-
-      const isAlert =
-        this.isLowStock(item) ||
-        this.isExpired(item) ||
-        item.status === 'maintenance' ||
-        item.status === 'damaged' ||
-        item.status === 'out_of_service';
-
-      return matchesSearch && matchesCategory && matchesStatus && (!alertsOnly || isAlert);
-    });
-  });
-
-  totalPages = computed(() => {
-    return Math.max(1, Math.ceil(this.filteredInventories().length / this.pageSize()));
-  });
-
-  paginatedInventories = computed(() => {
-    const page = this.currentPage();
-    const size = this.pageSize();
-    const start = (page - 1) * size;
-    return this.filteredInventories().slice(start, start + size);
-  });
-
-  stats = computed(() => {
-    const items = this.inventories();
-
-    return {
-      totalItems: items.length,
-      totalQuantity: items.reduce((sum, item) => sum + (item.quantity || 0), 0),
-      lowStock: items.filter((item) => this.isLowStock(item)).length,
-      expired: items.filter((item) => this.isExpired(item)).length,
-      assigned: items.filter((item) => item.status === 'assigned').length,
-      maintenance: items.filter((item) => item.status === 'maintenance').length,
-    };
-  });
-
   setViewMode(mode: 'grid' | 'table'): void {
     this.viewMode.set(mode);
   }
@@ -239,8 +236,10 @@ export class InventoriesOverview {
         return 'Outil';
       case 'signage':
         return 'Signalisation';
-      default:
+      case 'other':
         return 'Autre';
+      default:
+        return category || '-';
     }
   }
 
@@ -265,7 +264,7 @@ export class InventoriesOverview {
       case 'out_of_service':
         return 'Hors service';
       default:
-        return status;
+        return status || '-';
     }
   }
 
@@ -278,87 +277,111 @@ export class InventoriesOverview {
       case 'fair':
         return 'Moyen';
       case 'poor':
-        return 'Faible';
+        return 'Mauvais';
       case 'damaged':
         return 'Endommagé';
       default:
-        return condition;
+        return condition || '-';
     }
   }
 
-  getZoneName(zone: InventoryItem['zone']): string {
+  getZoneName(zone: any): string {
     if (!zone) return '-';
     if (typeof zone === 'string') return zone;
-    return zone.name || '-';
-  }
-
-  getAssignedToName(assignedTo: InventoryItem['assignedTo']): string {
-    if (!assignedTo) return '-';
-    if (typeof assignedTo === 'string') return assignedTo;
-
-    const firstName = assignedTo.firstName || '';
-    const lastName = assignedTo.lastName || '';
-    const fullName = `${firstName} ${lastName}`.trim();
-
-    return fullName || assignedTo.email || '-';
-  }
-
-  getAssignmentEmployeeName(value: InventoryAssignment | null | undefined): string {
-    if (!value?.employee) return '-';
-
-    if (typeof value.employee === 'string') return value.employee;
-
-    const firstName = value.employee.firstName || '';
-    const lastName = value.employee.lastName || '';
-    const fullName = `${firstName} ${lastName}`.trim();
-
-    return fullName || value.employee.email || '-';
+    return zone.name || zone.label || zone.code || '-';
   }
 
   getAssignedDisplayName(item: InventoryItem): string {
-    const directName = this.getAssignedToName(item.assignedTo);
-
-    if (directName !== '-') {
-      return directName;
+    const itemId = this.getInventoryItemId(item);
+    if (itemId && this.assignmentNameMap().has(itemId)) {
+      return this.assignmentNameMap().get(itemId) || '-';
     }
 
-    return this.assignmentNameMap().get(item._id) || '-';
+    const assignedTo = (item as any).assignedTo || (item as any).assignedUser || (item as any).employee;
+    if (!assignedTo) return '-';
+
+    if (typeof assignedTo === 'string') return assignedTo;
+
+    const fullName = [assignedTo.firstName, assignedTo.lastName]
+      .filter(Boolean)
+      .join(' ')
+      .trim();
+
+    return fullName || assignedTo.name || assignedTo.email || '-';
   }
 
-  getInventoryItemId(value: InventoryAssignment['inventoryItem']): string {
+  getInventoryItemId(value: any): string {
     if (!value) return '';
-    return typeof value === 'string' ? value : value._id || '';
+    if (typeof value === 'string') return value;
+    return value._id || value.id || '';
   }
 
-  isExpired(item: InventoryItem): boolean {
-    if (!item.expiryDate) return false;
-    return new Date(item.expiryDate).getTime() < Date.now();
+  getAssignmentEmployeeName(assignment: InventoryAssignment | undefined): string {
+    if (!assignment) return '-';
+
+    const employee =
+      (assignment as any).employee ||
+      (assignment as any).assignedTo ||
+      (assignment as any).user ||
+      (assignment as any).beneficiary;
+
+    if (!employee) return '-';
+    if (typeof employee === 'string') return employee;
+
+    const fullName = [employee.firstName, employee.lastName]
+      .filter(Boolean)
+      .join(' ')
+      .trim();
+
+    return fullName || employee.name || employee.email || '-';
   }
 
   isLowStock(item: InventoryItem): boolean {
-    if (item.category === 'extinguisher') return false;
-    return (item.quantity || 0) <= (item.minStockLevel || 0);
+    const quantity = item.quantity || 0;
+    const minQuantity =
+      (item as any).minQuantity ??
+      (item as any).minimumQuantity ??
+      (item as any).reorderLevel ??
+      (item as any).alertThreshold ??
+      0;
+
+    return item.status === 'low_stock' || (!!minQuantity && quantity <= minQuantity);
+  }
+
+  isExpired(item: InventoryItem): boolean {
+    const expiryDate =
+      (item as any).expiryDate ||
+      (item as any).expirationDate ||
+      (item as any).validUntil;
+
+    if (item.status === 'expired') return true;
+    if (!expiryDate) return false;
+
+    return new Date(expiryDate).getTime() < Date.now();
   }
 
   isNearInspection(item: InventoryItem): boolean {
-    if (!item.nextInspectionDate) return false;
-
-    const diff = new Date(item.nextInspectionDate).getTime() - Date.now();
-    const days = diff / (1000 * 60 * 60 * 24);
-
-    return days >= 0 && days <= 15;
+    const date = (item as any).nextInspectionDate || (item as any).inspectionDueDate;
+    return this.isDateNear(date, 30);
   }
 
   isNearMaintenance(item: InventoryItem): boolean {
-    if (!item.nextMaintenanceDate) return false;
-
-    const diff = new Date(item.nextMaintenanceDate).getTime() - Date.now();
-    const days = diff / (1000 * 60 * 60 * 24);
-
-    return days >= 0 && days <= 15;
+    const date = (item as any).nextMaintenanceDate || (item as any).maintenanceDueDate;
+    return this.isDateNear(date, 30);
   }
 
-  trackById(_: number, item: InventoryItem): string {
-    return item._id;
+  isDateNear(value: string | Date | undefined, days = 30): boolean {
+    if (!value) return false;
+
+    const target = new Date(value).getTime();
+    if (Number.isNaN(target)) return false;
+
+    const now = Date.now();
+    const limit = now + days * 24 * 60 * 60 * 1000;
+    return target >= now && target <= limit;
+  }
+
+  trackById(index: number, item: InventoryItem): string | number {
+    return item._id || (item as any).id || index;
   }
 }

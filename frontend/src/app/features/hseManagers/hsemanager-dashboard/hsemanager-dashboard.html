@@ -1,21 +1,22 @@
 <div class="dashboard-page">
   <div class="hero">
     <div class="hero-copy">
-      <div class="eyebrow">HSE MANAGER</div>
-      <h1>Safety command center</h1>
+      <div class="eyebrow">MANAGER HSE</div>
+      <h1>Centre de contrôle sécurité</h1>
       <p>
-        Pilot zones, incidents, training progress and field activity from one dashboard.
+        Pilotez les zones, les incidents, les observations, les formations et l’activité terrain depuis un seul tableau de bord.
       </p>
     </div>
 
     <div class="hero-side">
       <div class="hero-pill">
         <i class="bi bi-shield-check"></i>
-        Compliance {{ complianceRate() }}%
+        Conformité {{ complianceRate() }}%
       </div>
+
       <div class="hero-pill soft">
         <i class="bi bi-broadcast-pin"></i>
-        Devices online {{ devicesOnline() }}/{{ devicesTotal() }}
+        Appareils en ligne {{ devicesOnline() }}/{{ devicesTotal() }}
       </div>
     </div>
   </div>
@@ -32,6 +33,7 @@
           <div class="stat-value">
             {{ card.value }}{{ card.unit ?? '' }}
           </div>
+
           <div class="stat-trend" [class.down]="(card.trend ?? 0) < 0">
             <i
               class="bi"
@@ -49,50 +51,70 @@
     <div class="panel overview">
       <div class="panel-head">
         <div>
-          <h3>Operational overview</h3>
-          <p>Weekly safety activity snapshot</p>
+          <h3>Vue opérationnelle</h3>
+          <p>Aperçu hebdomadaire de l’activité HSE</p>
         </div>
-        <a routerLink="/manager/monitoring" class="link-btn">Open monitoring</a>
+
+        <a routerLink="/manager/monitoring" class="link-btn">
+          Ouvrir le monitoring
+        </a>
       </div>
 
       <div class="overview-kpis">
         <div class="mini">
-          <span>High-risk zones</span>
+          <span>Zones à risque élevé</span>
           <strong>{{ highRiskZones() }}</strong>
         </div>
+
         <div class="mini">
-          <span>Open incidents</span>
-          <strong>{{ openIncidentsCount() }}</strong>
+          <span>Incidents ouverts</span>
+          <strong>
+            @if (loadingIncidents()) {
+              ...
+            } @else {
+              {{ openIncidentsCount() }}
+            }
+          </strong>
         </div>
+
         <div class="mini">
-          <span>Open observations</span>
-          <strong>{{ openObservationsCount() }}</strong>
+          <span>Observations ouvertes</span>
+          <strong>
+            @if (loadingObservations()) {
+              ...
+            } @else {
+              {{ openObservationsCount() }}
+            }
+          </strong>
         </div>
       </div>
 
       <div class="chart-card">
         <div class="chart-header">
-          <span>Incidents this week</span>
+          <span>Incidents ouverts cette semaine</span>
         </div>
 
-        <div class="bars">
-          @for (bar of chartBars(); track bar.label) {
-            <div class="bar-col">
-              <div class="bar-wrap">
-                <div class="bar" [style.height]="bar.height"></div>
-              </div>
-              <span>{{ bar.label }}</span>
-            </div>
-          }
-        </div>
+<div class="bars">
+  @for (bar of chartBars(); track bar.label) {
+    <div
+      class="bar-col"
+      [attr.data-tooltip]="incidentTooltip(bar)"
+    >
+      <div class="bar-wrap">
+        <div class="bar" [style.height]="bar.height"></div>
+      </div>
+      <span>{{ bar.label }}</span>
+    </div>
+  }
+</div>
       </div>
     </div>
 
     <div class="panel live-alerts">
       <div class="panel-head">
         <div>
-          <h3>Live alerts</h3>
-          <p>Last important events</p>
+          <h3>Alertes en direct</h3>
+          <p>Derniers événements importants</p>
         </div>
       </div>
 
@@ -122,10 +144,11 @@
     <div class="panel">
       <div class="panel-head">
         <div>
-          <h3>Zones status</h3>
-          <p>Environment and device connectivity</p>
+          <h3>État des zones</h3>
+          <p>Environnement et connectivité des appareils</p>
         </div>
-        <a routerLink="/manager/zones" class="link-btn">View all</a>
+
+        <a routerLink="/manager/zones" class="link-btn">Voir tout</a>
       </div>
 
       <div class="zone-list">
@@ -135,7 +158,7 @@
               <div>
                 <div class="zone-name">{{ zone.name }}</div>
                 <div class="zone-sub">
-                  {{ zone.devicesOnline }}/{{ zone.devicesTotal }} devices online
+                  {{ zone.devicesOnline }}/{{ zone.devicesTotal }} appareils en ligne
                 </div>
               </div>
 
@@ -146,11 +169,12 @@
 
             <div class="zone-metrics">
               <div class="metric">
-                <span>Temperature</span>
+                <span>Température</span>
                 <strong>{{ zone.temperature }}°C</strong>
               </div>
+
               <div class="metric">
-                <span>Humidity</span>
+                <span>Humidité</span>
                 <strong>{{ zone.humidity }}%</strong>
               </div>
             </div>
@@ -158,7 +182,8 @@
             <div class="progress-line">
               <div
                 class="progress-value"
-                [style.width.%]="(zone.devicesOnline / zone.devicesTotal) * 100"
+                
+                [style.width.%]="zone.devicesTotal ? (zone.devicesOnline / zone.devicesTotal) * 100 : 0"
               ></div>
             </div>
           </div>
@@ -169,42 +194,103 @@
     <div class="panel">
       <div class="panel-head">
         <div>
-          <h3>Recent incidents</h3>
-          <p>Track escalation and resolution</p>
+          <h3>Incidents ouverts</h3>
+          <p>Données réelles depuis le service incidents</p>
         </div>
-        <a routerLink="/manager/incidents" class="link-btn">Manage</a>
+
+        <div class="panel-actions">
+          <button class="link-btn" type="button" (click)="loadOpenIncidents()">
+            Actualiser
+          </button>
+
+          <a routerLink="/manager/incidents" class="link-btn">Gérer</a>
+        </div>
       </div>
 
-      <div class="incident-list">
-        @for (incident of incidents(); track trackById($index, incident)) {
-          <div class="incident-item">
-            <div class="incident-main">
-              <div class="incident-title">{{ incident.title }}</div>
-              <div class="incident-sub">
-                {{ incident.zone }} • {{ incident.date | date:'yyyy-MM-dd HH:mm' }}
+      @if (loadingIncidents()) {
+        <div class="empty-state">Chargement des incidents...</div>
+      } @else if (incidentsError()) {
+        <div class="empty-state error">{{ incidentsError() }}</div>
+      } @else if (incidents().length === 0) {
+        <div class="empty-state">Aucun incident ouvert.</div>
+      } @else {
+        <div class="incident-list">
+          @for (incident of incidents(); track trackById($index, incident)) {
+            <div class="incident-item">
+              <div class="incident-main">
+                <div class="incident-title">{{ incident.title }}</div>
+                <div class="incident-sub">
+                  {{ incident.zone }} • {{ incident.date | date:'yyyy-MM-dd HH:mm' }}
+                </div>
+              </div>
+
+              <div class="incident-right">
+                <span class="pill soft" [class]="severityClass(incident.severity)">
+                  {{ incident.severity }}
+                </span>
+
+                <span class="pill" [class]="incidentStatusClass(incident.status)">
+                  {{ incident.status }}
+                </span>
               </div>
             </div>
-
-            <div class="incident-right">
-              <span class="pill soft" [class]="severityClass(incident.severity)">
-                {{ incident.severity }}
-              </span>
-              <span class="pill" [class]="incidentStatusClass(incident.status)">
-                {{ incident.status }}
-              </span>
-            </div>
-          </div>
-        }
-      </div>
+          }
+        </div>
+      }
     </div>
 
     <div class="panel">
       <div class="panel-head">
         <div>
-          <h3>Training progress</h3>
-          <p>Completion status by program</p>
+          <h3>Observations ouvertes</h3>
+          <p>Données réelles depuis le service observations</p>
         </div>
-        <a routerLink="/manager/trainings" class="link-btn">Open training</a>
+
+        <div class="panel-actions">
+          <button class="link-btn" type="button" (click)="loadOpenObservations()">
+            Actualiser
+          </button>
+
+          <a routerLink="/manager/observations" class="link-btn">Gérer</a>
+        </div>
+      </div>
+
+      @if (loadingObservations()) {
+        <div class="empty-state">Chargement des observations...</div>
+      } @else if (observationsError()) {
+        <div class="empty-state error">{{ observationsError() }}</div>
+      } @else if (observations().length === 0) {
+        <div class="empty-state">Aucune observation ouverte.</div>
+      } @else {
+        <div class="incident-list">
+          @for (observation of observations(); track trackById($index, observation)) {
+            <div class="incident-item">
+              <div class="incident-main">
+                <div class="incident-title">{{ observation.title }}</div>
+                <div class="incident-sub">
+                  {{ observation.zone }} • {{ observation.createdAt | date:'yyyy-MM-dd HH:mm' }}
+                </div>
+              </div>
+
+              <div class="incident-right">
+                <span class="pill" [class]="incidentStatusClass(observation.status)">
+                  {{ observation.status }}
+                </span>
+              </div>
+            </div>
+          }
+        </div>
+      }
+    </div>
+
+    <div class="panel">
+      <div class="panel-head">
+        <div>
+          <h3>Progression des formations</h3>
+          <p>État d’avancement par programme</p>
+        </div>
+
+        <a routerLink="/manager/trainings" class="link-btn">Ouvrir</a>
       </div>
 
       <div class="training-list">
@@ -215,6 +301,7 @@
                 <div class="training-title">{{ training.title }}</div>
                 <div class="training-sub">{{ training.audience }}</div>
               </div>
+
               <strong>{{ training.completion }}%</strong>
             </div>
 
@@ -226,7 +313,7 @@
             </div>
 
             <div class="training-footer">
-              <span>Due {{ training.dueDate | date:'yyyy-MM-dd' }}</span>
+              <span>Échéance {{ training.dueDate | date:'yyyy-MM-dd' }}</span>
             </div>
           </div>
         }
@@ -236,10 +323,11 @@
     <div class="panel">
       <div class="panel-head">
         <div>
-          <h3>Team activity</h3>
-          <p>Field and supervision status</p>
+          <h3>Activité de l’équipe</h3>
+          <p>Suivi terrain et supervision</p>
         </div>
-        <a routerLink="/manager/team" class="link-btn">Team</a>
+
+        <a routerLink="/manager/team" class="link-btn">Équipe</a>
       </div>
 
       <div class="team-list">

@@ -1,50 +1,83 @@
 <section class="inventories-page">
-  <div class="page-header">
-    <div>
+  <section class="inventory-hero">
+    <div class="hero-content">
       <p class="eyebrow">HSE Inventory</p>
-      <h1>Inventaires</h1>
+      <h1>Gestion des inventaires</h1>
       <p class="subtitle">
-        Suivi des équipements, EPI et matériels de sécurité.
+        Suivez les EPI, équipements de sécurité, affectations, alertes de stock,
+        inspections et maintenances depuis un tableau de bord centralisé.
       </p>
     </div>
 
-    <div class="header-actions">
-      <a routerLink="/manager/inventories/add" class="btn btn-primary">
-        Ajouter
+    <div class="hero-actions">
+      <button class="btn btn-hero-light" type="button" (click)="refresh()" [disabled]="loading()">
+        <i class="bi bi-arrow-repeat"></i>
+        Actualiser
+      </button>
+
+      <a routerLink="/manager/inventories/add" class="btn btn-hero-primary">
+        <i class="bi bi-plus-lg"></i>
+        Ajouter un article
       </a>
     </div>
-  </div>
+  </section>
 
   <div class="stats-grid">
-    <div class="stat-card">
-      <span>Total articles</span>
-      <strong>{{ stats().totalItems }}</strong>
+    <div class="stat-card total">
+      <div class="stat-icon"><i class="bi bi-box-seam"></i></div>
+      <div>
+        <span>Total articles</span>
+        <strong>{{ stats().totalItems }}</strong>
+        <p>Articles enregistrés</p>
+      </div>
+    </div>
+
+    <div class="stat-card quantity">
+      <div class="stat-icon"><i class="bi bi-stack"></i></div>
+      <div>
+        <span>Quantité totale</span>
+        <strong>{{ stats().totalQuantity }}</strong>
+        <p>Unités disponibles</p>
+      </div>
     </div>
 
     <div class="stat-card warning">
-      <span>Stock faible</span>
-      <strong>{{ stats().lowStock }}</strong>
+      <div class="stat-icon"><i class="bi bi-exclamation-triangle"></i></div>
+      <div>
+        <span>Stock faible</span>
+        <strong>{{ stats().lowStock }}</strong>
+        <p>Articles à réapprovisionner</p>
+      </div>
     </div>
 
     <div class="stat-card danger">
-      <span>Expirés</span>
-      <strong>{{ stats().expired }}</strong>
+      <div class="stat-icon"><i class="bi bi-calendar-x"></i></div>
+      <div>
+        <span>Expirés</span>
+        <strong>{{ stats().expired }}</strong>
+        <p>Contrôle nécessaire</p>
+      </div>
     </div>
 
     <div class="stat-card info">
-      <span>Affectés</span>
-      <strong>{{ stats().assigned }}</strong>
+      <div class="stat-icon"><i class="bi bi-person-check"></i></div>
+      <div>
+        <span>Affectés</span>
+        <strong>{{ stats().assigned }}</strong>
+        <p>Articles utilisés</p>
+      </div>
     </div>
   </div>
 
   <div class="filters-card">
     <div class="filters-grid">
       <div class="field search-field">
+        <i class="bi bi-search"></i>
         <input
           type="text"
           [ngModel]="q()"
           (ngModelChange)="q.set($event); onFilterChange()"
-          placeholder="Recherche..."
+          placeholder="Recherche par article, code, marque, zone, affectation..."
         />
       </div>
 
@@ -80,6 +113,7 @@
       </label>
 
       <button class="btn btn-light" type="button" (click)="resetFilters()">
+        <i class="bi bi-x-circle"></i>
         Reset
       </button>
     </div>
@@ -87,12 +121,16 @@
 
   @if (errorMessage()) {
     <div class="alert alert-danger">
+      <i class="bi bi-exclamation-triangle"></i>
       {{ errorMessage() }}
     </div>
   }
 
   @if (loading()) {
-    <div class="state-box">Chargement des inventaires...</div>
+    <div class="state-box loading-box">
+      <div class="spinner"></div>
+      <span>Chargement des inventaires...</span>
+    </div>
   } @else {
     <div class="table-card">
       <div class="table-wrap">
@@ -209,7 +247,7 @@
                 <td class="actions-col">
                   <div class="actions">
                     <a
-                      class="icon-btn"
+                      class="icon-btn view"
                       [routerLink]="['/manager/inventories', item._id]"
                       title="Voir"
                     >
@@ -217,12 +255,22 @@
                     </a>
 
                     <a
-                      class="icon-btn"
+                      class="icon-btn edit"
                       [routerLink]="['/manager/inventories/edit', item._id]"
                       title="Modifier"
                     >
                       <i class="bi bi-pencil-square"></i>
                     </a>
+                  </div>
+                </td>
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="9">
+                  <div class="empty-box">
+                    <i class="bi bi-inboxes"></i>
+                    <strong>Aucun article trouvé</strong>
+                    <span>Modifiez les filtres ou ajoutez un nouvel article.</span>
                   </div>
                 </td>
               </tr>

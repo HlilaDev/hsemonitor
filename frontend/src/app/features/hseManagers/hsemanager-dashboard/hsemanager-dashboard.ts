@@ -1,7 +1,26 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, signal } from '@angular/core';
+import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
+import { forkJoin } from 'rxjs';
+
+import {
+  IncidentEvent,
+  IncidentEventServices,
+  IncidentSeverity,
+  IncidentStatus,
+} from '../../../core/services/incidentEvents/incident-event-services';
+
+import {
+  Observation,
+  ObservationService,
+  ObservationStatus,
+} from '../../../core/services/observations/observation-services';
+
+import {
+  Zone,
+  ZoneServices,
+} from '../../../core/services/zones/zone-services';
 
 type StatCard = {
   label: string;
@@ -26,9 +45,9 @@ type IncidentItem = {
   id: string;
   title: string;
   zone: string;
-  severity: 'low' | 'medium' | 'high';
+  severity: IncidentSeverity;
   date: string;
-  status: 'open' | 'in_progress' | 'closed';
+  status: IncidentStatus;
 };
 
 type ObservationItem = {
@@ -36,7 +55,7 @@ type ObservationItem = {
   title: string;
   zone: string;
   createdAt: string;
-  status: 'open' | 'in_progress' | 'resolved' | 'rejected';
+  status: ObservationStatus;
 };
 
 type TrainingItem = {
@@ -70,132 +89,45 @@ type AlertItem = {
   templateUrl: './hsemanager-dashboard.html',
   styleUrl: './hsemanager-dashboard.scss',
 })
-export class HsemanagerDashboard {
-  readonly today = new Date();
+export class HsemanagerDashboard implements OnInit {
+  private readonly incidentService = inject(IncidentEventServices);
+  private readonly observationService = inject(ObservationService);
+  private readonly zoneService = inject(ZoneServices);
 
-  readonly zones = signal<ZoneRisk[]>([
-    {
-      id: 'z1',
-      name: 'Production A',
-      risk: 'high',
-      temperature: 31,
-      humidity: 54,
-      devicesOnline: 4,
-      devicesTotal: 5,
-    },
-    {
-      id: 'z2',
-      name: 'Warehouse B',
-      risk: 'medium',
-      temperature: 26,
-      humidity: 49,
-      devicesOnline: 3,
-      devicesTotal: 3,
-    },
-    {
-      id: 'z3',
-      name: 'Chemical Storage',
-      risk: 'high',
-      temperature: 29,
-      humidity: 61,
-      devicesOnline: 2,
-      devicesTotal: 4,
-    },
-    {
-      id: 'z4',
-      name: 'Packaging Line',
-      risk: 'low',
-      temperature: 24,
-      humidity: 46,
-      devicesOnline: 2,
-      devicesTotal: 2,
-    },
-  ]);
+  readonly loadingZones = signal(false);
+  readonly loadingIncidents = signal(false);
+  readonly loadingObservations = signal(false);
 
-  readonly incidents = signal<IncidentItem[]>([
-    {
-      id: 'i1',
-      title: 'Gas threshold exceeded',
-      zone: 'Chemical Storage',
-      severity: 'high',
-      date: '2026-03-08T08:20:00',
-      status: 'open',
-    },
-    {
-      id: 'i2',
-      title: 'Helmet not detected',
-      zone: 'Production A',
-      severity: 'medium',
-      date: '2026-03-08T07:50:00',
-      status: 'in_progress',
-    },
-    {
-      id: 'i3',
-      title: 'Humidity sensor offline',
-      zone: 'Warehouse B',
-      severity: 'low',
-      date: '2026-03-07T17:30:00',
-      status: 'closed',
-    },
-  ]);
+  readonly zonesError = signal<string | null>(null);
+  readonly incidentsError = signal<string | null>(null);
+  readonly observationsError = signal<string | null>(null);
 
-  readonly observations = signal<ObservationItem[]>([
-    {
-      id: 'o1',
-      title: 'Helmet not worn in production line',
-      zone: 'Production A',
-      createdAt: '2026-03-08T08:45:00',
-      status: 'open',
-    },
-    {
-      id: 'o2',
-      title: 'Blocked emergency exit',
-      zone: 'Warehouse B',
-      createdAt: '2026-03-08T07:30:00',
-      status: 'in_progress',
-    },
-    {
-      id: 'o3',
-      title: 'Chemical container without label',
-      zone: 'Chemical Storage',
-      createdAt: '2026-03-07T16:10:00',
-      status: 'resolved',
-    },
-    {
-      id: 'o4',
-      title: 'Worker without reflective vest',
-      zone: 'Packaging Line',
-      createdAt: '2026-03-07T11:20:00',
-      status: 'open',
-    },
-    {
-      id: 'o5',
-      title: 'Improper storage near evacuation path',
-      zone: 'Warehouse B',
-      createdAt: '2026-03-06T14:00:00',
-      status: 'rejected',
-    },
-  ]);
+  readonly openIncidentsCount = signal(0);
+  readonly openObservationsCount = signal(0);
+
+  readonly zones = signal<ZoneRisk[]>([]);
+  readonly incidents = signal<IncidentItem[]>([]);
+  readonly observations = signal<ObservationItem[]>([]);
 
   readonly trainings = signal<TrainingItem[]>([
     {
       id: 't1',
-      title: 'Fire Safety Drill',
-      audience: 'Production Team',
+      title: 'Exercice sécurité incendie',
+      audience: 'Équipe production',
       completion: 84,
       dueDate: '2026-03-12',
     },
     {
       id: 't2',
-      title: 'PPE Compliance Basics',
-      audience: 'All Operators',
+      title: 'Bases de conformité EPI',
+      audience: 'Tous les opérateurs',
       completion: 67,
       dueDate: '2026-03-15',
     },
     {
       id: 't3',
-      title: 'Chemical Risk Awareness',
-      audience: 'Warehouse + Safety',
+      title: 'Sensibilisation risques chimiques',
+      audience: 'Entrepôt + HSE',
       completion: 52,
       dueDate: '2026-03-18',
     },
@@ -205,81 +137,42 @@ export class HsemanagerDashboard {
     {
       id: 'u1',
       name: 'Sarra Trabelsi',
-      role: 'HSE Agent',
-      task: 'Zone inspection - Production A',
+      role: 'Agent HSE',
+      task: 'Inspection zone - Production A',
       status: 'active',
     },
     {
       id: 'u2',
       name: 'Ahmed Ben Ali',
-      role: 'Safety Supervisor',
-      task: 'Incident follow-up',
+      role: 'Superviseur sécurité',
+      task: 'Suivi des incidents',
       status: 'active',
-    },
-    {
-      id: 'u3',
-      name: 'Mohamed Gharbi',
-      role: 'Operator',
-      task: 'Awaiting validation',
-      status: 'idle',
-    },
-    {
-      id: 'u4',
-      name: 'Yasmine Krichen',
-      role: 'Trainer',
-      task: 'Offline',
-      status: 'offline',
     },
   ]);
 
   readonly alerts = signal<AlertItem[]>([
     {
       id: 'a1',
-      message: 'Gas sensor reported abnormal value',
-      zone: 'Chemical Storage',
+      message: 'Valeur gaz anormale détectée',
+      zone: 'Stockage chimique',
       level: 'critical',
-      time: '2 min ago',
+      time: 'il y a 2 min',
     },
     {
       id: 'a2',
-      message: 'Device maintenance required',
+      message: 'Maintenance appareil requise',
       zone: 'Production A',
       level: 'warning',
-      time: '18 min ago',
-    },
-    {
-      id: 'a3',
-      message: 'Training reminder sent to operators',
-      zone: 'All Zones',
-      level: 'info',
-      time: '1 hour ago',
+      time: 'il y a 18 min',
     },
   ]);
 
   readonly complianceRate = signal(91);
-  readonly devicesOnline = signal(11);
-  readonly devicesTotal = signal(14);
-  readonly responseTime = signal(12);
-
-  readonly onlineRate = computed(() => {
-    const total = this.devicesTotal();
-    return total ? Math.round((this.devicesOnline() / total) * 100) : 0;
-  });
+  readonly devicesOnline = signal(0);
+  readonly devicesTotal = signal(0);
 
   readonly highRiskZones = computed(
     () => this.zones().filter(zone => zone.risk === 'high').length
-  );
-
-  readonly openIncidentsCount = computed(
-    () => this.incidents().filter(incident => incident.status !== 'closed').length
-  );
-
-  readonly openObservationsCount = computed(
-    () =>
-      this.observations().filter(
-        observation =>
-          observation.status === 'open' || observation.status === 'in_progress'
-      ).length
   );
 
   readonly trainingCompletionRate = computed(() => {
@@ -292,54 +185,260 @@ export class HsemanagerDashboard {
 
   readonly stats = computed<StatCard[]>(() => [
     {
-      label: 'Zones monitored',
+      label: 'Zones surveillées',
       value: this.zones().length,
       icon: 'bi bi-geo-alt',
-      trend: 8,
+      trend: 0,
       tone: 'primary',
     },
     {
-      label: 'Open observations',
+      label: 'Observations ouvertes',
       value: this.openObservationsCount(),
       icon: 'bi bi-search',
-      trend: 6,
+      trend: 0,
       tone: 'success',
     },
     {
-      label: 'Open incidents',
+      label: 'Incidents ouverts',
       value: this.openIncidentsCount(),
       icon: 'bi bi-exclamation-triangle',
-      trend: -2,
+      trend: 0,
       tone: 'warn',
     },
     {
-      label: 'Training completion',
+      label: 'Formation complétée',
       value: this.trainingCompletionRate(),
       unit: '%',
       icon: 'bi bi-mortarboard',
-      trend: 11,
+      trend: 0,
       tone: 'danger',
     },
   ]);
 
-  readonly chartBars = computed(() => {
-    const data = [
-      { label: 'Mon', value: 5 },
-      { label: 'Tue', value: 8 },
-      { label: 'Wed', value: 4 },
-      { label: 'Thu', value: 9 },
-      { label: 'Fri', value: 6 },
-      { label: 'Sat', value: 3 },
-      { label: 'Sun', value: 7 },
-    ];
+readonly chartBars = computed(() => {
+  const days = ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'];
 
-    const max = Math.max(...data.map(item => item.value), 1);
+  const data = days.map((label, index) => {
+    const value = this.incidents().filter(incident => {
+      const date = new Date(incident.date);
+      return date.getDay() === index;
+    }).length;
 
-    return data.map(item => ({
-      ...item,
-      height: `${(item.value / max) * 100}%`,
-    }));
+    return {
+      label,
+      value,
+    };
   });
+
+  const max = Math.max(...data.map(item => item.value), 1);
+
+  return data.map(item => ({
+    ...item,
+    height: `${(item.value / max) * 100}%`,
+  }));
+});
+
+incidentTooltip(bar: { label: string; value: number }): string {
+  return `${bar.label} : ${bar.value} incident${bar.value > 1 ? 's' : ''}`;
+}
+
+  ngOnInit(): void {
+    this.loadZones();
+    this.loadOpenIncidents();
+    this.loadOpenObservations();
+  }
+
+  loadZones(): void {
+    this.loadingZones.set(true);
+    this.zonesError.set(null);
+
+    this.zoneService.getAllZones(undefined, true).subscribe({
+      next: response => {
+        const items = response.items || [];
+
+        this.zones.set(items.map(zone => this.mapZone(zone)));
+
+        this.devicesTotal.set(
+          items.reduce((sum, zone) => sum + this.getDevicesTotal(zone), 0)
+        );
+
+        this.devicesOnline.set(
+          items.reduce((sum, zone) => sum + this.getDevicesOnline(zone), 0)
+        );
+
+        this.loadingZones.set(false);
+      },
+      error: err => {
+        console.error('Erreur chargement zones dashboard:', err);
+
+        this.zones.set([]);
+        this.devicesTotal.set(0);
+        this.devicesOnline.set(0);
+        this.zonesError.set('Impossible de charger les zones.');
+        this.loadingZones.set(false);
+      },
+    });
+  }
+
+  loadOpenIncidents(): void {
+    this.loadingIncidents.set(true);
+    this.incidentsError.set(null);
+
+    this.incidentService
+      .listIncidentEvents({
+        status: 'open',
+        page: 1,
+        limit: 5,
+        sort: '-createdAt',
+      })
+      .subscribe({
+        next: response => {
+          this.openIncidentsCount.set(response.meta.total);
+          this.incidents.set(response.items.map(item => this.mapIncident(item)));
+          this.loadingIncidents.set(false);
+        },
+        error: err => {
+          console.error('Erreur chargement incidents dashboard:', err);
+
+          this.openIncidentsCount.set(0);
+          this.incidents.set([]);
+          this.incidentsError.set('Impossible de charger les incidents ouverts.');
+          this.loadingIncidents.set(false);
+        },
+      });
+  }
+
+  loadOpenObservations(): void {
+    this.loadingObservations.set(true);
+    this.observationsError.set(null);
+
+    forkJoin({
+      open: this.observationService.list({
+        status: 'open',
+        page: 1,
+        limit: 5,
+        sort: '-createdAt',
+      }),
+      inProgress: this.observationService.list({
+        status: 'in_progress',
+        page: 1,
+        limit: 5,
+        sort: '-createdAt',
+      }),
+    }).subscribe({
+      next: ({ open, inProgress }) => {
+        this.openObservationsCount.set(open.meta.total + inProgress.meta.total);
+
+        const items = [...open.items, ...inProgress.items]
+          .sort(
+            (a, b) =>
+              new Date(b.createdAt || b.updatedAt || 0).getTime() -
+              new Date(a.createdAt || a.updatedAt || 0).getTime()
+          )
+          .slice(0, 5);
+
+        this.observations.set(items.map(item => this.mapObservation(item)));
+        this.loadingObservations.set(false);
+      },
+      error: err => {
+        console.error('Erreur chargement observations dashboard:', err);
+
+        this.openObservationsCount.set(0);
+        this.observations.set([]);
+        this.observationsError.set(
+          'Impossible de charger les observations ouvertes.'
+        );
+        this.loadingObservations.set(false);
+      },
+    });
+  }
+
+  private mapZone(zone: Zone): ZoneRisk {
+    return {
+      id: zone._id,
+      name: zone.name || 'Zone sans nom',
+      risk: this.normalizeRisk(zone.riskLevel),
+      temperature: this.getZoneMetric(zone, ['temperature', 'temp']),
+      humidity: this.getZoneMetric(zone, ['humidity']),
+      devicesOnline: this.getDevicesOnline(zone),
+      devicesTotal: this.getDevicesTotal(zone),
+    };
+  }
+
+  private mapIncident(item: IncidentEvent): IncidentItem {
+    return {
+      id: item._id,
+      title: item.title || 'Incident sans titre',
+      zone: this.getName(item.zone, 'Zone non définie'),
+      severity: item.severity || 'medium',
+      date: item.createdAt || item.updatedAt || new Date().toISOString(),
+      status: item.status,
+    };
+  }
+
+  private mapObservation(item: Observation): ObservationItem {
+    return {
+      id: item._id,
+      title: item.title || 'Observation sans titre',
+      zone: this.getName(item.zone, 'Zone non définie'),
+      createdAt: item.createdAt || item.updatedAt || new Date().toISOString(),
+      status: item.status,
+    };
+  }
+
+  private getDevicesTotal(zone: Zone): number {
+    const devices = (zone as any).devices;
+
+    if (Array.isArray(devices)) return devices.length;
+
+    return Number(
+      (zone as any).devicesTotal ??
+        (zone as any).devicesCount ??
+        (zone as any).deviceCount ??
+        0
+    );
+  }
+
+  private getDevicesOnline(zone: Zone): number {
+    const devices = (zone as any).devices;
+
+    if (Array.isArray(devices)) {
+      return devices.filter((device: any) => device.status === 'online').length;
+    }
+
+    return Number(
+      (zone as any).devicesOnline ??
+        (zone as any).onlineDevices ??
+        (zone as any).onlineDevicesCount ??
+        0
+    );
+  }
+
+  private getZoneMetric(zone: Zone, keys: string[]): number {
+    for (const key of keys) {
+      const value = (zone as any)[key];
+
+      if (typeof value === 'number') return value;
+
+      if (!Number.isNaN(Number(value)) && value !== undefined && value !== null) {
+        return Number(value);
+      }
+    }
+
+    return 0;
+  }
+
+  private normalizeRisk(value: any): 'low' | 'medium' | 'high' {
+    if (value === 'high' || value === 'critical') return 'high';
+    if (value === 'medium' || value === 'warning') return 'medium';
+    return 'low';
+  }
+
+  private getName(value: any, fallback: string): string {
+    if (!value) return fallback;
+    if (typeof value === 'string') return value;
+    return value.name || value.title || fallback;
+  }
 
   riskClass(risk: string): string {
     if (risk === 'low') return 'ok';
@@ -349,19 +448,22 @@ export class HsemanagerDashboard {
 
   severityClass(level: string): string {
     if (level === 'low' || level === 'info') return 'ok';
+
     if (
       level === 'medium' ||
       level === 'warning' ||
-      level === 'in_progress'
+      level === 'in_progress' ||
+      level === 'reviewed'
     ) {
       return 'warn';
     }
+
     return 'bad';
   }
 
   incidentStatusClass(status: string): string {
-    if (status === 'closed') return 'ok';
-    if (status === 'in_progress') return 'warn';
+    if (status === 'closed' || status === 'resolved') return 'ok';
+    if (status === 'in_progress' || status === 'reviewed') return 'warn';
     return 'bad';
   }
 

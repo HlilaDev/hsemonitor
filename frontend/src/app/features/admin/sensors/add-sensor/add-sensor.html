@@ -1,89 +1,118 @@
 <div class="page">
-  <div class="header">
+  <section class="hero">
     <div>
-      <h2>Ajouter un capteur</h2>
-      <p class="muted">
-        Créer un nouveau capteur et l'affecter à un device (zone auto)
-      </p>
+      <span class="eyebrow">Admin · IoT Monitoring</span>
+      <h1>Ajouter un capteur</h1>
+      <p>Déclare un nouveau capteur IoT et configure son seuil initial.</p>
     </div>
 
-    <a class="btn ghost" routerLink="/admin/sensors">
+    <a class="btn light" routerLink="/admin/sensors">
       <i class="bi bi-arrow-left"></i>
       Retour
     </a>
-  </div>
+  </section>
 
-  <div class="card">
-    <div *ngIf="error()" class="alert error">
+  <section class="stats-grid">
+    <div class="stat-card">
+      <span>Étape 1</span>
+      <strong>Info</strong>
+      <small>Nom, type et unité</small>
+    </div>
+
+    <div class="stat-card success">
+      <span>Étape 2</span>
+      <strong>Device</strong>
+      <small>Liaison avec ESP/Raspberry</small>
+    </div>
+
+    <div class="stat-card warning">
+      <span>Étape 3</span>
+      <strong>Seuil</strong>
+      <small>Threshold initial</small>
+    </div>
+  </section>
+
+  @if (error()) {
+    <div class="alert error">
       <i class="bi bi-exclamation-triangle"></i>
       {{ error() }}
     </div>
+  }
 
-    <form class="form" [formGroup]="form" (ngSubmit)="submit()">
-      <div class="grid">
-        <div class="field">
-          <label>Nom *</label>
-          <input class="input" formControlName="name" placeholder="Ex: Temp Sensor A1" />
-          <div class="hint error" *ngIf="fieldInvalid('name')">
-            Nom requis (min 2 caractères)
-          </div>
-        </div>
-
-        <div class="field">
-          <label>Type *</label>
-          <select class="input" formControlName="type">
-            <option *ngFor="let t of sensorTypes" [value]="t.value">
-              {{ t.label }}
-            </option>
-          </select>
-          <div class="hint error" *ngIf="fieldInvalid('type')">Type requis</div>
-        </div>
-
-        <!-- ✅ IMPORTANT: formControlName="device" and value = d._id -->
-        <div class="field">
-          <label>Device *</label>
-          <select
-            class="input"
-            formControlName="device"
-            (change)="onDeviceChange(form.value.device || '')"
-          >
-            <option value="">-- Choisir device --</option>
-            <option *ngFor="let d of devices()" [value]="d._id">
-              {{ deviceLabel(d) }}
-            </option>
-          </select>
-          <div class="hint error" *ngIf="fieldInvalid('device')">Device requis</div>
-        </div>
-
-        <div class="field">
-          <label>Zone (auto depuis device)</label>
-          <input class="input" [value]="zoneLabel()" disabled />
-          <div class="hint" *ngIf="!selectedZone()">
-            Sélectionne un device pour remplir la zone automatiquement.
-          </div>
-        </div>
-
-        <div class="field">
-          <label>Threshold (optionnel)</label>
-          <input class="input" type="number" formControlName="threshold" placeholder="Ex: 80" />
-        </div>
-
-        <div class="field">
-          <label>Unité (optionnel)</label>
-          <input class="input" formControlName="unit" placeholder="Ex: °C, ppm, dB" />
-        </div>
+  <form class="card form-card" [formGroup]="form" (ngSubmit)="submit()">
+    <div class="section-title">
+      <div>
+        <h3>Informations du capteur</h3>
+        <p>Ces informations seront utilisées par le monitoring et les alert rules.</p>
       </div>
 
-      <div class="actions">
-        <button class="btn primary" type="submit" [disabled]="!canSubmit()">
-          <span *ngIf="!loading()">Créer</span>
-          <span *ngIf="loading()" class="inline">
-            <span class="spinner"></span>
-            Création...
-          </span>
-        </button>
-        <a class="btn" routerLink="/admin/sensors">Annuler</a>
+      <span class="status-pill" [class.online]="form.value.status === 'online'">
+        {{ form.value.status }}
+      </span>
+    </div>
+
+    <div class="grid">
+      <div class="field">
+        <label>Nom *</label>
+        <input class="input" formControlName="name" placeholder="Ex: MP2" />
+        @if (fieldInvalid('name')) {
+          <div class="hint error">Nom requis, minimum 2 caractères.</div>
+        }
       </div>
-    </form>
-  </div>
+
+      <div class="field">
+        <label>Type *</label>
+        <select class="input" formControlName="type">
+          @for (t of sensorTypes; track t.value) {
+            <option [value]="t.value">{{ t.label }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Device ID Mongo *</label>
+        <input class="input" formControlName="device" placeholder="ObjectId du device" />
+        @if (fieldInvalid('device')) {
+          <div class="hint error">Device requis.</div>
+        }
+      </div>
+
+      <div class="field">
+        <label>Zone ID</label>
+        <input class="input" formControlName="zone" placeholder="Optionnel" />
+        <div class="hint">Tu peux laisser vide si la zone vient du device.</div>
+      </div>
+
+      <div class="field">
+        <label>Threshold initial</label>
+        <input class="input" type="number" formControlName="threshold" placeholder="Ex: 160" />
+      </div>
+
+      <div class="field">
+        <label>Unité</label>
+        <input class="input" formControlName="unit" placeholder="°C, ppm, %, raw" />
+      </div>
+
+      <div class="field full">
+        <label>Status *</label>
+        <select class="input" formControlName="status">
+          @for (s of statuses; track s.value) {
+            <option [value]="s.value">{{ s.label }}</option>
+          }
+        </select>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="btn ghost" type="button" (click)="goBack()">Annuler</button>
+
+      <button class="btn primary" type="submit" [disabled]="!canSubmit()">
+        @if (!loading()) {
+          <span><i class="bi bi-plus-circle"></i> Ajouter le capteur</span>
+        } @else {
+          <span class="inline"><span class="spinner"></span> Création...</span>
+        }
+      </button>
+    </div>
+  </form>
 </div>

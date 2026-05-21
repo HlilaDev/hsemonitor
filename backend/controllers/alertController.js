@@ -1,4 +1,16 @@
+//SAAS ok
 const Alert = require("../models/alertModel");
+
+// Helper SaaS multi-tenant
+const getCompanyFilter = (req) => {
+  if (req.user?.role === "superAdmin") {
+    return {};
+  }
+
+  return {
+    company: req.user.company,
+  };
+};
 
 // GET /api/alerts
 exports.listAlerts = async (req, res) => {
@@ -15,7 +27,9 @@ exports.listAlerts = async (req, res) => {
       sort = "-createdAt",
     } = req.query;
 
-    const filter = {};
+    const filter = {
+      ...getCompanyFilter(req),
+    };
 
     if (status) filter.status = status;
     if (severity) filter.severity = severity;
@@ -24,7 +38,9 @@ exports.listAlerts = async (req, res) => {
     if (type) filter.type = type;
     if (isRead !== undefined) filter.isRead = isRead === "true";
 
-    const skip = (Number(page) - 1) * Number(limit);
+    const safePage = Math.max(Number(page) || 1, 1);
+    const safeLimit = Math.min(Math.max(Number(limit) || 20, 1), 100);
+    const skip = (safePage - 1) * safeLimit;
 
     const [items, total] = await Promise.all([
       Alert.find(filter)
@@ -36,7 +52,8 @@ exports.listAlerts = async (req, res) => {
         .populate("resolvedBy", "_id firstName lastName email")
         .sort(sort)
         .skip(skip)
-        .limit(Number(limit)),
+        .limit(safeLimit),
+
       Alert.countDocuments(filter),
     ]);
 
@@ -44,9 +61,9 @@ exports.listAlerts = async (req, res) => {
       items,
       meta: {
         total,
-        page: Number(page),
-        limit: Number(limit),
-        pages: Math.ceil(total / Number(limit)),
+        page: safePage,
+        limit: safeLimit,
+        pages: Math.ceil(total / safeLimit),
       },
     });
   } catch (error) {
@@ -60,7 +77,10 @@ exports.listAlerts = async (req, res) => {
 // GET /api/alerts/:id
 exports.getAlertById = async (req, res) => {
   try {
-    const alert = await Alert.findById(req.params.id)
+    const alert = await Alert.findOne({
+      _id: req.params.id,
+      ...getCompanyFilter(req),
+    })
       .populate("zone", "_id name")
       .populate("device", "_id name deviceId status")
       .populate("sensor", "_id name type")
@@ -84,8 +104,11 @@ exports.getAlertById = async (req, res) => {
 // PATCH /api/alerts/:id/read
 exports.markAsRead = async (req, res) => {
   try {
-    const alert = await Alert.findByIdAndUpdate(
-      req.params.id,
+    const alert = await Alert.findOneAndUpdate(
+      {
+        _id: req.params.id,
+        ...getCompanyFilter(req),
+      },
       { isRead: true },
       { new: true }
     );
@@ -115,9 +138,14 @@ exports.acknowledgeAlert = async (req, res) => {
       update.acknowledgedBy = req.user._id;
     }
 
-    const alert = await Alert.findByIdAndUpdate(req.params.id, update, {
-      new: true,
-    });
+    const alert = await Alert.findOneAndUpdate(
+      {
+        _id: req.params.id,
+        ...getCompanyFilter(req),
+      },
+      update,
+      { new: true }
+    );
 
     if (!alert) {
       return res.status(404).json({ message: "Alert not found" });
@@ -145,9 +173,14 @@ exports.resolveAlert = async (req, res) => {
       update.resolvedBy = req.user._id;
     }
 
-    const alert = await Alert.findByIdAndUpdate(req.params.id, update, {
-      new: true,
-    });
+    const alert = await Alert.findOneAndUpdate(
+      {
+        _id: req.params.id,
+        ...getCompanyFilter(req),
+      },
+      update,
+      { new: true }
+    );
 
     if (!alert) {
       return res.status(404).json({ message: "Alert not found" });
@@ -165,7 +198,10 @@ exports.resolveAlert = async (req, res) => {
 // DELETE /api/alerts/:id
 exports.deleteAlert = async (req, res) => {
   try {
-    const alert = await Alert.findByIdAndDelete(req.params.id);
+    const alert = await Alert.findOneAndDelete({
+      _id: req.params.id,
+      ...getCompanyFilter(req),
+    });
 
     if (!alert) {
       return res.status(404).json({ message: "Alert not found" });

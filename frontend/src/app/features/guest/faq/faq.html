@@ -1,0 +1,30 @@
+<app-header/>
+<section class="faq-section" id="faq">
+  <div class="container">
+    
+  
+
+    <div class="faq-list">
+      @for (item of faqs; track item; let i = $index) {
+        <div class="faq-item" [class.active]="activeIndex() === i">
+
+          <button class="faq-question" (click)="toggle(i)">
+            <span>{{ item.question }}</span>
+            <span class="icon">
+              {{ activeIndex() === i ? '−' : '+' }}
+            </span>
+          </button>
+
+          @if (activeIndex() === i) {
+            <div class="faq-answer">
+              <p>{{ item.answer }}</p>
+            </div>
+          }
+
+        </div>
+      }
+    </div>
+
+  </div>
+</section>
+<app-footer/>

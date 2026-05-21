@@ -15,5 +15,12 @@ export const GUEST_ROUTES: Routes = [
       import('./contact-us/contact-us').then(m => m.ContactUs),
     
   },
+
+      {
+    path: 'faq',
+    loadComponent: () =>
+      import('./faq/faq').then(m => m.Faq),
+    
+  },
   
 ];

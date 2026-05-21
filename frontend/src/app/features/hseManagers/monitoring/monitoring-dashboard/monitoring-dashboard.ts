@@ -10,7 +10,7 @@ import {
 import {
   AiPrediction,
   AiPredictionServices,
-} from '../../../../core/services/ai/ai-prediction-services';
+} from '../../../../core/services/ai/ai-prediction/ai-prediction-services';
 
 type ZoneSummary = {
   zoneId: string;
@@ -285,7 +285,7 @@ export class MonitoringDashboard implements OnInit {
     this.aiError.set(null);
 
     this.aiPredictionServices.predictZoneRisk(zoneId).subscribe({
-      next: (response) => {
+      next: (response: { prediction: any; }) => {
         this.aiPrediction.set(response.prediction);
         this.isAiLoading.set(false);
       },

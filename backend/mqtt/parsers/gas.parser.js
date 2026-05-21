@@ -9,7 +9,8 @@ module.exports = function parseGas(payload) {
 
   return {
     values: {
-      ppm
+          gas: ppm
+
     },
     raw: payload
   };

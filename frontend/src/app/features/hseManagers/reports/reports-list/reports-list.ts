@@ -1,10 +1,12 @@
-import { Component, DestroyRef, inject, signal, computed, OnInit } from '@angular/core';
+import { Component, inject, signal, computed, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { catchError, finalize, of } from 'rxjs';
 
+
 import { ReportServices } from '../../../../core/services/reports/report-services';
 import { ZoneServices } from '../../../../core/services/zones/zone-services';
+import { AiWeeklyReportService } from '../../../../core/services/ai/weekly-reports/ai-weekly-report';
 import { BASE_URL } from '../../../../core/config/api_urls';
 
 type ZoneLite = { _id: string; name: string };
@@ -18,24 +20,32 @@ type Report = {
   _id: string;
   type: ReportType;
   title?: string;
-
   startDate?: string | Date;
   endDate?: string | Date;
-
   zone?: ZoneRef | null;
-
   metrics?: {
     totalIncidents?: number;
     totalObservations?: number;
     complianceRate?: number;
   };
-
   generatedBy?: UserRef | null;
-
   isAutomatic?: boolean;
   exportUrl?: string;
-
   createdAt?: string;
+};
+
+type AiWeeklyReport = {
+  _id: string;
+  title: string;
+  summary: string;
+  riskLevel: 'low' | 'medium' | 'high' | 'critical';
+  weekStart: string;
+  weekEnd: string;
+  stats?: any;
+  sections?: any;
+  recommendations?: any[];
+  actionPlan?: any[];
+  exportUrl?: string;
 };
 
 @Component({
@@ -46,9 +56,9 @@ type Report = {
   styleUrl: './reports-list.scss',
 })
 export class ReportsList implements OnInit {
-  private destroyRef = inject(DestroyRef);
   private reportsApi = inject(ReportServices);
   private zonesApi = inject(ZoneServices);
+  private aiWeeklyApi = inject(AiWeeklyReportService);
 
   readonly loading = signal<boolean>(false);
   readonly error = signal<string | null>(null);
@@ -60,6 +70,10 @@ export class ReportsList implements OnInit {
   readonly type = signal<'all' | ReportType>('all');
   readonly zoneId = signal<'all' | string>('all');
   readonly sort = signal<'date_desc' | 'date_asc' | 'title_asc' | 'title_desc'>('date_desc');
+
+  readonly aiGenerating = signal<boolean>(false);
+  readonly showAiModal = signal<boolean>(false);
+  readonly aiReport = signal<AiWeeklyReport | null>(null);
 
   ngOnInit(): void {
     this.loadZones();
@@ -91,6 +105,35 @@ export class ReportsList implements OnInit {
 
   setSort(v: any) {
     this.sort.set((v || 'date_desc') as any);
+  }
+
+  generateAiReport(regenerate = false) {
+    this.aiGenerating.set(true);
+    this.showAiModal.set(true);
+    this.aiReport.set(null);
+    this.error.set(null);
+
+    this.aiWeeklyApi
+      .generate(regenerate)
+      .pipe(
+        catchError((err) => {
+          this.error.set(err?.error?.message || 'Erreur lors de la génération du rapport IA.');
+          return of(null);
+        }),
+        finalize(() => this.aiGenerating.set(false))
+      )
+      .subscribe((res: any) => {
+        if (!res?.report) return;
+        this.aiReport.set(res.report);
+      });
+  }
+
+  regenerateAiReport() {
+    this.generateAiReport(true);
+  }
+
+  closeAiModal() {
+    this.showAiModal.set(false);
   }
 
   readonly filtered = computed(() => {
@@ -133,7 +176,7 @@ export class ReportsList implements OnInit {
 
   zoneIdOf(z: Report['zone']): string | null {
     if (!z) return null;
-    return typeof z === 'string' ? z : (z._id ?? null);
+    return typeof z === 'string' ? z : z._id ?? null;
   }
 
   zoneName(z: Report['zone']): string {
@@ -192,6 +235,7 @@ export class ReportsList implements OnInit {
             : Array.isArray(data?.reports)
               ? data.reports
               : [];
+
         this.reports.set(list);
       });
   }
@@ -208,7 +252,7 @@ export class ReportsList implements OnInit {
     obs$
       .pipe(catchError(() => of([])))
       .subscribe((zs: any) => {
-        const list = Array.isArray(zs) ? zs : (zs?.items ?? []);
+        const list = Array.isArray(zs) ? zs : zs?.items ?? [];
         this.zones.set(list.map((z: any) => ({ _id: z._id, name: z.name })));
       });
   }
@@ -241,6 +285,7 @@ export class ReportsList implements OnInit {
       )
       .subscribe((updated: any) => {
         if (!updated) return;
+
         this.reports.update((list) =>
           list.map((x) => (x._id === r._id ? (updated as Report) : x))
         );
@@ -248,10 +293,31 @@ export class ReportsList implements OnInit {
   }
 
   badgeClass(type: ReportType) {
-    if (type === 'weekly' || type === 'monthly') return 'scheduled';
-    if (type === 'audit' || type === 'yearly') return 'completed';
-    return 'cancelled';
+    return type;
   }
+
+  riskLabel(level?: string) {
+    if (level === 'low') return 'Faible';
+    if (level === 'medium') return 'Moyen';
+    if (level === 'high') return 'Élevé';
+    if (level === 'critical') return 'Critique';
+    return '—';
+  }
+
+  getAiPdfUrl(): string {
+  const url = this.aiReport()?.exportUrl;
+
+  if (!url) return '';
+
+  if (url.startsWith('http://') || url.startsWith('https://')) {
+    return url;
+  }
+
+  const base = BASE_URL.replace(/\/+$/, '');
+  const path = url.replace(/^\/+/, '');
+
+  return `${base}/${path}`;
+}
 
   formatPeriod(start: any, end: any) {
     const s = start ? new Date(start) : null;

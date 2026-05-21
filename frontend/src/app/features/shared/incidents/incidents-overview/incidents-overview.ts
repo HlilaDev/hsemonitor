@@ -9,6 +9,11 @@ import {
   IncidentStatus,
 } from '../../../../core/services/incidentEvents/incident-event-services';
 
+import {
+  IncidentStats,
+  IncidentsStatsServices,
+} from '../../../../core/services/stats/incidents-stats/incidents-stats-services';
+
 type IncidentFilter = 'all' | IncidentStatus;
 
 interface ZoneRisk {
@@ -32,91 +37,97 @@ interface ActivityItem {
 })
 export class IncidentsOverview implements OnInit {
   private incidentService = inject(IncidentEventServices);
+  private incidentsStatsService = inject(IncidentsStatsServices);
 
   selectedFilter = signal<IncidentFilter>('all');
 
   isLoading = signal(false);
+  isStatsLoading = signal(false);
   error = signal<string | null>(null);
 
   incidents = signal<IncidentEvent[]>([]);
+  stats = signal<IncidentStats | null>(null);
 
   filteredIncidents = computed(() => {
     const filter = this.selectedFilter();
-
-    if (filter === 'all') {
-      return this.incidents();
-    }
-
+    if (filter === 'all') return this.incidents();
     return this.incidents().filter((incident) => incident.status === filter);
   });
 
-  totalIncidents = computed(() => this.incidents().length);
+  totalIncidents = computed(() => this.stats()?.total ?? 0);
+  openCount = computed(() => this.stats()?.open?.count ?? 0);
 
-  openCount = computed(() =>
-    this.incidents().filter((incident) => incident.status === 'open').length
-  );
+  investigatingCount = computed(() => {
+    return (
+      this.stats()?.byStatus?.find((item) => item.status === 'in_progress')
+        ?.count ?? 0
+    );
+  });
 
-  investigatingCount = computed(() =>
-    this.incidents().filter((incident) =>
-      ['reviewed', 'in_progress'].includes(incident.status)
-    ).length
-  );
+  resolvedCount = computed(() => this.stats()?.closed?.count ?? 0);
 
-  resolvedCount = computed(() =>
-    this.incidents().filter((incident) =>
-      ['closed', 'false_positive'].includes(incident.status)
-    ).length
-  );
+  criticalCount = computed(() => {
+    return (
+      this.stats()?.bySeverity?.find((item) => item.severity === 'critical')
+        ?.count ?? 0
+    );
+  });
 
-  criticalCount = computed(() =>
-    this.incidents().filter((incident) => incident.severity === 'critical')
-      .length
-  );
+  weeklyTrend = computed(() => {
+    const current = this.stats()?.weekly?.current ?? 0;
+    const previous = this.stats()?.weekly?.previous ?? 0;
+    return this.calcTrend(current, previous);
+  });
 
-riskZones = computed<ZoneRisk[]>(() => {
-  const map = new Map<string, number>();
+  openTrend = computed(() => this.stats()?.open?.trend ?? this.weeklyTrend());
 
-  for (const incident of this.incidents()) {
-    const zone = this.getZoneName(incident.zone);
-    map.set(zone, (map.get(zone) || 0) + 1);
-  }
+  closedTrend = computed(() => this.weeklyTrend());
+  investigatingTrend = computed(() => this.weeklyTrend());
+  criticalTrend = computed(() => this.weeklyTrend());
 
-  return Array.from(map.entries())
-    .map(([zone, incidents]): ZoneRisk => {
-      const risk: ZoneRisk['risk'] =
-        incidents >= 5 ? 'critical' : incidents >= 2 ? 'warning' : 'stable';
+  riskZones = computed<ZoneRisk[]>(() => {
+    const zones = this.stats()?.byZone ?? [];
 
-      return {
-        zone,
-        incidents,
-        risk,
-      };
-    })
-    .sort((a, b) => b.incidents - a.incidents)
-    .slice(0, 5);
-});
+    return zones
+      .map((zone): ZoneRisk => {
+        const incidents = zone.count;
 
-  activities = computed<ActivityItem[]>(() => {
-    return this.incidents()
-      .slice(0, 6)
-      .map((incident) => {
-        const status = incident.status;
+        const risk: ZoneRisk['risk'] =
+          incidents >= 5 ? 'critical' : incidents >= 2 ? 'warning' : 'stable';
 
         return {
-          time: this.formatTime(incident.updatedAt || incident.createdAt),
-          text: `${incident.title} — ${this.statusLabel(status)}`,
-          type:
-            status === 'closed' || status === 'false_positive'
-              ? 'resolve'
-              : status === 'open'
-              ? 'create'
-              : 'update',
+          zone: zone.zoneName,
+          incidents,
+          risk,
         };
-      });
+      })
+      .sort((a, b) => b.incidents - a.incidents)
+      .slice(0, 5);
+  });
+
+  activities = computed<ActivityItem[]>(() => {
+    const recent = this.stats()?.recent?.length
+      ? this.stats()?.recent ?? []
+      : this.incidents();
+
+    return recent.slice(0, 6).map((incident: any) => {
+      const status = incident.status;
+
+      return {
+        time: this.formatTime(incident.updatedAt || incident.createdAt),
+        text: `${incident.title} — ${this.statusLabel(status)}`,
+        type:
+          status === 'closed' || status === 'false_positive'
+            ? 'resolve'
+            : status === 'open'
+            ? 'create'
+            : 'update',
+      };
+    });
   });
 
   ngOnInit(): void {
-    this.loadIncidents();
+    this.refreshPage();
   }
 
   loadIncidents(): void {
@@ -143,8 +154,51 @@ riskZones = computed<ZoneRisk[]>(() => {
       });
   }
 
+  loadStats(): void {
+    this.isStatsLoading.set(true);
+
+    this.incidentsStatsService.getStats().subscribe({
+      next: (res) => {
+        this.stats.set(res.data);
+        this.isStatsLoading.set(false);
+      },
+      error: () => {
+        this.isStatsLoading.set(false);
+      },
+    });
+  }
+
+  refreshPage(): void {
+    this.loadIncidents();
+    this.loadStats();
+  }
+
   setFilter(filter: IncidentFilter): void {
     this.selectedFilter.set(filter);
+  }
+
+  private calcTrend(current: number, previous: number): number {
+    if (previous === 0) return current > 0 ? 100 : 0;
+    return Math.round(((current - previous) / previous) * 100);
+  }
+
+  trendClass(value: number): string {
+    if (value > 0) return 'up';
+    if (value < 0) return 'down';
+    return 'neutral';
+  }
+
+  trendIcon(value: number): string {
+    if (value > 0) return 'bi bi-arrow-up-right';
+    if (value < 0) return 'bi bi-arrow-down-right';
+    return 'bi bi-dash-lg';
+  }
+
+  trendText(value: number): string {
+    const abs = Math.abs(value);
+    if (value > 0) return `+${abs}% vs semaine passée`;
+    if (value < 0) return `-${abs}% vs semaine passée`;
+    return `0% vs semaine passée`;
   }
 
   severityLabel(value?: IncidentSeverity): string {
@@ -187,8 +241,6 @@ riskZones = computed<ZoneRisk[]>(() => {
         return 'Attention';
       case 'critical':
         return 'Critique';
-      default:
-        return value;
     }
   }
 

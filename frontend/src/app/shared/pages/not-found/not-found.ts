@@ -3,7 +3,7 @@ import { Location } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { catchError, of } from 'rxjs';
 
-import { AuthServices, User } from '../../../core/services/auth/auth-services';
+import { AuthServices } from '../../../core/services/auth/auth-services';
 import { RoleRedirectServices } from '../../../core/services/redirect/role-redirect-services';
 
 @Component({
@@ -25,7 +25,7 @@ export class NotFound {
   goHome() {
     this.authService.me()
       .pipe(catchError(() => of(null)))
-      .subscribe((res: { user: User } | null) => {
+      .subscribe((res) => {
         this.roleRedirect.redirectByRole(res?.user ?? null);
       });
   }

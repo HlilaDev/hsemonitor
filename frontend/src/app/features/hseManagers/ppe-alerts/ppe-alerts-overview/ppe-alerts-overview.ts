@@ -108,17 +108,10 @@ export class PpeAlertsOverview implements OnInit {
     if (term) {
       items = items.filter((item) => {
         const text = [
-          item.label,
-          item.alertType,
-          item.status,
-          item.cameraId,
-          item.siteId,
-          item.deviceId,
-          item.device?.name,
-          item.device?.deviceId,
+          this.getTypeLabel(item.alertType),
+          this.getStatusLabel(item.status),
           item.zone?.name,
           item.zone?.code,
-          item.source,
         ]
           .filter(Boolean)
           .join(' ')
@@ -258,6 +251,9 @@ export class PpeAlertsOverview implements OnInit {
   getTypeLabel(type: string): string {
     switch (type) {
       case 'no_helmet':
+      case 'NO-Hardhat':
+      case 'no-hardhat':
+      case 'no_helmet':
         return 'Sans casque';
       case 'no_vest':
         return 'Sans gilet';
@@ -266,7 +262,7 @@ export class PpeAlertsOverview implements OnInit {
       case 'ppe_violation':
         return 'Violation PPE';
       default:
-        return type || 'Inconnu';
+        return 'Sans casque';
     }
   }
 
@@ -303,21 +299,19 @@ export class PpeAlertsOverview implements OnInit {
   getTypeClass(type: string): string {
     switch (type) {
       case 'no_helmet':
+      case 'NO-Hardhat':
+      case 'no-hardhat':
         return 'type-critical';
       case 'no_vest':
         return 'type-warning';
       case 'zone_intrusion':
         return 'type-critical';
       default:
-        return 'type-default';
+        return 'type-critical';
     }
   }
 
   getConfidencePercent(confidence: number): number {
     return Math.max(0, Math.min(100, Math.round((confidence || 0) * 100)));
-  }
-
-  getPreviewUrl(alert: PpeAlertItem): string | null {
-    return alert.snapshotPath || null;
   }
 }
