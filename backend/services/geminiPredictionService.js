@@ -30,7 +30,6 @@ Format attendu:
   "priorityActions": ["action urgente"]
 }
 `;
-
   const response = await ai.models.generateContent({
     model: process.env.GEMINI_MODEL || "gemini-2.5-flash",
     contents: prompt,
@@ -38,6 +37,5 @@ Format attendu:
       responseMimeType: "application/json",
     },
   });
-
   return JSON.parse(response.text);
 };

@@ -72,6 +72,7 @@ app.use(
     },
     crossOriginEmbedderPolicy: false,
     crossOriginResourcePolicy: false,  
+    permissionsPolicy: false,
   })
 );
 
