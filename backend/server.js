@@ -74,15 +74,18 @@ app.use(
     crossOriginEmbedderPolicy: false,
     crossOriginResourcePolicy: false,
 
-    permissionsPolicy: {
-      features: {
-        camera: [],
-        microphone: [],
-        geolocation: [],
-      },
-    },
+    permissionsPolicy: false, // disable helmet's handling — set manually below
   })
 );
+
+// Permissions-Policy set manually to guarantee correct syntax
+app.use((req, res, next) => {
+  res.setHeader(
+    "Permissions-Policy",
+    "camera=(), microphone=(), geolocation=(), payment=(), usb=(), interest-cohort=()"
+  );
+  next();
+});
 
 
 app.use(express.json({ limit: "1mb" }));
