@@ -3,7 +3,7 @@ services:
     build: ./backend
     container_name: hse-backend-container
     ports:
-      - "3002:5000"
+      - "5000:5000"
     env_file:
       - ./backend/.env
     restart: unless-stopped
