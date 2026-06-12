@@ -4,11 +4,10 @@
 
       <!-- Brand -->
       <a class="brand" routerLink="/">
-        <div class="logo" aria-hidden="true"></div>
-
+        <img class="logo" src="assets/images/logo.webp" alt="HSE Monitor" />
         <div class="brand-text">
           <h1>HSE Monitor</h1>
-          <p>Plateforme intelligente HSE</p>
+          <p>{{ 'landing.header.tagline' | translate }}</p>
         </div>
       </a>
 
@@ -16,22 +15,45 @@
       <div class="nav-links" role="navigation" aria-label="Navigation principale">
         @for (link of navLinks; track link.anchor) {
           <button class="nav-link" type="button" (click)="scrollTo(link.anchor)">
-            {{ link.label }}
+            {{ link.key | translate }}
           </button>
         }
       </div>
 
       <!-- Desktop Actions -->
       <div class="nav-actions">
+        <!-- Language switcher -->
+        <div class="lang-switcher" [class.open]="isLangMenuOpen()">
+          <button class="lang-btn" type="button" (click)="toggleLangMenu()">
+            <span class="lang-code">{{ currentLang().toUpperCase() }}</span>
+            <i class="bi bi-chevron-down lang-caret"></i>
+          </button>
+          @if (isLangMenuOpen()) {
+            <div class="lang-dropdown">
+              @for (lang of langs; track lang.code) {
+                <button
+                  class="lang-option"
+                  type="button"
+                  [class.active]="currentLang() === lang.code"
+                  (click)="setLang(lang.code)"
+                >
+                  <span class="lang-code-sm">{{ lang.flag }}</span>
+                  <span>{{ lang.label }}</span>
+                </button>
+              }
+            </div>
+          }
+        </div>
+
         @if (!isLoggedIn()) {
           <a class="btn btn-dark" routerLink="/login">
-            Connexion
+            {{ 'landing.header.login' | translate }}
           </a>
         }
 
         @if (isLoggedIn()) {
           <button class="btn btn-primary" type="button" (click)="goToPlatform()">
-            Accéder à la plateforme →
+            {{ 'landing.header.goToPlatform' | translate }}
           </button>
         }
       </div>
@@ -53,31 +75,35 @@
     <!-- Mobile Menu -->
     @if (isMobileMenuOpen()) {
       <div class="mobile-menu">
-
         @for (link of navLinks; track link.anchor) {
           <button class="nav-link" type="button" (click)="scrollTo(link.anchor)">
-            {{ link.label }}
+            {{ link.key | translate }}
           </button>
         }
 
+        <!-- Mobile language switcher -->
+        <div class="mobile-lang">
+          @for (lang of langs; track lang.code) {
+            <button
+              class="lang-pill"
+              type="button"
+              [class.active]="currentLang() === lang.code"
+              (click)="setLang(lang.code)"
+            >
+              {{ lang.flag }}
+            </button>
+          }
+        </div>
+
         <div class="mobile-actions">
           @if (!isLoggedIn()) {
-            <a
-              class="btn btn-dark"
-              routerLink="/login"
-              (click)="toggleMobileMenu()"
-            >
-              Connexion
+            <a class="btn btn-dark" routerLink="/login" (click)="toggleMobileMenu()">
+              {{ 'landing.header.login' | translate }}
             </a>
           }
-
           @if (isLoggedIn()) {
-            <button
-              class="btn btn-primary"
-              type="button"
-              (click)="goToPlatform()"
-            >
-              Accéder à la plateforme →
+            <button class="btn btn-primary" type="button" (click)="goToPlatform()">
+              {{ 'landing.header.goToPlatform' | translate }}
             </button>
           }
         </div>
