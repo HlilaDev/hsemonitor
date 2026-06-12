@@ -32,11 +32,11 @@
       <div class="empty-icon">
         <i class="bi bi-file-earmark-text"></i>
       </div>
-      <h3>Rapport introuvable</h3>
-      <p>Le rapport demandé n’existe pas ou n’est plus disponible.</p>
+      <h3>{{ 'reports.detail.notFound' | translate }}</h3>
+      <p>{{ 'reports.detail.notFoundMsg' | translate }}</p>
       <button class="btn primary" (click)="goBack()">
         <i class="bi bi-arrow-left"></i>
-        Retour à la liste
+        {{ 'reports.detail.backToList' | translate }}
       </button>
     </div>
 
@@ -44,7 +44,7 @@
       <div class="topbar">
         <button class="btn ghost" (click)="goBack()">
           <i class="bi bi-arrow-left"></i>
-          Retour
+          {{ 'reports.detail.back' | translate }}
         </button>
 
         <div class="topbar-actions">
@@ -56,7 +56,7 @@
             rel="noopener"
           >
             <i class="bi bi-file-earmark-pdf"></i>
-            Ouvrir PDF
+            {{ 'reports.detail.openPdf' | translate }}
           </a>
 
           <a
@@ -64,7 +64,7 @@
             [routerLink]="['/manager/reports', r._id, 'edit']"
           >
             <i class="bi bi-pencil-square"></i>
-            Modifier
+            {{ 'reports.detail.edit' | translate }}
           </a>
 
           <button
@@ -73,14 +73,14 @@
             [disabled]="recalculating()"
           >
             <i class="bi bi-arrow-clockwise"></i>
-            {{ recalculating() ? 'Recalcul...' : 'Recalculer métriques' }}
+            {{ recalculating() ? ('reports.detail.recalculating' | translate) : ('reports.detail.recalculate' | translate) }}
           </button>
         </div>
       </div>
 
       <div class="card hero">
         <div class="hero-left">
-          <div class="eyebrow">Rapport HSE</div>
+          <div class="eyebrow">{{ 'reports.detail.kicker' | translate }}</div>
 
           <h1>{{ r.title || ('Rapport ' + typeLabel(r.type)) }}</h1>
 
@@ -101,13 +101,13 @@
 
             <span class="chip" *ngIf="r.isAutomatic; else manualBlock">
               <i class="bi bi-cpu"></i>
-              Automatique
+              {{ 'reports.detail.automatic' | translate }}
             </span>
 
             <ng-template #manualBlock>
               <span class="chip">
                 <i class="bi bi-person"></i>
-                Manuel
+                {{ 'reports.detail.manual' | translate }}
               </span>
             </ng-template>
           </div>
@@ -115,7 +115,7 @@
 
         <div class="hero-right">
           <div class="status-card">
-            <span class="status-label">Conformité globale</span>
+            <span class="status-label">{{ 'reports.detail.compliance' | translate }}</span>
             <span class="status-value">
               {{ complianceValue() | number:'1.0-2' }}%
             </span>
@@ -129,9 +129,9 @@
             <i class="bi bi-exclamation-octagon"></i>
           </div>
           <div class="metric-content">
-            <div class="metric-label">Incidents</div>
+            <div class="metric-label">{{ 'reports.detail.metrics.incidents' | translate }}</div>
             <div class="metric-value">{{ incidentsValue() }}</div>
-            <div class="metric-sub">Nombre total enregistrés</div>
+            <div class="metric-sub">{{ 'reports.detail.metrics.incidentsHint' | translate }}</div>
           </div>
         </div>
 
@@ -140,9 +140,9 @@
             <i class="bi bi-clipboard-check"></i>
           </div>
           <div class="metric-content">
-            <div class="metric-label">Observations</div>
+            <div class="metric-label">{{ 'reports.detail.metrics.observations' | translate }}</div>
             <div class="metric-value">{{ observationsValue() }}</div>
-            <div class="metric-sub">Observations HSE collectées</div>
+            <div class="metric-sub">{{ 'reports.detail.metrics.observationsHint' | translate }}</div>
           </div>
         </div>
 
@@ -151,11 +151,11 @@
             <i class="bi bi-shield-check"></i>
           </div>
           <div class="metric-content">
-            <div class="metric-label">Compliance</div>
+            <div class="metric-label">{{ 'reports.detail.metrics.compliance' | translate }}</div>
             <div class="metric-value">
               {{ complianceValue() | number:'1.0-2' }}%
             </div>
-            <div class="metric-sub">Niveau de conformité calculé</div>
+            <div class="metric-sub">{{ 'reports.detail.metrics.complianceHint' | translate }}</div>
           </div>
         </div>
 
@@ -164,9 +164,9 @@
             <i class="bi bi-person-badge"></i>
           </div>
           <div class="metric-content">
-            <div class="metric-label">Généré par</div>
+            <div class="metric-label">{{ 'reports.detail.generatedBy' | translate }}</div>
             <div class="metric-value smaller">{{ userName(r.generatedBy) }}</div>
-            <div class="metric-sub">Auteur du rapport</div>
+            <div class="metric-sub">{{ 'reports.detail.authorHint' | translate }}</div>
           </div>
         </div>
       </div>
@@ -175,28 +175,28 @@
         <div class="card detail-card">
           <div class="section-title">
             <i class="bi bi-info-circle"></i>
-            Informations générales
+            {{ 'reports.detail.info.title' | translate }}
           </div>
 
           <div class="detail-list">
             <div class="detail-row">
-              <span class="k">Titre</span>
+              <span class="k">{{ 'reports.detail.info.titleLabel' | translate }}</span>
               <span class="v">{{ r.title || '—' }}</span>
             </div>
 
             <div class="detail-row">
-              <span class="k">Type</span>
+              <span class="k">{{ 'reports.detail.info.type' | translate }}</span>
               <span class="v">{{ typeLabel(r.type) }}</span>
             </div>
 
             <div class="detail-row">
-              <span class="k">Zone</span>
+              <span class="k">{{ 'reports.detail.info.zone' | translate }}</span>
               <span class="v">{{ zoneName(r.zone) }}</span>
             </div>
 
             <div class="detail-row">
-              <span class="k">Mode</span>
-              <span class="v">{{ r.isAutomatic ? 'Automatique' : 'Manuel' }}</span>
+              <span class="k">{{ 'reports.detail.info.mode' | translate }}</span>
+              <span class="v">{{ r.isAutomatic ? ('reports.detail.info.automatic' | translate) : ('reports.detail.info.manual' | translate) }}</span>
             </div>
           </div>
         </div>
@@ -204,33 +204,33 @@
         <div class="card detail-card">
           <div class="section-title">
             <i class="bi bi-calendar-event"></i>
-            Période & traçabilité
+            {{ 'reports.detail.info.period' | translate }}
           </div>
 
           <div class="detail-list">
             <div class="detail-row">
-              <span class="k">Date début</span>
+              <span class="k">{{ 'reports.detail.info.startDate' | translate }}</span>
               <span class="v">
                 {{ r.startDate ? (r.startDate | date:'dd/MM/yyyy') : '—' }}
               </span>
             </div>
 
             <div class="detail-row">
-              <span class="k">Date fin</span>
+              <span class="k">{{ 'reports.detail.info.endDate' | translate }}</span>
               <span class="v">
                 {{ r.endDate ? (r.endDate | date:'dd/MM/yyyy') : '—' }}
               </span>
             </div>
 
             <div class="detail-row">
-              <span class="k">Créé le</span>
+              <span class="k">{{ 'reports.detail.info.createdAt' | translate }}</span>
               <span class="v">
                 {{ r.createdAt ? (r.createdAt | date:'dd/MM/yyyy HH:mm') : '—' }}
               </span>
             </div>
 
             <div class="detail-row">
-              <span class="k">Mis à jour</span>
+              <span class="k">{{ 'reports.detail.info.updatedAt' | translate }}</span>
               <span class="v">
                 {{ r.updatedAt ? (r.updatedAt | date:'dd/MM/yyyy HH:mm') : '—' }}
               </span>
@@ -242,14 +242,14 @@
       <div class="card export-card">
         <div class="section-title">
           <i class="bi bi-file-earmark-pdf"></i>
-          Export PDF
+          {{ 'reports.detail.export.title' | translate }}
         </div>
 
         <ng-container *ngIf="r.exportUrl; else noPdf">
           <div class="export-box available">
             <div class="export-text">
-              <strong>Export disponible</strong>
-              <p>Le rapport possède déjà un fichier PDF généré.</p>
+              <strong>{{ 'reports.detail.export.available' | translate }}</strong>
+              <p>{{ 'reports.detail.export.availableHint' | translate }}</p>
             </div>
 
             <a
@@ -259,7 +259,7 @@
               rel="noopener"
             >
               <i class="bi bi-box-arrow-up-right"></i>
-              Ouvrir le PDF
+              {{ 'reports.detail.export.openPdf' | translate }}
             </a>
           </div>
         </ng-container>
@@ -267,8 +267,8 @@
         <ng-template #noPdf>
           <div class="export-box">
             <div class="export-text">
-              <strong>Aucun export PDF</strong>
-              <p>Ce rapport ne contient pas encore de fichier PDF généré.</p>
+              <strong>{{ 'reports.detail.export.noExport' | translate }}</strong>
+              <p>{{ 'reports.detail.export.noExportHint' | translate }}</p>
             </div>
           </div>
         </ng-template>

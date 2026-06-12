@@ -2,8 +2,8 @@
   <div class="card">
 
     <div class="head">
-      <h2>Ajouter une observation</h2>
-      <p>Déclare une situation à risque ou une anomalie dans une zone.</p>
+      <h2>{{ 'observations.add.title' | translate }}</h2>
+      <p>{{ 'observations.add.subtitle' | translate }}</p>
     </div>
 
     <div *ngIf="errorMsg()" class="alert error">{{ errorMsg() }}</div>
@@ -13,63 +13,57 @@
 
       <div class="grid">
 
-        <!-- Titre -->
         <div class="field">
-          <label>Titre</label>
-          <input formControlName="title" placeholder="Ex: Manque d'extincteur" />
+          <label>{{ 'observations.add.titleLabel' | translate }}</label>
+          <input formControlName="title" [placeholder]="'observations.add.titlePlaceholder' | translate" />
           <small *ngIf="form.controls.title.touched && form.controls.title.invalid">
-            Titre requis (min 3 caractères)
+            {{ 'observations.add.titleError' | translate }}
           </small>
         </div>
 
-        <!-- Zone -->
         <div class="field">
-          <label>Zone</label>
+          <label>{{ 'observations.add.zoneLabel' | translate }}</label>
           <select formControlName="zone" (change)="onZoneChange($event)">
             <option *ngFor="let z of zones()" [value]="z._id || z.id">
               {{ z.name }}
             </option>
           </select>
           <small *ngIf="form.controls.zone.touched && form.controls.zone.invalid">
-            Zone requise
+            {{ 'observations.add.zoneError' | translate }}
           </small>
         </div>
 
-        <!-- Gravité -->
         <div class="field">
-          <label>Gravité</label>
+          <label>{{ 'observations.add.severityLabel' | translate }}</label>
           <select formControlName="severity">
             <option *ngFor="let s of severityOptions" [value]="s">{{ s }}</option>
           </select>
         </div>
 
-        <!-- Statut -->
         <div class="field">
-          <label>Statut</label>
+          <label>{{ 'observations.add.statusLabel' | translate }}</label>
           <select formControlName="status">
             <option *ngFor="let st of statusOptions" [value]="st">{{ st }}</option>
           </select>
         </div>
 
-        <!-- Description -->
         <div class="field full">
-          <label>Description</label>
+          <label>{{ 'observations.add.descriptionLabel' | translate }}</label>
           <textarea
             formControlName="description"
             rows="5"
-            placeholder="Décris l'observation..."
+            [placeholder]="'observations.add.descriptionPlaceholder' | translate"
           ></textarea>
           <small *ngIf="form.controls.description.touched && form.controls.description.invalid">
-            Description requise (min 5 caractères)
+            {{ 'observations.add.descriptionError' | translate }}
           </small>
         </div>
 
-        <!-- Upload images -->
         <div class="field full">
-          <label>Images</label>
+          <label>{{ 'observations.add.imagesLabel' | translate }}</label>
           <input type="file" multiple accept="image/*" (change)="onFilesSelected($event)" />
           <small *ngIf="selectedFiles().length > 0">
-            {{ selectedFiles().length }} image(s) sélectionnée(s)
+            {{ selectedFiles().length }} {{ 'observations.add.imagesCount' | translate }}
           </small>
         </div>
 
@@ -77,9 +71,9 @@
 
       <div class="actions">
         <button class="btn" type="submit" [disabled]="!canSubmit()">
-          {{ loading() ? 'Enregistrement...' : "Créer l'observation" }}
+          {{ loading() ? ('observations.add.saving' | translate) : ('observations.add.create' | translate) }}
         </button>
-        <a class="link" routerLink="/agent/observations">Annuler</a>
+        <a class="link" routerLink="/agent/observations">{{ 'observations.add.cancel' | translate }}</a>
       </div>
 
     </form>

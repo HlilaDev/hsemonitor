@@ -1,14 +1,14 @@
 <section class="page">
   <div class="head">
     <div>
-      <h2>Détails de l’observation</h2>
-      <p class="muted">Consulte les informations complètes de l’observation.</p>
+      <h2>{{ 'observations.add.title' | translate }}</h2>
+      <p class="muted">{{ 'observations.add.subtitle' | translate }}</p>
     </div>
 
     <div class="actions">
-      <a class="btn ghost" routerLink="/agent/observations">← Retour</a>
+      <a class="btn ghost" routerLink="/agent/observations">← {{ 'observations.agent.back' | translate }}</a>
       <button class="btn" type="button" (click)="load(id())" [disabled]="loading()">
-        {{ loading() ? 'Chargement...' : 'Actualiser' }}
+        {{ loading() ? ('observations.agent.loading' | translate) : ('observations.agent.refresh' | translate) }}
       </button>
     </div>
   </div>
@@ -32,7 +32,7 @@
   }
 
   @if (loading()) {
-    <div class="loading">Chargement...</div>
+    <div class="loading">{{ 'observations.agent.loading' | translate }}</div>
   } @else if (obs()) {
     <div class="panel">
       <div class="top">
@@ -58,12 +58,12 @@
       <div class="grid">
         <div class="main">
           <div class="block">
-            <div class="label">Description</div>
+            <div class="label">{{ 'observations.add.descriptionLabel' | translate }}</div>
             <div class="desc">{{ obs()!.description }}</div>
           </div>
 
           <div class="block">
-            <div class="label">Images de l’observation</div>
+            <div class="label">{{ 'observations.add.imagesLabel' | translate }}</div>
 
             @if (hasImages()) {
               <div class="images">
@@ -79,17 +79,17 @@
                 }
               </div>
             } @else {
-              <div class="muted">Aucune image attachée.</div>
+              <div class="muted">—</div>
             }
           </div>
 
           @if (canSubmitResolution()) {
             <div class="block treatment-card">
-              <div class="label">Traitement de l’observation</div>
+              <div class="label">Traitement de l'observation</div>
 
               <div class="helper-text">
                 Décris les actions réalisées pour corriger le problème, puis
-                joins des photos de preuve avant d’envoyer l’observation au manager.
+                joins des photos de preuve avant d'envoyer l'observation au manager.
               </div>
 
               <div class="form-field">
@@ -99,12 +99,12 @@
                   rows="5"
                   [value]="resolutionComment()"
                   (input)="onResolutionComment($any($event.target).value)"
-                  placeholder="Exemple : zone sécurisée, équipement remplacé, signalisation remise en place..."
+                  placeholder="Exemple : zone sécurisée, équipement remplacé..."
                 ></textarea>
               </div>
 
               <div class="form-field">
-                <label>Photos de preuve (optionnel)</label>
+                <label>{{ 'observations.add.imagesLabel' | translate }}</label>
 
                 <label class="upload-box" for="proofFiles">
                   <input
@@ -169,7 +169,7 @@
                   (click)="submitResolution()"
                   [disabled]="submittingResolution()"
                 >
-                  {{ submittingResolution() ? 'Envoi...' : 'Marquer comme traité' }}
+                  {{ submittingResolution() ? ('observations.agent.loading' | translate) : 'Marquer comme traité' }}
                 </button>
               </div>
             </div>
@@ -191,7 +191,7 @@
                 </div>
 
                 <div class="desc">
-                  {{ obs()!.resolutionComment || 'Aucun commentaire fourni.' }}
+                  {{ obs()!.resolutionComment || '—' }}
                 </div>
 
                 @if (hasResolutionImages()) {
@@ -224,7 +224,7 @@
                 </div>
 
                 <div class="desc">
-                  {{ obs()!.validationComment || 'Aucun commentaire de validation.' }}
+                  {{ obs()!.validationComment || '—' }}
                 </div>
               </div>
             </div>
@@ -233,12 +233,12 @@
 
         <div class="side">
           <div class="side-block">
-            <div class="label">Zone</div>
+            <div class="label">{{ 'observations.add.zoneLabel' | translate }}</div>
             <div class="value">{{ obs()!.zone?.name || '—' }}</div>
           </div>
 
           <div class="side-block">
-            <div class="label">Déclarée par</div>
+            <div class="label">{{ 'observations.agent.table.declaredBy' | translate }}</div>
             <div class="value">
               <div>{{ getUserDisplayName(obs()!.reportedBy) }}</div>
               <div class="muted">{{ getUserEmail(obs()!.reportedBy) }}</div>
@@ -246,7 +246,7 @@
           </div>
 
           <div class="side-block">
-            <div class="label">Affectée à</div>
+            <div class="label">{{ 'observations.agent.table.assignedTo' | translate }}</div>
             <div class="value">{{ getUserDisplayName(obs()!.assignedTo) }}</div>
           </div>
 
@@ -256,17 +256,17 @@
           </div>
 
           <div class="side-block">
-            <div class="label">Date d’affectation</div>
+            <div class="label">Date d'affectation</div>
             <div class="value">{{ formatDate(obs()!.assignedAt) }}</div>
           </div>
 
           <div class="side-block">
-            <div class="label">Gravité</div>
+            <div class="label">{{ 'observations.agent.table.severity' | translate }}</div>
             <div class="value">{{ obs()!.severity }}</div>
           </div>
 
           <div class="side-block">
-            <div class="label">Statut</div>
+            <div class="label">{{ 'observations.agent.table.status' | translate }}</div>
             <div class="value">{{ obs()!.status }}</div>
           </div>
         </div>

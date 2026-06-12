@@ -1,11 +1,9 @@
 <div class="team-page">
   <div class="page-header">
     <div class="title-wrap">
-      <span class="eyebrow">HSE Team Monitoring</span>
-      <h1>Team Overview</h1>
-      <p>
-        View managers and agents from your company in real time from the backend.
-      </p>
+      <span class="eyebrow">{{ 'team.kicker' | translate }}</span>
+      <h1>{{ 'team.title' | translate }}</h1>
+      <p>{{ 'team.subtitle' | translate }}</p>
     </div>
 
     <div class="header-actions">
@@ -15,7 +13,7 @@
         (click)="setView('table')"
         type="button">
         <i class="bi bi-table"></i>
-        Table
+        {{ 'team.viewTable' | translate }}
       </button>
 
       <button
@@ -24,12 +22,12 @@
         (click)="setView('cards')"
         type="button">
         <i class="bi bi-grid-3x3-gap"></i>
-        Cards
+        {{ 'team.viewCards' | translate }}
       </button>
 
       <button class="view-btn" type="button" (click)="loadTeam()">
         <i class="bi bi-arrow-clockwise"></i>
-        Refresh
+        {{ 'team.refresh' | translate }}
       </button>
     </div>
   </div>
@@ -40,7 +38,7 @@
         <i class="bi bi-people"></i>
       </div>
       <div class="stat-content">
-        <span>Total Team</span>
+        <span>{{ 'team.stats.total' | translate }}</span>
         <strong>{{ totalMembers() }}</strong>
       </div>
     </div>
@@ -50,7 +48,7 @@
         <i class="bi bi-person-badge"></i>
       </div>
       <div class="stat-content">
-        <span>Managers</span>
+        <span>{{ 'team.stats.managers' | translate }}</span>
         <strong>{{ managersCount() }}</strong>
       </div>
     </div>
@@ -60,7 +58,7 @@
         <i class="bi bi-person-workspace"></i>
       </div>
       <div class="stat-content">
-        <span>Agents</span>
+        <span>{{ 'team.stats.agents' | translate }}</span>
         <strong>{{ agentsCount() }}</strong>
       </div>
     </div>
@@ -70,7 +68,7 @@
         <i class="bi bi-funnel"></i>
       </div>
       <div class="stat-content">
-        <span>Filtered</span>
+        <span>{{ 'team.stats.filtered' | translate }}</span>
         <strong>{{ filteredTeam().length }}</strong>
       </div>
     </div>
@@ -82,16 +80,16 @@
         <i class="bi bi-search"></i>
         <input
           type="text"
-          placeholder="Search by name, role, email or company..."
+          [placeholder]="'team.filters.searchPlaceholder' | translate"
           [ngModel]="search()"
           (ngModelChange)="search.set($event)" />
       </div>
 
       <div class="filters">
         <select [ngModel]="selectedRole()" (ngModelChange)="selectedRole.set($event)">
-          <option value="all">All roles</option>
-          <option value="manager">Manager</option>
-          <option value="agent">Agent</option>
+          <option value="all">{{ 'team.filters.allRoles' | translate }}</option>
+          <option value="manager">{{ 'team.filters.manager' | translate }}</option>
+          <option value="agent">{{ 'team.filters.agent' | translate }}</option>
         </select>
       </div>
     </div>
@@ -101,7 +99,7 @@
     <div class="table-card">
       <div class="empty-state">
         <i class="bi bi-arrow-repeat spin"></i>
-        <p>Loading team members...</p>
+        <p>{{ 'team.table.loading' | translate }}</p>
       </div>
     </div>
   } @else if (error()) {
@@ -116,8 +114,8 @@
       <div class="table-card">
         <div class="table-head">
           <div>
-            <h3>Team Members</h3>
-            <p>{{ filteredTeam().length }} member(s) found</p>
+            <h3>{{ 'team.table.title' | translate }}</h3>
+            <p>{{ filteredTeam().length }} {{ 'team.table.count' | translate }}</p>
           </div>
         </div>
 
@@ -125,11 +123,11 @@
           <table>
             <thead>
               <tr>
-                <th>Member</th>
-                <th>Role</th>
-                <th>Company</th>
-                <th>Email</th>
-                <th>Created At</th>
+                <th>{{ 'team.table.member' | translate }}</th>
+                <th>{{ 'team.table.role' | translate }}</th>
+                <th>{{ 'team.table.company' | translate }}</th>
+                <th>{{ 'team.table.email' | translate }}</th>
+                <th>{{ 'team.table.createdAt' | translate }}</th>
               </tr>
             </thead>
 
@@ -168,7 +166,7 @@
                   <td colspan="5">
                     <div class="empty-state">
                       <i class="bi bi-inboxes"></i>
-                      <p>No team members found for the selected filters.</p>
+                      <p>{{ 'team.table.empty' | translate }}</p>
                     </div>
                   </td>
                 </tr>
@@ -225,7 +223,7 @@
         } @else {
           <div class="empty-state cards-empty">
             <i class="bi bi-inboxes"></i>
-            <p>No team members found for the selected filters.</p>
+            <p>{{ 'team.table.empty' | translate }}</p>
           </div>
         }
       </div>

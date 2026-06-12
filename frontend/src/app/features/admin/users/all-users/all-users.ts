@@ -1,8 +1,11 @@
 import { CommonModule, DatePipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 
 import { UserServices } from '../../../../core/services/users/user-services';
+import { ConfirmModalService } from '../../../../core/services/confirm-modal/confirm-modal.service';
+import { ToastService } from '../../../../core/services/toast/toast.service';
 
 export type UserRole = 'agent' | 'manager' | 'admin' | 'supervisor';
 
@@ -19,12 +22,14 @@ export type User = {
 @Component({
   selector: 'app-all-users',
   standalone: true,
-  imports: [CommonModule, RouterModule, DatePipe],
+  imports: [CommonModule, RouterModule, DatePipe, TranslateModule],
   templateUrl: './all-users.html',
   styleUrl: './all-users.scss',
 })
 export class AllUsers {
   private userService = inject(UserServices);
+  private confirmModal = inject(ConfirmModalService);
+  private toast = inject(ToastService);
 
   users: User[] = [];
   loading = true;
@@ -63,14 +68,26 @@ export class AllUsers {
     return 'Agent';
   }
 
-  deleteUser(id: string) {
-    if (!confirm('Confirmer la suppression ?')) return;
+  roleIcon(role: UserRole) {
+    if (role === 'admin') return 'bi-shield-fill';
+    if (role === 'manager') return 'bi-briefcase-fill';
+    if (role === 'supervisor') return 'bi-eye-fill';
+    return 'bi-person-fill';
+  }
 
-    this.userService.deleteUser(id).subscribe({
-      next: () => {
-        this.users = this.users.filter((u) => u._id !== id);
+  deleteUser(id: string, name?: string) {
+    this.confirmModal.open({
+      message: 'Êtes-vous sûr de vouloir supprimer cet utilisateur ?',
+      itemName: name,
+      onConfirm: () => {
+        this.userService.deleteUser(id).subscribe({
+          next: () => {
+            this.users = this.users.filter((u) => u._id !== id);
+            this.toast.success('Utilisateur supprimé avec succès.');
+          },
+          error: (e: any) => this.toast.error(e?.error?.message || 'Suppression impossible.'),
+        });
       },
-      error: (e: any) => alert(e?.message || 'Suppression impossible'),
     });
   }
 }

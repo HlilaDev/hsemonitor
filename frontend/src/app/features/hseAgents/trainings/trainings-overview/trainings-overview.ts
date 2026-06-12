@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, inject, signal } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
+import { TranslatePipe } from '@ngx-translate/core';
 import { catchError, finalize, of } from 'rxjs';
 
 import {
@@ -48,7 +49,7 @@ type SortKey = 'startDate_asc' | 'startDate_desc' | 'title_asc' | 'title_desc';
 @Component({
   selector: 'app-trainings-overview',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, TranslatePipe],
   templateUrl: './trainings-overview.html',
   styleUrl: './trainings-overview.scss',
 })

@@ -1,15 +1,15 @@
 <div class="page">
   <div class="page-header">
     <div class="title-block">
-      <span class="eyebrow">Super Admin / Gestion</span>
-      <h2>Ajouter un admin</h2>
-      <p class="muted">Créer un nouvel administrateur et le lier à une company.</p>
+      <span class="eyebrow">{{ 'superadmin.admins.add.kicker' | translate }}</span>
+      <h2>{{ 'superadmin.admins.add.title' | translate }}</h2>
+      <p class="muted">{{ 'superadmin.admins.add.subtitle' | translate }}</p>
     </div>
 
     <div class="header-actions">
       <a class="btn btn-light" routerLink="/superadmin/admins">
         <span>←</span>
-        Retour
+        {{ 'superadmin.admins.add.back' | translate }}
       </a>
     </div>
   </div>
@@ -21,20 +21,20 @@
       </div>
 
       <div class="preview-content">
-        <span class="preview-label">Aperçu</span>
-        <h3>{{ fullNamePreview() || 'Nouvel Admin' }}</h3>
-        <p>{{ email() || 'email@company.com' }}</p>
+        <span class="preview-label">{{ 'superadmin.admins.add.preview.label' | translate }}</span>
+        <h3>{{ fullNamePreview() || ('superadmin.admins.add.preview.defaultName' | translate) }}</h3>
+        <p>{{ email() || ('superadmin.admins.add.preview.defaultEmail' | translate) }}</p>
       </div>
     </div>
 
     <div class="mini-stat">
-      <span class="mini-label">Rôle</span>
-      <strong>Admin</strong>
+      <span class="mini-label">{{ 'superadmin.admins.add.preview.role' | translate }}</span>
+      <strong>{{ 'superadmin.admins.add.preview.roleValue' | translate }}</strong>
     </div>
 
     <div class="mini-stat">
-      <span class="mini-label">Statut</span>
-      <strong>{{ isActive() ? 'Actif' : 'Inactif' }}</strong>
+      <span class="mini-label">{{ 'superadmin.admins.add.preview.status' | translate }}</span>
+      <strong>{{ isActive() ? ('superadmin.admins.add.preview.active' | translate) : ('superadmin.admins.add.preview.inactive' | translate) }}</strong>
     </div>
   </div>
 
@@ -53,18 +53,18 @@
   <form class="form-card" (ngSubmit)="submit()">
     <div class="section-head">
       <div>
-        <h3>Informations administrateur</h3>
-        <p>Renseignez les informations principales du compte admin.</p>
+        <h3>{{ 'superadmin.admins.add.formTitle' | translate }}</h3>
+        <p>{{ 'superadmin.admins.add.formSubtitle' | translate }}</p>
       </div>
     </div>
 
     <div class="form-grid">
       <div class="field">
-        <label for="firstName">Prénom <span>*</span></label>
+        <label for="firstName">{{ 'superadmin.admins.add.firstNameLabel' | translate }} <span>*</span></label>
         <input
           id="firstName"
           type="text"
-          placeholder="Ex: Ali"
+          [placeholder]="'superadmin.admins.add.firstNamePlaceholder' | translate"
           [ngModel]="firstName()"
           (ngModelChange)="firstName.set($event)"
           name="firstName"
@@ -72,11 +72,11 @@
       </div>
 
       <div class="field">
-        <label for="lastName">Nom <span>*</span></label>
+        <label for="lastName">{{ 'superadmin.admins.add.lastNameLabel' | translate }} <span>*</span></label>
         <input
           id="lastName"
           type="text"
-          placeholder="Ex: Salah"
+          [placeholder]="'superadmin.admins.add.lastNamePlaceholder' | translate"
           [ngModel]="lastName()"
           (ngModelChange)="lastName.set($event)"
           name="lastName"
@@ -84,11 +84,11 @@
       </div>
 
       <div class="field field-full">
-        <label for="email">Email <span>*</span></label>
+        <label for="email">{{ 'superadmin.admins.add.emailLabel' | translate }} <span>*</span></label>
         <input
           id="email"
           type="email"
-          placeholder="admin@company.com"
+          [placeholder]="'superadmin.admins.add.emailPlaceholder' | translate"
           [ngModel]="email()"
           (ngModelChange)="email.set($event)"
           name="email"
@@ -96,12 +96,12 @@
       </div>
 
       <div class="field">
-        <label for="password">Mot de passe <span>*</span></label>
+        <label for="password">{{ 'superadmin.admins.add.passwordLabel' | translate }} <span>*</span></label>
         <div class="password-wrap">
           <input
             id="password"
             [type]="showPassword() ? 'text' : 'password'"
-            placeholder="Créer un mot de passe"
+            [placeholder]="'superadmin.admins.add.passwordPlaceholder' | translate"
             [ngModel]="password()"
             (ngModelChange)="password.set($event)"
             name="password"
@@ -111,18 +111,18 @@
             class="toggle-btn"
             (click)="showPassword.set(!showPassword())"
           >
-            {{ showPassword() ? 'Hide' : 'Show' }}
+            {{ showPassword() ? ('superadmin.admins.add.hide' | translate) : ('superadmin.admins.add.show' | translate) }}
           </button>
         </div>
       </div>
 
       <div class="field">
-        <label for="confirmPassword">Confirmer le mot de passe <span>*</span></label>
+        <label for="confirmPassword">{{ 'superadmin.admins.add.confirmPasswordLabel' | translate }} <span>*</span></label>
         <div class="password-wrap">
           <input
             id="confirmPassword"
             [type]="showConfirmPassword() ? 'text' : 'password'"
-            placeholder="Confirmer le mot de passe"
+            [placeholder]="'superadmin.admins.add.confirmPasswordPlaceholder' | translate"
             [ngModel]="confirmPassword()"
             (ngModelChange)="confirmPassword.set($event)"
             name="confirmPassword"
@@ -132,17 +132,17 @@
             class="toggle-btn"
             (click)="showConfirmPassword.set(!showConfirmPassword())"
           >
-            {{ showConfirmPassword() ? 'Hide' : 'Show' }}
+            {{ showConfirmPassword() ? ('superadmin.admins.add.hide' | translate) : ('superadmin.admins.add.show' | translate) }}
           </button>
         </div>
 
         @if (confirmPassword() && password() !== confirmPassword()) {
-          <small class="field-error">Les mots de passe ne correspondent pas.</small>
+          <small class="field-error">{{ 'superadmin.admins.add.passwordMismatch' | translate }}</small>
         }
       </div>
 
 <div class="field field-full">
-  <label for="companyId">Company <span>*</span></label>
+  <label for="companyId">{{ 'superadmin.admins.add.companyLabel' | translate }} <span>*</span></label>
   <select
     id="companyId"
     [ngModel]="companyId()"
@@ -152,9 +152,9 @@
   >
     <option value="">
       @if (loadingCompanies()) {
-        Chargement des companies...
+        {{ 'superadmin.admins.add.companyLoading' | translate }}
       } @else {
-        Sélectionner une company
+        {{ 'superadmin.admins.add.companySelect' | translate }}
       }
     </option>
 
@@ -165,7 +165,7 @@
 
   @if (companyId()) {
     <small class="selected-company-hint">
-      Company sélectionnée : {{ selectedCompanyName() }}
+      {{ 'superadmin.admins.add.companySelected' | translate }} {{ selectedCompanyName() }}
     </small>
   }
 </div>
@@ -183,8 +183,8 @@
           </label>
 
           <div class="check-text">
-            <strong>Compte actif</strong>
-            <p>L’administrateur pourra se connecter immédiatement.</p>
+            <strong>{{ 'superadmin.admins.add.activeLabel' | translate }}</strong>
+            <p>{{ 'superadmin.admins.add.activeHint' | translate }}</p>
           </div>
         </div>
       </div>
@@ -192,7 +192,7 @@
 
     <div class="form-actions">
       <button type="button" class="btn btn-light" routerLink="/superadmin/admins">
-        Annuler
+        {{ 'superadmin.admins.add.cancel' | translate }}
       </button>
 
       <button
@@ -200,7 +200,7 @@
         class="btn btn-outline"
         (click)="resetForm()"
       >
-        Reset
+        {{ 'superadmin.admins.add.reset' | translate }}
       </button>
 
       <button
@@ -209,9 +209,9 @@
         [disabled]="loading() || formInvalid()"
       >
         @if (loading()) {
-          <span>Création...</span>
+          <span>{{ 'superadmin.admins.add.creating' | translate }}</span>
         } @else {
-          <span>Créer Admin</span>
+          <span>{{ 'superadmin.admins.add.createBtn' | translate }}</span>
         }
       </button>
     </div>

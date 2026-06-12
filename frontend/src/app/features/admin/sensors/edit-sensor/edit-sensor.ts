@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { catchError, finalize, forkJoin, of, switchMap } from 'rxjs';
+import { TranslateModule } from '@ngx-translate/core';
 
 import {
   Sensor,
@@ -21,7 +22,7 @@ import {
 @Component({
   selector: 'app-edit-sensor',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, TranslateModule],
   templateUrl: './edit-sensor.html',
   styleUrl: './edit-sensor.scss',
 })

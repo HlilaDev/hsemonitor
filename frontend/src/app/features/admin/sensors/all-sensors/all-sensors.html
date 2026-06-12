@@ -1,83 +1,83 @@
 <div class="page">
   <section class="hero">
     <div>
-      <span class="eyebrow">Admin · IoT Monitoring</span>
-      <h1>All Sensors</h1>
-      <p>Supervision des capteurs, seuils, zones et états de connexion.</p>
+      <span class="eyebrow">{{ 'SENSORS.KICKER' | translate }}</span>
+      <h1>{{ 'SENSORS.TITLE' | translate }}</h1>
+      <p>{{ 'SENSORS.SUBTITLE' | translate }}</p>
     </div>
 
     <a class="btn light" routerLink="/admin/sensors/add">
       <i class="bi bi-plus-lg"></i>
-      Ajouter
+      {{ 'SENSORS.ADD_BTN' | translate }}
     </a>
   </section>
 
   <section class="stats-grid">
     <div class="stat-card">
-      <span>Total capteurs</span>
+      <span>{{ 'SENSORS.STATS.TOTAL' | translate }}</span>
       <strong>{{ total() }}</strong>
-      <small>Capteurs configurés</small>
+      <small>{{ 'SENSORS.STATS.TOTAL_SUB' | translate }}</small>
     </div>
 
     <div class="stat-card success">
-      <span>Online</span>
+      <span>{{ 'SENSORS.STATS.ONLINE' | translate }}</span>
       <strong>{{ onlineCount() }}</strong>
-      <small>Actifs maintenant</small>
+      <small>{{ 'SENSORS.STATS.ONLINE_SUB' | translate }}</small>
     </div>
 
     <div class="stat-card danger">
-      <span>Offline</span>
+      <span>{{ 'SENSORS.STATS.OFFLINE' | translate }}</span>
       <strong>{{ offlineCount() }}</strong>
-      <small>À vérifier</small>
+      <small>{{ 'SENSORS.STATS.OFFLINE_SUB' | translate }}</small>
     </div>
 
     <div class="stat-card warning">
-      <span>Seuils</span>
+      <span>{{ 'SENSORS.STATS.CRITICAL' | translate }}</span>
       <strong>{{ criticalThresholdCount() }}</strong>
-      <small>Threshold configuré</small>
+      <small>{{ 'SENSORS.STATS.CRITICAL_SUB' | translate }}</small>
     </div>
   </section>
 
   <div class="card filters">
     <div class="field">
-      <label>Recherche</label>
-      <input class="input" type="text" placeholder="Nom..." [ngModel]="q()" (ngModelChange)="q.set($event)" (keyup.enter)="onSearch()" />
+      <label>{{ 'SENSORS.FILTERS.SEARCH' | translate }}</label>
+      <input class="input" type="text" [placeholder]="'SENSORS.FILTERS.SEARCH_PH' | translate" [ngModel]="q()" (ngModelChange)="q.set($event)" (keyup.enter)="onSearch()" />
     </div>
 
     <div class="field">
-      <label>Zone</label>
-      <input class="input" type="text" placeholder="Zone ID" [ngModel]="zone()" (ngModelChange)="zone.set($event)" (keyup.enter)="onSearch()" />
+      <label>{{ 'SENSORS.FILTERS.ZONE' | translate }}</label>
+      <input class="input" type="text" [placeholder]="'SENSORS.FILTERS.ZONE_PH' | translate" [ngModel]="zone()" (ngModelChange)="zone.set($event)" (keyup.enter)="onSearch()" />
     </div>
 
     <div class="field">
-      <label>Type</label>
+      <label>{{ 'SENSORS.FILTERS.TYPE' | translate }}</label>
       <select class="input" [ngModel]="type()" (ngModelChange)="type.set($event)">
-        <option value="">Tous</option>
-        <option value="temperature">Température</option>
-        <option value="gas">Gas</option>
-        <option value="humidity">Humidité</option>
-        <option value="noise">Bruit</option>
-        <option value="motion">Motion</option>
+        <option value="">{{ 'SENSORS.FILTERS.ALL' | translate }}</option>
+        <option value="temperature">{{ 'SENSORS.TYPE.temperature' | translate }}</option>
+        <option value="gas">{{ 'SENSORS.TYPE.gas' | translate }}</option>
+        <option value="humidity">{{ 'SENSORS.TYPE.humidity' | translate }}</option>
+        <option value="noise">{{ 'SENSORS.TYPE.sound' | translate }}</option>
+        <option value="motion">{{ 'SENSORS.TYPE.motion' | translate }}</option>
       </select>
     </div>
 
     <div class="field">
-      <label>Status</label>
+      <label>{{ 'SENSORS.FILTERS.STATUS' | translate }}</label>
       <select class="input" [ngModel]="status()" (ngModelChange)="status.set($event)">
-        <option value="">Tous</option>
-        <option value="online">Online</option>
-        <option value="offline">Offline</option>
-        <option value="maintenance">Maintenance</option>
+        <option value="">{{ 'SENSORS.FILTERS.ALL' | translate }}</option>
+        <option value="online">{{ 'SENSORS.STATUS.online' | translate }}</option>
+        <option value="offline">{{ 'SENSORS.STATUS.offline' | translate }}</option>
+        <option value="maintenance">{{ 'SENSORS.STATUS.maintenance' | translate }}</option>
       </select>
     </div>
 
     <div class="actions">
       <button class="btn" (click)="onSearch()" [disabled]="loading()">
         <i class="bi bi-search"></i>
-        Filtrer
+        {{ 'COMMON.FILTER' | translate }}
       </button>
       <button class="btn ghost" (click)="clearFilters()" [disabled]="loading()">
-        Réinitialiser
+        {{ 'COMMON.RESET' | translate }}
       </button>
     </div>
   </div>
@@ -90,28 +90,28 @@
 
     <div *ngIf="loading()" class="loading">
       <span class="spinner"></span>
-      Chargement...
+      {{ 'SENSORS.LOADING' | translate }}
     </div>
 
     <div class="table-wrap" *ngIf="!loading()">
       <table class="table">
         <thead>
           <tr>
-            <th>Nom</th>
-            <th>Type</th>
-            <th>Device</th>
-            <th>Zone</th>
-            <th>Threshold</th>
-            <th>Unit</th>
-            <th>Status</th>
-            <th class="right">Actions</th>
+            <th>{{ 'SENSORS.COLUMNS.NAME' | translate }}</th>
+            <th>{{ 'SENSORS.COLUMNS.TYPE' | translate }}</th>
+            <th>{{ 'SENSORS.COLUMNS.DEVICE' | translate }}</th>
+            <th>{{ 'SENSORS.COLUMNS.ZONE' | translate }}</th>
+            <th>{{ 'SENSORS.COLUMNS.THRESHOLD' | translate }}</th>
+            <th>{{ 'SENSORS.COLUMNS.UNIT' | translate }}</th>
+            <th>{{ 'SENSORS.COLUMNS.STATUS' | translate }}</th>
+            <th class="right">{{ 'SENSORS.COLUMNS.ACTIONS' | translate }}</th>
           </tr>
         </thead>
 
         <tbody>
           <tr *ngFor="let s of pagedSensors()">
             <td class="strong">{{ s.name }}</td>
-            <td>{{ s.type }}</td>
+            <td>{{ 'SENSORS.TYPE.' + s.type | translate }}</td>
             <td>{{ deviceName(s) }}</td>
             <td>{{ zoneName(s) }}</td>
             <td>{{ s.threshold ?? '—' }}</td>
@@ -119,41 +119,41 @@
 
             <td>
               <span class="badge" [class]="badgeClass(s.status)">
-                {{ s.status }}
+                {{ 'SENSORS.STATUS.' + s.status | translate }}
               </span>
             </td>
 
             <td class="right actions-cell">
-              <a class="btn xs" [routerLink]="['/admin/sensors', s._id]" title="Voir">
+              <a class="btn xs" [routerLink]="['/admin/sensors', s._id]" [title]="'COMMON.VIEW' | translate">
                 <i class="bi bi-eye"></i>
               </a>
-              <a class="btn xs" [routerLink]="['/admin/sensors/edit', s._id]" title="Modifier">
+              <a class="btn xs" [routerLink]="['/admin/sensors/edit', s._id]" [title]="'COMMON.EDIT' | translate">
                 <i class="bi bi-pencil"></i>
               </a>
               <button class="btn xs" (click)="toggleStatus(s)" [disabled]="loading()" title="Toggle status">
                 <i class="bi bi-wifi"></i>
               </button>
-              <button class="btn xs danger" (click)="deleteSensor(s)" [disabled]="loading()" title="Supprimer">
+              <button class="btn xs danger" (click)="deleteSensor(s)" [disabled]="loading()" [title]="'COMMON.DELETE' | translate">
                 <i class="bi bi-trash"></i>
               </button>
             </td>
           </tr>
 
           <tr *ngIf="pagedSensors().length === 0">
-            <td colspan="8" class="empty">Aucun capteur trouvé.</td>
+            <td colspan="8" class="empty">{{ 'SENSORS.EMPTY' | translate }}</td>
           </tr>
         </tbody>
       </table>
     </div>
 
     <div class="pager" *ngIf="!loading()">
-      <div class="muted">Total : <b>{{ total() }}</b></div>
+      <div class="muted">{{ 'COMMON.TOTAL' | translate }} : <b>{{ total() }}</b></div>
 
       <div class="pager-actions">
         <button class="btn" (click)="prev()" [disabled]="page() <= 1">
           <i class="bi bi-chevron-left"></i>
         </button>
-        <span class="muted">Page {{ page() }} / {{ pages() }}</span>
+        <span class="muted">{{ 'COMMON.PAGE' | translate }} {{ page() }} / {{ pages() }}</span>
         <button class="btn" (click)="next()" [disabled]="page() >= pages()">
           <i class="bi bi-chevron-right"></i>
         </button>

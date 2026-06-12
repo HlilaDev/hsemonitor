@@ -6,13 +6,14 @@ const User = require("../models/userModel");
 const Company = require("../models/companyModel");
 const { createSessionLog } = require("../services/sessionLogService");
 
-// Helper: create JWT
+
 const signToken = (user, sessionId) => {
   return jwt.sign(
     {
       id: user._id,
       role: user.role,
       sessionId,
+      companyId: user.company,
     },
     process.env.JWT_SECRET,
     { expiresIn: process.env.JWT_EXPIRES_IN || "7d" }

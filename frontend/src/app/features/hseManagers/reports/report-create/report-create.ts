@@ -1,5 +1,6 @@
 import { Component, inject, signal, OnInit, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { TranslatePipe } from '@ngx-translate/core';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { catchError, finalize, of } from 'rxjs';
@@ -14,7 +15,7 @@ type ReportType = 'weekly' | 'monthly' | 'yearly' | 'audit' | 'custom';
 @Component({
   selector: 'app-report-create',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, TranslatePipe],
   templateUrl: './report-create.html',
   styleUrl: './report-create.scss',
 })

@@ -1,23 +1,20 @@
 <div class="page">
   <section class="hero-banner">
     <div class="hero-content">
-      <p class="eyebrow">FORMATION HSE</p>
-      <h1>Vue d’ensemble des formations</h1>
-      <p>
-        Suivez, planifiez et pilotez toutes les formations HSE de vos équipes
-        depuis un seul espace.
-      </p>
+      <p class="eyebrow">{{ 'trainings.list.kicker' | translate }}</p>
+      <h1>{{ 'trainings.list.title' | translate }}</h1>
+      <p>{{ 'trainings.list.subtitle' | translate }}</p>
     </div>
 
     <div class="hero-actions">
       <button class="btn hero-light" type="button" (click)="fetch()" [disabled]="isLoading()">
         <i class="bi bi-arrow-repeat"></i>
-        Actualiser
+        {{ 'trainings.list.refresh' | translate }}
       </button>
 
       <button class="btn hero-primary" type="button" (click)="goCreate()">
         <i class="bi bi-plus-lg"></i>
-        Nouvelle formation
+        {{ 'trainings.list.newTraining' | translate }}
       </button>
     </div>
   </section>
@@ -28,9 +25,9 @@
         <i class="bi bi-journal-text"></i>
       </div>
       <div>
-        <span class="stat-label">Total formations</span>
+        <span class="stat-label">{{ 'trainings.list.stats.total' | translate }}</span>
         <strong class="stat-value">{{ totalTrainings() }}</strong>
-        <p>Formations enregistrées</p>
+        <p>{{ 'trainings.list.stats.totalHint' | translate }}</p>
       </div>
     </div>
 
@@ -39,9 +36,9 @@
         <i class="bi bi-clock-history"></i>
       </div>
       <div>
-        <span class="stat-label">Formations prévues</span>
+        <span class="stat-label">{{ 'trainings.list.stats.scheduled' | translate }}</span>
         <strong class="stat-value">{{ scheduledTrainings() }}</strong>
-        <p>À suivre prochainement</p>
+        <p>{{ 'trainings.list.stats.scheduledHint' | translate }}</p>
       </div>
     </div>
 
@@ -50,9 +47,9 @@
         <i class="bi bi-check-circle"></i>
       </div>
       <div>
-        <span class="stat-label">Terminées</span>
+        <span class="stat-label">{{ 'trainings.list.stats.completed' | translate }}</span>
         <strong class="stat-value">{{ completedTrainings() }}</strong>
-        <p>Sessions finalisées</p>
+        <p>{{ 'trainings.list.stats.completedHint' | translate }}</p>
       </div>
     </div>
 
@@ -61,9 +58,9 @@
         <i class="bi bi-x-circle"></i>
       </div>
       <div>
-        <span class="stat-label">Annulées</span>
+        <span class="stat-label">{{ 'trainings.list.stats.cancelled' | translate }}</span>
         <strong class="stat-value">{{ cancelledTrainings() }}</strong>
-        <p>Sessions non réalisées</p>
+        <p>{{ 'trainings.list.stats.cancelledHint' | translate }}</p>
       </div>
     </div>
 
@@ -72,9 +69,9 @@
         <i class="bi bi-people"></i>
       </div>
       <div>
-        <span class="stat-label">Participants</span>
+        <span class="stat-label">{{ 'trainings.list.stats.participants' | translate }}</span>
         <strong class="stat-value">{{ totalParticipants() }}</strong>
-        <p>Total inscriptions</p>
+        <p>{{ 'trainings.list.stats.participantsHint' | translate }}</p>
       </div>
     </div>
   </section>
@@ -88,7 +85,7 @@
 
   <div class="filters card">
     <div class="field grow">
-      <label>Recherche</label>
+      <label>{{ 'trainings.list.filters.search' | translate }}</label>
       <div class="input-wrap">
         <i class="bi bi-search"></i>
         <input
@@ -96,46 +93,46 @@
           type="text"
           [value]="q()"
           (input)="q.set(($any($event.target).value || ''))"
-          placeholder="Titre, description, provider, location..."
+          [placeholder]="'trainings.list.filters.searchPlaceholder' | translate"
         />
       </div>
     </div>
 
     <div class="field">
-      <label>Catégorie</label>
+      <label>{{ 'trainings.list.filters.category' | translate }}</label>
       <select class="select" [value]="category()" (change)="category.set($any($event.target).value)">
-        <option value="all">Toutes</option>
-        <option value="safety">Safety</option>
-        <option value="environment">Environment</option>
-        <option value="quality">Quality</option>
-        <option value="security">Security</option>
-        <option value="other">Other</option>
+        <option value="all">{{ 'trainings.list.filters.allCategories' | translate }}</option>
+        <option value="safety">{{ 'trainings.create.category.safety' | translate }}</option>
+        <option value="environment">{{ 'trainings.create.category.environment' | translate }}</option>
+        <option value="quality">{{ 'trainings.create.category.quality' | translate }}</option>
+        <option value="security">{{ 'trainings.create.category.security' | translate }}</option>
+        <option value="other">{{ 'trainings.create.category.other' | translate }}</option>
       </select>
     </div>
 
     <div class="field">
-      <label>Statut</label>
+      <label>{{ 'trainings.list.filters.status' | translate }}</label>
       <select class="select" [value]="status()" (change)="status.set($any($event.target).value)">
-        <option value="all">Tous</option>
-        <option value="scheduled">Prévu</option>
-        <option value="completed">Terminé</option>
-        <option value="cancelled">Annulé</option>
+        <option value="all">{{ 'trainings.list.filters.allStatuses' | translate }}</option>
+        <option value="scheduled">{{ 'trainings.create.status.scheduled' | translate }}</option>
+        <option value="completed">{{ 'trainings.create.status.completed' | translate }}</option>
+        <option value="cancelled">{{ 'trainings.create.status.cancelled' | translate }}</option>
       </select>
     </div>
 
     <div class="field">
-      <label>Tri</label>
+      <label>{{ 'trainings.list.filters.sort' | translate }}</label>
       <select class="select" [value]="sort()" (change)="sort.set($any($event.target).value)">
-        <option value="startDate_desc">Date (récent → ancien)</option>
-        <option value="startDate_asc">Date (ancien → récent)</option>
-        <option value="title_asc">Titre (A → Z)</option>
-        <option value="title_desc">Titre (Z → A)</option>
+        <option value="startDate_desc">{{ 'trainings.list.filters.sortOptions.dateDesc' | translate }}</option>
+        <option value="startDate_asc">{{ 'trainings.list.filters.sortOptions.dateAsc' | translate }}</option>
+        <option value="title_asc">{{ 'trainings.list.filters.sortOptions.titleAsc' | translate }}</option>
+        <option value="title_desc">{{ 'trainings.list.filters.sortOptions.titleDesc' | translate }}</option>
       </select>
     </div>
 
     <button class="btn ghost small" type="button" (click)="resetFilters()">
       <i class="bi bi-x-circle"></i>
-      Reset
+      {{ 'trainings.list.filters.reset' | translate }}
     </button>
   </div>
 
@@ -160,11 +157,11 @@
           <i class="bi bi-journal-text"></i>
         </div>
         <div class="txt">
-          <h3>Aucune formation</h3>
-          <p class="muted">Crée ta première formation ou change les filtres.</p>
+          <h3>{{ 'trainings.list.empty.title' | translate }}</h3>
+          <p class="muted">{{ 'trainings.list.empty.subtitle' | translate }}</p>
           <button class="btn primary" type="button" (click)="goCreate()">
             <i class="bi bi-plus-lg"></i>
-            Créer une formation
+            {{ 'trainings.list.empty.create' | translate }}
           </button>
         </div>
       </div>
@@ -186,13 +183,13 @@
               </div>
 
               <div class="right">
-                <button class="icon-btn" type="button" (click)="goDetail(t._id)" title="Détails">
+                <button class="icon-btn" type="button" (click)="goDetail(t._id)" [title]="'trainings.list.card.details' | translate">
                   <i class="bi bi-eye"></i>
                 </button>
-                <button class="icon-btn" type="button" (click)="goEdit(t._id)" title="Modifier">
+                <button class="icon-btn" type="button" (click)="goEdit(t._id)" [title]="'trainings.list.card.edit' | translate">
                   <i class="bi bi-pencil-square"></i>
                 </button>
-                <button class="icon-btn danger" type="button" (click)="deleteTraining(t._id)" title="Supprimer">
+                <button class="icon-btn danger" type="button" (click)="deleteTraining(t._id)" [title]="'trainings.list.card.delete' | translate">
                   <i class="bi bi-trash"></i>
                 </button>
               </div>
@@ -200,19 +197,19 @@
 
             <div class="mid">
               <div class="row">
-                <span class="k"><i class="bi bi-calendar-event"></i> Début</span>
+                <span class="k"><i class="bi bi-calendar-event"></i> {{ 'trainings.list.card.start' | translate }}</span>
                 <span class="v">{{ fmtDate(t.startDate) }}</span>
               </div>
               <div class="row">
-                <span class="k"><i class="bi bi-calendar-check"></i> Fin</span>
+                <span class="k"><i class="bi bi-calendar-check"></i> {{ 'trainings.list.card.end' | translate }}</span>
                 <span class="v">{{ t.endDate ? fmtDate(t.endDate) : '-' }}</span>
               </div>
               <div class="row">
-                <span class="k"><i class="bi bi-geo-alt"></i> Lieu</span>
+                <span class="k"><i class="bi bi-geo-alt"></i> {{ 'trainings.list.card.location' | translate }}</span>
                 <span class="v">{{ t.location || '-' }}</span>
               </div>
               <div class="row">
-                <span class="k"><i class="bi bi-people"></i> Participants</span>
+                <span class="k"><i class="bi bi-people"></i> {{ 'trainings.list.card.participants' | translate }}</span>
                 <span class="v">{{ participantsCount(t) }}</span>
               </div>
             </div>
@@ -223,7 +220,7 @@
 
             <div class="bottom">
               <button class="btn ghost" type="button" (click)="goDetail(t._id)">
-                Voir détails <i class="bi bi-chevron-right"></i>
+                {{ 'trainings.list.card.viewDetails' | translate }} <i class="bi bi-chevron-right"></i>
               </button>
             </div>
           </div>

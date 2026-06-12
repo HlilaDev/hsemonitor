@@ -1,15 +1,20 @@
 {
   "ZONES": {
+    "KICKER": "Zone Management",
     "TITLE": "Zones",
+    "SUBTITLE": "Manage industrial zones and their risk levels.",
     "ADD_BTN": "Add Zone",
     "EMPTY": "No zones found.",
     "EDIT_TITLE": "Edit Zone",
     "EDIT_SUBTITLE": "Update this zone's information.",
+    "ADD_TITLE": "Add Zone",
+    "ADD_SUBTITLE": "Create a new HSE zone with its associated risk level.",
     "COLUMNS": {
       "NAME": "Name",
       "DESCRIPTION": "Description",
       "RISK": "Risk Level",
-      "ACTIVE": "Active"
+      "ACTIVE": "Active",
+      "ACTIONS": "Actions"
     },
     "FORM": {
       "NAME": "Zone Name",
@@ -18,7 +23,16 @@
       "DESC_PH": "Describe this zone...",
       "RISK": "Risk Level",
       "ACTIVE": "Active Zone",
-      "ACTIVE_HELP": "Disable this option to temporarily hide the zone."
+      "ACTIVE_HELP": "Disable this option to temporarily hide the zone.",
+      "SECTION_IDENTIFICATION": "Identification",
+      "SECTION_SECURITY": "Security Settings"
+    },
+    "FILTERS": {
+      "SEARCH": "Search",
+      "SEARCH_PH": "Search by name or description...",
+      "RISK": "Risk Level",
+      "STATUS": "Status",
+      "ALL": "All"
     },
     "RISK": {
       "low": "Low",
@@ -32,10 +46,33 @@
       "CRITICAL": "Critical",
       "UNKNOWN": "Unknown"
     },
+    "RISK_DESC": {
+      "low": "Minimal risk",
+      "medium": "Moderate risk",
+      "high": "Critical risk"
+    },
+    "STATUS": {
+      "active": "Active",
+      "inactive": "Inactive"
+    },
     "VALIDATION": {
       "NAME_REQUIRED": "Zone name is required.",
       "NAME_MIN": "The name must contain at least 3 characters."
     },
+    "SUCCESS": {
+      "CREATED": "Zone created successfully.",
+      "UPDATED": "Zone updated successfully."
+    },
+    "ERROR": {
+      "LOAD": "Error while loading zones.",
+      "NOT_FOUND": "Zone not found.",
+      "LOAD_ONE": "Error while loading the zone.",
+      "UPDATE": "Error while updating the zone.",
+      "CREATE": "Error while creating the zone.",
+      "DELETE": "Error while deleting the zone.",
+      "TOGGLE_ACTIVE": "Error while updating zone status."
+    },
+    "CONFIRM_DELETE": "Are you sure you want to delete this zone?",
     "MESSAGES": {
       "LOAD_ERROR": "Error while loading zones.",
       "DETAIL_LOAD_ERROR": "Error while loading the zone.",
@@ -111,6 +148,13 @@
     "SAVING": "Saving...",
     "CANCEL": "Cancel",
     "VIEW": "View",
-    "RESET": "Reset"
+    "RESET": "Reset",
+    "FILTER": "Filter",
+    "TOTAL": "Total",
+    "PAGE": "Page",
+    "ACTIVE": "Active",
+    "INACTIVE": "Inactive",
+    "ENABLE": "Enable",
+    "DISABLE": "Disable"
   }
 }

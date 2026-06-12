@@ -1,4 +1,5 @@
 import { CommonModule } from '@angular/common';
+import { TranslatePipe } from '@ngx-translate/core';
 import { Component, computed, signal } from '@angular/core';
 
 interface SecurityItem {
@@ -21,7 +22,7 @@ interface LoginActivity {
 @Component({
   selector: 'app-account-security',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TranslatePipe],
   templateUrl: './account-security.html',
   styleUrl: './account-security.scss',
 })

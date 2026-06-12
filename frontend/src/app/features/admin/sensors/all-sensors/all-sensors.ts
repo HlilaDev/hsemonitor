@@ -3,22 +3,27 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { catchError, finalize, of } from 'rxjs';
+import { TranslateModule } from '@ngx-translate/core';
 
 import {
   Sensor,
   SensorServices,
   SensorStatus,
 } from '../../../../core/services/sensors/sensor-services';
+import { ConfirmModalService } from '../../../../core/services/confirm-modal/confirm-modal.service';
+import { ToastService } from '../../../../core/services/toast/toast.service';
 
 @Component({
   selector: 'app-all-sensors',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule],
+  imports: [CommonModule, RouterModule, FormsModule, TranslateModule],
   templateUrl: './all-sensors.html',
   styleUrl: './all-sensors.scss',
 })
 export class AllSensors {
   private sensorService = inject(SensorServices);
+  private confirmModal = inject(ConfirmModalService);
+  private toast = inject(ToastService);
 
   loading = signal(false);
   error = signal<string | null>(null);
@@ -115,25 +120,30 @@ export class AllSensors {
   }
 
   deleteSensor(s: Sensor) {
-    if (!confirm(`Supprimer le capteur "${s.name}" ?`)) return;
+    this.confirmModal.open({
+      message: 'Êtes-vous sûr de vouloir supprimer ce capteur ?',
+      itemName: s.name,
+      onConfirm: () => {
+        this.loading.set(true);
+        this.error.set(null);
 
-    this.loading.set(true);
-    this.error.set(null);
-
-    this.sensorService
-      .delete(s._id)
-      .pipe(
-        catchError((err) => {
-          this.error.set(err?.error?.message ?? 'Suppression échouée');
-          return of(null);
-        }),
-        finalize(() => this.loading.set(false))
-      )
-      .subscribe((res) => {
-        if (res === null) return;
-        this.sensors.set(this.sensors().filter((x) => x._id !== s._id));
-        if (this.page() > this.pages()) this.page.set(this.pages());
-      });
+        this.sensorService
+          .delete(s._id)
+          .pipe(
+            catchError((err) => {
+              this.toast.error(err?.error?.message ?? 'Suppression échouée.');
+              return of(null);
+            }),
+            finalize(() => this.loading.set(false))
+          )
+          .subscribe((res) => {
+            if (res === null) return;
+            this.sensors.set(this.sensors().filter((x) => x._id !== s._id));
+            if (this.page() > this.pages()) this.page.set(this.pages());
+            this.toast.success('Capteur supprimé avec succès.');
+          });
+      },
+    });
   }
 
   toggleStatus(s: Sensor) {

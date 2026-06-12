@@ -3,16 +3,19 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { catchError, finalize, of } from 'rxjs';
+import { TranslateModule } from '@ngx-translate/core';
 
 import {
   DeviceServices,
   Device,
 } from '../../../../core/services/devices/device-services';
+import { ConfirmModalService } from '../../../../core/services/confirm-modal/confirm-modal.service';
+import { ToastService } from '../../../../core/services/toast/toast.service';
 
 @Component({
   selector: 'app-all-devices',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule],
+  imports: [CommonModule, RouterModule, FormsModule, TranslateModule],
   providers: [DatePipe],
   templateUrl: './all-devices.html',
   styleUrl: './all-devices.scss',
@@ -20,6 +23,8 @@ import {
 export class AllDevices {
   private deviceService = inject(DeviceServices);
   private datePipe = inject(DatePipe);
+  private confirmModal = inject(ConfirmModalService);
+  private toast = inject(ToastService);
 
   loading = signal(false);
   error = signal<string | null>(null);
@@ -178,33 +183,30 @@ export class AllDevices {
       .subscribe();
   }
 
-  deleteDevice(id: string): void {
-    if (!confirm('Voulez-vous supprimer ce device ?')) return;
+  deleteDevice(id: string, name?: string): void {
+    this.confirmModal.open({
+      message: 'Êtes-vous sûr de vouloir supprimer ce device ?',
+      itemName: name,
+      onConfirm: () => {
+        this.loading.set(true);
+        this.error.set(null);
 
-    this.loading.set(true);
-    this.error.set(null);
-
-    this.deviceService
-      .deleteDevice(id)
-      .pipe(
-        catchError((err) => {
-          this.error.set(err?.error?.message ?? 'Erreur de suppression');
-          return of(null);
-        }),
-        finalize(() => this.loading.set(false))
-      )
-      .subscribe((res) => {
-        if (res === null) return;
-
-        this.devices.set(
-          this.devices().filter(
-            (d: any) => d?._id !== id && d?.deviceId !== id
+        this.deviceService
+          .deleteDevice(id)
+          .pipe(
+            catchError((err) => {
+              this.toast.error(err?.error?.message ?? 'Erreur de suppression');
+              return of(null);
+            }),
+            finalize(() => this.loading.set(false))
           )
-        );
-
-        if (this.page() > this.pages()) {
-          this.page.set(this.pages());
-        }
-      });
+          .subscribe((res) => {
+            if (res === null) return;
+            this.devices.set(this.devices().filter((d: any) => d?._id !== id && d?.deviceId !== id));
+            if (this.page() > this.pages()) this.page.set(this.pages());
+            this.toast.success('Device supprimé avec succès.');
+          });
+      },
+    });
   }
 }

@@ -7,6 +7,7 @@ import {
   signal,
 } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
+import { TranslatePipe } from '@ngx-translate/core';
 import { finalize, of, switchMap } from 'rxjs';
 
 import {
@@ -64,7 +65,7 @@ type ObservationItem = {
 @Component({
   selector: 'app-observation-details',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, TranslatePipe],
   templateUrl: './observation-details.html',
   styleUrl: './observation-details.scss',
 })

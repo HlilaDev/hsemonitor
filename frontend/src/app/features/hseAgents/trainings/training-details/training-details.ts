@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { TranslatePipe } from '@ngx-translate/core';
 import { catchError, finalize, of, switchMap } from 'rxjs';
 
 import {
@@ -63,7 +64,7 @@ type TrainingDetailModel = {
 @Component({
   selector: 'app-training-details',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule],
+  imports: [CommonModule, FormsModule, RouterModule, TranslatePipe],
   templateUrl: './training-details.html',
   styleUrl: './training-details.scss',
 })

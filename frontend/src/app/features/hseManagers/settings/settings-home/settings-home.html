@@ -2,12 +2,9 @@
   <div class="hero-card">
     <div class="hero-content">
       <div class="hero-text">
-        <span class="eyebrow">Account Center</span>
-        <h1>Settings</h1>
-        <p>
-          Manage your profile, security, notifications and personal preferences
-          for the HSE platform.
-        </p>
+        <span class="eyebrow">{{ 'settings.home.kicker' | translate }}</span>
+        <h1>{{ 'settings.home.title' | translate }}</h1>
+        <p>{{ 'settings.home.subtitle' | translate }}</p>
       </div>
 
       <div class="security-score-card">
@@ -16,7 +13,7 @@
         </div>
 
         <div class="score-text">
-          <h3>Security Score</h3>
+          <h3>{{ 'settings.home.securityScore' | translate }}</h3>
           <p>{{ securityLabel() }}</p>
           <small>{{ securityMessage() }}</small>
         </div>
@@ -30,8 +27,8 @@
         <i class="bi bi-person-badge"></i>
       </div>
       <div class="quick-info">
-        <span>Profile Status</span>
-        <strong>Complete</strong>
+        <span>{{ 'settings.home.quickCards.profileStatus' | translate }}</span>
+        <strong>{{ 'settings.home.quickCards.complete' | translate }}</strong>
       </div>
     </div>
 
@@ -40,7 +37,7 @@
         <i class="bi bi-shield-check"></i>
       </div>
       <div class="quick-info">
-        <span>Account Protection</span>
+        <span>{{ 'settings.home.quickCards.accountProtection' | translate }}</span>
         <strong>{{ securityLabel() }}</strong>
       </div>
     </div>
@@ -50,8 +47,8 @@
         <i class="bi bi-bell"></i>
       </div>
       <div class="quick-info">
-        <span>Alerts</span>
-        <strong>{{ emailAlertsEnabled() ? 'Enabled' : 'Disabled' }}</strong>
+        <span>{{ 'settings.home.quickCards.alerts' | translate }}</span>
+        <strong>{{ emailAlertsEnabled() ? ('settings.home.quickCards.enabled' | translate) : ('settings.home.quickCards.disabled' | translate) }}</strong>
       </div>
     </div>
 
@@ -60,8 +57,8 @@
         <i class="bi bi-moon-stars"></i>
       </div>
       <div class="quick-info">
-        <span>Theme</span>
-        <strong>{{ darkModeEnabled() ? 'Dark' : 'Light' }}</strong>
+        <span>{{ 'settings.home.quickCards.theme' | translate }}</span>
+        <strong>{{ darkModeEnabled() ? ('settings.home.quickCards.dark' | translate) : ('settings.home.quickCards.light' | translate) }}</strong>
       </div>
     </div>
   </div>
@@ -71,8 +68,8 @@
       <div class="panel-card">
         <div class="panel-head">
           <div>
-            <h2>Settings Sections</h2>
-            <p>Access the main account configuration areas.</p>
+            <h2>{{ 'settings.home.sections.title' | translate }}</h2>
+            <p>{{ 'settings.home.sections.subtitle' | translate }}</p>
           </div>
         </div>
 
@@ -106,8 +103,8 @@
       <div class="panel-card">
         <div class="panel-head">
           <div>
-            <h2>Recent Activity</h2>
-            <p>Latest account changes and security events.</p>
+            <h2>{{ 'settings.home.recentActivity.title' | translate }}</h2>
+            <p>{{ 'settings.home.recentActivity.subtitle' | translate }}</p>
           </div>
         </div>
 
@@ -136,16 +133,16 @@
       <div class="panel-card">
         <div class="panel-head">
           <div>
-            <h2>Quick Preferences</h2>
-            <p>Update common options directly from here.</p>
+            <h2>{{ 'settings.home.preferences.title' | translate }}</h2>
+            <p>{{ 'settings.home.preferences.subtitle' | translate }}</p>
           </div>
         </div>
 
         <div class="preferences-list">
           <div class="preference-item">
             <div class="preference-text">
-              <h4>Email Alerts</h4>
-              <p>Receive alerts for critical incidents and reports.</p>
+              <h4>{{ 'settings.home.preferences.emailAlerts' | translate }}</h4>
+              <p>{{ 'settings.home.preferences.emailAlertsHint' | translate }}</p>
             </div>
 
             <button
@@ -159,8 +156,8 @@
 
           <div class="preference-item">
             <div class="preference-text">
-              <h4>Dark Mode</h4>
-              <p>Use a darker visual theme for low-light environments.</p>
+              <h4>{{ 'settings.home.preferences.darkMode' | translate }}</h4>
+              <p>{{ 'settings.home.preferences.darkModeHint' | translate }}</p>
             </div>
 
             <button
@@ -174,8 +171,8 @@
 
           <div class="preference-item">
             <div class="preference-text">
-              <h4>Extra Security</h4>
-              <p>Enable stronger protection for account access.</p>
+              <h4>{{ 'settings.home.preferences.extraSecurity' | translate }}</h4>
+              <p>{{ 'settings.home.preferences.extraSecurityHint' | translate }}</p>
             </div>
 
             <button
@@ -194,14 +191,11 @@
           <i class="bi bi-shield-exclamation"></i>
         </div>
 
-        <h3>Security Recommendation</h3>
-        <p>
-          Review your login history regularly and update your password
-          periodically to reduce unauthorized access risks.
-        </p>
+        <h3>{{ 'settings.home.recommendation.title' | translate }}</h3>
+        <p>{{ 'settings.home.recommendation.body' | translate }}</p>
 
         <a class="highlight-link" routerLink="/manager/settings/security">
-          Open Security Settings
+          {{ 'settings.home.recommendation.link' | translate }}
           <i class="bi bi-arrow-right"></i>
         </a>
       </div>

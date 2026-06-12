@@ -1,14 +1,14 @@
 <div class="page">
   <section class="hero">
     <div>
-      <span class="eyebrow">HSEMonitor · Capteurs IoT</span>
-      <h2>Modifier un capteur</h2>
-      <p>Configure les informations du capteur et ajoute ses règles d’alerte.</p>
+      <span class="eyebrow">{{ 'SENSORS.KICKER' | translate }}</span>
+      <h2>{{ 'SENSORS.EDIT_TITLE' | translate }}</h2>
+      <p>{{ 'SENSORS.EDIT_SUBTITLE' | translate }}</p>
     </div>
 
     <a class="btn light" routerLink="/admin/sensors">
       <i class="bi bi-arrow-left"></i>
-      Retour
+      {{ 'COMMON.BACK' | translate }}
     </a>
   </section>
 
@@ -29,81 +29,81 @@
   @if (loading()) {
     <div class="card loading-card">
       <span class="spinner"></span>
-      <span>Chargement du capteur...</span>
+      <span>{{ 'SENSORS.DETAIL.LOADING' | translate }}</span>
     </div>
   } @else {
     <div class="layout">
       <form class="card form-card" [formGroup]="form" (ngSubmit)="submit()">
         <div class="section-title">
           <div>
-            <h3>Informations capteur</h3>
-            <p>Données générales utilisées par le monitoring IoT.</p>
+            <h3>{{ 'SENSORS.FORM.SECTION_INFO' | translate }}</h3>
+            <p>{{ 'SENSORS.FORM.SECTION_INFO_SUB' | translate }}</p>
           </div>
 
           <span class="status-pill" [class.online]="form.value.status === 'online'">
-            {{ form.value.status }}
+            {{ 'SENSORS.STATUS.' + form.value.status | translate }}
           </span>
         </div>
 
         <div class="grid">
           <div class="field">
-            <label>Nom *</label>
-            <input class="input" formControlName="name" placeholder="Ex: Température Zone B" />
+            <label>{{ 'SENSORS.FORM.NAME' | translate }} *</label>
+            <input class="input" formControlName="name" [placeholder]="'SENSORS.FORM.NAME_PH' | translate" />
             @if (fieldInvalid('name')) {
-              <div class="hint error">Nom requis, minimum 2 caractères.</div>
+              <div class="hint error">{{ 'SENSORS.FORM.NAME_REQUIRED' | translate }}</div>
             }
           </div>
 
           <div class="field">
-            <label>Type *</label>
+            <label>{{ 'SENSORS.FORM.TYPE' | translate }} *</label>
             <select class="input" formControlName="type">
               @for (t of sensorTypes; track t.value) {
-                <option [value]="t.value">{{ t.label }}</option>
+                <option [value]="t.value">{{ 'SENSORS.TYPE.' + t.value | translate }}</option>
               }
             </select>
           </div>
 
           <div class="field">
-            <label>Device</label>
+            <label>{{ 'SENSORS.COLUMNS.DEVICE' | translate }}</label>
             <input class="input readonly" [value]="deviceLabel()" disabled />
-            <div class="hint">Le device n’est pas modifiable ici.</div>
+            <div class="hint">{{ 'SENSORS.FORM.DEVICE_READONLY' | translate }}</div>
           </div>
 
           <div class="field">
-            <label>Zone</label>
+            <label>{{ 'SENSORS.FILTERS.ZONE' | translate }}</label>
             <input class="input readonly" [value]="zoneLabel()" disabled />
-            <div class="hint">Zone héritée du device.</div>
+            <div class="hint">{{ 'SENSORS.FORM.ZONE_READONLY' | translate }}</div>
           </div>
 
           <div class="field">
-            <label>Threshold simple</label>
-            <input class="input" type="number" formControlName="threshold" placeholder="Ex: 40" />
-            <div class="hint">Valeur indicative du capteur.</div>
+            <label>{{ 'SENSORS.FORM.THRESHOLD' | translate }}</label>
+            <input class="input" type="number" formControlName="threshold" [placeholder]="'SENSORS.FORM.THRESHOLD_PH' | translate" />
+            <div class="hint">{{ 'SENSORS.FORM.THRESHOLD_HINT' | translate }}</div>
           </div>
 
           <div class="field">
-            <label>Unité</label>
-            <input class="input" formControlName="unit" placeholder="°C, ppm, %, dB" />
+            <label>{{ 'SENSORS.FORM.UNIT' | translate }}</label>
+            <input class="input" formControlName="unit" [placeholder]="'SENSORS.FORM.UNIT_PH' | translate" />
           </div>
 
           <div class="field full">
-            <label>Status *</label>
+            <label>{{ 'SENSORS.FORM.STATUS' | translate }} *</label>
             <select class="input" formControlName="status">
               @for (s of statuses; track s.value) {
-                <option [value]="s.value">{{ s.label }}</option>
+                <option [value]="s.value">{{ 'SENSORS.STATUS.' + s.value | translate }}</option>
               }
             </select>
           </div>
         </div>
 
         <div class="actions">
-          <button class="btn ghost" type="button" (click)="goBack()">Annuler</button>
+          <button class="btn ghost" type="button" (click)="goBack()">{{ 'COMMON.CANCEL' | translate }}</button>
 
           <button class="btn primary" type="submit" [disabled]="!canSubmit()">
             @if (!saving()) {
-              <span>Enregistrer capteur</span>
+              <span>{{ 'COMMON.SAVE' | translate }}</span>
             } @else {
-              <span class="inline"><span class="spinner"></span> Sauvegarde...</span>
+              <span class="inline"><span class="spinner"></span> {{ 'COMMON.SAVING' | translate }}</span>
             }
           </button>
         </div>
@@ -113,15 +113,15 @@
         <div class="icon-box">
           <i class="bi bi-cpu"></i>
         </div>
-        <h3>{{ sensor()?.name || 'Capteur' }}</h3>
-        <p>Les alert rules sont les vrais seuils utilisés par le backend.</p>
+        <h3>{{ sensor()?.name || ('SENSORS.TITLE' | translate) }}</h3>
+        <p>{{ 'SENSORS.RULES.SUBTITLE' | translate }}</p>
 
         <div class="mini-row">
-          <span>Metric</span>
+          <span>{{ 'SENSORS.RULES.METRIC' | translate }}</span>
           <strong>{{ form.value.type }}</strong>
         </div>
         <div class="mini-row">
-          <span>Rules actives</span>
+          <span>{{ 'SENSORS.RULES.ACTIVE_RULES' | translate }}</span>
           <strong>{{ alertRules().length }}</strong>
         </div>
       </aside>
@@ -130,22 +130,22 @@
     <section class="card rules-card">
       <div class="section-title">
         <div>
-          <h3>Ajouter alert rule / threshold</h3>
-          <p>Cette règle sera liée à ce capteur et utilisée par <b>alertRuleEngine</b>.</p>
+          <h3>{{ 'SENSORS.RULES.TITLE' | translate }}</h3>
+          <p>{{ 'SENSORS.RULES.SUBTITLE' | translate }}</p>
         </div>
       </div>
 
       <form class="rule-grid" [formGroup]="ruleForm" (ngSubmit)="createRule()">
         <div class="field wide">
-          <label>Nom de la règle *</label>
-          <input class="input" formControlName="name" placeholder="Ex: High temperature zone B" />
+          <label>{{ 'SENSORS.RULES.RULE_NAME' | translate }} *</label>
+          <input class="input" formControlName="name" [placeholder]="'SENSORS.RULES.RULE_NAME_PH' | translate" />
           @if (ruleFieldInvalid('name')) {
-            <div class="hint error">Nom requis.</div>
+            <div class="hint error">{{ 'SENSORS.RULES.RULE_NAME_REQUIRED' | translate }}</div>
           }
         </div>
 
         <div class="field">
-          <label>Opérateur</label>
+          <label>{{ 'SENSORS.RULES.OPERATOR' | translate }}</label>
           <select class="input" formControlName="operator">
             <option value=">">&gt;</option>
             <option value=">=">&gt;=</option>
@@ -157,12 +157,12 @@
         </div>
 
         <div class="field">
-          <label>Threshold *</label>
-          <input class="input" type="number" formControlName="threshold" placeholder="Ex: 40" />
+          <label>{{ 'SENSORS.RULES.THRESHOLD' | translate }} *</label>
+          <input class="input" type="number" formControlName="threshold" [placeholder]="'SENSORS.RULES.THRESHOLD_PH' | translate" />
         </div>
 
         <div class="field">
-          <label>Sévérité</label>
+          <label>{{ 'SENSORS.RULES.SEVERITY' | translate }}</label>
           <select class="input" formControlName="severity">
             <option value="info">Info</option>
             <option value="warning">Warning</option>
@@ -171,20 +171,20 @@
         </div>
 
         <div class="field">
-          <label>Cooldown sec</label>
+          <label>{{ 'SENSORS.RULES.COOLDOWN' | translate }}</label>
           <input class="input" type="number" formControlName="cooldownSec" />
         </div>
 
         <label class="switch-field">
           <input type="checkbox" formControlName="isActive" />
-          <span>Active</span>
+          <span>{{ 'SENSORS.RULES.ACTIVE' | translate }}</span>
         </label>
 
         <button class="btn danger full" type="submit" [disabled]="!canCreateRule()">
           @if (!ruleSaving()) {
-            <span><i class="bi bi-plus-circle"></i> Ajouter alert rule</span>
+            <span><i class="bi bi-plus-circle"></i> {{ 'SENSORS.RULES.ADD_BTN' | translate }}</span>
           } @else {
-            <span class="inline"><span class="spinner"></span> Création...</span>
+            <span class="inline"><span class="spinner"></span> {{ 'SENSORS.RULES.CREATING' | translate }}</span>
           }
         </button>
       </form>
@@ -193,7 +193,7 @@
         @if (alertRules().length === 0) {
           <div class="empty">
             <i class="bi bi-shield-exclamation"></i>
-            Aucune règle liée à ce capteur.
+            {{ 'SENSORS.RULES.EMPTY' | translate }}
           </div>
         } @else {
           @for (rule of alertRules(); track rule._id) {
@@ -208,7 +208,7 @@
 
               <div class="rule-actions">
                 <button class="chip" type="button" (click)="toggleRule(rule)">
-                  {{ rule.isActive ? 'Active' : 'Inactive' }}
+                  {{ rule.isActive ? ('SENSORS.RULES.ACTIVE' | translate) : 'Inactive' }}
                 </button>
                 <button class="icon-btn" type="button" (click)="deleteRule(rule)">
                   <i class="bi bi-trash"></i>

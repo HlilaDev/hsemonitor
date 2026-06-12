@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
+import { TranslatePipe } from '@ngx-translate/core';
 import { catchError, finalize, forkJoin, of } from 'rxjs';
 
 import {
@@ -16,7 +17,7 @@ import {
 @Component({
   selector: 'app-device-monitoring',
   standalone: true,
-  imports: [CommonModule, RouterModule, SensorTrendCurve],
+  imports: [CommonModule, RouterModule, SensorTrendCurve, TranslatePipe],
   templateUrl: './device-monitoring.html',
   styleUrl: './device-monitoring.scss',
 })

@@ -1,13 +1,143 @@
-<div class="grid">
-  @for (w of widgets; track w.key) {
-    <app-stat-card
-      [title]="w.title"
-      [value]="w.value"
-      [subtitle]="w.subtitle"
-      [iconClass]="w.iconClass"
-      [variant]="w.variant"
-      [routerLink]="w.routerLink"
-      linkLabel="View Details"
-    />
-  }
-</div>
+<!-- ── Hero Banner ─────────────────────────────────── -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-content">
+    <div class="hero-left">
+      <p class="hero-kicker">
+        <i class="bi bi-shield-check"></i>
+        {{ 'admin.dashboard.kicker' | translate }}
+      </p>
+      <h1>{{ 'admin.dashboard.title' | translate }} <span class="accent">{{ 'admin.dashboard.titleAccent' | translate }}</span></h1>
+      <p class="hero-sub">{{ 'admin.dashboard.subtitle' | translate }}</p>
+    </div>
+    <div class="hero-right">
+      <div class="hero-date">
+        <i class="bi bi-calendar3"></i>
+        <span>{{ today }}</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── KPI Cards ──────────────────────────────────── -->
+<section class="kpi-section">
+  <div class="kpi-grid">
+
+    <a class="kpi-card blue" routerLink="/admin/devices">
+      <div class="kpi-icon">
+        <i class="bi bi-cpu-fill"></i>
+      </div>
+      <div class="kpi-body">
+        <span class="kpi-label">{{ 'admin.dashboard.kpi.devices' | translate }}</span>
+        <strong class="kpi-value">{{ getWidget('devices') }}</strong>
+        <span class="kpi-sub">{{ 'admin.dashboard.kpi.devicesSub' | translate }}</span>
+      </div>
+      <i class="bi bi-arrow-right kpi-arrow"></i>
+    </a>
+
+    <a class="kpi-card green" routerLink="/admin/employees">
+      <div class="kpi-icon">
+        <i class="bi bi-people-fill"></i>
+      </div>
+      <div class="kpi-body">
+        <span class="kpi-label">{{ 'admin.dashboard.kpi.employees' | translate }}</span>
+        <strong class="kpi-value">{{ getWidget('employees') }}</strong>
+        <span class="kpi-sub">{{ 'admin.dashboard.kpi.employeesSub' | translate }}</span>
+      </div>
+      <i class="bi bi-arrow-right kpi-arrow"></i>
+    </a>
+
+    <a class="kpi-card orange" routerLink="/admin/users">
+      <div class="kpi-icon">
+        <i class="bi bi-person-badge-fill"></i>
+      </div>
+      <div class="kpi-body">
+        <span class="kpi-label">{{ 'admin.dashboard.kpi.users' | translate }}</span>
+        <strong class="kpi-value">{{ getWidget('users') }}</strong>
+        <span class="kpi-sub">{{ 'admin.dashboard.kpi.usersSub' | translate }}</span>
+      </div>
+      <i class="bi bi-arrow-right kpi-arrow"></i>
+    </a>
+
+    <a class="kpi-card purple" routerLink="/admin/sensors">
+      <div class="kpi-icon">
+        <i class="bi bi-broadcast-pin"></i>
+      </div>
+      <div class="kpi-body">
+        <span class="kpi-label">{{ 'admin.dashboard.kpi.sensors' | translate }}</span>
+        <strong class="kpi-value">{{ getWidget('sensors') }}</strong>
+        <span class="kpi-sub">{{ 'admin.dashboard.kpi.sensorsSub' | translate }}</span>
+      </div>
+      <i class="bi bi-arrow-right kpi-arrow"></i>
+    </a>
+
+  </div>
+</section>
+
+<!-- ── Quick Actions ──────────────────────────────── -->
+<section class="actions-section">
+  <h2 class="section-title">
+    <i class="bi bi-lightning-charge-fill"></i>
+    {{ 'admin.dashboard.actions.title' | translate }}
+  </h2>
+  <div class="actions-grid">
+    <a class="action-card" routerLink="/admin/zones">
+      <div class="action-icon teal"><i class="bi bi-geo-alt-fill"></i></div>
+      <span>{{ 'admin.dashboard.actions.zones' | translate }}</span>
+      <i class="bi bi-chevron-right action-chev"></i>
+    </a>
+    <a class="action-card" routerLink="/admin/devices">
+      <div class="action-icon blue"><i class="bi bi-cpu-fill"></i></div>
+      <span>{{ 'admin.dashboard.actions.devices' | translate }}</span>
+      <i class="bi bi-chevron-right action-chev"></i>
+    </a>
+    <a class="action-card" routerLink="/admin/sensors">
+      <div class="action-icon purple"><i class="bi bi-broadcast-pin"></i></div>
+      <span>{{ 'admin.dashboard.actions.sensors' | translate }}</span>
+      <i class="bi bi-chevron-right action-chev"></i>
+    </a>
+    <a class="action-card" routerLink="/admin/employees">
+      <div class="action-icon green"><i class="bi bi-people-fill"></i></div>
+      <span>{{ 'admin.dashboard.actions.employees' | translate }}</span>
+      <i class="bi bi-chevron-right action-chev"></i>
+    </a>
+    <a class="action-card" routerLink="/admin/users">
+      <div class="action-icon orange"><i class="bi bi-person-badge-fill"></i></div>
+      <span>{{ 'admin.dashboard.actions.users' | translate }}</span>
+      <i class="bi bi-chevron-right action-chev"></i>
+    </a>
+    <a class="action-card" routerLink="/admin/settings">
+      <div class="action-icon gray"><i class="bi bi-gear-fill"></i></div>
+      <span>{{ 'admin.dashboard.actions.settings' | translate }}</span>
+      <i class="bi bi-chevron-right action-chev"></i>
+    </a>
+  </div>
+</section>
+
+<!-- ── System Info ─────────────────────────────────── -->
+<section class="info-section">
+  <div class="info-card">
+    <div class="info-icon"><i class="bi bi-shield-fill-check"></i></div>
+    <div>
+      <strong>{{ 'admin.dashboard.info.secured' | translate }}</strong>
+      <p>{{ 'admin.dashboard.info.securedSub' | translate }}</p>
+    </div>
+    <span class="info-badge online">{{ 'admin.dashboard.info.online' | translate }}</span>
+  </div>
+  <div class="info-card">
+    <div class="info-icon"><i class="bi bi-hdd-stack-fill"></i></div>
+    <div>
+      <strong>{{ 'admin.dashboard.info.iot' | translate }}</strong>
+      <p>{{ getWidget('sensors') }} {{ 'admin.dashboard.kpi.sensors' | translate | lowercase }} · {{ getWidget('devices') }} {{ 'admin.dashboard.kpi.devices' | translate | lowercase }}</p>
+    </div>
+    <span class="info-badge active">{{ 'admin.dashboard.info.active' | translate }}</span>
+  </div>
+  <div class="info-card">
+    <div class="info-icon"><i class="bi bi-people-fill"></i></div>
+    <div>
+      <strong>{{ 'admin.dashboard.info.team' | translate }}</strong>
+      <p>{{ getWidget('employees') }} {{ 'admin.dashboard.kpi.employees' | translate | lowercase }} · {{ getWidget('users') }} {{ 'admin.dashboard.kpi.users' | translate | lowercase }}</p>
+    </div>
+    <span class="info-badge active">{{ 'admin.dashboard.info.active' | translate }}</span>
+  </div>
+</section>

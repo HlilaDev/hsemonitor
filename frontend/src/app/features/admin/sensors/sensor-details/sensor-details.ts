@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 
 import {
   SensorServices,
@@ -22,7 +23,7 @@ export interface SensorHistoryEntry {
 @Component({
   selector: 'app-sensor-details',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule],
+  imports: [CommonModule, RouterLink, FormsModule, TranslateModule],
   templateUrl: './sensor-details.html',
   styleUrls: ['./sensor-details.scss'],
 })

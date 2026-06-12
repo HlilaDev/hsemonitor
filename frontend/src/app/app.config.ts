@@ -18,7 +18,7 @@ export const appConfig: ApplicationConfig = {
       loader: {
         provide: TranslateLoader,
         useFactory: (http: HttpClient) =>
-          new MultiTranslateHttpLoader(http, ['common', 'sidebar', 'auth' , 'zones','devices','employees']),
+          new MultiTranslateHttpLoader(http, ['common', 'sidebar', 'auth' , 'zones','devices','employees',"pages"]),
         deps: [HttpClient],
       },
       fallbackLang: 'en',

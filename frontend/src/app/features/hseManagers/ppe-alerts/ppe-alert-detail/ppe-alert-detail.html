@@ -1,136 +1,126 @@
 <div class="page">
+
   @if (loading()) {
-    <div class="state-card">
+    <div class="state-center">
       <div class="spinner"></div>
-      <h3>Chargement de l’alerte PPE...</h3>
-      <p>Veuillez patienter pendant la récupération des informations.</p>
+      <p>Chargement de l'alerte...</p>
     </div>
   } @else if (error()) {
-    <div class="state-card error">
-      <h3>Erreur</h3>
+    <div class="state-center error">
+      <i class="bi bi-exclamation-triangle-fill"></i>
       <p>{{ error() }}</p>
-      <button type="button" class="btn btn-light" (click)="goBack()">
-        Retour
-      </button>
+      <button type="button" class="btn btn-light" (click)="goBack()">← Retour</button>
     </div>
   } @else if (alert()) {
-    <div class="topbar">
-      <button type="button" class="btn btn-light" (click)="goBack()">
-        ← Retour
+
+    <!-- ── PAGE HEADER ───────────────────────────────── -->
+    <div class="page-head">
+      <button type="button" class="back-btn" (click)="goBack()">
+        <i class="bi bi-arrow-left"></i>
+        Retour
       </button>
-
-      <div class="topbar-text">
-        <p class="eyebrow">PPE alert detail</p>
-        <h1>Détail alerte PPE</h1>
-        <p class="subtitle">
-          Consultez les informations de l’alerte, vérifiez la preuve visuelle et
-          appliquez une action de traitement.
-        </p>
+      <div class="breadcrumb">
+        <span>PPE Alertes</span>
+        <i class="bi bi-chevron-right"></i>
+        <span class="bc-active">Détail alerte</span>
+      </div>
+      <div class="head-end">
+        <span class="badge" [class]="getStatusClass(alert()!.status)">
+          {{ getStatusLabel(alert()!.status) }}
+        </span>
       </div>
     </div>
 
-    <div class="hero-card">
-      <div class="hero-left">
-        <div class="title-row">
+    <!-- ── ALERT STRIP ──────────────────────────────── -->
+    <div [class]="'alert-strip strip-' + getTypeClass(alert()!.alertType)">
+      <div class="strip-icon">
+        <i class="bi bi-shield-exclamation"></i>
+      </div>
+
+      <div class="strip-body">
+        <div class="strip-top">
           <h2>{{ getTypeLabel(alert()!.alertType) }}</h2>
-
-          <div class="badges">
-            <span class="badge" [class]="getTypeClass(alert()!.alertType)">
-              {{ getTypeLabel(alert()!.alertType) }}
-            </span>
-
-            <span class="badge" [class]="getStatusClass(alert()!.status)">
-              {{ getStatusLabel(alert()!.status) }}
-            </span>
-          </div>
+          <span class="badge" [class]="getTypeClass(alert()!.alertType)">
+            {{ getTypeLabel(alert()!.alertType) }}
+          </span>
         </div>
-
-        <p class="label-text">{{ alert()!.label || 'Alerte PPE' }}</p>
-
-        <div class="confidence-card">
-          <div class="confidence-head">
-            <span>Confiance du modèle</span>
-            <strong>{{ confidencePercent() }}%</strong>
+        <p class="strip-sub">{{ alert()!.label || alert()!.alertType }}</p>
+        <div class="conf-row">
+          <span class="conf-lbl">Confiance du modèle</span>
+          <div class="conf-track">
+            <div class="conf-fill" [style.width.%]="confidencePercent()"></div>
           </div>
-
-          <div class="confidence-bar">
-            <div
-              class="confidence-fill"
-              [style.width.%]="confidencePercent()"
-            ></div>
-          </div>
+          <strong class="conf-val">{{ confidencePercent() }}%</strong>
         </div>
       </div>
 
-      <div class="hero-right">
-        <div class="quick-stat">
-          <span class="quick-stat-label">Date</span>
-          <strong>{{ alert()!.timestamp | date: 'dd/MM/yyyy' }}</strong>
-          <small>{{ alert()!.timestamp | date: 'HH:mm:ss' }}</small>
-        </div>
-
-        <div class="quick-stat">
-          <span class="quick-stat-label">Source</span>
-          <strong>{{ alert()!.source || 'N/A' }}</strong>
-          <small>{{ alert()!.cameraId || 'Caméra inconnue' }}</small>
-        </div>
-      </div>
-    </div>
-
-    <div class="content-grid">
-      <section class="card info-card">
-        <div class="card-header">
-          <h3>Informations générales</h3>
-        </div>
-
-        <div class="info-grid">
-          <div class="info-item">
-            <span class="info-label">Device</span>
-            <strong>{{ alert()!.device?.name || alert()!.deviceId || 'N/A' }}</strong>
-            <small>{{ alert()!.device?.deviceId || alert()!.deviceId || '' }}</small>
-          </div>
-
-          <div class="info-item">
-            <span class="info-label">Zone</span>
-            <strong>{{ alert()!.zone?.name || 'N/A' }}</strong>
-            <small>{{ alert()!.zone?.code || 'Aucun code zone' }}</small>
-          </div>
-
-          <div class="info-item">
-            <span class="info-label">Caméra</span>
-            <strong>{{ alert()!.cameraId || 'N/A' }}</strong>
-            <small>Vision source</small>
-          </div>
-
-          <div class="info-item">
-            <span class="info-label">Site</span>
-            <strong>{{ alert()!.siteId || 'N/A' }}</strong>
-            <small>Zone industrielle</small>
-          </div>
-
-          <div class="info-item">
-            <span class="info-label">Statut</span>
-            <strong>{{ getStatusLabel(alert()!.status) }}</strong>
-            <small>État actuel de traitement</small>
-          </div>
-
-          <div class="info-item">
-            <span class="info-label">Horodatage</span>
+      <div class="strip-aside">
+        <div class="aside-item">
+          <i class="bi bi-calendar3"></i>
+          <div>
             <strong>{{ alert()!.timestamp | date: 'dd/MM/yyyy' }}</strong>
             <small>{{ alert()!.timestamp | date: 'HH:mm:ss' }}</small>
           </div>
+        </div>
+        <div class="aside-item">
+          <i class="bi bi-cpu"></i>
+          <div>
+            <strong>{{ alert()!.source || 'N/A' }}</strong>
+            <small>{{ alert()!.cameraId || 'Caméra inconnue' }}</small>
+          </div>
+        </div>
+      </div>
+    </div>
 
+    <!-- ── BODY GRID ────────────────────────────────── -->
+    <div class="body-grid">
+
+      <section class="card">
+        <div class="card-head">
+          <div class="card-icon"><i class="bi bi-info-circle"></i></div>
+          <h3>Informations générales</h3>
+        </div>
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="info-lbl"><i class="bi bi-cpu"></i> Device</span>
+            <strong>{{ alert()!.device?.name || alert()!.deviceId || 'N/A' }}</strong>
+            <small>{{ alert()!.device?.deviceId || alert()!.deviceId || '—' }}</small>
+          </div>
+          <div class="info-item">
+            <span class="info-lbl"><i class="bi bi-map"></i> Zone</span>
+            <strong>{{ alert()!.zone?.name || 'N/A' }}</strong>
+            <small>{{ alert()!.zone?.code || 'Aucun code zone' }}</small>
+          </div>
+          <div class="info-item">
+            <span class="info-lbl"><i class="bi bi-camera-video"></i> Caméra</span>
+            <strong>{{ alert()!.cameraId || 'N/A' }}</strong>
+            <small>Vision source</small>
+          </div>
+          <div class="info-item">
+            <span class="info-lbl"><i class="bi bi-building"></i> Site</span>
+            <strong>{{ alert()!.siteId || 'N/A' }}</strong>
+            <small>Zone industrielle</small>
+          </div>
+          <div class="info-item">
+            <span class="info-lbl"><i class="bi bi-activity"></i> Statut</span>
+            <strong>{{ getStatusLabel(alert()!.status) }}</strong>
+            <small>État actuel</small>
+          </div>
+          <div class="info-item">
+            <span class="info-lbl"><i class="bi bi-clock"></i> Horodatage</span>
+            <strong>{{ alert()!.timestamp | date: 'dd/MM/yyyy' }}</strong>
+            <small>{{ alert()!.timestamp | date: 'HH:mm:ss' }}</small>
+          </div>
           @if (alert()!.metadata?.trackId !== null && alert()!.metadata?.trackId !== undefined) {
             <div class="info-item">
-              <span class="info-label">Track ID</span>
+              <span class="info-lbl"><i class="bi bi-tag"></i> Track ID</span>
               <strong>{{ alert()!.metadata?.trackId }}</strong>
               <small>Identifiant de suivi</small>
             </div>
           }
-
           @if (alert()!.metadata?.eventType) {
             <div class="info-item">
-              <span class="info-label">Event type</span>
+              <span class="info-lbl"><i class="bi bi-lightning"></i> Event type</span>
               <strong>{{ alert()!.metadata?.eventType }}</strong>
               <small>Type technique</small>
             </div>
@@ -138,49 +128,48 @@
         </div>
       </section>
 
-      <section class="card preview-card">
-        <div class="card-header">
+      <section class="card proof-card">
+        <div class="card-head">
+          <div class="card-icon"><i class="bi bi-camera"></i></div>
           <h3>Preuve visuelle</h3>
         </div>
-
         @if (alert()!.snapshotPath) {
-          <div class="snapshot-wrapper">
-          <img
-  [src]="getSnapshotUrl(alert()!.snapshotPath)"
-  [alt]="alert()!.label || 'Snapshot PPE'"
-  (error)="retryImage($event)"
-/>
+          <div class="snapshot-wrap">
+            <img
+              [src]="getSnapshotUrl(alert()!.snapshotPath)"
+              [alt]="alert()!.label || 'Snapshot PPE'"
+              (error)="retryImage($event)"
+            />
           </div>
         } @else {
-          <div class="empty-preview">
-            <div class="empty-icon">📷</div>
+          <div class="empty-proof">
+            <i class="bi bi-camera-video-off"></i>
             <h4>Aucune image disponible</h4>
-            <p>
-              Aucun snapshot n’a été envoyé avec cette alerte pour le moment.
-            </p>
+            <p>Aucun snapshot n'a été envoyé avec cette alerte.</p>
           </div>
         }
       </section>
+
     </div>
 
-    <section class="card actions-card">
-      <div class="card-header">
-        <h3>Actions de traitement</h3>
-        <p>Choisissez l’action adaptée à cette alerte PPE.</p>
+    <!-- ── ACTIONS BAR ──────────────────────────────── -->
+    <div class="actions-bar">
+      <div class="actions-label">
+        <i class="bi bi-gear"></i>
+        Actions de traitement
       </div>
-
-      <div class="actions">
+      <div class="actions-btns">
         @if (alert()!.status === 'open') {
           <button
             type="button"
-            class="btn btn-warning"
+            class="btn btn-warn"
             [disabled]="actionLoading()"
             (click)="updateStatus('acknowledged')"
           >
+            <i class="bi bi-eye"></i>
             Accuser réception
           </button>
         }
-
         @if (alert()!.status !== 'resolved') {
           <button
             type="button"
@@ -188,21 +177,23 @@
             [disabled]="actionLoading()"
             (click)="updateStatus('resolved')"
           >
+            <i class="bi bi-check-circle"></i>
             Résoudre
           </button>
         }
-
         @if (alert()!.status !== 'false_positive') {
           <button
             type="button"
-            class="btn btn-danger-soft"
+            class="btn btn-ghost-red"
             [disabled]="actionLoading()"
             (click)="updateStatus('false_positive')"
           >
-            Marquer faux positif
+            <i class="bi bi-x-circle"></i>
+            Faux positif
           </button>
         }
       </div>
-    </section>
+    </div>
+
   }
 </div>

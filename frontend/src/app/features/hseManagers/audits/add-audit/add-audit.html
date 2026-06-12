@@ -1,25 +1,24 @@
 <div class="page">
   <div class="header">
     <div>
-      <div class="eyebrow">Audit Management</div>
-      <h1>Create Audit</h1>
+      <div class="eyebrow">{{ 'audits.form.kicker' | translate }}</div>
+      <h1>{{ 'audits.form.createTitle' | translate }}</h1>
       <p>
-        Create a new audit linked to your HSE process, zone, auditor, findings,
-        and supporting documents.
+        {{ 'audits.form.createSubtitle' | translate }}
       </p>
     </div>
 
     <a class="btn light" routerLink="/manager/audits">
       <i class="bi bi-arrow-left"></i>
-      Back
+      {{ 'audits.form.back' | translate }}
     </a>
   </div>
 
   <div class="layout">
     <div class="main-card">
       <div class="card-head">
-        <h2>Audit Form</h2>
-        <span>Fill the audit information based on your backend model.</span>
+        <h2>{{ 'audits.form.formTitle' | translate }}</h2>
+        <span>{{ 'audits.form.formSubtitle' | translate }}</span>
       </div>
 
       <div *ngIf="error()" class="alert error">
@@ -34,24 +33,24 @@
 
       <form class="form" [formGroup]="form" (ngSubmit)="submit()">
         <div class="section">
-          <h3>Main Information</h3>
+          <h3>{{ 'audits.form.mainInfo' | translate }}</h3>
 
           <div class="grid two">
             <div class="field field-full">
-              <label>Title <span>*</span></label>
+              <label>{{ 'audits.form.titleLabel' | translate }} <span>*</span></label>
               <input
                 class="input"
                 type="text"
                 formControlName="title"
-                placeholder="Ex: Weekly PPE Safety Audit - Zone A"
+                [placeholder]="'audits.form.titlePlaceholder' | translate"
               />
               <small class="error-text" *ngIf="fieldInvalid('title')">
-                Title is required and must have at least 3 characters.
+                {{ 'audits.form.titleError' | translate }}
               </small>
             </div>
 
             <div class="field">
-              <label>Type <span>*</span></label>
+              <label>{{ 'audits.form.typeLabel' | translate }} <span>*</span></label>
               <select class="input" formControlName="type">
                 <option *ngFor="let type of auditTypes" [value]="type">
                   {{ type }}
@@ -60,7 +59,7 @@
             </div>
 
             <div class="field">
-              <label>Status <span>*</span></label>
+              <label>{{ 'audits.form.statusLabel' | translate }} <span>*</span></label>
               <select class="input" formControlName="status">
                 <option *ngFor="let status of auditStatuses" [value]="status">
                   {{ status }}
@@ -69,23 +68,23 @@
             </div>
 
             <div class="field field-full">
-              <label>Description</label>
+              <label>{{ 'audits.form.descriptionLabel' | translate }}</label>
               <textarea
                 class="input textarea"
                 rows="4"
                 formControlName="description"
-                placeholder="Write audit description, scope, objectives and operational notes..."
+                [placeholder]="'audits.form.descriptionPlaceholder' | translate"
               ></textarea>
             </div>
           </div>
         </div>
 
         <div class="section">
-          <h3>Assignment & Scheduling</h3>
+          <h3>{{ 'audits.form.assignment' | translate }}</h3>
 
           <div class="grid two">
             <div class="field">
-              <label>Zone ID</label>
+              <label>{{ 'audits.form.zoneLabel' | translate }}</label>
               <input
                 class="input"
                 type="text"
@@ -95,7 +94,7 @@
             </div>
 
             <div class="field">
-              <label>Auditor ID <span>*</span></label>
+              <label>{{ 'audits.form.auditorLabel' | translate }} <span>*</span></label>
               <input
                 class="input"
                 type="text"
@@ -103,12 +102,12 @@
                 placeholder="User ObjectId"
               />
               <small class="error-text" *ngIf="fieldInvalid('auditor')">
-                Auditor is required.
+                {{ 'audits.form.auditorError' | translate }}
               </small>
             </div>
 
             <div class="field">
-              <label>Scheduled Date</label>
+              <label>{{ 'audits.form.scheduledDate' | translate }}</label>
               <input
                 class="input"
                 type="datetime-local"
@@ -117,7 +116,7 @@
             </div>
 
             <div class="field">
-              <label>Completed Date</label>
+              <label>{{ 'audits.form.completedDate' | translate }}</label>
               <input
                 class="input"
                 type="datetime-local"
@@ -126,7 +125,7 @@
             </div>
 
             <div class="field">
-              <label>Score</label>
+              <label>{{ 'audits.form.scoreLabel' | translate }}</label>
               <input
                 class="input"
                 type="number"
@@ -141,10 +140,10 @@
 
         <div class="section">
           <div class="section-head">
-            <h3>Findings</h3>
+            <h3>{{ 'audits.form.findings' | translate }}</h3>
             <button class="btn primary small" type="button" (click)="addFinding()">
               <i class="bi bi-plus-lg"></i>
-              Add finding
+              {{ 'audits.form.addFinding' | translate }}
             </button>
           </div>
 
@@ -155,43 +154,43 @@
               [formGroupName]="i"
             >
               <div class="finding-top">
-                <h4>Finding #{{ i + 1 }}</h4>
+                <h4>{{ 'audits.form.findingNum' | translate }} #{{ i + 1 }}</h4>
                 <button
                   class="btn danger small"
                   type="button"
                   (click)="removeFinding(i)"
                 >
                   <i class="bi bi-trash3"></i>
-                  Remove
+                  {{ 'audits.form.remove' | translate }}
                 </button>
               </div>
 
               <div class="grid two">
                 <div class="field field-full">
-                  <label>Finding Title <span>*</span></label>
+                  <label>{{ 'audits.form.findingTitle' | translate }} <span>*</span></label>
                   <input
                     class="input"
                     type="text"
                     formControlName="title"
-                    placeholder="Ex: Emergency exit blocked"
+                    [placeholder]="'audits.form.findingTitlePlaceholder' | translate"
                   />
                   <small class="error-text" *ngIf="findingFieldInvalid(i, 'title')">
-                    Finding title is required.
+                    {{ 'audits.form.findingTitleError' | translate }}
                   </small>
                 </div>
 
                 <div class="field field-full">
-                  <label>Description</label>
+                  <label>{{ 'audits.form.descriptionLabel' | translate }}</label>
                   <textarea
                     class="input textarea"
                     rows="3"
                     formControlName="description"
-                    placeholder="Describe the problem..."
+                    [placeholder]="'audits.form.descriptionPlaceholder' | translate"
                   ></textarea>
                 </div>
 
                 <div class="field">
-                  <label>Severity</label>
+                  <label>{{ 'audits.form.severity' | translate }}</label>
                   <select class="input" formControlName="severity">
                     <option *ngFor="let sev of findingSeverities" [value]="sev">
                       {{ sev }}
@@ -200,7 +199,7 @@
                 </div>
 
                 <div class="field">
-                  <label>Status</label>
+                  <label>{{ 'audits.form.statusLabel' | translate }}</label>
                   <select class="input" formControlName="status">
                     <option *ngFor="let st of findingStatuses" [value]="st">
                       {{ st }}
@@ -209,7 +208,7 @@
                 </div>
 
                 <div class="field">
-                  <label>Due Date</label>
+                  <label>{{ 'audits.form.dueDate' | translate }}</label>
                   <input
                     class="input"
                     type="datetime-local"
@@ -218,7 +217,7 @@
                 </div>
 
                 <div class="field">
-                  <label>Assigned To</label>
+                  <label>{{ 'audits.form.assignedTo' | translate }}</label>
                   <input
                     class="input"
                     type="text"
@@ -232,31 +231,31 @@
         </div>
 
         <div class="section">
-          <h3>Attachments</h3>
+          <h3>{{ 'audits.form.attachments' | translate }}</h3>
 
           <div class="field">
-            <label>Attachment URLs</label>
+            <label>{{ 'audits.form.attachmentUrls' | translate }}</label>
             <textarea
               class="input textarea"
               rows="4"
               formControlName="attachmentsText"
-              placeholder="https://file1.pdf, https://image2.jpg"
+              [placeholder]="'audits.form.attachmentPlaceholder' | translate"
             ></textarea>
             <small class="hint">
-              Separate URLs with commas. They will be saved as a string array.
+              {{ 'audits.form.attachmentHint' | translate }}
             </small>
           </div>
         </div>
 
         <div class="actions">
-          <a class="btn light" routerLink="/manager/audits">Cancel</a>
+          <a class="btn light" routerLink="/manager/audits">{{ 'audits.form.cancel' | translate }}</a>
 
           <button class="btn primary" type="submit" [disabled]="loading()">
             <span *ngIf="!loading()">
               <i class="bi bi-shield-check"></i>
-              Create Audit
+              {{ 'audits.form.createBtn' | translate }}
             </span>
-            <span *ngIf="loading()">Saving...</span>
+            <span *ngIf="loading()">{{ 'audits.form.saving' | translate }}</span>
           </button>
         </div>
       </form>
@@ -264,29 +263,29 @@
 
 <aside class="side-card">
   <div class="card-head">
-    <h2>Audit Tips</h2>
-    <span>Best practices for creating a complete audit.</span>
+    <h2>{{ 'audits.form.tips.title' | translate }}</h2>
+    <span>{{ 'audits.form.tips.subtitle' | translate }}</span>
   </div>
 
   <div class="tips-list">
     <div class="tip-item">
-      <strong>Clear title</strong>
-      <p>Use the zone or process name in the audit title.</p>
+      <strong>{{ 'audits.form.tips.clearTitle' | translate }}</strong>
+      <p>{{ 'audits.form.tips.clearTitleHint' | translate }}</p>
     </div>
 
     <div class="tip-item">
-      <strong>Assign auditor</strong>
-      <p>Select the responsible auditor before saving.</p>
+      <strong>{{ 'audits.form.tips.assignAuditor' | translate }}</strong>
+      <p>{{ 'audits.form.tips.assignAuditorHint' | translate }}</p>
     </div>
 
     <div class="tip-item">
-      <strong>Add findings</strong>
-      <p>Record observed issues directly during audit creation.</p>
+      <strong>{{ 'audits.form.tips.addFindings' | translate }}</strong>
+      <p>{{ 'audits.form.tips.addFindingsHint' | translate }}</p>
     </div>
 
     <div class="tip-item">
-      <strong>Attach evidence</strong>
-      <p>Add document or image links for traceability.</p>
+      <strong>{{ 'audits.form.tips.attachEvidence' | translate }}</strong>
+      <p>{{ 'audits.form.tips.attachEvidenceHint' | translate }}</p>
     </div>
   </div>
 </aside>

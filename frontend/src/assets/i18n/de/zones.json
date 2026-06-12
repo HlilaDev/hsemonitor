@@ -1,16 +1,20 @@
 {
   "ZONES": {
+    "KICKER": "Zonenverwaltung",
     "TITLE": "Zonen",
     "SUBTITLE": "Verwalten Sie industrielle Zonen und deren Risikostufe.",
     "ADD_BTN": "Zone hinzufügen",
     "EMPTY": "Keine Zonen gefunden.",
     "EDIT_TITLE": "Zone bearbeiten",
     "EDIT_SUBTITLE": "Aktualisieren Sie die Informationen dieser Zone.",
+    "ADD_TITLE": "Zone hinzufügen",
+    "ADD_SUBTITLE": "Erstellen Sie eine neue HSE-Zone mit der zugehörigen Risikostufe.",
     "COLUMNS": {
       "NAME": "Name",
       "DESCRIPTION": "Beschreibung",
       "RISK": "Risikostufe",
-      "ACTIVE": "Aktiv"
+      "ACTIVE": "Aktiv",
+      "ACTIONS": "Aktionen"
     },
     "FORM": {
       "NAME": "Zonenname",
@@ -19,7 +23,9 @@
       "DESC_PH": "Beschreiben Sie diese Zone...",
       "RISK": "Risikostufe",
       "ACTIVE": "Zone aktiv",
-      "ACTIVE_HELP": "Deaktivieren Sie diese Option, um die Zone vorübergehend auszublenden."
+      "ACTIVE_HELP": "Deaktivieren Sie diese Option, um die Zone vorübergehend auszublenden.",
+      "SECTION_IDENTIFICATION": "Identifikation",
+      "SECTION_SECURITY": "Sicherheitseinstellungen"
     },
     "FILTERS": {
       "SEARCH": "Suche",
@@ -40,12 +46,29 @@
       "CRITICAL": "Kritisch",
       "UNKNOWN": "Unbekannt"
     },
+    "RISK_DESC": {
+      "low": "Minimales Risiko",
+      "medium": "Moderates Risiko",
+      "high": "Kritisches Risiko"
+    },
+    "STATUS": {
+      "active": "Aktiv",
+      "inactive": "Inaktiv"
+    },
     "VALIDATION": {
       "NAME_REQUIRED": "Der Zonenname ist erforderlich.",
       "NAME_MIN": "Der Name muss mindestens 3 Zeichen enthalten."
     },
+    "SUCCESS": {
+      "CREATED": "Zone erfolgreich erstellt.",
+      "UPDATED": "Zone erfolgreich aktualisiert."
+    },
     "ERROR": {
       "LOAD": "Fehler beim Laden der Zonen.",
+      "NOT_FOUND": "Zone nicht gefunden.",
+      "LOAD_ONE": "Fehler beim Laden der Zone.",
+      "UPDATE": "Fehler beim Aktualisieren der Zone.",
+      "CREATE": "Fehler beim Erstellen der Zone.",
       "DELETE": "Fehler beim Löschen der Zone.",
       "TOGGLE_ACTIVE": "Fehler beim Aktualisieren des Zonenstatus."
     },

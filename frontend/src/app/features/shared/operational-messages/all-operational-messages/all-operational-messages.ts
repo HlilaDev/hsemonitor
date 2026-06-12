@@ -1,4 +1,5 @@
 import { CommonModule, DatePipe } from '@angular/common';
+import { TranslatePipe } from '@ngx-translate/core';
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { finalize } from 'rxjs';
@@ -7,17 +8,21 @@ import {
   OperationalMessage,
   OperationalMessageServices,
 } from '../../../../core/services/operational-messages/operatioanl-message-services';
+import { ConfirmModalService } from '../../../../core/services/confirm-modal/confirm-modal.service';
+import { ToastService } from '../../../../core/services/toast/toast.service';
 
 @Component({
   selector: 'app-all-operational-messages',
   standalone: true,
-  imports: [CommonModule, DatePipe],
+  imports: [CommonModule, DatePipe, TranslatePipe],
   templateUrl: './all-operational-messages.html',
   styleUrl: './all-operational-messages.scss',
 })
 export class AllOperationalMessages implements OnInit {
   private operationalMessageServices = inject(OperationalMessageServices);
   private router = inject(Router);
+  private confirmModal = inject(ConfirmModalService);
+  private toast = inject(ToastService);
 
   loading = signal(false);
   actionLoadingId = signal<string | null>(null);
@@ -132,6 +137,10 @@ export class AllOperationalMessages implements OnInit {
     this.loadMessages();
   }
 
+  goToAdd(): void {
+    this.router.navigate(['/manager/operational-messages/add']);
+  }
+
   goToDetail(item: OperationalMessage): void {
     if (!item?._id) return;
 
@@ -142,6 +151,7 @@ export class AllOperationalMessages implements OnInit {
     if (!item?._id) return;
 
     this.actionLoadingId.set(item._id);
+    this.error.set(null);
 
     this.operationalMessageServices
       .publishMessage(item._id)
@@ -151,9 +161,14 @@ export class AllOperationalMessages implements OnInit {
           this.loadMessages();
         },
         error: (err) => {
-          this.error.set(
-            err?.error?.message || 'Impossible de publier ce message.'
-          );
+          const status = err?.status;
+          const msg = err?.error?.message;
+          if (status === 503) {
+            this.error.set(msg || 'MQTT non connecté. Message mis en file d\'attente.');
+            this.loadMessages();
+          } else {
+            this.error.set(msg || 'Impossible de publier ce message.');
+          }
         },
       });
   }
@@ -181,27 +196,26 @@ export class AllOperationalMessages implements OnInit {
   deleteMessage(item: OperationalMessage): void {
     if (!item?._id) return;
 
-    const confirmed = window.confirm(
-      `Supprimer le message "${item.title || item.content}" ?`
-    );
+    this.confirmModal.open({
+      message: 'Êtes-vous sûr de vouloir supprimer ce message opérationnel ?',
+      itemName: item.title || String(item.content).substring(0, 50),
+      onConfirm: () => {
+        this.actionLoadingId.set(item._id);
 
-    if (!confirmed) return;
-
-    this.actionLoadingId.set(item._id);
-
-    this.operationalMessageServices
-      .deleteMessage(item._id)
-      .pipe(finalize(() => this.actionLoadingId.set(null)))
-      .subscribe({
-        next: () => {
-          this.loadMessages();
-        },
-        error: (err) => {
-          this.error.set(
-            err?.error?.message || 'Impossible de supprimer ce message.'
-          );
-        },
-      });
+        this.operationalMessageServices
+          .deleteMessage(item._id)
+          .pipe(finalize(() => this.actionLoadingId.set(null)))
+          .subscribe({
+            next: () => {
+              this.toast.success('Message supprimé avec succès.');
+              this.loadMessages();
+            },
+            error: (err) => {
+              this.toast.error(err?.error?.message || 'Impossible de supprimer ce message.');
+            },
+          });
+      },
+    });
   }
 
   getTargetLabel(item: OperationalMessage): string {

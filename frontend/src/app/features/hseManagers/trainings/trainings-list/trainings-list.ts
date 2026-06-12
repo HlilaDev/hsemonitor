@@ -1,9 +1,12 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { TranslatePipe } from '@ngx-translate/core';
 import { Router, RouterModule } from '@angular/router';
 import { catchError, finalize, of } from 'rxjs';
 
 import { TrainingServices } from '../../../../core/services/trainings/training-services';
+import { ConfirmModalService } from '../../../../core/services/confirm-modal/confirm-modal.service';
+import { ToastService } from '../../../../core/services/toast/toast.service';
 
 type Category = 'safety' | 'environment' | 'quality' | 'security' | 'other';
 type TrainingStatus = 'scheduled' | 'completed' | 'cancelled';
@@ -26,13 +29,15 @@ type SortKey = 'startDate_desc' | 'startDate_asc' | 'title_asc' | 'title_desc';
 @Component({
   selector: 'app-trainings-list',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, TranslatePipe],
   templateUrl: './trainings-list.html',
   styleUrl: './trainings-list.scss',
 })
 export class TrainingsList {
   private trainingsService = inject(TrainingServices);
   private router = inject(Router);
+  private confirmModal = inject(ConfirmModalService);
+  private toast = inject(ToastService);
 
   isLoading = signal(true);
   error = signal<string | null>(null);
@@ -195,27 +200,30 @@ export class TrainingsList {
     this.router.navigate(['/manager/trainings', id, 'edit']);
   }
 
-  deleteTraining(id: string): void {
-    const ok = confirm('Supprimer cette formation ?');
-    if (!ok) return;
+  deleteTraining(id: string, title?: string): void {
+    this.confirmModal.open({
+      message: 'Êtes-vous sûr de vouloir supprimer cette formation ?',
+      itemName: title,
+      onConfirm: () => {
+        this.isLoading.set(true);
+        this.error.set(null);
 
-    this.isLoading.set(true);
-    this.error.set(null);
-
-    this.trainingsService
-      .deleteTraining(id)
-      .pipe(
-        catchError((err) => {
-          console.error('Delete training error:', err);
-          this.error.set(err?.error?.message || 'Suppression échouée.');
-          return of(null);
-        }),
-        finalize(() => this.isLoading.set(false))
-      )
-      .subscribe((res) => {
-        if (!res) return;
-        this.fetch();
-      });
+        this.trainingsService
+          .deleteTraining(id)
+          .pipe(
+            catchError((err) => {
+              this.toast.error(err?.error?.message || 'Suppression échouée.');
+              return of(null);
+            }),
+            finalize(() => this.isLoading.set(false))
+          )
+          .subscribe((res) => {
+            if (!res) return;
+            this.toast.success('Formation supprimée avec succès.');
+            this.fetch();
+          });
+      },
+    });
   }
 
   resetFilters(): void {

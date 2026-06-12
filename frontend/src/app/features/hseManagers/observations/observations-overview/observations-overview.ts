@@ -2,6 +2,7 @@ import { CommonModule, DatePipe, NgClass } from '@angular/common';
 import { Component, DestroyRef, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { TranslatePipe } from '@ngx-translate/core';
 import { finalize } from 'rxjs';
 
 import {
@@ -26,7 +27,7 @@ type ObservationItem = {
 @Component({
   selector: 'app-observations-overview',
   standalone: true,
-  imports: [CommonModule, FormsModule, NgClass, DatePipe],
+  imports: [CommonModule, FormsModule, NgClass, DatePipe, TranslatePipe],
   templateUrl: './observations-overview.html',
   styleUrl: './observations-overview.scss',
 })

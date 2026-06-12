@@ -3,7 +3,10 @@
     "SECTIONS": {
       "ADMIN": "ADMIN MENU",
       "MANAGER": "MANAGER MENU",
-      "AGENT": "AGENT MENU"
+      "AGENT": "AGENT MENU",
+      "MANAGER_MAIN": "Monitoring & Alerts",
+      "HSE_MANAGEMENT": "HSE Management",
+      "HSE_MANAGEMENT_RESSOURCES": "Organisation & Resources"
     },
     "MENU": {
       "DASHBOARD": "Dashboard",
@@ -18,15 +21,15 @@
       "INCIDENTS": "Incidents",
       "TRAINING": "Training",
       "TEAM": "Team",
+      "INVENTORIES": "Inventories",
+      "OPMESSAGES": "Operational Messages",
+      "INSPECTIONS": "Inspections",
+
       "MONITORING": "Monitoring",
-            "INVENTORIES":"Inventories",
-            "OPMESSAGES" :"operational messages",
-            "INSPECTIONS":"Inspections",
-
-
-      "AUDITS":"Audits",
+      "AUDITS": "Audits",
       "ALERTS": "Alerts",
-      "REPORTS": "Reports"
+      "REPORTS": "Reports",
+      "PPE": "PPE"
     },
     "HINT": {
       "SECURE_ADMIN": "Secure administration",

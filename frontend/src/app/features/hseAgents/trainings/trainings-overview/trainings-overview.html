@@ -1,23 +1,20 @@
 <section class="page">
   <div class="head">
     <div>
-      <div class="eyebrow">HSE AGENT TRAININGS</div>
-      <h2>Vue d’ensemble des formations</h2>
-      <p>
-        Suivez les formations planifiées par le manager, consultez les sessions
-        à venir et accédez rapidement au traitement terrain.
-      </p>
+      <div class="eyebrow">{{ 'trainings.overview.kicker' | translate }}</div>
+      <h2>{{ 'trainings.overview.title' | translate }}</h2>
+      <p>{{ 'trainings.overview.subtitle' | translate }}</p>
     </div>
 
     <div class="head-actions">
       <button class="btn ghost" type="button" (click)="fetchTrainings()" [disabled]="loading()">
         <i class="bi bi-arrow-repeat"></i>
-        {{ loading() ? 'Chargement...' : 'Actualiser' }}
+        {{ loading() ? ('trainings.overview.loading' | translate) : ('trainings.overview.refresh' | translate) }}
       </button>
 
       <button class="btn" type="button" (click)="goToAllTrainings()">
         <i class="bi bi-journal-text"></i>
-        Voir toutes les formations
+        {{ 'trainings.overview.viewAll' | translate }}
       </button>
     </div>
   </div>
@@ -31,43 +28,43 @@
 
   <div class="summary">
     <div class="summary-card">
-      <span class="summary-label">Planifiées</span>
+      <span class="summary-label">{{ 'trainings.overview.stats.scheduled' | translate }}</span>
       <strong>{{ plannedCount() }}</strong>
-      <small>Sessions à préparer</small>
+      <small>{{ 'trainings.overview.stats.scheduledHint' | translate }}</small>
     </div>
 
     <div class="summary-card">
-      <span class="summary-label">Terminées</span>
+      <span class="summary-label">{{ 'trainings.overview.stats.completed' | translate }}</span>
       <strong>{{ completedCount() }}</strong>
-      <small>Sessions clôturées</small>
+      <small>{{ 'trainings.overview.stats.completedHint' | translate }}</small>
     </div>
 
     <div class="summary-card">
-      <span class="summary-label">Annulées</span>
+      <span class="summary-label">{{ 'trainings.overview.stats.cancelled' | translate }}</span>
       <strong>{{ cancelledCount() }}</strong>
-      <small>Sessions interrompues</small>
+      <small>{{ 'trainings.overview.stats.cancelledHint' | translate }}</small>
     </div>
 
     <div class="summary-card">
-      <span class="summary-label">Participants</span>
+      <span class="summary-label">{{ 'trainings.overview.stats.participants' | translate }}</span>
       <strong>{{ participantCount() }}</strong>
-      <small>Total des employés inscrits</small>
+      <small>{{ 'trainings.overview.stats.participantsHint' | translate }}</small>
     </div>
   </div>
 
   <div class="toolbar">
     <div class="field field-search">
-      <label>Recherche</label>
+      <label>{{ 'trainings.overview.filters.status' | translate }}</label>
       <input
         type="text"
         [value]="q()"
         (input)="q.set(($any($event.target).value || ''))"
-        placeholder="Titre, description, lieu, provider..."
+        [placeholder]="'trainings.overview.filters.searchPlaceholder' | translate"
       />
     </div>
 
     <div class="field">
-      <label>Statut</label>
+      <label>{{ 'trainings.overview.filters.status' | translate }}</label>
       <select [value]="status()" (change)="status.set($any($event.target).value)">
         @for (option of statusOptions; track option.value) {
           <option [value]="option.value">{{ option.label }}</option>
@@ -76,7 +73,7 @@
     </div>
 
     <div class="field">
-      <label>Catégorie</label>
+      <label>{{ 'trainings.overview.filters.category' | translate }}</label>
       <select [value]="category()" (change)="category.set($any($event.target).value)">
         @for (option of categoryOptions; track option.value) {
           <option [value]="option.value">{{ option.label }}</option>
@@ -85,33 +82,33 @@
     </div>
 
     <div class="field">
-      <label>Tri</label>
+      <label>{{ 'trainings.overview.filters.sort' | translate }}</label>
       <select [value]="sort()" (change)="sort.set($any($event.target).value)">
-        <option value="startDate_asc">Date début ↑</option>
-        <option value="startDate_desc">Date début ↓</option>
-        <option value="title_asc">Titre A → Z</option>
-        <option value="title_desc">Titre Z → A</option>
+        <option value="startDate_asc">{{ 'trainings.overview.filters.sortOptions.startAsc' | translate }}</option>
+        <option value="startDate_desc">{{ 'trainings.overview.filters.sortOptions.startDesc' | translate }}</option>
+        <option value="title_asc">{{ 'trainings.overview.filters.sortOptions.titleAsc' | translate }}</option>
+        <option value="title_desc">{{ 'trainings.overview.filters.sortOptions.titleDesc' | translate }}</option>
       </select>
     </div>
 
     <div class="toolbar-actions">
       <button class="btn ghost full" type="button" (click)="resetFilters()">
-        Réinitialiser
+        {{ 'trainings.overview.filters.reset' | translate }}
       </button>
     </div>
   </div>
 
   @if (loading()) {
     <div class="state loading">
-      Chargement des formations...
+      {{ 'trainings.overview.loading' | translate }}
     </div>
   } @else {
     <div class="boards">
       <div class="board">
         <div class="board-head">
           <div>
-            <h3>Prochaines sessions</h3>
-            <p>Les formations à venir à suivre sur le terrain.</p>
+            <h3>{{ 'trainings.overview.upcoming.title' | translate }}</h3>
+            <p>{{ 'trainings.overview.upcoming.subtitle' | translate }}</p>
           </div>
           <span class="pill">{{ upcomingItems().length }}</span>
         </div>
@@ -136,22 +133,22 @@
 
                 <div class="meta-grid">
                   <div class="meta-item">
-                    <span class="meta-label">Début</span>
+                    <span class="meta-label">{{ 'trainings.overview.upcoming.start' | translate }}</span>
                     <strong>{{ formatDateTime(item.startDate) }}</strong>
                   </div>
 
                   <div class="meta-item">
-                    <span class="meta-label">Lieu</span>
+                    <span class="meta-label">{{ 'trainings.overview.upcoming.location' | translate }}</span>
                     <strong>{{ item.location || '—' }}</strong>
                   </div>
 
                   <div class="meta-item">
-                    <span class="meta-label">Participants</span>
+                    <span class="meta-label">{{ 'trainings.overview.upcoming.participants' | translate }}</span>
                     <strong>{{ getParticipantsCount(item) }}</strong>
                   </div>
 
                   <div class="meta-item">
-                    <span class="meta-label">Présents/validés</span>
+                    <span class="meta-label">{{ 'trainings.overview.upcoming.present' | translate }}</span>
                     <strong>{{ getPresentCount(item) }}</strong>
                   </div>
                 </div>
@@ -164,7 +161,7 @@
           </div>
         } @else {
           <div class="state empty">
-            Aucune session à venir.
+            {{ 'trainings.overview.upcoming.empty' | translate }}
           </div>
         }
       </div>
@@ -172,8 +169,8 @@
       <div class="board">
         <div class="board-head">
           <div>
-            <h3>Formations récentes terminées</h3>
-            <p>Sessions déjà finalisées par les agents.</p>
+            <h3>{{ 'trainings.overview.recent.title' | translate }}</h3>
+            <p>{{ 'trainings.overview.recent.subtitle' | translate }}</p>
           </div>
           <span class="pill success">{{ recentCompletedItems().length }}</span>
         </div>
@@ -192,14 +189,14 @@
                 <div class="compact-meta">
                   <span><i class="bi bi-calendar-check"></i> {{ formatDate(item.endDate || item.startDate) }}</span>
                   <span><i class="bi bi-geo-alt"></i> {{ item.location || '—' }}</span>
-                  <span><i class="bi bi-people"></i> {{ getParticipantsCount(item) }} participant(s)</span>
+                  <span><i class="bi bi-people"></i> {{ getParticipantsCount(item) }} {{ 'trainings.overview.list.participants' | translate }}</span>
                 </div>
               </button>
             }
           </div>
         } @else {
           <div class="state empty">
-            Aucune formation terminée pour le moment.
+            {{ 'trainings.overview.list.empty' | translate }}
           </div>
         }
       </div>
@@ -208,8 +205,8 @@
     <div class="table-section">
       <div class="section-head">
         <div>
-          <h3>Liste filtrée</h3>
-          <p>{{ visibleItems().length }} formation(s) visible(s) après filtres.</p>
+          <h3>{{ 'trainings.overview.list.title' | translate }}</h3>
+          <p>{{ visibleItems().length }} {{ 'trainings.overview.list.count' | translate }}</p>
         </div>
       </div>
 
@@ -218,13 +215,13 @@
           <table class="table">
             <thead>
               <tr>
-                <th>Titre</th>
-                <th>Catégorie</th>
-                <th>Début</th>
-                <th>Lieu</th>
-                <th>Participants</th>
-                <th>Statut</th>
-                <th>Action</th>
+                <th>{{ 'trainings.overview.list.titleCol' | translate }}</th>
+                <th>{{ 'trainings.overview.list.category' | translate }}</th>
+                <th>{{ 'trainings.overview.list.startDate' | translate }}</th>
+                <th>{{ 'trainings.overview.list.location' | translate }}</th>
+                <th>{{ 'trainings.overview.list.participants' | translate }}</th>
+                <th>{{ 'trainings.overview.list.status' | translate }}</th>
+                <th>{{ 'trainings.overview.list.action' | translate }}</th>
               </tr>
             </thead>
 
@@ -261,7 +258,7 @@
         </div>
       } @else {
         <div class="state empty">
-          Aucune formation trouvée pour ces filtres.
+          {{ 'trainings.overview.list.empty' | translate }}
         </div>
       }
     </div>

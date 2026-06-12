@@ -1,221 +1,226 @@
-<div class="dashboard-page">
-  <div class="page-header">
-    <div>
-      <span class="eyebrow">Super Admin / Overview</span>
-      <h2>Dashboard global</h2>
-      <p class="muted">
-        Vue réelle sur les companies et les administrateurs de la plateforme.
-      </p>
+<div class="page">
+
+  <!-- ── HERO STRIP ──────────────────────────────────── -->
+  <div class="hero-strip">
+    <div class="hero-left">
+      <div class="hero-badge">
+        <i class="bi bi-shield-check"></i>
+        Super Admin · Vue globale
+      </div>
+      <h1>Dashboard global</h1>
+      <p>Vue réelle de toutes les entreprises et administrateurs de la plateforme HSE.</p>
     </div>
-
-    <div class="header-actions">
-      <a class="btn btn-light" routerLink="/superadmin/companies">
-        Companies
+    <div class="hero-actions">
+      <a class="btn btn-ghost" routerLink="/super/companies">
+        <i class="bi bi-buildings"></i>
+        Entreprises
       </a>
-
-      <a class="btn btn-primary" routerLink="/superadmin/admins">
-        Admins
+      <a class="btn btn-solid" routerLink="/super/admins">
+        <i class="bi bi-people"></i>
+        Administrateurs
       </a>
     </div>
   </div>
 
   @if (loading()) {
-    <div class="state-card">
-      <div class="state-text">Chargement du dashboard...</div>
+    <div class="state-center">
+      <div class="spinner"></div>
+      <p>Chargement du dashboard...</p>
     </div>
   } @else if (errorMessage()) {
-    <div class="alert-error">
+    <div class="error-alert">
+      <i class="bi bi-exclamation-triangle-fill"></i>
       {{ errorMessage() }}
     </div>
   } @else {
-    <div class="stats-grid">
-      <div class="stat-card primary">
-        <div class="stat-top">
-          <span class="stat-label">Companies</span>
-          <span class="stat-icon">🏢</span>
-        </div>
 
-        <strong class="stat-value">{{ totalCompanies() }}</strong>
-        <p class="stat-meta">Total des sociétés enregistrées</p>
-        <a class="stat-link" routerLink="/super/companies">Voir les companies</a>
+    <!-- ── KPI ROW ────────────────────────────────────── -->
+    <div class="kpi-grid">
+      <div class="kpi-card kpi-blue">
+        <div class="kpi-top">
+          <span class="kpi-label">Total des entreprises</span>
+          <div class="kpi-icon"><i class="bi bi-buildings"></i></div>
+        </div>
+        <strong class="kpi-value">{{ totalCompanies() }}</strong>
+        <p class="kpi-sub">Sociétés enregistrées</p>
+        <a class="kpi-link" routerLink="/super/companies">Voir les entreprises <i class="bi bi-arrow-right"></i></a>
       </div>
 
-      <div class="stat-card emerald">
-        <div class="stat-top">
-          <span class="stat-label">Companies actives</span>
-          <span class="stat-icon">✅</span>
+      <div class="kpi-card kpi-green">
+        <div class="kpi-top">
+          <span class="kpi-label">Entreprises actives</span>
+          <div class="kpi-icon"><i class="bi bi-check-circle"></i></div>
         </div>
-
-        <strong class="stat-value">{{ activeCompanies() }}</strong>
-        <p class="stat-meta">Companies actives dans la plateforme</p>
-        <a class="stat-link" routerLink="/super/companies">Voir la liste</a>
+        <strong class="kpi-value">{{ activeCompanies() }}</strong>
+        <p class="kpi-sub">En activité sur la plateforme</p>
+        <a class="kpi-link" routerLink="/super/companies">Voir la liste <i class="bi bi-arrow-right"></i></a>
       </div>
 
-      <div class="stat-card danger">
-        <div class="stat-top">
-          <span class="stat-label">Companies inactives</span>
-          <span class="stat-icon">⏸️</span>
+      <div class="kpi-card kpi-red">
+        <div class="kpi-top">
+          <span class="kpi-label">Entreprises inactives</span>
+          <div class="kpi-icon"><i class="bi bi-pause-circle"></i></div>
         </div>
-
-        <strong class="stat-value">{{ inactiveCompanies() }}</strong>
-        <p class="stat-meta">Companies temporairement inactives</p>
-        <a class="stat-link" routerLink="/super/companies">Voir la liste</a>
+        <strong class="kpi-value">{{ inactiveCompanies() }}</strong>
+        <p class="kpi-sub">Temporairement inactives</p>
+        <a class="kpi-link" routerLink="/super/companies">Voir la liste <i class="bi bi-arrow-right"></i></a>
       </div>
 
-      <div class="stat-card indigo">
-        <div class="stat-top">
-          <span class="stat-label">Admins</span>
-          <span class="stat-icon">🛡️</span>
+      <div class="kpi-card kpi-violet">
+        <div class="kpi-top">
+          <span class="kpi-label">Administrateurs</span>
+          <div class="kpi-icon"><i class="bi bi-person-badge"></i></div>
         </div>
-
-        <strong class="stat-value">{{ totalAdmins() }}</strong>
-        <p class="stat-meta">Administrateurs liés aux companies</p>
-        <a class="stat-link" routerLink="/super/admins">Voir les admins</a>
+        <strong class="kpi-value">{{ totalAdmins() }}</strong>
+        <p class="kpi-sub">Liés aux entreprises</p>
+        <a class="kpi-link" routerLink="/super/admins">Voir les admins <i class="bi bi-arrow-right"></i></a>
       </div>
     </div>
 
-    <div class="summary-grid">
-      <div class="summary-card">
-        <div class="summary-head">
-          <h3>Résumé companies</h3>
-          <span>Données réelles</span>
+    <!-- ── MIDDLE ROW ─────────────────────────────────── -->
+    <div class="mid-grid">
+
+      <!-- Snapshot card -->
+      <div class="card snapshot-card">
+        <div class="card-head">
+          <div class="head-icon blue"><i class="bi bi-pie-chart-fill"></i></div>
+          <div class="head-text">
+            <h3>Aperçu de la plateforme</h3>
+            <p>Répartition en temps réel</p>
+          </div>
+          <div class="live-chip"><span class="live-dot"></span> En direct</div>
         </div>
 
-        <div class="mini-stats">
-          <div class="mini-stat">
-            <span>Total</span>
-            <strong>{{ totalCompanies() }}</strong>
+        <div class="snap-body">
+          <div class="ring-wrap">
+            <div class="ring-chart" [style]="ringStyle()">
+              <div class="ring-hole">
+                <strong>{{ totalCompanies() }}</strong>
+                <span>entreprises</span>
+              </div>
+            </div>
           </div>
 
-          <div class="mini-stat">
-            <span>Actives</span>
-            <strong>{{ activeCompanies() }}</strong>
-          </div>
-
-          <div class="mini-stat">
-            <span>Inactives</span>
-            <strong>{{ inactiveCompanies() }}</strong>
+          <div class="snap-legend">
+            <div class="leg-item">
+              <span class="leg-dot green"></span>
+              <span class="leg-label">Actives</span>
+              <strong class="leg-val">{{ activeCompanies() }}</strong>
+            </div>
+            <div class="leg-sep"></div>
+            <div class="leg-item">
+              <span class="leg-dot red"></span>
+              <span class="leg-label">Inactives</span>
+              <strong class="leg-val">{{ inactiveCompanies() }}</strong>
+            </div>
+            <div class="leg-sep"></div>
+            <div class="leg-item">
+              <span class="leg-dot violet"></span>
+              <span class="leg-label">Administrateurs</span>
+              <strong class="leg-val">{{ totalAdmins() }}</strong>
+            </div>
           </div>
         </div>
       </div>
 
-      <div class="summary-card">
-        <div class="summary-head">
-          <h3>Actions rapides</h3>
-          <span>Navigation</span>
+      <!-- Quick actions -->
+      <div class="card actions-card">
+        <div class="card-head">
+          <div class="head-icon violet"><i class="bi bi-lightning-charge-fill"></i></div>
+          <div class="head-text">
+            <h3>Actions rapides</h3>
+            <p>Accès direct aux fonctions clés</p>
+          </div>
         </div>
 
-        <div class="quick-links">
-          <a class="quick-link" routerLink="/superadmin/companies/add">
-            <span class="quick-icon">＋</span>
-            <div>
-              <strong>Ajouter company</strong>
-              <small>Créer une nouvelle société</small>
-            </div>
+        <div class="tile-grid">
+          <a class="tile" routerLink="/super/companies/add">
+            <div class="tile-icon blue"><i class="bi bi-plus-lg"></i></div>
+            <strong>Nouvelle entreprise</strong>
+            <small>Créer une société</small>
           </a>
-
-          <a class="quick-link" routerLink="/superadmin/admins/add">
-            <span class="quick-icon">＋</span>
-            <div>
-              <strong>Ajouter admin</strong>
-              <small>Créer un admin lié à une company</small>
-            </div>
+          <a class="tile" routerLink="/super/admins/add">
+            <div class="tile-icon violet"><i class="bi bi-person-plus-fill"></i></div>
+            <strong>Nouvel administrateur</strong>
+            <small>Créer un compte admin</small>
           </a>
-
-          <a class="quick-link" routerLink="/superadmin/companies">
-            <span class="quick-icon">→</span>
-            <div>
-              <strong>Voir companies</strong>
-              <small>Consulter la liste complète</small>
-            </div>
+          <a class="tile" routerLink="/super/companies">
+            <div class="tile-icon green"><i class="bi bi-buildings-fill"></i></div>
+            <strong>Entreprises</strong>
+            <small>Liste complète</small>
           </a>
-
-          <a class="quick-link" routerLink="/superadmin/admins">
-            <span class="quick-icon">→</span>
-            <div>
-              <strong>Voir admins</strong>
-              <small>Consulter les administrateurs</small>
-            </div>
+          <a class="tile" routerLink="/super/admins">
+            <div class="tile-icon orange"><i class="bi bi-people-fill"></i></div>
+            <strong>Administrateurs</strong>
+            <small>Gestion des accès</small>
           </a>
         </div>
       </div>
+
     </div>
 
-    <div class="content-grid">
-      <div class="panel-card">
-        <div class="panel-head">
-          <div>
-            <h3>Companies récentes</h3>
-            <p>Dernières companies créées</p>
-          </div>
+    <!-- ── BOTTOM ROW ─────────────────────────────────── -->
+    <div class="bottom-grid">
 
-          <a class="panel-link" routerLink="/superadmin/companies">Tout voir</a>
+      <div class="card">
+        <div class="card-head">
+          <div class="head-icon blue"><i class="bi bi-clock-history"></i></div>
+          <div class="head-text">
+            <h3>Entreprises récentes</h3>
+            <p>Dernières sociétés créées</p>
+          </div>
+          <a class="see-all" routerLink="/super/companies">Tout voir →</a>
         </div>
 
         @if (recentCompanies().length === 0) {
-          <div class="empty-state">
-            Aucune company disponible.
-          </div>
+          <div class="empty-msg"><i class="bi bi-inbox"></i> Aucune entreprise disponible.</div>
         } @else {
-          <div class="list-block">
+          <div class="data-list">
             @for (company of recentCompanies(); track company._id) {
-              <div class="list-row">
-                <div class="list-avatar">
-                  {{ company.name?.charAt(0) || 'C' }}
-                </div>
-
-                <div class="list-meta">
+              <div class="data-row">
+                <div class="row-av blue">{{ company.name.charAt(0) }}</div>
+                <div class="row-info">
                   <strong>{{ company.name }}</strong>
-                  <span>{{ company.industry || 'Industry non définie' }}</span>
+                  <span>{{ company.industry || 'Secteur non défini' }}</span>
                 </div>
-
-                <div
-                  class="status-badge"
-                  [class.inactive]="company.isActive === false"
-                >
+                <span class="pill" [class.pill-inactive]="company.isActive === false">
                   {{ company.isActive === false ? 'Inactive' : 'Active' }}
-                </div>
+                </span>
               </div>
             }
           </div>
         }
       </div>
 
-      <div class="panel-card">
-        <div class="panel-head">
-          <div>
-            <h3>Admins récents</h3>
-            <p>Administrateurs disponibles</p>
+      <div class="card">
+        <div class="card-head">
+          <div class="head-icon violet"><i class="bi bi-person-lines-fill"></i></div>
+          <div class="head-text">
+            <h3>Administrateurs récents</h3>
+            <p>Comptes administrateurs disponibles</p>
           </div>
-
-          <a class="panel-link" routerLink="/superadmin/admins">Tout voir</a>
+          <a class="see-all" routerLink="/super/admins">Tout voir →</a>
         </div>
 
         @if (recentAdmins().length === 0) {
-          <div class="empty-state">
-            Aucun admin trouvé.
-          </div>
+          <div class="empty-msg"><i class="bi bi-inbox"></i> Aucun administrateur trouvé.</div>
         } @else {
-          <div class="list-block">
+          <div class="data-list">
             @for (admin of recentAdmins(); track admin._id) {
-              <div class="list-row">
-                <div class="list-avatar admin">
-                  {{ getUserDisplayName(admin).charAt(0) }}
-                </div>
-
-                <div class="list-meta">
+              <div class="data-row">
+                <div class="row-av violet">{{ getUserDisplayName(admin).charAt(0) }}</div>
+                <div class="row-info">
                   <strong>{{ getUserDisplayName(admin) }}</strong>
                   <span>{{ admin.email }}</span>
                 </div>
-
-                <div class="inline-company">
-                  {{ getCompanyName(admin) }}
-                </div>
+                <span class="tag">{{ getCompanyName(admin) }}</span>
               </div>
             }
           </div>
         }
       </div>
+
     </div>
+
   }
 </div>

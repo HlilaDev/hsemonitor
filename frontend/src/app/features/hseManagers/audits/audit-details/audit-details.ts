@@ -1,5 +1,6 @@
 import { Component, computed, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { TranslatePipe } from '@ngx-translate/core';
 import { RouterModule } from '@angular/router';
 
 type AuditStatus = 'planned' | 'in_progress' | 'completed' | 'cancelled';
@@ -49,7 +50,7 @@ type AuditItem = {
 @Component({
   selector: 'app-audit-details',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, TranslatePipe],
   templateUrl: './audit-details.html',
   styleUrl: './audit-details.scss',
 })

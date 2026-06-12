@@ -1,4 +1,5 @@
 import { CommonModule } from '@angular/common';
+import { TranslatePipe } from '@ngx-translate/core';
 import { Component, computed, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
@@ -21,7 +22,7 @@ interface ActivityItem {
 @Component({
   selector: 'app-settings-home',
   standalone: true,
-  imports: [CommonModule,RouterLink],
+  imports: [CommonModule, RouterLink, TranslatePipe],
   templateUrl: './settings-home.html',
   styleUrl: './settings-home.scss',
 })

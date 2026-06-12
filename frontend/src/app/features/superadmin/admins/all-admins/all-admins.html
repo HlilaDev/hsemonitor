@@ -1,37 +1,37 @@
 <div class="page">
   <div class="page-header">
     <div class="title-block">
-      <span class="eyebrow">Super Admin / Gestion</span>
-      <h2>Admins</h2>
-      <p class="muted">Gestion des administrateurs des companies</p>
+      <span class="eyebrow">{{ 'superadmin.admins.kicker' | translate }}</span>
+      <h2>{{ 'superadmin.admins.title' | translate }}</h2>
+      <p class="muted">{{ 'superadmin.admins.subtitle' | translate }}</p>
     </div>
 
     <div class="header-actions">
       <a class="btn btn-light" routerLink="/superadmin">
         <span>←</span>
-        Retour
+        {{ 'superadmin.admins.back' | translate }}
       </a>
 
       <button class="btn btn-primary" type="button" routerLink="/super/admins/add">
         <span>+</span>
-        Ajouter
+        {{ 'superadmin.admins.addBtn' | translate }}
       </button>
     </div>
   </div>
 
   <div class="stats-grid">
     <div class="stat-card">
-      <span class="stat-label">Total</span>
+      <span class="stat-label">{{ 'superadmin.admins.stats.total' | translate }}</span>
       <strong class="stat-value">{{ total() }}</strong>
     </div>
 
     <div class="stat-card">
-      <span class="stat-label">Page</span>
+      <span class="stat-label">{{ 'superadmin.admins.stats.page' | translate }}</span>
       <strong class="stat-value">{{ page() }}</strong>
     </div>
 
     <div class="stat-card">
-      <span class="stat-label">Résultats</span>
+      <span class="stat-label">{{ 'superadmin.admins.stats.results' | translate }}</span>
       <strong class="stat-value">{{ admins().length }}</strong>
     </div>
   </div>
@@ -41,21 +41,21 @@
       <div class="search-input-wrap">
         <input
           type="text"
-          placeholder="Rechercher un admin..."
+          [placeholder]="'superadmin.admins.filters.searchPlaceholder' | translate"
           [ngModel]="q()"
           (ngModelChange)="q.set($event)"
         />
       </div>
 
       <button class="btn btn-primary search-btn" type="button" (click)="onSearch()">
-        Search
+        {{ 'superadmin.admins.filters.searchBtn' | translate }}
       </button>
     </div>
   </div>
 
   @if (loading()) {
     <div class="state-card">
-      <div class="state-text">Chargement des administrateurs...</div>
+      <div class="state-text">{{ 'superadmin.admins.list.loading' | translate }}</div>
     </div>
   } @else if (errorMessage()) {
     <div class="alert-error">
@@ -64,15 +64,15 @@
   } @else if (admins().length === 0) {
     <div class="empty-card">
       <div class="empty-icon">👤</div>
-      <h3>Aucun administrateur trouvé</h3>
-      <p>Essayez une autre recherche ou ajoutez un nouvel admin.</p>
+      <h3>{{ 'superadmin.admins.list.emptyTitle' | translate }}</h3>
+      <p>{{ 'superadmin.admins.list.emptyBody' | translate }}</p>
     </div>
   } @else {
     <div class="card table-card">
       <div class="table-head">
         <div>
-          <h3>Liste des admins</h3>
-          <p>{{ total() }} administrateur(s) trouvé(s)</p>
+          <h3>{{ 'superadmin.admins.list.tableTitle' | translate }}</h3>
+          <p>{{ total() }} {{ 'superadmin.admins.list.tableCount' | translate }}</p>
         </div>
       </div>
 
@@ -80,10 +80,10 @@
         <table class="admins-table">
           <thead>
             <tr>
-              <th>Nom</th>
-              <th>Email</th>
-              <th>Statut</th>
-              <th class="actions-col">Actions</th>
+              <th>{{ 'superadmin.admins.list.colName' | translate }}</th>
+              <th>{{ 'superadmin.admins.list.colEmail' | translate }}</th>
+              <th>{{ 'superadmin.admins.list.colStatus' | translate }}</th>
+              <th class="actions-col">{{ 'superadmin.admins.list.colActions' | translate }}</th>
             </tr>
           </thead>
 
@@ -109,13 +109,13 @@
 
       <td>
         <span class="badge active">
-          {{ admin.isActive === false ? 'Inactive' : 'Active' }}
+          {{ admin.isActive === false ? ('superadmin.admins.list.inactive' | translate) : ('superadmin.admins.list.active' | translate) }}
         </span>
       </td>
 
       <td class="actions">
-        <button class="btn-table btn-edit" type="button">Edit</button>
-        <button class="btn-table btn-delete" type="button">Delete</button>
+        <button class="btn-table btn-edit" type="button">{{ 'superadmin.admins.list.editBtn' | translate }}</button>
+        <button class="btn-table btn-delete" type="button">{{ 'superadmin.admins.list.deleteBtn' | translate }}</button>
       </td>
     </tr>
   }
@@ -131,7 +131,7 @@
         [disabled]="page() === 1"
         (click)="goToPage(page() - 1)"
       >
-        Prev
+        {{ 'superadmin.admins.pagination.previous' | translate }}
       </button>
 
       <div class="page-indicator">
@@ -146,7 +146,7 @@
         [disabled]="page() === pages()"
         (click)="goToPage(page() + 1)"
       >
-        Next
+        {{ 'superadmin.admins.pagination.next' | translate }}
       </button>
     </div>
   }

@@ -1,0 +1,1799 @@
+{
+  "incidents": {
+    "kicker": "HSE-Vorfälle",
+    "title": "Vorfall-Übersicht",
+    "subtitle": "Globale Ansicht der HSE-Vorfälle, kritischer Alarme, Risikozonen und operativer Verfolgung.",
+    "actions": {
+      "refresh": "Aktualisieren",
+      "new": "Neuer Vorfall"
+    },
+    "loading": "Vorfälle werden geladen...",
+    "errors": {
+      "loadFailed": "Vorfälle konnten nicht geladen werden."
+    },
+    "trend": {
+      "vsLastWeek": "vs. letzte Woche"
+    },
+    "unassigned": "Nicht zugewiesen",
+    "stats": {
+      "total": "Vorfälle gesamt",
+      "open": "Offen",
+      "inProgress": "In Bearbeitung",
+      "critical": "Kritisch",
+      "resolved": "Gelöst"
+    },
+    "filters": {
+      "all": "Alle",
+      "open": "Offen",
+      "inProgress": "In Bearbeitung",
+      "reviewed": "Überprüft",
+      "closed": "Geschlossen",
+      "falsePositive": "Falsch-Positiv"
+    },
+    "list": {
+      "title": "Aktuelle Vorfälle",
+      "count": "Vorfall/Vorfälle angezeigt",
+      "empty": "Keine Vorfälle gefunden.",
+      "reportedBy": "Gemeldet von",
+      "viewDetails": "Details anzeigen"
+    },
+    "zones": {
+      "title": "Risikozonen",
+      "subtitle": "Zonen mit den meisten Vorfällen",
+      "incidents": "Vorfälle",
+      "empty": "Keine Risikozonen.",
+      "undefined": "Nicht definierte Zone"
+    },
+    "timeline": {
+      "title": "Aktivitätsverlauf",
+      "subtitle": "Neueste operative Aktionen",
+      "empty": "Keine aktuelle Aktivität."
+    },
+    "severity": {
+      "low": "Niedrig",
+      "medium": "Mittel",
+      "high": "Hoch",
+      "critical": "Kritisch",
+      "undefined": "Nicht definiert"
+    },
+    "status": {
+      "open": "Offen",
+      "inProgress": "In Bearbeitung",
+      "reviewed": "Überprüft",
+      "closed": "Geschlossen",
+      "falsePositive": "Falsch-Positiv",
+      "unknown": "Unbekannt"
+    },
+    "risk": {
+      "stable": "Stabil",
+      "warning": "Warnung",
+      "critical": "Kritisch"
+    },
+    "types": {
+      "fall": "Sturz",
+      "injury": "Verletzung",
+      "fire_alert": "Feueralarm",
+      "leak": "Leck",
+      "work_accident": "Arbeitsunfall",
+      "no_helmet": "Kein Helm",
+      "no_vest": "Keine Weste",
+      "gas_alert": "Gasalarm",
+      "temp_alert": "Temperaturalarm",
+      "manual_report": "Manuelle Meldung",
+      "other": "Sonstige"
+    }
+  },
+
+  "monitoring": {
+    "backLink": "Zurück zur Überwachung",
+    "refresh": "Aktualisieren",
+    "zone": {
+      "title": "Zonen-Überwachung",
+      "subtitle": "Aggregierte Ansicht der Geräte, neueste Messwerte und Gesamtzustand der Zone.",
+      "loading": "Zonen-Überwachung wird geladen...",
+      "zoneId": "Zonen-ID:",
+      "devicesCount": "Überwachte Geräte:",
+      "lastSync": "Letzte Synchronisation:",
+      "stats": {
+        "devices": "Geräte",
+        "online": "Online",
+        "avgTemp": "Durchschnittstemperatur",
+        "avgHumidity": "Durchschnittsfeuchtigkeit"
+      },
+      "charts": {
+        "tempTrend": "Globaler Temperaturverlauf",
+        "humidityTrend": "Globaler Feuchtigkeitsverlauf",
+        "wholeZone": "Gesamte Zone",
+        "tempPlaceholder": "Globales Temperaturdiagramm hier integrieren",
+        "humidityPlaceholder": "Globales Feuchtigkeitsdiagramm hier integrieren"
+      },
+      "table": {
+        "title": "Neueste Messwerte pro Gerät",
+        "subtitle": "Eine Zeile pro überwachtem Gerät in der Zone",
+        "device": "Gerät",
+        "status": "Status",
+        "sensor": "Sensor",
+        "temperature": "Temperatur",
+        "humidity": "Feuchtigkeit",
+        "gas": "Gas",
+        "lastReading": "Letzter Messwert",
+        "action": "Aktion",
+        "viewDetail": "Detail anzeigen"
+      },
+      "card": {
+        "sensor": "Sensor",
+        "values": "Werte",
+        "reading": "Messung",
+        "openDevice": "Gerät öffnen"
+      }
+    },
+    "device": {
+      "title": "Geräte-Überwachung",
+      "subtitle": "Echtzeitverfolgung, neueste Werte und Verlauf des ausgewählten Geräts.",
+      "loading": "Gerätedaten werden geladen...",
+      "noReading": "Keine Messwerte für dieses Gerät verfügbar.",
+      "deviceId": "Geräte-ID:",
+      "zone": "Zone:",
+      "sensor": "Sensor:",
+      "lastReading": "Letzter Messwert:",
+      "stats": {
+        "temperature": "Temperatur",
+        "humidity": "Feuchtigkeit",
+        "gas": "Gas",
+        "sync": "Synchronisation"
+      },
+      "charts": {
+        "tempEvolution": "Temperaturverlauf",
+        "humidityEvolution": "Feuchtigkeitsverlauf",
+        "lastMeasures": "letzte Messungen"
+      },
+      "history": {
+        "title": "Aktueller Verlauf",
+        "subtitle": "Neueste aufgezeichnete Messwerte für dieses Gerät",
+        "date": "Datum",
+        "sensorType": "Sensortyp",
+        "values": "Werte",
+        "empty": "Keine Messwerte für dieses Gerät gefunden."
+      }
+    }
+  },
+
+  "audits": {
+    "kicker": "Audit-Verwaltung",
+    "title": "Audit-Übersicht",
+    "subtitle": "Verfolgen Sie Audit-Aktivitäten, überwachen Sie den Konformitätsfortschritt und überprüfen Sie die Inspektionsleistung.",
+    "actions": {
+      "allAudits": "Alle Audits",
+      "newAudit": "Neuer Audit",
+      "createAudit": "Audit erstellen"
+    },
+    "stats": {
+      "total": "Audits gesamt",
+      "totalHint": "Alle registrierten Audits",
+      "completed": "Abgeschlossen",
+      "completedHint": "Erfolgreich abgeschlossene Audits",
+      "planned": "Geplant",
+      "plannedHint": "Bevorstehende Inspektionen",
+      "avgScore": "Durchschnittspunktzahl",
+      "totalFindings": "Feststellungen insgesamt"
+    },
+    "toolbar": {
+      "title": "Audit-Aktivität",
+      "subtitle": "Audits nach Typ, Status, Zone oder Prüfer suchen und filtern.",
+      "searchPlaceholder": "Nach Titel, Zone, Prüfer suchen...",
+      "statusLabel": "Status",
+      "typeLabel": "Typ",
+      "allStatuses": "Alle Status",
+      "allTypes": "Alle Typen"
+    },
+    "status": {
+      "planned": "Geplant",
+      "in_progress": "In Bearbeitung",
+      "completed": "Abgeschlossen",
+      "cancelled": "Abgebrochen"
+    },
+    "type": {
+      "internal": "Intern",
+      "external": "Extern",
+      "safety": "Sicherheit",
+      "environment": "Umwelt",
+      "compliance": "Compliance"
+    },
+    "list": {
+      "title": "Audit-Liste",
+      "results": "Ergebnis(se)",
+      "findings": "Feststellungen",
+      "files": "Dateien",
+      "viewDetails": "Details anzeigen",
+      "editAudit": "Audit bearbeiten"
+    },
+    "empty": {
+      "title": "Keine Audits gefunden",
+      "subtitle": "Filter ändern oder neuen Audit erstellen.",
+      "cta": "Audit erstellen"
+    },
+    "detail": {
+      "back": "Zurück zu Audits",
+      "edit": "Bearbeiten",
+      "export": "Exportieren",
+      "title": "Audit-Details",
+      "finalPerf": "Endgültige Audit-Leistung",
+      "totalFindings": "Feststellungen gesamt",
+      "resolvedClosed": "Gelöst / Geschlossen",
+      "openInProgress": "Offen / In Bearbeitung",
+      "correctionProgress": "Korrekturfortschritt",
+      "summary": {
+        "title": "Audit-Zusammenfassung",
+        "subtitle": "Wesentliche operative Informationen und Zeitplan",
+        "type": "Audit-Typ",
+        "status": "Status",
+        "zone": "Zone",
+        "auditor": "Prüfer",
+        "scheduledDate": "Geplantes Datum",
+        "completedDate": "Abschlussdatum",
+        "createdAt": "Erstellt am",
+        "updatedAt": "Zuletzt aktualisiert"
+      },
+      "findings": "Feststellungen",
+      "findingsRecorded": "Feststellung(en) bei diesem Audit erfasst",
+      "scoreInsight": {
+        "title": "Punktzahl-Analyse",
+        "subtitle": "Zusammenfassung der Inspektionsleistung"
+      },
+      "attachments": "Anhänge",
+      "linkedFiles": "verknüpfte Datei(en)",
+      "correctiveProgress": {
+        "title": "Korrekturfortschritt",
+        "subtitle": "Basierend auf der Lösung von Feststellungen",
+        "resolved": "Gelöst",
+        "pending": "Ausstehend",
+        "progress": "Fortschritt"
+      }
+    },
+    "form": {
+      "kicker": "Audit-Verwaltung",
+      "createTitle": "Audit erstellen",
+      "createSubtitle": "Neuen Audit verknüpft mit HSE-Prozess, Zone, Prüfer, Feststellungen und Dokumenten erstellen.",
+      "back": "Zurück",
+      "formTitle": "Audit-Formular",
+      "formSubtitle": "Füllen Sie die Audit-Informationen aus.",
+      "mainInfo": "Hauptinformationen",
+      "titleLabel": "Titel",
+      "titlePlaceholder": "Bsp: Wöchentlicher PSA-Sicherheitsaudit - Zone A",
+      "titleError": "Titel erforderlich (mind. 3 Zeichen)",
+      "typeLabel": "Typ",
+      "statusLabel": "Status",
+      "descriptionLabel": "Beschreibung",
+      "descriptionPlaceholder": "Audit-Beschreibung, Umfang, Ziele und Notizen...",
+      "assignment": "Zuweisung & Planung",
+      "zoneLabel": "Zonen-ID",
+      "auditorLabel": "Prüfer-ID",
+      "auditorError": "Prüfer ist erforderlich",
+      "scheduledDate": "Geplantes Datum",
+      "completedDate": "Abschlussdatum",
+      "scoreLabel": "Punktzahl",
+      "findings": "Feststellungen",
+      "addFinding": "Feststellung hinzufügen",
+      "findingNum": "Feststellung Nr.",
+      "remove": "Entfernen",
+      "findingTitle": "Titel der Feststellung",
+      "findingTitlePlaceholder": "Bsp: Notausgang blockiert",
+      "findingTitleError": "Titel ist erforderlich",
+      "severity": "Schweregrad",
+      "dueDate": "Fälligkeitsdatum",
+      "assignedTo": "Zugewiesen an",
+      "attachments": "Anhänge",
+      "attachmentUrls": "Anhang-URLs",
+      "attachmentPlaceholder": "https://datei1.pdf, https://bild2.jpg",
+      "attachmentHint": "URLs durch Kommas trennen.",
+      "cancel": "Abbrechen",
+      "createBtn": "Audit erstellen",
+      "saving": "Speichern...",
+      "tips": {
+        "title": "Audit-Tipps",
+        "subtitle": "Best Practices für einen vollständigen Audit",
+        "clearTitle": "Klarer Titel",
+        "clearTitleHint": "Zone oder Prozessname im Audit-Titel verwenden",
+        "assignAuditor": "Prüfer zuweisen",
+        "assignAuditorHint": "Verantwortlichen Prüfer vor dem Speichern auswählen",
+        "addFindings": "Feststellungen hinzufügen",
+        "addFindingsHint": "Beobachtete Probleme direkt bei der Audit-Erstellung erfassen",
+        "attachEvidence": "Belege anhängen",
+        "attachEvidenceHint": "Dokument- oder Bildlinks für die Rückverfolgbarkeit hinzufügen"
+      }
+    }
+  },
+
+  "trainings": {
+    "list": {
+      "kicker": "HSE SCHULUNG",
+      "title": "Schulungsübersicht",
+      "subtitle": "Verfolgen, planen und verwalten Sie alle HSE-Schulungen Ihrer Teams von einem Ort.",
+      "refresh": "Aktualisieren",
+      "newTraining": "Neue Schulung",
+      "stats": {
+        "total": "Gesamtschulungen",
+        "totalHint": "Registrierte Schulungen",
+        "scheduled": "Geplant",
+        "scheduledHint": "Bevorstehende Sitzungen",
+        "completed": "Abgeschlossen",
+        "completedHint": "Abgeschlossene Sitzungen",
+        "cancelled": "Storniert",
+        "cancelledHint": "Nicht abgehaltene Sitzungen",
+        "participants": "Teilnehmer",
+        "participantsHint": "Gesamtanmeldungen"
+      },
+      "filters": {
+        "search": "Suche",
+        "searchPlaceholder": "Titel, Beschreibung, Anbieter, Ort...",
+        "category": "Kategorie",
+        "allCategories": "Alle",
+        "status": "Status",
+        "allStatuses": "Alle",
+        "sort": "Sortieren",
+        "sortOptions": {
+          "dateDesc": "Datum (neueste → älteste)",
+          "dateAsc": "Datum (älteste → neueste)",
+          "titleAsc": "Titel (A → Z)",
+          "titleDesc": "Titel (Z → A)"
+        },
+        "reset": "Zurücksetzen"
+      },
+      "empty": {
+        "title": "Keine Schulung",
+        "subtitle": "Erstellen Sie Ihre erste Schulung oder ändern Sie die Filter.",
+        "create": "Schulung erstellen"
+      },
+      "card": {
+        "start": "Start",
+        "end": "Ende",
+        "location": "Ort",
+        "participants": "Teilnehmer",
+        "viewDetails": "Details anzeigen",
+        "details": "Details",
+        "edit": "Bearbeiten",
+        "delete": "Löschen"
+      }
+    },
+    "create": {
+      "title": "Neue Schulung",
+      "subtitle": "HSE-Schulung erstellen und Mitarbeiter (Teilnehmer) einladen.",
+      "back": "Zurück",
+      "create": "Erstellen",
+      "saving": "Speichern...",
+      "titleLabel": "Titel",
+      "titlePlaceholder": "Bsp: PSA-Tragetraining",
+      "titleError": "Titel erforderlich (mind. 3 Zeichen).",
+      "categoryLabel": "Kategorie",
+      "categoryError": "Kategorie erforderlich.",
+      "statusLabel": "Status",
+      "statusError": "Status erforderlich.",
+      "providerLabel": "Anbieter",
+      "providerPlaceholder": "Bsp: Extern / Berater",
+      "locationLabel": "Ort",
+      "locationPlaceholder": "Bsp: Raum A, Fabrik 1",
+      "startDateLabel": "Startdatum",
+      "startDateError": "Startdatum erforderlich.",
+      "endDateLabel": "Enddatum",
+      "endDateHint": "Optional",
+      "descriptionLabel": "Beschreibung",
+      "descriptionPlaceholder": "Ziel, Inhalt, Voraussetzungen...",
+      "participants": "Teilnehmer",
+      "participantsSubtitle": "Mitarbeiter zur Einladung auswählen.",
+      "addEmployees": "Mitarbeiter hinzufügen",
+      "selectionHint": "Tipp: <b>Strg</b> (Windows) / <b>Cmd</b> (Mac) gedrückt halten für Mehrfachauswahl.",
+      "noneSelected": "Kein Teilnehmer ausgewählt.",
+      "cancel": "Abbrechen",
+      "createBtn": "Schulung erstellen",
+      "category": {
+        "safety": "Sicherheit",
+        "environment": "Umwelt",
+        "quality": "Qualität",
+        "security": "Schutz",
+        "other": "Sonstiges"
+      },
+      "status": {
+        "scheduled": "Geplant",
+        "completed": "Abgeschlossen",
+        "cancelled": "Abgebrochen"
+      }
+    },
+    "edit": {
+      "title": "Schulung bearbeiten",
+      "subtitle": "Schulungsinformationen und Teilnehmerliste aktualisieren.",
+      "back": "Zurück",
+      "generalInfo": "Allgemeine Informationen",
+      "titleLabel": "Titel",
+      "titlePlaceholder": "Bsp: Brandschutzschulung",
+      "titleError": "Titel ist Pflichtfeld (mind. 3 Zeichen).",
+      "descriptionLabel": "Beschreibung",
+      "descriptionPlaceholder": "Schulungsziel beschreiben...",
+      "categoryLabel": "Kategorie",
+      "statusLabel": "Status",
+      "providerLabel": "Anbieter",
+      "providerPlaceholder": "Bsp: externe Organisation",
+      "locationLabel": "Ort",
+      "locationPlaceholder": "Bsp: HSE-Raum / Standort A",
+      "startDateLabel": "Startdatum",
+      "startDateError": "Startdatum ist Pflichtfeld.",
+      "endDateLabel": "Enddatum",
+      "participants": "Teilnehmer",
+      "selectEmployees": "Mitarbeiter auswählen",
+      "selectionHint": "Strg oder Cmd gedrückt halten für Mehrfachauswahl.",
+      "noneSelected": "Kein Teilnehmer ausgewählt.",
+      "participantStatus": "Teilnehmerstatus",
+      "scoreLabel": "Punktzahl",
+      "validityLabel": "Gültig bis",
+      "noteLabel": "Notiz",
+      "notePlaceholder": "Beobachtung, Ergebnis...",
+      "summary": "Zusammenfassung",
+      "participantsCol": "Teilnehmer",
+      "categoryCol": "Kategorie",
+      "statusCol": "Status",
+      "startDateCol": "Startdatum",
+      "actionsCol": "Aktionen",
+      "saveBtn": "Änderungen speichern",
+      "cancel": "Abbrechen",
+      "saving": "Speichern..."
+    },
+    "detail": {
+      "kicker": "HSE-Schulung",
+      "back": "Zurück",
+      "edit": "Bearbeiten",
+      "createdBy": "Erstellt von",
+      "start": "Start",
+      "end": "Ende",
+      "provider": "Anbieter",
+      "location": "Ort",
+      "company": "Unternehmen",
+      "createdAt": "Erstellt am",
+      "participants": "Teilnehmer",
+      "participantsSubtitle": "In dieser Schulung eingeschriebene Mitarbeiter verwalten.",
+      "addParticipants": "Hinzufügen",
+      "addWarning": "Das Hinzufügen von Teilnehmern ist nur für eine geplante Schulung erlaubt, die noch nicht begonnen hat.",
+      "noParticipants": "Keine Teilnehmer für diese Schulung registriert.",
+      "summary": {
+        "title": "Zusammenfassung",
+        "category": "Kategorie",
+        "status": "Status",
+        "participants": "Teilnehmer",
+        "location": "Ort"
+      },
+      "actions": {
+        "title": "Aktionen",
+        "editTraining": "Schulung bearbeiten",
+        "addParticipants": "Teilnehmer hinzufügen",
+        "backToList": "Zurück zur Liste"
+      },
+      "modal": {
+        "title": "Teilnehmer hinzufügen",
+        "subtitle": "Einen oder mehrere Mitarbeiter für diese Schulung auswählen.",
+        "searchPlaceholder": "Mitarbeiter suchen...",
+        "selected": "ausgewählt",
+        "loading": "Mitarbeiter werden geladen...",
+        "empty": "Keine verfügbaren Mitarbeiter zum Hinzufügen.",
+        "cancel": "Abbrechen",
+        "addBtn": "Teilnehmer hinzufügen",
+        "adding": "Hinzufügen..."
+      },
+      "notFound": "Schulung nicht gefunden",
+      "notFoundBack": "Zurück"
+    },
+    "overview": {
+      "kicker": "HSE-AGENTSCHULUNGEN",
+      "title": "Schulungsübersicht",
+      "subtitle": "Verfolgen Sie vom Manager geplante Schulungen, sehen Sie bevorstehende Sitzungen und greifen Sie schnell auf Feldarbeit zu.",
+      "loading": "Laden...",
+      "refresh": "Aktualisieren",
+      "viewAll": "Alle Schulungen anzeigen",
+      "stats": {
+        "scheduled": "Geplant",
+        "scheduledHint": "Vorzubereitende Sitzungen",
+        "completed": "Abgeschlossen",
+        "completedHint": "Abgeschlossene Sitzungen",
+        "cancelled": "Abgebrochen",
+        "cancelledHint": "Unterbrochene Sitzungen",
+        "participants": "Teilnehmer",
+        "participantsHint": "Eingeschriebene Mitarbeiter gesamt"
+      },
+      "filters": {
+        "searchPlaceholder": "Titel, Beschreibung, Ort, Anbieter...",
+        "status": "Status",
+        "category": "Kategorie",
+        "sort": "Sortieren",
+        "sortOptions": {
+          "startAsc": "Startdatum ↑",
+          "startDesc": "Startdatum ↓",
+          "titleAsc": "Titel A → Z",
+          "titleDesc": "Titel Z → A"
+        },
+        "reset": "Zurücksetzen"
+      },
+      "upcoming": {
+        "title": "Bevorstehende Sitzungen",
+        "subtitle": "Bevorstehende Schulungen im Feld.",
+        "start": "Start",
+        "location": "Ort",
+        "participants": "Teilnehmer",
+        "present": "Anwesend/Validiert",
+        "empty": "Keine bevorstehenden Sitzungen."
+      },
+      "recent": {
+        "title": "Kürzlich abgeschlossene Schulungen",
+        "subtitle": "Von Agenten bereits abgeschlossene Sitzungen."
+      },
+      "list": {
+        "title": "Gefilterte Liste",
+        "count": "Schulung(en) nach Filter sichtbar",
+        "titleCol": "Titel",
+        "category": "Kategorie",
+        "startDate": "Start",
+        "location": "Ort",
+        "participants": "Teilnehmer",
+        "status": "Status",
+        "action": "Aktion",
+        "empty": "Keine Schulung für diese Filter gefunden."
+      }
+    },
+    "agentDetail": {
+      "back": "Zurück",
+      "loading": "Laden...",
+      "refresh": "Aktualisieren",
+      "kicker": "AGENTSCHULUNG",
+      "createdBy": "Vom Manager erstellt",
+      "start": "Start",
+      "end": "Ende",
+      "provider": "Trainer / Anbieter",
+      "location": "Ort",
+      "company": "Unternehmen",
+      "createdAt": "Erstellt am",
+      "participants": {
+        "title": "Teilnehmer und Feldverfolgung",
+        "subtitle": "Der Agent kann Anwesenheit, Abwesenheit markieren und Kommentare hinzufügen.",
+        "scheduled": "Geplant:",
+        "present": "Anwesend:",
+        "absent": "Abwesend:",
+        "empty": "Keine Teilnehmer für diese Schulung registriert.",
+        "statusLabel": "Teilnehmerstatus",
+        "scoreLabel": "Punktzahl",
+        "scorePlaceholder": "Bsp: 80",
+        "validity": "Gültigkeit",
+        "comment": "Kommentar / Abwesenheitsgrund",
+        "commentPlaceholder": "Bsp: entschuldigt, zu spät...",
+        "save": "Speichern",
+        "saving": "Speichern..."
+      },
+      "summary": {
+        "title": "Zusammenfassung",
+        "category": "Kategorie",
+        "status": "Aktueller Status",
+        "participants": "Teilnehmer",
+        "location": "Ort"
+      },
+      "statusUpdate": {
+        "title": "Sitzungsaktualisierung",
+        "newStatus": "Neuer Status",
+        "updateBtn": "Status aktualisieren",
+        "updating": "Aktualisieren...",
+        "tips": {
+          "title": "Empfohlene Verwendung",
+          "scheduled": "vor der Schulung",
+          "completed": "nach der Feldsitzung",
+          "cancelled": "Sitzung nicht abgehalten"
+        }
+      },
+      "resetBtn": "Alle Teilnehmer auf 'geplant' zurücksetzen",
+      "backToList": "Zurück zur Liste",
+      "notFound": "Schulung nicht gefunden",
+      "notFoundBack": "Zurück"
+    }
+  },
+
+  "reports": {
+    "create": {
+      "title": "Bericht erstellen",
+      "subtitle": "Einen Bericht (wöchentlich / monatlich / jährlich / Audit / benutzerdefiniert) für eine Zone und einen Zeitraum erstellen.",
+      "back": "Zurück",
+      "titleLabel": "Titel",
+      "titlePlaceholder": "Bsp: Audit-Bericht Zone A",
+      "titleHint": "Optional. Wenn leer, kann ein Titel automatisch generiert werden.",
+      "typeLabel": "Typ",
+      "typeError": "Typ erforderlich",
+      "zoneLabel": "Zone",
+      "zoneAll": "Alle / global",
+      "zoneHint": "Leer lassen für einen globalen Bericht.",
+      "startDateLabel": "Startdatum",
+      "startDateHint": "Optional.",
+      "endDateLabel": "Enddatum",
+      "endDateError": "Enddatum muss nach Startdatum liegen.",
+      "modeLabel": "Modus",
+      "automatic": "Automatisch",
+      "manual": "Manuell",
+      "modeHint": "Automatisch: Server berechnet Metriken. Manuell: Daten können nachträglich ergänzt oder angepasst werden.",
+      "totalIncidents": "Vorfälle gesamt",
+      "totalObservations": "Beobachtungen gesamt",
+      "complianceRate": "Konformitätsrate (%)",
+      "uploadPdf": "PDF hochladen",
+      "choosePdf": "PDF-Datei auswählen",
+      "pdfSizeHint": "Empfohlene Maximalgröße: 10 MB",
+      "pdfHint": "Optional. Sie können das Bericht-PDF direkt anhängen.",
+      "cancel": "Abbrechen",
+      "create": "Erstellen",
+      "creating": "Erstellen..."
+    },
+    "edit": {
+      "back": "Zurück",
+      "viewDetail": "Detail anzeigen",
+      "save": "Speichern",
+      "saving": "Speichern...",
+      "title": "Bericht bearbeiten",
+      "pdfAvailable": "PDF verfügbar",
+      "currentCompliance": "Aktuelle Konformität",
+      "editInfo": "Informationen bearbeiten",
+      "titleLabel": "Titel",
+      "titlePlaceholder": "Bsp: HSE-Bericht Zone A - Woche 12",
+      "typeLabel": "Typ",
+      "typeError": "Typ ist Pflichtfeld",
+      "startDateLabel": "Startdatum",
+      "endDateLabel": "Enddatum",
+      "zoneLabel": "Zone",
+      "zoneNone": "Keine Zone",
+      "modeLabel": "Generierungsmodus",
+      "automatic": "Automatisch",
+      "manual": "Manuell",
+      "reset": "Zurücksetzen",
+      "saveBtn": "Änderungen speichern",
+      "metrics": {
+        "title": "Aktuelle Metriken",
+        "incidents": "Vorfälle",
+        "observations": "Beobachtungen",
+        "compliance": "Konformität"
+      },
+      "info": {
+        "title": "Berichtsinformationen",
+        "author": "Autor",
+        "currentZone": "Aktuelle Zone",
+        "pdf": "PDF",
+        "available": "Verfügbar",
+        "none": "Keines",
+        "mode": "Modus",
+        "automatic": "Automatisch",
+        "manual": "Manuell"
+      },
+      "notFound": "Bericht nicht gefunden",
+      "notFoundMsg": "Dieser Bericht konnte nicht zur Bearbeitung geladen werden.",
+      "backToList": "Zurück zur Liste"
+    },
+    "detail": {
+      "notFound": "Bericht nicht gefunden",
+      "notFoundMsg": "Der angeforderte Bericht existiert nicht oder ist nicht mehr verfügbar.",
+      "backToList": "Zurück zur Liste",
+      "back": "Zurück",
+      "openPdf": "PDF öffnen",
+      "edit": "Bearbeiten",
+      "recalculate": "Metriken neu berechnen",
+      "recalculating": "Neu berechnen...",
+      "kicker": "HSE-Bericht",
+      "period": "Zeitraum & Rückverfolgbarkeit",
+      "automatic": "Automatisch",
+      "manual": "Manuell",
+      "compliance": "Globale Konformität",
+      "metrics": {
+        "incidents": "Vorfälle",
+        "incidentsHint": "Insgesamt erfasst",
+        "observations": "Beobachtungen",
+        "observationsHint": "Erfasste HSE-Beobachtungen",
+        "compliance": "Konformität",
+        "complianceHint": "Berechnetes Konformitätsniveau"
+      },
+      "generatedBy": "Erstellt von",
+      "authorHint": "Berichtsautor",
+      "info": {
+        "title": "Allgemeine Informationen",
+        "titleLabel": "Titel",
+        "type": "Typ",
+        "zone": "Zone",
+        "mode": "Modus",
+        "automatic": "Automatisch",
+        "manual": "Manuell",
+        "period": "Zeitraum & Rückverfolgbarkeit",
+        "startDate": "Startdatum",
+        "endDate": "Enddatum",
+        "createdAt": "Erstellt am",
+        "updatedAt": "Aktualisiert"
+      },
+      "export": {
+        "title": "PDF-Export",
+        "available": "Export verfügbar",
+        "availableHint": "Der Bericht hat bereits eine generierte PDF-Datei.",
+        "openPdf": "PDF öffnen",
+        "noExport": "Kein PDF-Export",
+        "noExportHint": "Dieser Bericht enthält noch keine generierte PDF-Datei."
+      }
+    }
+  },
+
+  "observations": {
+    "manager": {
+      "kicker": "HSE-Überwachung",
+      "title": "Beobachtungsübersicht",
+      "subtitle": "Verfolgen Sie alle von Agenten in verschiedenen Zonen gemeldeten Beobachtungen.",
+      "refresh": "Aktualisieren",
+      "export": "Exportieren",
+      "stats": {
+        "total": "Beobachtungen gesamt",
+        "totalHint": "Über alle Zonen",
+        "open": "Offene Beobachtungen",
+        "openHint": "Schnell zu bearbeiten",
+        "critical": "Kritisch",
+        "criticalHint": "Hohes Risikoniveau",
+        "closed": "Geschlossen",
+        "closedHint": "Von Teams bearbeitet"
+      },
+      "filters": {
+        "title": "Filter und Suche",
+        "subtitle": "Ergebnisse nach Schweregrad, Status, Zone oder Agent verfeinern.",
+        "searchLabel": "Suche",
+        "searchPlaceholder": "Titel, Beschreibung, Zone, Agent...",
+        "statusLabel": "Status",
+        "severityLabel": "Schweregrad",
+        "zoneLabel": "Zone",
+        "all": "Alle",
+        "allZones": "Alle Zonen",
+        "status": {
+          "open": "Offen",
+          "in_progress": "In Bearbeitung",
+          "closed": "Geschlossen"
+        },
+        "severity": {
+          "all": "Alle",
+          "low": "Niedrig",
+          "medium": "Mittel",
+          "high": "Hoch",
+          "critical": "Kritisch"
+        }
+      },
+      "list": {
+        "title": "Beobachtungsliste",
+        "count": "Ergebnis(se) angezeigt",
+        "date": "Datum",
+        "observation": "Beobachtung",
+        "agent": "Agent",
+        "zone": "Zone",
+        "severity": "Schweregrad",
+        "status": "Status",
+        "images": "Bilder",
+        "action": "Aktion",
+        "view": "Anzeigen",
+        "loading": "Beobachtungen werden geladen...",
+        "empty": "Keine Beobachtungen gefunden",
+        "emptyHint": "Filter oder Suche ändern, um mehr Ergebnisse anzuzeigen."
+      }
+    },
+    "agent": {
+      "kicker": "HSE-AGENTBEOBACHTUNGEN",
+      "title": "Beobachtungen",
+      "subtitle": "Einheitliche Ansicht der Sie betreffenden Beobachtungen: von Ihnen deklariert oder Ihnen zugewiesen.",
+      "newObservation": "+ Neue Beobachtung",
+      "loading": "Laden...",
+      "refresh": "Aktualisieren",
+      "back": "Zurück",
+      "filters": {
+        "searchPlaceholder": "Titel / Beschreibung...",
+        "status": "Status",
+        "severity": "Schweregrad",
+        "perPage": "Pro Seite",
+        "all": "Alle"
+      },
+      "table": {
+        "title": "Tabelle",
+        "date": "Datum",
+        "titleCol": "Titel",
+        "zone": "Zone",
+        "declaredBy": "Gemeldet von",
+        "assignedTo": "Zugewiesen an",
+        "severity": "Schweregrad",
+        "status": "Status",
+        "action": "Aktion",
+        "viewDetail": "Detail anzeigen",
+        "empty": "Keine Beobachtungen für diese Ansicht gefunden."
+      },
+      "pagination": {
+        "previous": "Zurück",
+        "page": "Seite",
+        "total": "Gesamt:",
+        "next": "Weiter"
+      }
+    },
+    "myObservations": {
+      "title": "Meine Beobachtungen",
+      "subtitle": "Liste der von Ihnen deklarierten Beobachtungen.",
+      "newObservation": "+ Neue Beobachtung",
+      "loading": "Laden...",
+      "refresh": "Aktualisieren",
+      "filters": {
+        "searchPlaceholder": "Titel / Beschreibung...",
+        "status": "Status",
+        "severity": "Schweregrad",
+        "perPage": "Pro Seite",
+        "all": "Alle"
+      },
+      "table": {
+        "date": "Datum",
+        "titleCol": "Titel",
+        "zone": "Zone",
+        "severity": "Schweregrad",
+        "status": "Status",
+        "images": "Bilder",
+        "action": "Aktion",
+        "view": "Anzeigen",
+        "empty": "Keine Beobachtungen gefunden."
+      },
+      "pagination": {
+        "previous": "Zurück",
+        "page": "Seite",
+        "total": "Gesamt:",
+        "next": "Weiter"
+      }
+    },
+    "add": {
+      "title": "Beobachtung hinzufügen",
+      "subtitle": "Eine Risikosituation oder Anomalie in einer Zone melden.",
+      "titleLabel": "Titel",
+      "titlePlaceholder": "Bsp: Feuerlöscher fehlt",
+      "titleError": "Titel erforderlich (mind. 3 Zeichen)",
+      "zoneLabel": "Zone",
+      "zoneError": "Zone erforderlich",
+      "severityLabel": "Schweregrad",
+      "statusLabel": "Status",
+      "descriptionLabel": "Beschreibung",
+      "descriptionPlaceholder": "Beobachtung beschreiben...",
+      "descriptionError": "Beschreibung erforderlich (mind. 5 Zeichen)",
+      "imagesLabel": "Bilder",
+      "imagesCount": "Bild(er) ausgewählt",
+      "create": "Beobachtung erstellen",
+      "saving": "Speichern...",
+      "cancel": "Abbrechen"
+    }
+  },
+
+  "agent": {
+    "dashboard": {
+      "kicker": "AGENTEN-DASHBOARD",
+      "welcome": "Willkommen",
+      "subtitle": "Verfolgen Sie schnell Ihre Beobachtungen, Zuweisungen, Schulungen und wichtige Benachrichtigungen.",
+      "loading": "Laden...",
+      "refresh": "Aktualisieren",
+      "widgets": {
+        "myObservations": "Meine Beobachtungen",
+        "myObservationsSubtitle": "Von Ihnen erstellte Beobachtungen",
+        "myObservationsLink": "Meine Beobachtungen anzeigen",
+        "assignedObservations": "Zugewiesene Beobachtungen",
+        "assignedObservationsSubtitle": "Zur Bearbeitung zugewiesene Beobachtungen",
+        "assignedObservationsLink": "Zuweisungen anzeigen",
+        "scheduledTrainings": "Geplante Schulungen",
+        "scheduledTrainingsSubtitle": "Noch durchzuführende Sitzungen",
+        "scheduledTrainingsLink": "Schulungen anzeigen",
+        "completedTrainings": "Abgeschlossene Schulungen",
+        "completedTrainingsSubtitle": "Bereits abgeschlossene Sitzungen",
+        "completedTrainingsLink": "Verlauf anzeigen",
+        "unreadNotifications": "Ungelesene Benachrichtigungen",
+        "unreadNotificationsSubtitle": "Ausstehende Alarme und Aktionen",
+        "unreadNotificationsLink": "Benachrichtigungen anzeigen"
+      },
+      "quickAccess": {
+        "title": "Schnellzugriff",
+        "subtitle": "Die nützlichsten Aktionen für den Agenten.",
+        "observations": "Beobachtungen",
+        "observationsHint": "Beobachtungen anzeigen und bearbeiten",
+        "trainings": "Schulungen",
+        "trainingsHint": "Geplante und abgeschlossene Sitzungen verfolgen",
+        "notifications": "Benachrichtigungen",
+        "notificationsHint": "Empfangene Alarme und Zuweisungen anzeigen",
+        "profile": "Mein Profil",
+        "profileHint": "Persönliche Informationen verwalten"
+      },
+      "summary": {
+        "title": "Agenten-Zusammenfassung",
+        "subtitle": "Synthetische Ansicht Ihrer Aktivität.",
+        "totalWidgets": "Geschäfts-Widgets gesamt",
+        "myObservations": "Erstellte Beobachtungen",
+        "assignedObservations": "Zugewiesene Beobachtungen",
+        "scheduledTrainings": "Geplante Schulungen",
+        "unreadNotifications": "Ungelesene Benachrichtigungen"
+      }
+    }
+  },
+
+  "superadmin": {
+    "companies": {
+      "kicker": "Super Admin",
+      "title": "Unternehmensverwaltung",
+      "subtitle": "Verwalten Sie alle registrierten Unternehmen in Ihrer intelligenten HSE-Plattform.",
+      "addCompany": "Unternehmen hinzufügen",
+      "stats": {
+        "total": "Gesamt",
+        "active": "Aktiv",
+        "inactive": "Inaktiv"
+      },
+      "filters": {
+        "searchLabel": "Suche",
+        "searchPlaceholder": "Unternehmensname...",
+        "statusLabel": "Status",
+        "all": "Alle",
+        "active": "Aktiv",
+        "inactive": "Inaktiv",
+        "searchBtn": "Suchen"
+      },
+      "list": {
+        "title": "Alle Unternehmen",
+        "count": "Unternehmen gefunden",
+        "loading": "Unternehmen werden geladen...",
+        "empty": "Keine Unternehmen gefunden.",
+        "company": "Unternehmen",
+        "industry": "Branche",
+        "contact": "Kontakt",
+        "location": "Standort",
+        "status": "Status",
+        "actions": "Aktionen",
+        "view": "Anzeigen",
+        "edit": "Bearbeiten",
+        "delete": "Löschen",
+        "active": "Aktiv",
+        "inactive": "Inaktiv"
+      },
+      "pagination": {
+        "previous": "Zurück",
+        "page": "Seite",
+        "next": "Weiter"
+      },
+      "add": {
+        "kicker": "Super Admin",
+        "title": "Neues Unternehmen hinzufügen",
+        "subtitle": "Neues Unternehmen in Ihrer HSE-Plattform registrieren und Hauptprofil konfigurieren.",
+        "backToList": "Zurück zur Liste",
+        "formTitle": "Unternehmensinformationen",
+        "formSubtitle": "Details unten ausfüllen, um ein neues Unternehmen zu erstellen.",
+        "nameLabel": "Unternehmensname",
+        "namePlaceholder": "Unternehmensnamen eingeben",
+        "industryLabel": "Branche",
+        "industryPlaceholder": "Branchensektor",
+        "logoLabel": "Logo-URL",
+        "countryLabel": "Land",
+        "countryPlaceholder": "Land",
+        "cityLabel": "Stadt",
+        "cityPlaceholder": "Stadt",
+        "streetLabel": "Straße",
+        "streetPlaceholder": "Straße",
+        "postalCodeLabel": "Postleitzahl",
+        "postalCodePlaceholder": "Postleitzahl",
+        "emailLabel": "Kontakt-E-Mail",
+        "emailPlaceholder": "kontakt@unternehmen.de",
+        "phoneLabel": "Kontakttelefon",
+        "phonePlaceholder": "+49 xxx xxx xxxx",
+        "statusLabel": "Status",
+        "active": "Aktiv",
+        "inactive": "Inaktiv",
+        "cancel": "Abbrechen",
+        "create": "Unternehmen erstellen",
+        "creating": "Erstellen..."
+      },
+      "detail": {
+        "back": "Zurück",
+        "loading": "Laden...",
+        "totalAdmins": "Admins gesamt",
+        "status": "Status",
+        "inactive": "Inaktiv",
+        "active": "Aktiv",
+        "info": {
+          "title": "Informationen",
+          "name": "Name",
+          "industry": "Branche",
+          "email": "E-Mail",
+          "phone": "Telefon",
+          "noIndustry": "Keine Branche"
+        },
+        "admins": {
+          "title": "Admins",
+          "add": "+ Hinzufügen",
+          "empty": "Keine Admins",
+          "name": "Name",
+          "email": "E-Mail"
+        }
+      }
+    },
+    "admins": {
+      "kicker": "Super Admin / Verwaltung",
+      "title": "Admins",
+      "subtitle": "Unternehmensadministratoren verwalten.",
+      "back": "Zurück",
+      "addBtn": "Hinzufügen",
+      "stats": {
+        "total": "Gesamt",
+        "page": "Seite",
+        "results": "Ergebnisse"
+      },
+      "filters": {
+        "searchPlaceholder": "Admin suchen...",
+        "searchBtn": "Suchen"
+      },
+      "list": {
+        "title": "Admin-Liste",
+        "count": "Administrator(en) gefunden",
+        "loading": "Administratoren werden geladen...",
+        "empty": "Kein Administrator gefunden",
+        "emptyHint": "Andere Suche versuchen oder neuen Admin hinzufügen.",
+        "name": "Name",
+        "email": "E-Mail",
+        "status": "Status",
+        "actions": "Aktionen",
+        "active": "Aktiv",
+        "inactive": "Inaktiv",
+        "edit": "Bearbeiten",
+        "delete": "Löschen"
+      },
+      "pagination": {
+        "previous": "Zurück",
+        "page": "Seitennavigation",
+        "next": "Weiter"
+      },
+      "add": {
+        "kicker": "Super Admin / Verwaltung",
+        "title": "Admin hinzufügen",
+        "subtitle": "Neuen Administrator erstellen und mit einem Unternehmen verknüpfen.",
+        "back": "Zurück",
+        "preview": {
+          "title": "Vorschau",
+          "name": "Neuer Admin",
+          "role": "Rolle",
+          "roleValue": "Admin",
+          "status": "Status",
+          "active": "Aktiv",
+          "inactive": "Inaktiv"
+        },
+        "formTitle": "Administratorinformationen",
+        "formSubtitle": "Hauptkontoinformationen für den Admin ausfüllen.",
+        "firstNameLabel": "Vorname",
+        "firstNamePlaceholder": "Bsp: Ali",
+        "lastNameLabel": "Nachname",
+        "lastNamePlaceholder": "Bsp: Salah",
+        "emailLabel": "E-Mail",
+        "emailPlaceholder": "admin@unternehmen.de",
+        "passwordLabel": "Passwort",
+        "passwordPlaceholder": "Passwort erstellen",
+        "show": "Anzeigen",
+        "hide": "Ausblenden",
+        "confirmPasswordLabel": "Passwort bestätigen",
+        "confirmPasswordPlaceholder": "Passwort bestätigen",
+        "passwordMismatch": "Passwörter stimmen nicht überein",
+        "companyLabel": "Unternehmen",
+        "companyLoading": "Unternehmen werden geladen...",
+        "companySelect": "Unternehmen auswählen",
+        "companySelected": "Ausgewähltes Unternehmen:",
+        "activeLabel": "Aktives Konto",
+        "activeHint": "Der Administrator kann sich sofort anmelden.",
+        "cancel": "Abbrechen",
+        "reset": "Zurücksetzen",
+        "createBtn": "Admin erstellen",
+        "creating": "Erstellen..."
+      }
+    }
+  },
+
+  "team": {
+    "kicker": "HSE-Teamüberwachung",
+    "title": "Teamübersicht",
+    "subtitle": "Sehen Sie Manager und Agenten Ihres Unternehmens in Echtzeit.",
+    "viewTable": "Tabelle",
+    "viewCards": "Karten",
+    "refresh": "Aktualisieren",
+    "stats": {
+      "total": "Team gesamt",
+      "managers": "Manager",
+      "agents": "Agenten",
+      "filtered": "Gefiltert"
+    },
+    "filters": {
+      "searchPlaceholder": "Nach Name, Rolle, E-Mail oder Unternehmen suchen...",
+      "allRoles": "Alle Rollen",
+      "manager": "Manager",
+      "agent": "Agent"
+    },
+    "table": {
+      "title": "Teammitglieder",
+      "count": "Mitglied(er) gefunden",
+      "member": "Mitglied",
+      "role": "Rolle",
+      "company": "Unternehmen",
+      "email": "E-Mail",
+      "createdAt": "Erstellt am",
+      "loading": "Teammitglieder werden geladen...",
+      "empty": "Keine Teammitglieder für die ausgewählten Filter gefunden."
+    }
+  },
+
+  "settings": {
+    "title": "Einstellungen",
+    "subtitle": "Verwalten Sie Ihr Konto, Sicherheit und Plattformeinstellungen.",
+    "logs": {
+      "title": "Sitzungsprotokolle",
+      "subtitle": "Verfolgen Sie letzte Anmeldungen, aktive Geräte und fehlgeschlagene Versuche."
+    },
+    "profile": {
+      "title": "Profil",
+      "subtitle": "Persönliche Informationen und Foto bearbeiten."
+    },
+    "notifications": {
+      "title": "Benachrichtigungen",
+      "subtitle": "E-Mail-Benachrichtigungen und Einstellungen konfigurieren."
+    },
+    "securityNote": {
+      "title": "Sicherheitstipp",
+      "body": "Überprüfen Sie regelmäßig Ihren Anmeldeverlauf und aktualisieren Sie Ihr Passwort, um unbefugten Zugriff zu reduzieren.",
+      "link": "Sitzungsprotokolle anzeigen"
+    },
+    "home": {
+      "kicker": "Kontocenter",
+      "title": "Einstellungen",
+      "subtitle": "Verwalten Sie Ihr Profil, die Sicherheit, Benachrichtigungen und persönliche Präferenzen für die HSE-Plattform.",
+      "securityScore": "Sicherheitspunktzahl",
+      "quickCards": {
+        "profileStatus": "Profilstatus",
+        "profileComplete": "Vollständig",
+        "accountProtection": "Kontoschutz",
+        "alerts": "Alarme",
+        "enabled": "Aktiviert",
+        "disabled": "Deaktiviert",
+        "theme": "Design",
+        "dark": "Dunkel",
+        "light": "Hell"
+      },
+      "sections": {
+        "title": "Einstellungsbereiche",
+        "subtitle": "Auf die Hauptkonfigurationsbereiche des Kontos zugreifen."
+      },
+      "recentActivity": {
+        "title": "Aktuelle Aktivität",
+        "subtitle": "Neueste Kontoänderungen und Sicherheitsereignisse."
+      },
+      "preferences": {
+        "title": "Schnellpräferenzen",
+        "subtitle": "Allgemeine Optionen direkt hier aktualisieren.",
+        "emailAlerts": "E-Mail-Alarme",
+        "emailAlertsHint": "Alarme für kritische Vorfälle und Berichte erhalten.",
+        "darkMode": "Dunkelmodus",
+        "darkModeHint": "Dunkleres visuelles Design für Niedriglichtumgebungen verwenden.",
+        "extraSecurity": "Zusätzliche Sicherheit",
+        "extraSecurityHint": "Stärkeren Schutz für den Kontozugang aktivieren."
+      },
+      "recommendation": {
+        "title": "Sicherheitsempfehlung",
+        "text": "Überprüfen Sie regelmäßig Ihren Anmeldeverlauf und aktualisieren Sie Ihr Passwort regelmäßig, um das Risiko unbefugter Zugriffe zu reduzieren.",
+        "link": "Sicherheitseinstellungen öffnen"
+      }
+    },
+    "changePassword": {
+      "kicker": "Kontosicherheit",
+      "title": "Passwort ändern",
+      "subtitle": "Aktualisieren Sie Ihr Kontopasswort regelmäßig, um den Zugang zu Ihrer HSE-Plattform zu sichern.",
+      "formTitle": "Passwort-Aktualisierung",
+      "formSubtitle": "Geben Sie Ihr aktuelles Passwort ein und wählen Sie ein stärkeres neues Passwort.",
+      "currentPassword": "Aktuelles Passwort",
+      "currentPasswordPlaceholder": "Aktuelles Passwort eingeben",
+      "currentPasswordError": "Aktuelles Passwort ist erforderlich",
+      "newPassword": "Neues Passwort",
+      "newPasswordPlaceholder": "Neues Passwort eingeben",
+      "passwordStrength": "Passwortstärke",
+      "confirmPassword": "Neues Passwort bestätigen",
+      "confirmPasswordPlaceholder": "Neues Passwort bestätigen",
+      "confirmPasswordError": "Passwortbestätigung ist erforderlich",
+      "passwordMismatch": "Passwörter stimmen nicht überein",
+      "updateBtn": "Passwort aktualisieren",
+      "rules": {
+        "title": "Passwortregeln",
+        "subtitle": "Ihr neues Passwort muss diese Sicherheitsregeln erfüllen.",
+        "minLength": "Mindestens 8 Zeichen",
+        "uppercase": "Mindestens ein Großbuchstabe",
+        "lowercase": "Mindestens ein Kleinbuchstabe",
+        "number": "Mindestens eine Zahl",
+        "special": "Mindestens ein Sonderzeichen",
+        "match": "Passwortbestätigung stimmt überein"
+      },
+      "advice": {
+        "title": "Sicherheitshinweis",
+        "text": "Verwenden Sie Ihr Unternehmenspasswort nicht auf anderen Plattformen wieder. Wählen Sie ein eindeutiges Passwort und aktualisieren Sie es sofort bei verdächtigem Zugriff."
+      }
+    },
+    "security": {
+      "kicker": "Wichtig",
+      "title": "Kontosicherheit",
+      "subtitle": "Kontoschutz, Sicherheitsstatus und Zugriffsoptionen für Ihr HSE-Plattformkonto überprüfen.",
+      "scoreCard": {
+        "score": "Sicherheitspunktzahl",
+        "protection": "Schutz",
+        "loginAlerts": "Anmeldealarme",
+        "enabled": "Aktiviert",
+        "disabled": "Deaktiviert",
+        "twoFactor": "2FA",
+        "twoFactorEnabled": "Aktiviert",
+        "twoFactorNot": "Nicht aktiviert"
+      },
+      "sections": {
+        "protection": {
+          "title": "Schutzstatus",
+          "subtitle": "Wesentliche Sicherheitsschichten Ihres Kontos überprüfen."
+        },
+        "recentAccess": {
+          "title": "Aktuelle Zugriffsaktivität",
+          "subtitle": "Neueste erfolgreiche und fehlgeschlagene Kontozugriffsversuche."
+        },
+        "controls": {
+          "title": "Sicherheitskontrollen",
+          "subtitle": "Allgemeine Kontoschutzoptionen schnell verwalten.",
+          "twoFactor": "Zwei-Faktor-Authentifizierung",
+          "twoFactorHint": "Erfordert einen zusätzlichen Verifizierungsschritt bei der Anmeldung.",
+          "loginAlerts": "Anmeldealarme",
+          "loginAlertsHint": "Benachrichtigung bei neuer Anmeldung oder ungewöhnlichem Zugriff.",
+          "suspiciousProtection": "Schutz vor verdächtigen Aktivitäten",
+          "suspiciousProtectionHint": "Risikobehaftete Anmeldeversuche und nicht vertrauenswürdiges Sitzungsverhalten blockieren."
+        }
+      },
+      "recommendation": {
+        "title": "Sicherheitsempfehlung",
+        "text": "Aktivieren Sie die Zwei-Faktor-Authentifizierung und überprüfen Sie regelmäßig fehlgeschlagene Anmeldeversuche, um die allgemeine Kontosicherheit zu verbessern."
+      }
+    }
+  },
+
+  "operationalMessages": {
+    "kicker": "HSE-Kommunikation",
+    "title": "Operative Meldungen",
+    "subtitle": "Verwalten Sie Nachrichten, die an Bildschirme, Geräte und verbundene Zonen gesendet werden.",
+    "refresh": "Aktualisieren",
+    "newMessage": "Neue Meldung",
+    "stats": {
+      "draft": "Entwürfe",
+      "sent": "Gesendet",
+      "displayed": "Angezeigt",
+      "critical": "Kritisch",
+      "devicesLoaded": "Geräte geladen",
+      "devicesOnline": "Geräte online",
+      "zonesLoaded": "Zonen geladen"
+    },
+    "filters": {
+      "searchPlaceholder": "Nach Titel oder Inhalt suchen...",
+      "filterBtn": "Filtern",
+      "resetBtn": "Zurücksetzen"
+    },
+    "list": {
+      "title": "Nachrichtenliste",
+      "count": "Meldung(en) gefunden",
+      "loading": "Meldungen werden geladen...",
+      "empty": "Keine Meldungen gefunden",
+      "emptyHint": "Filter ändern oder neue Meldung hinzufügen.",
+      "emptyTitle": "Keine Meldungen gefunden",
+      "emptyBody": "Filter anpassen oder eine neue Meldung erstellen.",
+      "message": "Meldung",
+      "type": "Typ",
+      "priority": "Priorität",
+      "target": "Ziel",
+      "status": "Status",
+      "createdBy": "Erstellt von",
+      "date": "Datum",
+      "actions": "Aktionen",
+      "colMessage": "Meldung",
+      "colType": "Typ",
+      "colPriority": "Priorität",
+      "colTarget": "Ziel",
+      "colStatus": "Status",
+      "colCreatedBy": "Erstellt von",
+      "colDate": "Datum",
+      "colActions": "Aktionen",
+      "noTitle": "Kein Titel",
+      "viewDetail": "Detail anzeigen",
+      "publish": "Veröffentlichen",
+      "cancel": "Abbrechen",
+      "delete": "Löschen",
+      "actionView": "Detail anzeigen",
+      "actionPublish": "Veröffentlichen",
+      "actionCancel": "Abbrechen",
+      "actionDelete": "Löschen",
+      "titlePlaceholder": "Meldungstitel...",
+      "contentLabel": "Inhalt",
+      "contentPlaceholder": "Meldungsinhalt eingeben...",
+      "contentRequired": "Inhalt ist erforderlich.",
+      "targetDevice": "Zielgerät",
+      "selectDevice": "Gerät auswählen",
+      "deviceRequired": "Gerät ist erforderlich.",
+      "targetZone": "Zielzone",
+      "selectZone": "Zone auswählen",
+      "zoneRequired": "Zone ist erforderlich.",
+      "broadcastTitle": "Allgemeine Übertragung",
+      "broadcastBody": "Diese Meldung wird an alle verbundenen Geräte und Zonen übertragen.",
+      "displayMode": "Anzeigemodus",
+      "duration": "Dauer (s)",
+      "durationError": "Dauer muss zwischen 1 und 3600 Sekunden liegen.",
+      "scheduledAt": "Geplant für",
+      "expiresAt": "Läuft ab am",
+      "notes": "Notizen",
+      "notesPlaceholder": "Optionale Notizen...",
+      "loadingReferences": "Geräte und Zonen werden geladen...",
+      "previewTitle": "Vorschau der Meldung",
+      "previewPlaceholder": "Inhalt wird hier angezeigt...",
+      "createBtn": "Meldung erstellen",
+      "creating": "Wird erstellt..."
+    },
+    "pagination": {
+      "previous": "Zurück",
+      "next": "Weiter",
+      "page": "Seite"
+    }
+  },
+
+  "inspections": {
+    "kicker": "MANAGER-INSPEKTIONEN",
+    "title": "Inspektionsübersicht",
+    "subtitle": "Verwalten Sie Ihre Kontrollvorlagen, verfolgen Sie Feldausführungen und überwachen Sie die globale HSE-Inspektionskonformität.",
+    "newInspection": "Neue Inspektion",
+    "refresh": "Aktualisieren",
+    "loading": "Laden...",
+    "newTemplate": "Neue Vorlage",
+    "stats": {
+      "templates": "Vorlagen",
+      "completedExecutions": "Abgeschlossene Ausführungen",
+      "completedHint": "Abgeschlossene Kontrollen",
+      "inProgress": "In Bearbeitung",
+      "inProgressHint": "Aktive Inspektionen",
+      "completionRate": "Abschlussrate",
+      "completionSuffix": "Ausführungen"
+    },
+    "templates": {
+      "title": "Aktuelle Vorlagen",
+      "subtitle": "Verfügbare Checklisten-Vorlagen für Inspektionen.",
+      "viewAll": "Alle anzeigen",
+      "loading": "Vorlagen werden geladen...",
+      "items": "Element(e)",
+      "active": "Aktiv",
+      "inactive": "Inaktiv",
+      "empty": "Keine Inspektionsvorlage gefunden.",
+      "noDescription": "Keine Beschreibung."
+    },
+    "executions": {
+      "title": "Aktuelle Ausführungen",
+      "subtitle": "Neueste von Agenten im Feld durchgeführte Kontrollen.",
+      "viewAll": "Alle anzeigen",
+      "loading": "Ausführungen werden geladen...",
+      "checklist": "Checkliste",
+      "agent": "Agent",
+      "zone": "Zone",
+      "status": "Status",
+      "score": "Punktzahl",
+      "date": "Datum",
+      "empty": "Keine Inspektionsausführung gefunden."
+    },
+    "lowScore": {
+      "title": "Niedrigpunktzahl-Ausführungen",
+      "subtitle": "Kontrollen, die schnelle Aufmerksamkeit erfordern.",
+      "analyzing": "Punktzahlen werden analysiert...",
+      "empty": "Keine kritische Ausführung erkannt."
+    },
+    "categories": {
+      "title": "Verteilung nach Kategorie",
+      "subtitle": "Verfügbare Vorlagen nach HSE-Bereich."
+    },
+    "topZones": {
+      "title": "Top-Zonen",
+      "subtitle": "Zuletzt am meisten inspizierte Zonen.",
+      "empty": "Keine Zonen verfügbar."
+    },
+    "inactiveTemplates": {
+      "title": "Inaktive Vorlagen",
+      "subtitle": "Zu prüfende deaktivierte Vorlagen.",
+      "empty": "Keine inaktive Vorlage."
+    },
+    "summary": {
+      "title": "Aktivitätszusammenfassung",
+      "subtitle": "Schnellübersicht des Inspektionsmoduls.",
+      "total": "Ausführungen gesamt",
+      "completed": "Abgeschlossen",
+      "inProgress": "In Bearbeitung",
+      "drafts": "Entwürfe",
+      "activeTemplates": "Aktive Vorlagen"
+    },
+    "lastActivity": {
+      "title": "Letzte Aktivität",
+      "subtitle": "Zusammenfassung der letzten Modulaktivitäten.",
+      "lastTemplate": "Letzte Vorlage",
+      "lastExecution": "Letzte Ausführung",
+      "lastCompleted": "Letzte abgeschlossene Inspektion"
+    },
+    "quickActions": {
+      "title": "Schnellaktionen",
+      "subtitle": "Nützliche Verknüpfungen für den Manager.",
+      "createInspection": "Inspektion erstellen",
+      "createTemplate": "Vorlage erstellen",
+      "manageTemplates": "Vorlagen verwalten",
+      "viewExecutions": "Ausführungen anzeigen"
+    }
+  },
+
+  "inventory": {
+    "kicker": "HSE Inventar",
+    "title": "Inventar-Element Detail",
+    "subtitle": "Vollständige Verfolgung des Artikels, seiner Bewegungen, Zuweisungen und Inspektionen.",
+    "back": "Zurück",
+    "edit": "Bearbeiten",
+    "loading": "Element wird geladen...",
+    "noDescription": "Keine Beschreibung verfügbar.",
+    "noImage": "Kein Bild",
+    "code": "Code",
+    "quantity": "Menge",
+    "zone": "Zone",
+    "assignedTo": "Zugewiesen an",
+    "summary": {
+      "movements": "Bewegungen",
+      "assignments": "Zuweisungen",
+      "inspections": "Inspektionen",
+      "alerts": "Warnungen",
+      "yes": "Ja",
+      "no": "Nein"
+    },
+    "details": {
+      "company": "Unternehmen",
+      "brand": "Marke",
+      "model": "Modell",
+      "serial": "Seriennummer",
+      "supplier": "Lieferant",
+      "purchaseDate": "Kaufdatum",
+      "expiry": "Ablaufdatum",
+      "nextInspection": "Nächste Inspektion"
+    },
+    "tabs": {
+      "overview": "Übersicht",
+      "movements": "Bewegungen",
+      "assignments": "Zuweisungen",
+      "inspections": "Inspektionen"
+    },
+    "actions": {
+      "addMovement": "Bewegung hinzufügen",
+      "addMovementHint": "Eingang, Ausgang, Transfer oder Anpassung.",
+      "assign": "Zuweisen",
+      "assignHint": "Diesen Artikel einem Mitarbeiter oder einer Zone zuweisen.",
+      "newInspection": "Neue Inspektion",
+      "newInspectionHint": "Eine Kontrolle oder Überprüfung erfassen."
+    },
+    "movements": {
+      "title": "Bewegungen",
+      "subtitle": "Logistischer Verlauf dieses Artikels.",
+      "loading": "Bewegungen werden geladen...",
+      "empty": "Keine Bewegungen erfasst.",
+      "type": "Typ",
+      "quantity": "Menge",
+      "from": "Von",
+      "to": "Nach",
+      "employee": "Mitarbeiter",
+      "date": "Datum"
+    },
+    "assignments": {
+      "title": "Zuweisungen",
+      "subtitle": "Zuweisungsverlauf dieses Artikels.",
+      "loading": "Zuweisungen werden geladen...",
+      "empty": "Keine Zuweisungen erfasst.",
+      "employee": "Mitarbeiter",
+      "type": "Typ",
+      "status": "Status",
+      "date": "Datum",
+      "expectedReturn": "Voraussichtliche Rückgabe",
+      "actualReturn": "Tatsächliche Rückgabe"
+    },
+    "inspectionsTab": {
+      "title": "Inspektionen",
+      "subtitle": "Kontroll- und Überprüfungsverlauf.",
+      "loading": "Inspektionen werden geladen...",
+      "empty": "Keine Inspektionen erfasst.",
+      "date": "Datum",
+      "result": "Ergebnis",
+      "condition": "Zustand",
+      "inspectedBy": "Inspiziert von",
+      "next": "Nächste Inspektion"
+    }
+  },
+  "landing": {
+    "nav": {
+      "platform": "Plattform",
+      "features": "Funktionen",
+      "workflow": "Arbeitsablauf",
+      "roles": "Rollen",
+      "pricing": "Preise"
+    },
+    "header": {
+      "tagline": "Intelligente HSE-Plattform",
+      "login": "Anmelden",
+      "goToPlatform": "Zur Plattform →"
+    },
+    "hero": {
+      "badge": "NEU · HSE MONITOR",
+      "title": "Industrielle Sicherheit überwachen",
+      "titleHighlight": "in Echtzeit",
+      "subtitle": "All-in-One-SaaS-Plattform, die IoT-Sensoren, KI-gestützte PSA-Erkennung und HSE-Dashboards zum Schutz Ihrer Feldteams verbindet.",
+      "ctaStart": "Jetzt starten",
+      "ctaDiscover": "Demo ansehen →",
+      "stat1Value": "99,9%",
+      "stat1Label": "Verfügbarkeit",
+      "stat2Value": "< 2s",
+      "stat2Label": "Echtzeiterkennung",
+      "stat3Value": "50+",
+      "stat3Label": "Unterstützte Sensoren"
+    },
+    "about": {
+      "badge": "PLATTFORM",
+      "title": "Eine vollständige Lösung für industrielle Sicherheit",
+      "subtitle": "HSE Monitor bündelt alle Ihre Sicherheitswerkzeuge in einer einzigen intelligenten Plattform, die mit Ihren IoT-Geräten verbunden ist.",
+      "card1Title": "24/7-Überwachung",
+      "card1Desc": "Kontinuierliche Überwachung aller Ihrer Industriezonen mit sofortigen Alarmen.",
+      "card2Title": "Integrierte KI",
+      "card2Desc": "Automatische Erkennung fehlender PSA durch intelligente Videoanalyse.",
+      "card3Title": "Multi-Standort",
+      "card3Desc": "Verwalten Sie mehrere Unternehmen und Industriestandorte in einem einzigen Dashboard.",
+      "card4Title": "Garantierte Konformität",
+      "card4Desc": "Automatische HSE-Berichte zur Einhaltung der ISO 45001-Normen und HSE-Vorschriften."
+    },
+    "industries": {
+      "badge": "ZIELSEKTOREN",
+      "title": "Entwickelt für anspruchsvolle Industriestandorte",
+      "subtitle": "HSE Monitor passt sich jedem Sektor an, in dem Feldsicherheit kritisch ist.",
+      "item1Name": "Öl & Gas / Petrochemie",
+      "item1Desc": "Überwachung von Gefahrenzonen, Gaserkennung, ATEX-Vorfallmanagement.",
+      "item2Name": "Bau & Tiefbau",
+      "item2Desc": "PSA-Kontrolle auf der Baustelle, Arbeitsgenehmigungsverfolgung, Unfallmanagement.",
+      "item3Name": "Chemieindustrie",
+      "item3Desc": "Expositionsüberwachung, Gefahrstoffmanagement, HSE-Rückverfolgbarkeit.",
+      "item4Name": "Lebensmittel & Landwirtschaft",
+      "item4Desc": "Lebensmittelsicherheit und Hygiene, regelmäßige Audits, zertifizierte Schulungen.",
+      "item5Name": "Bergbau & Förderung",
+      "item5Desc": "Verfolgung von Untertagepersonal, atmosphärische Erkennung, Evakuierungsmanagement.",
+      "item6Name": "Energie & Versorgung",
+      "item6Desc": "Arbeitnehmerschutz auf Elektroanlagen, Freischaltungs-/Verriegelungsmanagement."
+    },
+    "features": {
+      "badge": "FUNKTIONEN",
+      "title": "Alles, was Sie für das Sicherheitsmanagement benötigen",
+      "subtitle": "Ein vollständiger Satz integrierter Tools zur End-to-End-Verwaltung Ihrer HSE-Richtlinie.",
+      "feat1Title": "Zonenüberwachung",
+      "feat1Desc": "Zonen definieren, IoT-Sensoren zuweisen und Echtzeitmeldungen empfangen.",
+      "feat2Title": "Vorfallmanagement",
+      "feat2Desc": "Beobachtungen und Arbeitsunfälle melden, verfolgen und analysieren.",
+      "feat3Title": "HSE-Schulung",
+      "feat3Desc": "Gesetzlich vorgeschriebene Schulungsprogramme für alle Mitarbeiter planen und verfolgen.",
+      "feat4Title": "Berichte & Analysen",
+      "feat4Desc": "Automatische HSE-Berichtserstellung mit Key Performance Indicators.",
+      "feat5Title": "PSA-Inventar",
+      "feat5Desc": "Persönliche Schutzausrüstung verwalten mit Ablaufwarnungen.",
+      "feat6Title": "Audits & Inspektionen",
+      "feat6Desc": "Checklisten erstellen, Audits planen und Korrekturmaßnahmen verfolgen."
+    },
+    "workflow": {
+      "badge": "WIE ES FUNKTIONIERT",
+      "title": "In weniger als einer Woche einsatzbereit",
+      "subtitle": "Eine einfache, schnelle Bereitstellung, um Ihre Teams ohne Verzögerung zu schützen.",
+      "step1Num": "01",
+      "step1Title": "Einrichtung",
+      "step1Desc": "Erstellen Sie Ihr Unternehmen, definieren Sie Ihre Zonen und verbinden Sie Ihre IoT-Geräte.",
+      "step2Num": "02",
+      "step2Title": "Team-Onboarding",
+      "step2Desc": "Laden Sie Ihre HSE-Manager, Feldagenten und Vorgesetzte mit den richtigen Berechtigungen ein.",
+      "step3Num": "03",
+      "step3Title": "Aktive Überwachung",
+      "step3Desc": "Ihre Sensoren liefern Daten in Echtzeit. Automatische Alarme bei Anomalien.",
+      "step4Num": "04",
+      "step4Title": "Analyse & Verbesserung",
+      "step4Desc": "Nutzen Sie Berichte und Analysen, um Ihre HSE-Richtlinie kontinuierlich zu verbessern."
+    },
+    "roles": {
+      "badge": "ROLLEN",
+      "title": "Eine Plattform für jedes Profil",
+      "subtitle": "Dedizierte Schnittstellen für jeden Akteur in Ihrer HSE-Organisation.",
+      "role1Name": "Administrator",
+      "role1Desc": "Verwaltet IoT-Geräte, Zonen und die technische Konfiguration des Standorts.",
+      "role1Icon": "bi-cpu",
+      "role2Name": "HSE-Manager",
+      "role2Desc": "Steuert die HSE-Richtlinie, erstellt Schulungsprogramme, Audits und Konformitätsberichte.",
+      "role2Icon": "bi-clipboard-check",
+      "role3Name": "HSE-Agent",
+      "role3Desc": "Führt Feldrundgänge durch, meldet Beobachtungen und verfolgt eigene Schulungen.",
+      "role3Icon": "bi-person-walking",
+      "role4Name": "Vorgesetzter",
+      "role4Desc": "Vollständige Sicherheitsübersicht, Vorfallvalidierung und Teammanagement.",
+      "role4Icon": "bi-eye",
+      "role5Name": "Super Admin",
+      "role5Desc": "Multi-Unternehmen-Management über eine zentrale Administrationskonsole.",
+      "role5Icon": "bi-shield-check"
+    },
+    "cta": {
+      "title": "Bereit, Ihre Industriestandorte zu sichern?",
+      "subtitle": "Schließen Sie sich den Unternehmen an, die HSE Monitor zum Schutz ihrer Teams vertrauen.",
+      "btn": "Demo anfragen"
+    },
+    "pricing": {
+      "badge": "PREISE",
+      "title": "Wählen Sie den Plan für Ihr Unternehmen",
+      "subtitle": "Einfache, skalierbare Pläne zur Bereitstellung von HSE Monitor in Ihren Industrieumgebungen, mit IoT-Technischem Support inklusive.",
+      "monthly": "/ Monat",
+      "recommended": "Empfohlen",
+      "choose": "Diesen Plan wählen",
+      "contact": "Team kontaktieren",
+      "starter": {
+        "name": "Starter",
+        "desc": "Ideal für einen kleinen Industriestandort oder eine Pilotphase.",
+        "f1": "1 Unternehmen",
+        "f2": "Benutzerverwaltung",
+        "f3": "Zonenüberwachung",
+        "f4": "Echtzeit-Alarme",
+        "f5": "Web-Dashboard",
+        "f6": "Standard IoT-technischer Support"
+      },
+      "professional": {
+        "name": "Professional",
+        "desc": "Perfekt für ein Unternehmen mit mehreren Zonen und mehr Geräten.",
+        "f1": "Multi-Zone",
+        "f2": "Erweitertes Rollenmanagement",
+        "f3": "HSE-Vorfallverfolgung",
+        "f4": "KI-gestützte PSA-Erkennung",
+        "f5": "Berichte und Statistiken",
+        "f6": "Priorität IoT-technischer Support"
+      },
+      "enterprise": {
+        "name": "Enterprise",
+        "desc": "Für größere Industriestrukturen mit vollständiger Betreuung.",
+        "f1": "Multi-Unternehmen",
+        "f2": "Zentralisierte Überwachung",
+        "f3": "Erweiterte IoT-Integration",
+        "f4": "Intelligente Alarmanalyse",
+        "f5": "Vollständiger Bereitstellungssupport",
+        "f6": "Vollständiger IoT-technischer Support"
+      }
+    },
+    "footer": {
+      "tagline": "Intelligente SaaS-Plattform für industrielle HSE-Überwachung, die IoT, KI und Feldsicherheit in Echtzeit verbindet.",
+      "platformTitle": "Plattform",
+      "companyTitle": "Unternehmen",
+      "supportTitle": "Support",
+      "features": "Funktionen",
+      "architecture": "Architektur",
+      "security": "Sicherheit",
+      "api": "API",
+      "about": "Über uns",
+      "team": "Team",
+      "careers": "Karriere",
+      "contact": "Kontakt",
+      "documentation": "Dokumentation",
+      "helpCenter": "Hilfezentrum",
+      "faq": "FAQ",
+      "techSupport": "Technischer Support",
+      "copyright": "HSE Monitor — Alle Rechte vorbehalten.",
+      "privacy": "Datenschutz",
+      "terms": "Bedingungen",
+      "cookies": "Cookies"
+    }
+  },
+
+  "users": {
+    "list": {
+      "kicker": "Zugriffsverwaltung",
+      "title": "Benutzer",
+      "subtitle": "Liste der Agent / Manager / Admin / Supervisor-Konten.",
+      "addBtn": "Benutzer hinzufügen",
+      "loading": "Benutzer werden geladen...",
+      "retry": "Erneut versuchen",
+      "colUser": "Benutzer",
+      "colEmail": "E-Mail",
+      "colRole": "Rolle",
+      "colCreated": "Erstellt am",
+      "colActions": "Aktionen",
+      "empty": "Keine Benutzer gefunden.",
+      "total": "Gesamt",
+      "confirmDelete": "Löschen bestätigen?"
+    },
+    "roles": {
+      "admin": "Admin",
+      "manager": "Manager",
+      "supervisor": "Supervisor",
+      "agent": "Agent"
+    },
+    "add": {
+      "kicker": "Zugriffsverwaltung",
+      "title": "Benutzer hinzufügen",
+      "subtitle": "Konto erstellen (Agent / Manager / Admin / Supervisor).",
+      "sectionIdentity": "Kontoinformationen",
+      "firstName": "Vorname",
+      "firstNamePh": "Bsp.: Ahmed",
+      "lastName": "Nachname",
+      "lastNamePh": "Bsp.: Ben Ali",
+      "email": "E-Mail",
+      "emailPh": "Bsp.: user@company.com",
+      "password": "Passwort",
+      "passwordPh": "Mindestens 6 Zeichen",
+      "role": "Rolle",
+      "createBtn": "Benutzer erstellen",
+      "creating": "Erstellen...",
+      "resetBtn": "Zurücksetzen",
+      "error": {
+        "firstNameRequired": "Vorname ist erforderlich.",
+        "firstNameMin": "Mindestens 2 Zeichen.",
+        "lastNameRequired": "Nachname ist erforderlich.",
+        "lastNameMin": "Mindestens 2 Zeichen.",
+        "emailRequired": "E-Mail ist erforderlich.",
+        "emailInvalid": "Ungültige E-Mail.",
+        "passwordRequired": "Passwort ist erforderlich.",
+        "passwordMin": "Mindestens 6 Zeichen."
+      },
+      "success": "Benutzer erfolgreich erstellt."
+    },
+    "edit": {
+      "kicker": "Zugriffsverwaltung",
+      "title": "Benutzer bearbeiten",
+      "subtitle": "Kontoinformationen aktualisieren.",
+      "loading": "Laden...",
+      "sectionIdentity": "Kontoinformationen",
+      "sectionPassword": "Passwort ändern",
+      "sectionPasswordHint": "Leer lassen, wenn Sie das Passwort nicht ändern möchten.",
+      "firstName": "Vorname",
+      "lastName": "Nachname",
+      "email": "E-Mail",
+      "role": "Rolle",
+      "newPassword": "Neues Passwort",
+      "newPasswordPh": "Mindestens 6 Zeichen",
+      "confirmPassword": "Passwort bestätigen",
+      "confirmPasswordPh": "Passwort bestätigen",
+      "saveBtn": "Speichern",
+      "saving": "Speichern...",
+      "resetPassword": "Passwort zurücksetzen",
+      "error": {
+        "firstNameRequired": "Vorname ist erforderlich.",
+        "firstNameMin": "Mindestens 2 Zeichen.",
+        "lastNameRequired": "Nachname ist erforderlich.",
+        "lastNameMin": "Mindestens 2 Zeichen.",
+        "emailRequired": "E-Mail ist erforderlich.",
+        "emailInvalid": "Ungültige E-Mail.",
+        "passwordMismatch": "Passwörter stimmen nicht überein."
+      },
+      "success": "Benutzer erfolgreich aktualisiert."
+    }
+  },
+
+  "admin": {
+    "dashboard": {
+      "kicker": "Systemadministration",
+      "title": "Dashboard",
+      "titleAccent": "Admin",
+      "subtitle": "Globale Übersicht der HSE Monitor Infrastruktur — Geräte, Sensoren, Mitarbeiter und Benutzer.",
+      "kpi": {
+        "devices": "Geräte",
+        "devicesSub": "Registrierte Ausrüstung",
+        "employees": "Mitarbeiter",
+        "employeesSub": "Unternehmenspersonal",
+        "users": "Benutzer",
+        "usersSub": "Aktive Konten auf der Plattform",
+        "sensors": "Sensoren",
+        "sensorsSub": "Verbundene IoT-Sensoren"
+      },
+      "actions": {
+        "title": "Schnellaktionen",
+        "zones": "Zonen verwalten",
+        "devices": "Geräte verwalten",
+        "sensors": "Sensoren verwalten",
+        "employees": "Mitarbeiter verwalten",
+        "users": "Benutzer verwalten",
+        "settings": "Einstellungen"
+      },
+      "info": {
+        "secured": "Sichere Plattform",
+        "securedSub": "HSE Monitor · Zentrale Verwaltung",
+        "online": "Online",
+        "iot": "IoT-Infrastruktur",
+        "team": "Team",
+        "active": "Aktiv"
+      }
+    }
+  }
+}

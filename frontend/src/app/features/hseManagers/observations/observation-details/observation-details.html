@@ -2,8 +2,8 @@
   @if (loading()) {
     <div class="state-card loading">
       <div class="spinner"></div>
-      <h3>Chargement de l’observation...</h3>
-      <p>Veuillez patienter pendant la récupération des données.</p>
+      <h3>{{ 'observations.manager.list.loadingTitle' | translate }}</h3>
+      <p>{{ 'observations.manager.list.loadingSubtitle' | translate }}</p>
     </div>
   } @else {
     @if (!error()) {
@@ -11,12 +11,12 @@
         <div class="topbar">
           <button class="back-btn" type="button" (click)="goBack()">
             <span>←</span>
-            Retour aux observations
+            {{ 'observations.manager.list.backBtn' | translate }}
           </button>
 
           <div class="topbar-actions">
             <button class="refresh-btn" type="button" (click)="refresh()">
-              Actualiser
+              {{ 'observations.manager.list.refreshBtn' | translate }}
             </button>
           </div>
         </div>
@@ -24,7 +24,7 @@
         <section class="hero">
           <div class="hero__content">
             <div class="hero__left">
-              <p class="eyebrow">Observation HSE</p>
+              <p class="eyebrow">{{ 'observations.manager.kicker' | translate }}</p>
 
               <div class="title-row">
                 <h1>{{ obs.title }}</h1>
@@ -39,9 +39,9 @@
                   </span>
 
                   @if (obs.assignedTo) {
-                    <span class="badge assigned">Affectée</span>
+                    <span class="badge assigned">{{ 'observations.manager.list.assigned' | translate }}</span>
                   } @else {
-                    <span class="badge unassigned">Non affectée</span>
+                    <span class="badge unassigned">{{ 'observations.manager.list.unassigned' | translate }}</span>
                   }
                 </div>
               </div>
@@ -52,37 +52,37 @@
 
               <div class="hero__meta">
                 <div class="meta-chip">
-                  <span class="label">Zone</span>
+                  <span class="label">{{ 'observations.manager.list.zone' | translate }}</span>
                   <strong>{{ zoneName() }}</strong>
                 </div>
 
                 <div class="meta-chip">
-                  <span class="label">Déclarée par</span>
+                  <span class="label">{{ 'observations.manager.list.declaredBy' | translate }}</span>
                   <strong>{{ reporterName() }}</strong>
                 </div>
 
                 <div class="meta-chip">
-                  <span class="label">Affectée à</span>
+                  <span class="label">{{ 'observations.manager.list.assignedTo' | translate }}</span>
                   <strong>{{ assignedToName() }}</strong>
                 </div>
 
                 <div class="meta-chip">
-                  <span class="label">Traité par</span>
+                  <span class="label">{{ 'observations.manager.list.resolvedBy' | translate }}</span>
                   <strong>{{ resolvedByName() }}</strong>
                 </div>
 
                 <div class="meta-chip">
-                  <span class="label">Créée le</span>
+                  <span class="label">{{ 'observations.manager.list.createdAt' | translate }}</span>
                   <strong>{{ obs.createdAt | date:'dd/MM/yyyy HH:mm' }}</strong>
                 </div>
 
                 <div class="meta-chip">
-                  <span class="label">Images observation</span>
+                  <span class="label">{{ 'observations.manager.list.observationImages' | translate }}</span>
                   <strong>{{ imageCount() }}</strong>
                 </div>
 
                 <div class="meta-chip">
-                  <span class="label">Preuves traitement</span>
+                  <span class="label">{{ 'observations.manager.list.resolutionProofs' | translate }}</span>
                   <strong>{{ resolutionImageCount() }}</strong>
                 </div>
               </div>
@@ -95,75 +95,75 @@
             <article class="panel">
               <div class="panel__header">
                 <div>
-                  <h2>Détails de l’observation</h2>
-                  <p>Informations détaillées déclarées par l’agent.</p>
+                  <h2>{{ 'observations.manager.list.detailsTitle' | translate }}</h2>
+                  <p>{{ 'observations.manager.list.detailsSubtitle' | translate }}</p>
                 </div>
               </div>
 
               <div class="details-grid">
                 <div class="detail-card">
-                  <span class="detail-label">Identifiant</span>
+                  <span class="detail-label">{{ 'observations.manager.list.identifier' | translate }}</span>
                   <strong>{{ obs._id }}</strong>
                 </div>
 
                 <div class="detail-card">
-                  <span class="detail-label">Zone</span>
+                  <span class="detail-label">{{ 'observations.manager.list.zone' | translate }}</span>
                   <strong>{{ zoneName() }}</strong>
                 </div>
 
                 <div class="detail-card">
-                  <span class="detail-label">Déclarée par</span>
+                  <span class="detail-label">{{ 'observations.manager.list.declaredBy' | translate }}</span>
                   <strong>{{ reporterName() }}</strong>
                 </div>
 
                 <div class="detail-card">
-                  <span class="detail-label">Email déclarant</span>
+                  <span class="detail-label">{{ 'observations.manager.list.reporterEmail' | translate }}</span>
                   <strong>{{ reporterEmail() }}</strong>
                 </div>
 
                 <div class="detail-card">
-                  <span class="detail-label">Gravité</span>
+                  <span class="detail-label">{{ 'observations.manager.list.severity' | translate }}</span>
                   <strong>{{ getSeverityLabel(obs.severity) }}</strong>
                 </div>
 
                 <div class="detail-card">
-                  <span class="detail-label">Statut</span>
+                  <span class="detail-label">{{ 'observations.manager.list.status' | translate }}</span>
                   <strong>{{ getStatusLabel(obs.status) }}</strong>
                 </div>
 
                 <div class="detail-card">
-                  <span class="detail-label">Affectée à</span>
+                  <span class="detail-label">{{ 'observations.manager.list.assignedTo' | translate }}</span>
                   <strong>{{ assignedToName() }}</strong>
                 </div>
 
                 <div class="detail-card">
-                  <span class="detail-label">Email agent affecté</span>
+                  <span class="detail-label">{{ 'observations.manager.list.assignedAgentEmail' | translate }}</span>
                   <strong>{{ assignedToEmail() }}</strong>
                 </div>
 
                 <div class="detail-card">
-                  <span class="detail-label">Affectée par</span>
+                  <span class="detail-label">{{ 'observations.manager.list.assignedBy' | translate }}</span>
                   <strong>{{ assignedByName() }}</strong>
                 </div>
 
                 <div class="detail-card">
-                  <span class="detail-label">Date d’affectation</span>
+                  <span class="detail-label">{{ 'observations.manager.list.assignedAt' | translate }}</span>
                   <strong>{{ assignedAtLabel() }}</strong>
                 </div>
 
                 <div class="detail-card">
-                  <span class="detail-label">Créée le</span>
+                  <span class="detail-label">{{ 'observations.manager.list.createdAt' | translate }}</span>
                   <strong>{{ obs.createdAt | date:'dd/MM/yyyy HH:mm' }}</strong>
                 </div>
 
                 <div class="detail-card">
-                  <span class="detail-label">Dernière mise à jour</span>
+                  <span class="detail-label">{{ 'observations.manager.list.lastUpdate' | translate }}</span>
                   <strong>{{ obs.updatedAt | date:'dd/MM/yyyy HH:mm' }}</strong>
                 </div>
               </div>
 
               <div class="description-box">
-                <h3>Description complète</h3>
+                <h3>{{ 'observations.manager.list.fullDescription' | translate }}</h3>
                 <p>{{ obs.description }}</p>
               </div>
             </article>
@@ -171,8 +171,8 @@
             <article class="panel">
               <div class="panel__header">
                 <div>
-                  <h2>Preuves visuelles de l’observation</h2>
-                  <p>{{ imageCount() }} image(s) associée(s) à cette observation.</p>
+                  <h2>{{ 'observations.manager.list.visualEvidenceTitle' | translate }}</h2>
+                  <p>{{ imageCount() }} {{ 'observations.manager.list.imagesLinked' | translate }}</p>
                 </div>
               </div>
 
@@ -185,7 +185,7 @@
                   }
 
                   <div class="gallery__thumbs">
-                    @for (img of obs.images ?? []; track trackByImage($index, img); let i = $index) {
+                    @for (img of obs.images; track trackByImage($index, img); let i = $index) {
                       <button
                         type="button"
                         class="thumb"
@@ -201,8 +201,8 @@
               } @else {
                 <div class="empty-box">
                   <div class="empty-icon">🖼️</div>
-                  <h3>Aucune image disponible</h3>
-                  <p>Cette observation ne contient pas encore de preuves visuelles.</p>
+                  <h3>{{ 'observations.manager.list.noImagesTitle' | translate }}</h3>
+                  <p>{{ 'observations.manager.list.noImagesBody' | translate }}</p>
                 </div>
               }
             </article>
@@ -210,8 +210,8 @@
             <article class="panel">
               <div class="panel__header">
                 <div>
-                  <h2>Traitement réalisé par l’agent</h2>
-                  <p>Consulter le commentaire de traitement et les images envoyées par l’agent.</p>
+                  <h2>{{ 'observations.manager.list.resolutionTitle' | translate }}</h2>
+                  <p>{{ 'observations.manager.list.resolutionSubtitle' | translate }}</p>
                 </div>
               </div>
 
@@ -219,36 +219,36 @@
                 <div class="treatment-wrap">
                   <div class="treatment-grid">
                     <div class="treatment-card">
-                      <span class="treatment-label">Traité par</span>
+                      <span class="treatment-label">{{ 'observations.manager.list.resolvedBy' | translate }}</span>
                       <strong>{{ resolvedByName() }}</strong>
                     </div>
 
                     <div class="treatment-card">
-                      <span class="treatment-label">Date du traitement</span>
+                      <span class="treatment-label">{{ 'observations.manager.list.resolutionDate' | translate }}</span>
                       <strong>{{ resolvedAtLabel() }}</strong>
                     </div>
 
                     <div class="treatment-card">
-                      <span class="treatment-label">Statut actuel</span>
+                      <span class="treatment-label">{{ 'observations.manager.list.currentStatus' | translate }}</span>
                       <strong>{{ getStatusLabel(obs.status) }}</strong>
                     </div>
 
                     <div class="treatment-card">
-                      <span class="treatment-label">Images de preuve</span>
+                      <span class="treatment-label">{{ 'observations.manager.list.proofImages' | translate }}</span>
                       <strong>{{ resolutionImageCount() }}</strong>
                     </div>
                   </div>
 
                   <div class="treatment-note">
-                    <h3>Commentaire de traitement</h3>
+                    <h3>{{ 'observations.manager.list.resolutionComment' | translate }}</h3>
                     <p>
-                      {{ obs.resolutionComment || 'Aucun commentaire de traitement fourni par l’agent.' }}
+                      {{ obs.resolutionComment || ('observations.manager.list.noResolutionComment' | translate) }}
                     </p>
                   </div>
 
                   <div class="treatment-media">
                     <div class="section-mini-title">
-                      Images de preuve du traitement
+                      {{ 'observations.manager.list.proofImagesTitle' | translate }}
                     </div>
 
                     @if (hasResolutionImages()) {
@@ -276,8 +276,8 @@
                     } @else {
                       <div class="empty-box compact">
                         <div class="empty-icon">📷</div>
-                        <h3>Aucune image de traitement</h3>
-                        <p>L’agent n’a pas encore ajouté d’images de preuve.</p>
+                        <h3>{{ 'observations.manager.list.noProofImagesTitle' | translate }}</h3>
+                        <p>{{ 'observations.manager.list.noProofImagesBody' | translate }}</p>
                       </div>
                     }
                   </div>
@@ -285,24 +285,24 @@
                   @if (hasValidationData()) {
                     <div class="validation-box">
                       <div class="validation-head">
-                        <h3>Retour de validation</h3>
-                        <span class="validation-badge">Manager</span>
+                        <h3>{{ 'observations.manager.list.validationFeedback' | translate }}</h3>
+                        <span class="validation-badge">{{ 'observations.manager.list.managerBadge' | translate }}</span>
                       </div>
 
                       <div class="validation-grid">
                         <div class="treatment-card">
-                          <span class="treatment-label">Validé par</span>
+                          <span class="treatment-label">{{ 'observations.manager.list.validatedBy' | translate }}</span>
                           <strong>{{ validatedByName() }}</strong>
                         </div>
 
                         <div class="treatment-card">
-                          <span class="treatment-label">Date de validation</span>
+                          <span class="treatment-label">{{ 'observations.manager.list.validationDate' | translate }}</span>
                           <strong>{{ validatedAtLabel() }}</strong>
                         </div>
                       </div>
 
                       <p class="validation-comment">
-                        {{ obs.validationComment || 'Aucun commentaire de validation.' }}
+                        {{ obs.validationComment || ('observations.manager.list.noValidationComment' | translate) }}
                       </p>
                     </div>
                   }
@@ -310,8 +310,8 @@
               } @else {
                 <div class="empty-box">
                   <div class="empty-icon">🛠️</div>
-                  <h3>Aucun traitement soumis</h3>
-                  <p>L’agent n’a pas encore transmis de commentaire ou d’images de traitement.</p>
+                  <h3>{{ 'observations.manager.list.noResolutionTitle' | translate }}</h3>
+                  <p>{{ 'observations.manager.list.noResolutionBody' | translate }}</p>
                 </div>
               }
             </article>
@@ -322,14 +322,14 @@
               <article class="panel side-panel">
                 <div class="panel__header">
                   <div>
-                    <h2>Affectation</h2>
-                    <p>Attribuer cette observation à un agent.</p>
+                    <h2>{{ 'observations.manager.list.assignmentTitle' | translate }}</h2>
+                    <p>{{ 'observations.manager.list.assignmentSubtitle' | translate }}</p>
                   </div>
                 </div>
 
                 <div class="assign-box">
                   <div class="assign-form">
-                    <label for="agentSelect">Choisir un agent</label>
+                    <label for="agentSelect">{{ 'observations.manager.list.chooseAgent' | translate }}</label>
 
                     <div class="select-wrap">
                       <select
@@ -338,7 +338,7 @@
                         [disabled]="agentsLoading() || assigning()"
                         (change)="onSelectedAgentChange($event)"
                       >
-                        <option value="">Sélectionner un agent</option>
+                        <option value="">{{ 'observations.manager.list.selectAgent' | translate }}</option>
 
                         @for (agent of agents(); track trackByAgent($index, agent)) {
                           <option [value]="agent._id">
@@ -352,7 +352,7 @@
                     </div>
 
                     @if (agentsLoading()) {
-                      <p class="form-message">Chargement des agents...</p>
+                      <p class="form-message">{{ 'observations.manager.list.loadingAgents' | translate }}</p>
                     }
 
                     @if (agentsError()) {
@@ -361,7 +361,7 @@
 
                     @if (selectedAgentName()) {
                       <div class="selected-agent-box">
-                        <span>Agent sélectionné</span>
+                        <span>{{ 'observations.manager.list.selectedAgent' | translate }}</span>
                         <strong>{{ selectedAgentName() }}</strong>
                       </div>
                     }
@@ -381,9 +381,9 @@
                       (click)="assignObservation()"
                     >
                       @if (assigning()) {
-                        Affectation...
+                        {{ 'observations.manager.list.assigning' | translate }}
                       } @else {
-                        Affecter à cet agent
+                        {{ 'observations.manager.list.assignBtn' | translate }}
                       }
                     </button>
                   </div>
@@ -395,25 +395,25 @@
               <article class="panel side-panel">
                 <div class="panel__header">
                   <div>
-                    <h2>Validation du traitement</h2>
-                    <p>Valider ou refuser le traitement soumis par l’agent.</p>
+                    <h2>{{ 'observations.manager.list.validationTitle' | translate }}</h2>
+                    <p>{{ 'observations.manager.list.validationSubtitle' | translate }}</p>
                   </div>
                 </div>
 
                 <div class="review-box">
                   <div class="review-status">
-                    <span class="review-status__label">Statut actuel</span>
+                    <span class="review-status__label">{{ 'observations.manager.list.currentStatus' | translate }}</span>
                     <strong>{{ getStatusLabel(obs.status) }}</strong>
                   </div>
 
                   <div class="review-form">
-                    <label for="reviewComment">Commentaire du manager</label>
+                    <label for="reviewComment">{{ 'observations.manager.list.managerComment' | translate }}</label>
                     <textarea
                       id="reviewComment"
                       rows="5"
                       [value]="reviewComment()"
                       [disabled]="validating() || rejecting()"
-                      placeholder="Ajouter un commentaire de validation ou de refus..."
+                      [placeholder]="'observations.manager.list.commentPlaceholder' | translate"
                       (input)="onReviewComment(($any($event.target).value || '').trimStart())"
                     ></textarea>
 
@@ -433,9 +433,9 @@
                         (click)="rejectObservation()"
                       >
                         @if (rejecting()) {
-                          Refus...
+                          {{ 'observations.manager.list.rejecting' | translate }}
                         } @else {
-                          Refuser
+                          {{ 'observations.manager.list.rejectBtn' | translate }}
                         }
                       </button>
 
@@ -446,9 +446,9 @@
                         (click)="approveObservation()"
                       >
                         @if (validating()) {
-                          Validation...
+                          {{ 'observations.manager.list.validating' | translate }}
                         } @else {
-                          Valider
+                          {{ 'observations.manager.list.approveBtn' | translate }}
                         }
                       </button>
                     </div>
@@ -460,49 +460,49 @@
             <article class="panel side-panel">
               <div class="panel__header">
                 <div>
-                  <h2>Résumé rapide</h2>
-                  <p>Vue synthétique de cette observation.</p>
+                  <h2>{{ 'observations.manager.list.quickSummaryTitle' | translate }}</h2>
+                  <p>{{ 'observations.manager.list.quickSummarySubtitle' | translate }}</p>
                 </div>
               </div>
 
               <div class="summary-list">
                 <div class="summary-item">
-                  <span>Gravité</span>
+                  <span>{{ 'observations.manager.list.severity' | translate }}</span>
                   <strong>{{ getSeverityLabel(obs.severity) }}</strong>
                 </div>
 
                 <div class="summary-item">
-                  <span>Statut</span>
+                  <span>{{ 'observations.manager.list.status' | translate }}</span>
                   <strong>{{ getStatusLabel(obs.status) }}</strong>
                 </div>
 
                 <div class="summary-item">
-                  <span>Zone</span>
+                  <span>{{ 'observations.manager.list.zone' | translate }}</span>
                   <strong>{{ zoneName() }}</strong>
                 </div>
 
                 <div class="summary-item">
-                  <span>Déclarant</span>
+                  <span>{{ 'observations.manager.list.reporter' | translate }}</span>
                   <strong>{{ reporterName() }}</strong>
                 </div>
 
                 <div class="summary-item">
-                  <span>Affectée à</span>
+                  <span>{{ 'observations.manager.list.assignedTo' | translate }}</span>
                   <strong>{{ assignedToName() }}</strong>
                 </div>
 
                 <div class="summary-item">
-                  <span>Traité par</span>
+                  <span>{{ 'observations.manager.list.resolvedBy' | translate }}</span>
                   <strong>{{ resolvedByName() }}</strong>
                 </div>
 
                 <div class="summary-item">
-                  <span>Images observation</span>
+                  <span>{{ 'observations.manager.list.observationImages' | translate }}</span>
                   <strong>{{ imageCount() }}</strong>
                 </div>
 
                 <div class="summary-item">
-                  <span>Preuves traitement</span>
+                  <span>{{ 'observations.manager.list.resolutionProofs' | translate }}</span>
                   <strong>{{ resolutionImageCount() }}</strong>
                 </div>
               </div>
@@ -511,8 +511,8 @@
             <article class="panel side-panel">
               <div class="panel__header">
                 <div>
-                  <h2>Chronologie</h2>
-                  <p>Historique principal.</p>
+                  <h2>{{ 'observations.manager.list.timelineTitle' | translate }}</h2>
+                  <p>{{ 'observations.manager.list.timelineSubtitle' | translate }}</p>
                 </div>
               </div>
 
@@ -520,7 +520,7 @@
                 <div class="timeline-item">
                   <div class="timeline-dot created"></div>
                   <div class="timeline-content">
-                    <strong>Observation créée</strong>
+                    <strong>{{ 'observations.manager.list.timelineCreated' | translate }}</strong>
                     <p>{{ obs.createdAt | date:'dd/MM/yyyy HH:mm' }}</p>
                   </div>
                 </div>
@@ -529,9 +529,9 @@
                   <div class="timeline-item">
                     <div class="timeline-dot assigned"></div>
                     <div class="timeline-content">
-                      <strong>Observation affectée</strong>
+                      <strong>{{ 'observations.manager.list.timelineAssigned' | translate }}</strong>
                       <p>
-                        À {{ assignedToName() }}
+                        {{ 'observations.manager.list.timelineTo' | translate }} {{ assignedToName() }}
                         @if (obs.assignedAt) {
                           — {{ obs.assignedAt | date:'dd/MM/yyyy HH:mm' }}
                         }
@@ -544,7 +544,7 @@
                   <div class="timeline-item">
                     <div class="timeline-dot progress"></div>
                     <div class="timeline-content">
-                      <strong>Traitement soumis par l’agent</strong>
+                      <strong>{{ 'observations.manager.list.timelineResolved' | translate }}</strong>
                       <p>
                         {{ resolvedByName() }}
                         @if (obs.resolvedAt) {
@@ -559,7 +559,7 @@
                   <div class="timeline-item">
                     <div class="timeline-dot review"></div>
                     <div class="timeline-content">
-                      <strong>Validation du traitement</strong>
+                      <strong>{{ 'observations.manager.list.timelineValidated' | translate }}</strong>
                       <p>
                         {{ validatedByName() }}
                         @if (obs.validatedAt) {
@@ -574,7 +574,7 @@
                   <div class="timeline-item">
                     <div class="timeline-dot closed"></div>
                     <div class="timeline-content">
-                      <strong>Observation clôturée</strong>
+                      <strong>{{ 'observations.manager.list.timelineClosed' | translate }}</strong>
                       <p>{{ obs.updatedAt | date:'dd/MM/yyyy HH:mm' }}</p>
                     </div>
                   </div>
@@ -586,16 +586,16 @@
       } @else {
         <div class="state-card empty">
           <div class="state-icon">📝</div>
-          <h3>Observation introuvable</h3>
-          <p>Aucune donnée n’a été trouvée pour cette observation.</p>
+          <h3>{{ 'observations.manager.list.notFoundTitle' | translate }}</h3>
+          <p>{{ 'observations.manager.list.notFoundBody' | translate }}</p>
         </div>
       }
     } @else {
       <div class="state-card error">
         <div class="state-icon">⚠️</div>
-        <h3>Erreur</h3>
+        <h3>{{ 'observations.manager.list.errorTitle' | translate }}</h3>
         <p>{{ error() }}</p>
-        <button class="primary-btn" type="button" (click)="refresh()">Réessayer</button>
+        <button class="primary-btn" type="button" (click)="refresh()">{{ 'observations.manager.list.retryBtn' | translate }}</button>
       </div>
     }
   }

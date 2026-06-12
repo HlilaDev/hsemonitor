@@ -1,34 +1,34 @@
 <div class="page">
   <section class="hero">
     <div>
-      <span class="eyebrow">Admin · IoT Monitoring</span>
-      <h1>Ajouter un capteur</h1>
-      <p>Déclare un nouveau capteur IoT et configure son seuil initial.</p>
+      <span class="eyebrow">{{ 'SENSORS.KICKER' | translate }}</span>
+      <h1>{{ 'SENSORS.ADD_TITLE' | translate }}</h1>
+      <p>{{ 'SENSORS.ADD_SUBTITLE' | translate }}</p>
     </div>
 
     <a class="btn light" routerLink="/admin/sensors">
       <i class="bi bi-arrow-left"></i>
-      Retour
+      {{ 'COMMON.BACK' | translate }}
     </a>
   </section>
 
   <section class="stats-grid">
     <div class="stat-card">
-      <span>Étape 1</span>
-      <strong>Info</strong>
-      <small>Nom, type et unité</small>
+      <span>{{ 'SENSORS.STEPS.STEP1' | translate }}</span>
+      <strong>{{ 'SENSORS.STEPS.STEP1_TITLE' | translate }}</strong>
+      <small>{{ 'SENSORS.STEPS.STEP1_SUB' | translate }}</small>
     </div>
 
     <div class="stat-card success">
-      <span>Étape 2</span>
-      <strong>Device</strong>
-      <small>Liaison avec ESP/Raspberry</small>
+      <span>{{ 'SENSORS.STEPS.STEP2' | translate }}</span>
+      <strong>{{ 'SENSORS.STEPS.STEP2_TITLE' | translate }}</strong>
+      <small>{{ 'SENSORS.STEPS.STEP2_SUB' | translate }}</small>
     </div>
 
     <div class="stat-card warning">
-      <span>Étape 3</span>
-      <strong>Seuil</strong>
-      <small>Threshold initial</small>
+      <span>{{ 'SENSORS.STEPS.STEP3' | translate }}</span>
+      <strong>{{ 'SENSORS.STEPS.STEP3_TITLE' | translate }}</strong>
+      <small>{{ 'SENSORS.STEPS.STEP3_SUB' | translate }}</small>
     </div>
   </section>
 
@@ -42,75 +42,75 @@
   <form class="card form-card" [formGroup]="form" (ngSubmit)="submit()">
     <div class="section-title">
       <div>
-        <h3>Informations du capteur</h3>
-        <p>Ces informations seront utilisées par le monitoring et les alert rules.</p>
+        <h3>{{ 'SENSORS.FORM.SECTION_INFO' | translate }}</h3>
+        <p>{{ 'SENSORS.FORM.SECTION_INFO_SUB' | translate }}</p>
       </div>
 
       <span class="status-pill" [class.online]="form.value.status === 'online'">
-        {{ form.value.status }}
+        {{ 'SENSORS.STATUS.' + form.value.status | translate }}
       </span>
     </div>
 
     <div class="grid">
       <div class="field">
-        <label>Nom *</label>
-        <input class="input" formControlName="name" placeholder="Ex: MP2" />
+        <label>{{ 'SENSORS.FORM.NAME' | translate }} *</label>
+        <input class="input" formControlName="name" [placeholder]="'SENSORS.FORM.NAME_PH' | translate" />
         @if (fieldInvalid('name')) {
-          <div class="hint error">Nom requis, minimum 2 caractères.</div>
+          <div class="hint error">{{ 'SENSORS.FORM.NAME_REQUIRED' | translate }}</div>
         }
       </div>
 
       <div class="field">
-        <label>Type *</label>
+        <label>{{ 'SENSORS.FORM.TYPE' | translate }} *</label>
         <select class="input" formControlName="type">
           @for (t of sensorTypes; track t.value) {
-            <option [value]="t.value">{{ t.label }}</option>
+            <option [value]="t.value">{{ 'SENSORS.TYPE.' + t.value | translate }}</option>
           }
         </select>
       </div>
 
       <div class="field">
-        <label>Device ID Mongo *</label>
-        <input class="input" formControlName="device" placeholder="ObjectId du device" />
+        <label>{{ 'SENSORS.FORM.DEVICE_ID' | translate }} *</label>
+        <input class="input" formControlName="device" [placeholder]="'SENSORS.FORM.DEVICE_ID_PH' | translate" />
         @if (fieldInvalid('device')) {
-          <div class="hint error">Device requis.</div>
+          <div class="hint error">{{ 'SENSORS.FORM.DEVICE_ID_REQUIRED' | translate }}</div>
         }
       </div>
 
       <div class="field">
-        <label>Zone ID</label>
-        <input class="input" formControlName="zone" placeholder="Optionnel" />
-        <div class="hint">Tu peux laisser vide si la zone vient du device.</div>
+        <label>{{ 'SENSORS.FORM.ZONE_ID' | translate }}</label>
+        <input class="input" formControlName="zone" [placeholder]="'SENSORS.FORM.ZONE_ID_PH' | translate" />
+        <div class="hint">{{ 'SENSORS.FORM.ZONE_HINT' | translate }}</div>
       </div>
 
       <div class="field">
-        <label>Threshold initial</label>
-        <input class="input" type="number" formControlName="threshold" placeholder="Ex: 160" />
+        <label>{{ 'SENSORS.FORM.THRESHOLD' | translate }}</label>
+        <input class="input" type="number" formControlName="threshold" [placeholder]="'SENSORS.FORM.THRESHOLD_PH' | translate" />
       </div>
 
       <div class="field">
-        <label>Unité</label>
-        <input class="input" formControlName="unit" placeholder="°C, ppm, %, raw" />
+        <label>{{ 'SENSORS.FORM.UNIT' | translate }}</label>
+        <input class="input" formControlName="unit" [placeholder]="'SENSORS.FORM.UNIT_PH' | translate" />
       </div>
 
       <div class="field full">
-        <label>Status *</label>
+        <label>{{ 'SENSORS.FORM.STATUS' | translate }} *</label>
         <select class="input" formControlName="status">
           @for (s of statuses; track s.value) {
-            <option [value]="s.value">{{ s.label }}</option>
+            <option [value]="s.value">{{ 'SENSORS.STATUS.' + s.value | translate }}</option>
           }
         </select>
       </div>
     </div>
 
     <div class="actions">
-      <button class="btn ghost" type="button" (click)="goBack()">Annuler</button>
+      <button class="btn ghost" type="button" (click)="goBack()">{{ 'COMMON.CANCEL' | translate }}</button>
 
       <button class="btn primary" type="submit" [disabled]="!canSubmit()">
         @if (!loading()) {
-          <span><i class="bi bi-plus-circle"></i> Ajouter le capteur</span>
+          <span><i class="bi bi-plus-circle"></i> {{ 'SENSORS.ADD_BTN' | translate }}</span>
         } @else {
-          <span class="inline"><span class="spinner"></span> Création...</span>
+          <span class="inline"><span class="spinner"></span> {{ 'SENSORS.RULES.CREATING' | translate }}</span>
         }
       </button>
     </div>

@@ -3,18 +3,16 @@
     <div>
       <a class="back-link" routerLink="/manager/monitoring">
         <i class="bi bi-arrow-left"></i>
-        Retour au monitoring
+        {{ 'monitoring.backLink' | translate }}
       </a>
 
-      <h2>Monitoring de la zone</h2>
-      <p class="muted">
-        Vue agrégée des devices, dernières lectures et état global de la zone.
-      </p>
+      <h2>{{ 'monitoring.zone.title' | translate }}</h2>
+      <p class="muted">{{ 'monitoring.zone.subtitle' | translate }}</p>
     </div>
 
     <button class="btn-refresh" type="button" (click)="refresh()">
       <i class="bi bi-arrow-clockwise"></i>
-      Actualiser
+      {{ 'monitoring.refresh' | translate }}
     </button>
   </div>
 
@@ -25,7 +23,7 @@
 
   <div *ngIf="isLoading()" class="loading-card">
     <div class="loader"></div>
-    <p>Chargement du monitoring de la zone...</p>
+    <p>{{ 'monitoring.zone.loading' | translate }}</p>
   </div>
 
   <ng-container *ngIf="!isLoading() && items().length > 0">
@@ -39,9 +37,9 @@
         <div class="hero-content">
           <h3>{{ zoneName() || zoneId() }}</h3>
           <div class="meta-list">
-            <span><strong>Zone ID :</strong> {{ zoneId() }}</span>
-            <span><strong>Devices surveillés :</strong> {{ totalDevices() }}</span>
-            <span><strong>Dernière remontée :</strong> {{ lastSync() | date:'dd/MM/yyyy HH:mm:ss' }}</span>
+            <span><strong>{{ 'monitoring.zone.zoneId' | translate }}</strong> {{ zoneId() }}</span>
+            <span><strong>{{ 'monitoring.zone.devicesCount' | translate }}</strong> {{ totalDevices() }}</span>
+            <span><strong>{{ 'monitoring.zone.lastSync' | translate }}</strong> {{ lastSync() | date:'dd/MM/yyyy HH:mm:ss' }}</span>
           </div>
         </div>
       </div>
@@ -60,7 +58,7 @@
           <i class="bi bi-cpu"></i>
         </div>
         <div class="stat-body">
-          <span class="label">Devices</span>
+          <span class="label">{{ 'monitoring.zone.stats.devices' | translate }}</span>
           <strong>{{ totalDevices() }}</strong>
         </div>
       </div>
@@ -70,7 +68,7 @@
           <i class="bi bi-wifi"></i>
         </div>
         <div class="stat-body">
-          <span class="label">En ligne</span>
+          <span class="label">{{ 'monitoring.zone.stats.online' | translate }}</span>
           <strong>{{ onlineDevices() }}</strong>
         </div>
       </div>
@@ -80,7 +78,7 @@
           <i class="bi bi-thermometer-half"></i>
         </div>
         <div class="stat-body">
-          <span class="label">Température moyenne</span>
+          <span class="label">{{ 'monitoring.zone.stats.avgTemp' | translate }}</span>
           <strong>{{ averageTemperature() !== null ? (averageTemperature() + ' °C') : '—' }}</strong>
         </div>
       </div>
@@ -90,7 +88,7 @@
           <i class="bi bi-droplet-half"></i>
         </div>
         <div class="stat-body">
-          <span class="label">Humidité moyenne</span>
+          <span class="label">{{ 'monitoring.zone.stats.avgHumidity' | translate }}</span>
           <strong>{{ averageHumidity() !== null ? (averageHumidity() + ' %') : '—' }}</strong>
         </div>
       </div>
@@ -100,23 +98,23 @@
     <div class="charts-grid">
       <div class="panel-card">
         <div class="panel-head">
-          <h3>Tendance globale température</h3>
-          <span>Zone entière</span>
+          <h3>{{ 'monitoring.zone.charts.tempTrend' | translate }}</h3>
+          <span>{{ 'monitoring.zone.charts.wholeZone' | translate }}</span>
         </div>
         <div class="chart-placeholder">
           <i class="bi bi-graph-up-arrow"></i>
-          <p>Graphique global température à intégrer ici</p>
+          <p>{{ 'monitoring.zone.charts.tempPlaceholder' | translate }}</p>
         </div>
       </div>
 
       <div class="panel-card">
         <div class="panel-head">
-          <h3>Tendance globale humidité</h3>
-          <span>Zone entière</span>
+          <h3>{{ 'monitoring.zone.charts.humidityTrend' | translate }}</h3>
+          <span>{{ 'monitoring.zone.charts.wholeZone' | translate }}</span>
         </div>
         <div class="chart-placeholder">
           <i class="bi bi-bar-chart-line"></i>
-          <p>Graphique global humidité à intégrer ici</p>
+          <p>{{ 'monitoring.zone.charts.humidityPlaceholder' | translate }}</p>
         </div>
       </div>
     </div>
@@ -125,8 +123,8 @@
     <div class="panel-card">
       <div class="panel-head">
         <div>
-          <h3>Dernières lectures par device</h3>
-          <span>Une ligne par device surveillé dans la zone</span>
+          <h3>{{ 'monitoring.zone.table.title' | translate }}</h3>
+          <span>{{ 'monitoring.zone.table.subtitle' | translate }}</span>
         </div>
       </div>
 
@@ -134,14 +132,14 @@
         <table>
           <thead>
             <tr>
-              <th>Device</th>
-              <th>Statut</th>
-              <th>Capteur</th>
-              <th>Température</th>
-              <th>Humidité</th>
-              <th>Gaz</th>
-              <th>Dernière lecture</th>
-              <th>Action</th>
+              <th>{{ 'monitoring.zone.table.device' | translate }}</th>
+              <th>{{ 'monitoring.zone.table.status' | translate }}</th>
+              <th>{{ 'monitoring.zone.table.sensor' | translate }}</th>
+              <th>{{ 'monitoring.zone.table.temperature' | translate }}</th>
+              <th>{{ 'monitoring.zone.table.humidity' | translate }}</th>
+              <th>{{ 'monitoring.zone.table.gas' | translate }}</th>
+              <th>{{ 'monitoring.zone.table.lastReading' | translate }}</th>
+              <th>{{ 'monitoring.zone.table.action' | translate }}</th>
             </tr>
           </thead>
 
@@ -174,7 +172,7 @@
                 <a
                   class="action-link"
                   [routerLink]="['/manager/monitoring/device', typeof item.device === 'string' ? item.raw?.deviceId : item.device.deviceId]">
-                  Voir détail
+                  {{ 'monitoring.zone.table.viewDetail' | translate }}
                 </a>
               </td>
             </tr>
@@ -193,15 +191,15 @@
 
         <div class="device-card-body">
           <div class="mini-row">
-            <span>Capteur</span>
+            <span>{{ 'monitoring.zone.card.sensor' | translate }}</span>
             <strong>{{ item.sensorType }}</strong>
           </div>
           <div class="mini-row">
-            <span>Valeurs</span>
+            <span>{{ 'monitoring.zone.card.values' | translate }}</span>
             <strong>{{ formatValues(item) }}</strong>
           </div>
           <div class="mini-row">
-            <span>Lecture</span>
+            <span>{{ 'monitoring.zone.card.reading' | translate }}</span>
             <strong>{{ item.ts | date:'HH:mm:ss' }}</strong>
           </div>
         </div>
@@ -209,7 +207,7 @@
         <a
           class="device-card-link"
           [routerLink]="['/manager/monitoring/device', typeof item.device === 'string' ? item.raw?.deviceId : item.device.deviceId]">
-          Ouvrir le device
+          {{ 'monitoring.zone.card.openDevice' | translate }}
         </a>
       </div>
     </div>

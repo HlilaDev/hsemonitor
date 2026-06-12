@@ -1,94 +1,106 @@
-<div class="page">
-  <div class="page-header">
-    <div>
-      <h2>Add Device</h2>
-      <p class="muted">Create a simple device</p>
-    </div>
+<div class="add-page">
 
-    <a class="btn btn-outline-secondary" routerLink="/admin/devices">
-      ← Back
+  <!-- ── Top Bar ─────────────────────────────── -->
+  <div class="topbar">
+    <a class="btn-back" routerLink="/admin/devices">
+      <i class="bi bi-arrow-left"></i>
+      {{ 'DEVICES.TITLE' | translate }}
     </a>
   </div>
 
-  <div class="card">
+  <!-- ── Hero ───────────────────────────────── -->
+  <div class="hero-card">
+    <div class="hero-gradient"></div>
+    <div class="hero-body">
+      <div class="hero-icon-wrap">
+        <i class="bi bi-router-fill"></i>
+      </div>
+      <div class="hero-text">
+        <p class="hero-eyebrow"><i class="bi bi-plus-circle-fill"></i> {{ 'DEVICES.ADD_BTN' | translate }}</p>
+        <h1 class="hero-title">{{ 'DEVICES.ADD_TITLE' | translate }}</h1>
+        <p class="hero-sub">{{ 'DEVICES.ADD_SUBTITLE' | translate }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Form Card ──────────────────────────── -->
+  <div class="form-card">
+
     @if (errorKey) {
-      <div class="alert alert-danger">
+      <div class="alert-box error-box">
+        <i class="bi bi-exclamation-triangle-fill"></i>
         {{ errorKey }}
       </div>
     }
-
     @if (successKey) {
-      <div class="alert alert-success">
+      <div class="alert-box success-box">
+        <i class="bi bi-check-circle-fill"></i>
         {{ successKey }}
       </div>
     }
 
     <form [formGroup]="form" (ngSubmit)="onSubmit()">
 
-      <!-- NAME -->
-      <div class="form-group">
-        <label class="form-label">
-          Device Name
-          <span class="req">*</span>
-        </label>
+      <div class="section-header">
+        <div class="section-icon cyan"><i class="bi bi-cpu-fill"></i></div>
+        <span>{{ 'DEVICES.FORM.SECTION_IDENTIFICATION' | translate }}</span>
+      </div>
 
-        <input
-          type="text"
-          class="form-control"
-          formControlName="name"
-          placeholder="Ex: Camera zone A"
-          [class.is-invalid]="name.touched && name.invalid"
-        />
-
-        @if (name.touched && name.errors?.['required']) {
-          <div class="invalid-feedback">
-            Name is required
+      <div class="fields-grid">
+        <div class="form-field">
+          <label>{{ 'DEVICES.FORM.NAME' | translate }} <span class="req">*</span></label>
+          <div class="input-wrap">
+            <i class="bi bi-router input-icon"></i>
+            <input
+              type="text"
+              formControlName="name"
+              [placeholder]="'DEVICES.FORM.NAME_PH' | translate"
+              [class.invalid]="name.touched && name.invalid"
+            />
           </div>
-        }
+          @if (name.touched && name.errors?.['required']) {
+            <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ 'DEVICES.VALIDATION.DEVICE_ID_REQUIRED' | translate }}</span>
+          }
+        </div>
+
+        <div class="form-field">
+          <label>{{ 'DEVICES.FORM.DEVICE_ID' | translate }} <span class="auto-tag">{{ 'DEVICES.FORM.DEVICE_ID_AUTO' | translate }}</span></label>
+          <div class="input-wrap">
+            <i class="bi bi-upc-scan input-icon"></i>
+            <input
+              type="text"
+              formControlName="deviceId"
+              class="readonly-input"
+              readonly
+            />
+          </div>
+          <span class="field-hint">{{ 'DEVICES.FORM.DEVICE_ID_HINT' | translate }}</span>
+        </div>
+
+        <div class="form-field full">
+          <label>{{ 'DEVICES.FORM.DESCRIPTION' | translate }}</label>
+          <textarea
+            formControlName="description"
+            rows="3"
+            [placeholder]="'DEVICES.FORM.DESC_PH' | translate"
+          ></textarea>
+        </div>
       </div>
 
-      <!-- DEVICE ID -->
-      <div class="form-group">
-        <label class="form-label">
-          Device ID
-        </label>
-
-        <input
-          type="text"
-          class="form-control auto-field"
-          formControlName="deviceId"
-          readonly
-        />
-      </div>
-
-      <!-- DESCRIPTION -->
-      <div class="form-group">
-        <label class="form-label">
-          Description
-        </label>
-
-        <textarea
-          class="form-control"
-          rows="4"
-          formControlName="description"
-          placeholder="Optional description..."
-        ></textarea>
-      </div>
-
-      <!-- ACTIONS -->
-      <div class="actions">
-        <button type="submit" class="btn btn-success" [disabled]="saving">
-          @if (!saving) {
-            Save
+      <div class="form-actions">
+        <a class="btn-cancel" routerLink="/admin/devices">{{ 'COMMON.CANCEL' | translate }}</a>
+        <button class="btn-submit" type="submit" [disabled]="saving">
+          @if (saving) {
+            <span class="spinner"></span>
+            {{ 'COMMON.SAVING' | translate }}
           } @else {
-            Saving...
+            <i class="bi bi-check-lg"></i>
+            {{ 'COMMON.SAVE' | translate }}
           }
         </button>
-
-        <a class="btn btn-light" routerLink="/admin/devices">
-          Cancel
-        </a>
       </div>
+
     </form>
   </div>
+
 </div>

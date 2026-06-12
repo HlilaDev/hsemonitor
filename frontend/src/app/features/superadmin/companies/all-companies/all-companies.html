@@ -2,32 +2,30 @@
   <section class="hero-card">
     <div class="hero-content">
       <div>
-        <span class="eyebrow">Super Admin</span>
-        <h1>Companies Management</h1>
-        <p>
-          Manage all registered companies in your HSE intelligent platform.
-        </p>
+        <span class="eyebrow">{{ 'superadmin.companies.kicker' | translate }}</span>
+        <h1>{{ 'superadmin.companies.title' | translate }}</h1>
+        <p>{{ 'superadmin.companies.subtitle' | translate }}</p>
       </div>
 
       <a class="btn primary" routerLink="/super/companies/add">
         <i class="bi bi-plus-lg"></i>
-        <span>Add Company</span>
+        <span>{{ 'superadmin.companies.addCompany' | translate }}</span>
       </a>
     </div>
 
     <div class="stats-grid">
       <div class="stat-card">
-        <span class="stat-label">Total</span>
+        <span class="stat-label">{{ 'superadmin.companies.stats.total' | translate }}</span>
         <strong>{{ stats().total }}</strong>
       </div>
 
       <div class="stat-card">
-        <span class="stat-label">Active</span>
+        <span class="stat-label">{{ 'superadmin.companies.stats.active' | translate }}</span>
         <strong>{{ stats().active }}</strong>
       </div>
 
       <div class="stat-card">
-        <span class="stat-label">Inactive</span>
+        <span class="stat-label">{{ 'superadmin.companies.stats.inactive' | translate }}</span>
         <strong>{{ stats().inactive }}</strong>
       </div>
     </div>
@@ -36,11 +34,11 @@
   <section class="filters-card">
     <div class="filters-grid">
       <div class="field">
-        <label>Search</label>
+        <label>{{ 'superadmin.companies.filters.search' | translate }}</label>
         <input
           type="text"
           class="input"
-          placeholder="Company name..."
+          [placeholder]="'superadmin.companies.filters.searchPlaceholder' | translate"
           [ngModel]="q()"
           (ngModelChange)="q.set($event)"
           (keyup.enter)="onSearch()"
@@ -48,22 +46,22 @@
       </div>
 
       <div class="field">
-        <label>Status</label>
+        <label>{{ 'superadmin.companies.filters.status' | translate }}</label>
         <select
           class="select"
           [ngModel]="activeFilter()"
           (ngModelChange)="activeFilter.set($event); onFilterChange()"
         >
-          <option value="">All</option>
-          <option value="true">Active</option>
-          <option value="false">Inactive</option>
+          <option value="">{{ 'superadmin.companies.filters.all' | translate }}</option>
+          <option value="true">{{ 'superadmin.companies.filters.active' | translate }}</option>
+          <option value="false">{{ 'superadmin.companies.filters.inactive' | translate }}</option>
         </select>
       </div>
 
       <div class="actions">
         <button class="btn secondary" type="button" (click)="onSearch()">
           <i class="bi bi-search"></i>
-          <span>Search</span>
+          <span>{{ 'superadmin.companies.filters.searchBtn' | translate }}</span>
         </button>
       </div>
     </div>
@@ -86,32 +84,32 @@
   <section class="table-card">
     <div class="table-head">
       <div>
-        <h2>All Companies</h2>
-        <p>{{ total() }} company(s) found</p>
+        <h2>{{ 'superadmin.companies.list.title' | translate }}</h2>
+        <p>{{ total() }} {{ 'superadmin.companies.list.count' | translate }}</p>
       </div>
     </div>
 
     @if (loading()) {
       <div class="state-box">
         <div class="spinner"></div>
-        <p>Loading companies...</p>
+        <p>{{ 'superadmin.companies.list.loading' | translate }}</p>
       </div>
     } @else if (companies().length === 0) {
       <div class="state-box empty">
         <i class="bi bi-buildings"></i>
-        <p>No companies found.</p>
+        <p>{{ 'superadmin.companies.list.empty' | translate }}</p>
       </div>
     } @else {
       <div class="table-wrapper">
         <table class="companies-table">
           <thead>
             <tr>
-              <th>Company</th>
-              <th>Industry</th>
-              <th>Contact</th>
-              <th>Location</th>
-              <th>Status</th>
-              <th class="actions-col">Actions</th>
+              <th>{{ 'superadmin.companies.list.colCompany' | translate }}</th>
+              <th>{{ 'superadmin.companies.list.colIndustry' | translate }}</th>
+              <th>{{ 'superadmin.companies.list.colContact' | translate }}</th>
+              <th>{{ 'superadmin.companies.list.colLocation' | translate }}</th>
+              <th>{{ 'superadmin.companies.list.colStatus' | translate }}</th>
+              <th class="actions-col">{{ 'superadmin.companies.list.colActions' | translate }}</th>
             </tr>
           </thead>
 
@@ -159,7 +157,7 @@
                     [class.active]="company.isActive"
                     [class.inactive]="!company.isActive"
                   >
-                    {{ company.isActive ? 'Active' : 'Inactive' }}
+                    {{ company.isActive ? ('superadmin.companies.list.active' | translate) : ('superadmin.companies.list.inactive' | translate) }}
                   </span>
                 </td>
 
@@ -168,7 +166,7 @@
                     <a
                       class="icon-btn view"
                       [routerLink]="['/super/companies', company._id]"
-                      title="View"
+                      [title]="'superadmin.companies.list.actionView' | translate"
                     >
                       <i class="bi bi-eye"></i>
                     </a>
@@ -176,7 +174,7 @@
                     <a
                       class="icon-btn edit"
                       [routerLink]="['/super/companies/edit', company._id]"
-                      title="Edit"
+                      [title]="'superadmin.companies.list.actionEdit' | translate"
                     >
                       <i class="bi bi-pencil-square"></i>
                     </a>
@@ -184,7 +182,7 @@
                     <button
                       class="icon-btn delete"
                       type="button"
-                      title="Delete"
+                      [title]="'superadmin.companies.list.actionDelete' | translate"
                       [disabled]="deletingId() === company._id"
                       (click)="onDelete(company._id, company.name)"
                     >
@@ -210,11 +208,11 @@
             [disabled]="page() === 1"
             (click)="goToPage(page() - 1)"
           >
-            Previous
+            {{ 'superadmin.companies.pagination.previous' | translate }}
           </button>
 
           <span class="page-indicator">
-            Page {{ page() }} / {{ pages() }}
+            {{ 'superadmin.companies.pagination.page' | translate }} {{ page() }} / {{ pages() }}
           </span>
 
           <button
@@ -223,7 +221,7 @@
             [disabled]="page() === pages()"
             (click)="goToPage(page() + 1)"
           >
-            Next
+            {{ 'superadmin.companies.pagination.next' | translate }}
           </button>
         </div>
       }

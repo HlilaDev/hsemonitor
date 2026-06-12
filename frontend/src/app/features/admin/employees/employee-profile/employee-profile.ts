@@ -236,13 +236,14 @@ export class EmployeeProfile {
 
   trainingStatusKey(status: any): string {
     const s = String(status ?? 'completed').toLowerCase();
-    return `TRAININGS.STATUS.${s}`;
+    return `trainings.create.status.${s}`;
   }
 
   trainingBadgeClass(status: any): string {
     const s = String(status ?? 'completed').toLowerCase();
     if (s === 'completed') return 'ok';
-    if (s === 'planned' || s === 'pending') return 'warn';
-    return 'bad';
+    if (s === 'scheduled' || s === 'planned' || s === 'pending') return 'warn';
+    if (s === 'cancelled' || s === 'canceled') return 'bad';
+    return 'neutral';
   }
 }

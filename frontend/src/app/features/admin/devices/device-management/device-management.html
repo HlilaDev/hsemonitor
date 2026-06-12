@@ -1,373 +1,333 @@
 <div class="page">
-  <div class="page-header">
-    <div class="title-wrap">
-      <div class="eyebrow">ADMIN / DEVICE MANAGEMENT</div>
-      <h1>Device Management</h1>
-      <p class="muted">
-        Manage device connectivity, MQTT configuration, maintenance actions,
-        firmware and remote commands.
-      </p>
-    </div>
 
-    <div class="header-actions">
-      <button class="btn ghost" (click)="onBack()">Back to devices</button>
+  <!-- ── PAGE HEADER ─────────────────────────────────── -->
+  <div class="page-head">
+    <button class="back-btn" type="button" (click)="onBack()">
+      <i class="bi bi-arrow-left"></i>
+      {{ 'COMMON.BACK' | translate }}
+    </button>
+    <div class="breadcrumb">
+      <span>{{ 'DEVICES.MANAGEMENT.BREADCRUMB' | translate }}</span>
+      <i class="bi bi-chevron-right"></i>
+      <span class="bc-active">{{ 'DEVICES.MANAGEMENT.TITLE' | translate }}</span>
+    </div>
+    <div class="head-end">
       <button
-        class="btn primary"
+        class="btn btn-primary"
+        type="button"
         (click)="onAction('Ping device')"
         [disabled]="loading() || !device()"
       >
-        Ping Now
+        <i class="bi bi-wifi"></i>
+        {{ 'DEVICES.MANAGEMENT.PING' | translate }}
       </button>
     </div>
   </div>
 
+  <!-- ── STATES ──────────────────────────────────────── -->
   @if (loading()) {
-    <section class="card state-card">
+    <div class="state-center">
       <div class="spinner"></div>
-      <h3>Loading device...</h3>
-      <p>Fetching latest MQTT and connectivity information.</p>
-    </section>
+      <p>{{ 'DEVICES.MANAGEMENT.LOADING' | translate }}</p>
+    </div>
   } @else if (error()) {
-    <section class="card state-card error-state">
-      <h3>Unable to load device</h3>
-      <p>{{ error() }}</p>
-    </section>
-  } @else if (device(); as currentDevice) {
-    <div class="top-grid">
-      <section class="card hero-card">
-        <div class="hero-top">
-          <div class="hero-left">
-            <div class="device-icon">
-              <i class="bi bi-cpu"></i>
-            </div>
+    <div class="error-alert">
+      <i class="bi bi-exclamation-triangle-fill"></i>
+      {{ error() }}
+    </div>
+  } @else if (device(); as d) {
 
-            <div class="hero-info">
-              <div class="device-row">
-                <h2>{{ displayName() }}</h2>
-                <span class="status-badge" [ngClass]="getStatusClass(currentDevice.status)">
-                  {{ currentDevice.status || 'offline' }}
-                </span>
-              </div>
+    <!-- ── DEVICE STRIP ─────────────────────────────── -->
+    <div class="device-strip" [class.strip-online]="isOnline()" [class.strip-offline]="!isOnline()">
+      <div class="strip-icon">
+        <i class="bi bi-cpu-fill"></i>
+      </div>
 
-              <div class="device-health">
-                <span class="health-pill" [ngClass]="getHeartbeatClass()">
-                  {{ heartbeatLabel() }}
-                </span>
-              </div>
-            </div>
-          </div>
-
-          <div class="hero-stats">
-            <div class="stat">
-              <span>Uptime</span>
-              <strong>{{ formattedUptime() }}</strong>
-            </div>
-
-            <div class="stat">
-              <span>Signal</span>
-              <strong>
-                {{
-                  currentDevice.signal !== null && currentDevice.signal !== undefined
-                    ? currentDevice.signal + ' dBm'
-                    : '—'
-                }}
-              </strong>
-              <small [ngClass]="signalLevelClass()">{{ signalLabel() }}</small>
-            </div>
-
-            <div class="stat">
-              <span>Battery</span>
-              <strong>{{ batteryLabel() }}</strong>
-            </div>
-
-            <div class="stat">
-              <span>Last Heartbeat</span>
-              <strong>
-                {{
-                  lastHeartbeat()
-                    ? (lastHeartbeat() | date: 'yyyy-MM-dd HH:mm:ss')
-                    : '—'
-                }}
-              </strong>
-            </div>
-          </div>
-        </div>
-
-        <div class="meta-grid">
-          <div>
-            <span>ID</span>
-            <strong>{{ currentDevice.deviceId }}</strong>
-          </div>
-
-          <div>
-            <span>Name</span>
-            <strong>{{ currentDevice.name || '—' }}</strong>
-          </div>
-
-          <div>
-            <span>Zone</span>
-            <strong>{{ zoneName() }}</strong>
-          </div>
-
-          <div>
-            <span>Firmware</span>
-            <strong>{{ currentDevice.firmware || '—' }}</strong>
-          </div>
-
-          <div>
-            <span>IP Address</span>
-            <strong>{{ currentDevice.ipAddress || '—' }}</strong>
-          </div>
-
-          <div>
-            <span>MAC</span>
-            <strong>{{ currentDevice.macAddress || '—' }}</strong>
-          </div>
-        </div>
-      </section>
-
-      <section class="card action-card">
-        <div class="card-head">
-          <h3>Quick Commands</h3>
-          <p>Most used remote actions</p>
-        </div>
-
-        <div class="action-grid">
-          <button
-            class="action-btn"
-            (click)="onAction('Restart device')"
-            [disabled]="!isOnline()"
-          >
-            <i class="bi bi-arrow-repeat"></i>
-            <span>Restart</span>
-          </button>
-
-          <button
-            class="action-btn"
-            (click)="onAction('Sync time')"
-            [disabled]="!isOnline()"
-          >
-            <i class="bi bi-clock-history"></i>
-            <span>Sync Time</span>
-          </button>
-
-          <button
-            class="action-btn"
-            (click)="onAction('Get instant reading')"
-            [disabled]="!isOnline()"
-          >
-            <i class="bi bi-activity"></i>
-            <span>Read Now</span>
-          </button>
-
-          <button
-            class="action-btn"
-            (click)="onAction('Run diagnostics')"
-            [disabled]="!isOnline()"
-          >
+      <div class="strip-body">
+        <div class="strip-title-row">
+          <h2>{{ displayName() }}</h2>
+          <span class="badge" [ngClass]="getStatusClass(d.status)">
+            <span class="badge-dot"></span>
+            {{ d.status || 'offline' }}
+          </span>
+          <span class="badge hb" [ngClass]="getHeartbeatClass()">
             <i class="bi bi-heart-pulse"></i>
-            <span>Diagnostics</span>
-          </button>
-
-          <button
-            class="action-btn"
-            (click)="onAction('Capture snapshot')"
-            [disabled]="!isOnline()"
-          >
-            <i class="bi bi-camera"></i>
-            <span>Snapshot</span>
-          </button>
-
-          <button
-            class="action-btn danger-soft"
-            (click)="onAction('Factory reset')"
-            [disabled]="!isOnline()"
-          >
-            <i class="bi bi-exclamation-octagon"></i>
-            <span>Factory Reset</span>
-          </button>
+            {{ heartbeatLabel() }}
+          </span>
         </div>
-      </section>
+        <p class="strip-sub">{{ d.deviceId }}</p>
+      </div>
+
+      <div class="strip-kpis">
+        <div class="kpi-chip">
+          <i class="bi bi-clock-history"></i>
+          <div>
+            <span>{{ 'DEVICES.MANAGEMENT.UPTIME' | translate }}</span>
+            <strong>{{ formattedUptime() }}</strong>
+          </div>
+        </div>
+        <div class="kpi-chip">
+          <i class="bi bi-reception-4"></i>
+          <div>
+            <span>{{ 'DEVICES.MANAGEMENT.SIGNAL' | translate }}</span>
+            <strong [ngClass]="signalLevelClass()">
+              {{ d.signal !== null && d.signal !== undefined ? d.signal + ' dBm' : '—' }}
+            </strong>
+          </div>
+        </div>
+        <div class="kpi-chip">
+          <i class="bi bi-battery-half"></i>
+          <div>
+            <span>{{ 'DEVICES.MANAGEMENT.BATTERY' | translate }}</span>
+            <strong>{{ batteryLabel() }}</strong>
+          </div>
+        </div>
+        <div class="kpi-chip">
+          <i class="bi bi-broadcast"></i>
+          <div>
+            <span>{{ 'DEVICES.MANAGEMENT.HEARTBEAT' | translate }}</span>
+            <strong>{{ lastHeartbeat() ? (lastHeartbeat() | date:'HH:mm:ss') : '—' }}</strong>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <div class="health-grid">
+    <!-- ── META ROW ─────────────────────────────────── -->
+    <div class="meta-bar">
+      <div class="meta-chip">
+        <span>{{ 'DEVICES.COLUMNS.ZONE' | translate }}</span>
+        <strong>{{ zoneName() }}</strong>
+      </div>
+      <div class="meta-chip">
+        <span>{{ 'DEVICES.MANAGEMENT.FIRMWARE' | translate }}</span>
+        <strong>{{ d.firmware || '—' }}</strong>
+      </div>
+      <div class="meta-chip">
+        <span>{{ 'DEVICES.MANAGEMENT.IP_ADDRESS' | translate }}</span>
+        <strong>{{ d.ipAddress || '—' }}</strong>
+      </div>
+      <div class="meta-chip">
+        <span>{{ 'DEVICES.MANAGEMENT.MAC' | translate }}</span>
+        <strong>{{ d.macAddress || '—' }}</strong>
+      </div>
+      <div class="meta-chip">
+        <span>{{ 'DEVICES.MANAGEMENT.NETWORK' | translate }}</span>
+        <strong>{{ d.networkType || '—' }}</strong>
+      </div>
+      <div class="meta-chip">
+        <span>{{ 'DEVICES.MANAGEMENT.LAST_SEEN' | translate }}</span>
+        <strong>{{ lastHeartbeat() ? (lastHeartbeat() | date:'dd/MM HH:mm') : '—' }}</strong>
+      </div>
+    </div>
+
+    <!-- ── HEALTH BAND ──────────────────────────────── -->
+    <div class="health-band">
       @for (item of healthItems(); track item.label) {
-        <section class="card health-card">
-          <span class="health-label">{{ item.label }}</span>
-          <strong class="health-value" [ngClass]="item.state">{{ item.value }}</strong>
-        </section>
+        <div class="health-chip">
+          <span class="h-label">{{ item.label | translate }}</span>
+          <strong class="h-val" [ngClass]="item.state">{{ item.value }}</strong>
+        </div>
       }
     </div>
 
-    <div class="content-grid">
-      <section class="card">
+    <!-- ── MAIN GRID ────────────────────────────────── -->
+    <div class="main-grid">
+
+      <!-- MQTT Config -->
+      <section class="card mqtt-card">
         <div class="card-head">
-          <h3>MQTT Configuration</h3>
-          <p>Broker communication and messaging settings</p>
-        </div>
-
-        <div class="form-grid">
-          <div class="field">
-            <label>Broker Host</label>
-            <input type="text" [value]="currentDevice.broker || ''" readonly />
-          </div>
-
-          <div class="field">
-            <label>Port</label>
-            <input type="number" [value]="currentDevice.port || 1883" readonly />
-          </div>
-
-          <div class="field">
-            <label>Sampling Interval (s)</label>
-            <input
-              type="number"
-              [value]="currentDevice.samplingInterval || 60"
-              readonly
-            />
-          </div>
-
-          <div class="field">
-            <label>Alert Threshold</label>
-            <input type="number" [value]="currentDevice.threshold || 75" readonly />
+          <div class="c-icon cyan"><i class="bi bi-diagram-3"></i></div>
+          <div>
+            <h3>{{ 'DEVICES.MANAGEMENT.MQTT_TITLE' | translate }}</h3>
+            <p>{{ 'DEVICES.MANAGEMENT.MQTT_SUB' | translate }}</p>
           </div>
         </div>
 
-        <div class="switch-list">
-          <button class="switch-item" [class.active]="mqttEnabled()" (click)="toggleMqtt()">
-            <div>
-              <strong>MQTT Enabled</strong>
-              <p>Allow device publish and subscribe communication</p>
+        <div class="fields-row">
+          <div class="field">
+            <label>{{ 'DEVICES.MANAGEMENT.BROKER_HOST' | translate }}</label>
+            <input type="text" [value]="d.broker || ''" readonly />
+          </div>
+          <div class="field">
+            <label>{{ 'DEVICES.MANAGEMENT.PORT' | translate }}</label>
+            <input type="number" [value]="d.port || 1883" readonly />
+          </div>
+          <div class="field">
+            <label>{{ 'DEVICES.MANAGEMENT.INTERVAL' | translate }}</label>
+            <input type="number" [value]="d.samplingInterval || 60" readonly />
+          </div>
+          <div class="field">
+            <label>{{ 'DEVICES.MANAGEMENT.THRESHOLD' | translate }}</label>
+            <input type="number" [value]="d.threshold || 75" readonly />
+          </div>
+        </div>
+
+        <div class="toggle-list">
+          <button class="toggle-row" [class.is-on]="mqttEnabled()" (click)="toggleMqtt()" type="button">
+            <div class="toggle-info">
+              <strong>{{ 'DEVICES.MANAGEMENT.MQTT_ENABLED' | translate }}</strong>
+              <span>{{ 'DEVICES.MANAGEMENT.MQTT_ENABLED_SUB' | translate }}</span>
             </div>
-            <span class="switch-pill">{{ mqttEnabled() ? 'ON' : 'OFF' }}</span>
+            <div class="toggle-pill" [class.on]="mqttEnabled()">
+              <div class="toggle-thumb"></div>
+            </div>
           </button>
 
-          <button
-            class="switch-item"
-            [class.active]="autoReconnect()"
-            (click)="toggleReconnect()"
-          >
-            <div>
-              <strong>Auto Reconnect</strong>
-              <p>Reconnect automatically when broker is unavailable</p>
+          <button class="toggle-row" [class.is-on]="autoReconnect()" (click)="toggleReconnect()" type="button">
+            <div class="toggle-info">
+              <strong>{{ 'DEVICES.MANAGEMENT.AUTO_RECONNECT' | translate }}</strong>
+              <span>{{ 'DEVICES.MANAGEMENT.AUTO_RECONNECT_SUB' | translate }}</span>
             </div>
-            <span class="switch-pill">{{ autoReconnect() ? 'ON' : 'OFF' }}</span>
+            <div class="toggle-pill" [class.on]="autoReconnect()">
+              <div class="toggle-thumb"></div>
+            </div>
           </button>
 
-          <button class="switch-item" [class.active]="alertMode()" (click)="toggleAlertMode()">
-            <div>
-              <strong>Alert Mode</strong>
-              <p>Publish critical alerts instantly</p>
+          <button class="toggle-row" [class.is-on]="alertMode()" (click)="toggleAlertMode()" type="button">
+            <div class="toggle-info">
+              <strong>{{ 'DEVICES.MANAGEMENT.ALERT_MODE' | translate }}</strong>
+              <span>{{ 'DEVICES.MANAGEMENT.ALERT_MODE_SUB' | translate }}</span>
             </div>
-            <span class="switch-pill">{{ alertMode() ? 'ON' : 'OFF' }}</span>
+            <div class="toggle-pill" [class.on]="alertMode()">
+              <div class="toggle-thumb"></div>
+            </div>
           </button>
         </div>
 
-        <div class="section-actions">
-          <button class="btn ghost" (click)="onAction('Test broker')">Test Broker</button>
-          <button class="btn primary" (click)="onAction('Save MQTT settings')">
-            Save MQTT Settings
+        <div class="card-footer">
+          <button class="btn btn-ghost" type="button" (click)="onAction('Test broker')">
+            <i class="bi bi-plug"></i> {{ 'DEVICES.MANAGEMENT.TEST_BROKER' | translate }}
+          </button>
+          <button class="btn btn-primary" type="button" (click)="onAction('Save MQTT settings')">
+            <i class="bi bi-floppy"></i> {{ 'COMMON.SAVE' | translate }}
           </button>
         </div>
       </section>
 
-      <section class="card">
-        <div class="card-head">
-          <h3>Connectivity & Network</h3>
-          <p>Technical info and communication health</p>
-        </div>
+      <!-- Right column -->
+      <div class="right-col">
 
-        <div class="kv-list">
-          <div class="kv-item">
-            <span>Connection Status</span>
-            <strong [class.ok]="isOnline()" [class.danger]="!isOnline()">
-              {{ currentDevice.status || 'offline' }}
-            </strong>
+        <!-- Quick commands -->
+        <section class="card">
+          <div class="card-head">
+            <div class="c-icon violet"><i class="bi bi-terminal"></i></div>
+            <div>
+              <h3>{{ 'DEVICES.MANAGEMENT.COMMANDS_TITLE' | translate }}</h3>
+              <p>{{ 'DEVICES.MANAGEMENT.COMMANDS_SUB' | translate }}</p>
+            </div>
           </div>
 
-          <div class="kv-item">
-            <span>Heartbeat State</span>
-            <strong [ngClass]="getHeartbeatClass()">
-              {{ heartbeatLabel() }}
-            </strong>
+          <div class="cmd-grid">
+            <button class="cmd-btn" type="button" (click)="onAction('Restart device')" [disabled]="!isOnline()">
+              <i class="bi bi-arrow-repeat"></i>
+              <span>{{ 'DEVICES.MANAGEMENT.CMD_RESTART' | translate }}</span>
+            </button>
+            <button class="cmd-btn" type="button" (click)="onAction('Sync time')" [disabled]="!isOnline()">
+              <i class="bi bi-clock-history"></i>
+              <span>{{ 'DEVICES.MANAGEMENT.CMD_SYNC_TIME' | translate }}</span>
+            </button>
+            <button class="cmd-btn" type="button" (click)="onAction('Get instant reading')" [disabled]="!isOnline()">
+              <i class="bi bi-activity"></i>
+              <span>{{ 'DEVICES.MANAGEMENT.CMD_READ_SENSORS' | translate }}</span>
+            </button>
+            <button class="cmd-btn" type="button" (click)="onAction('Run diagnostics')" [disabled]="!isOnline()">
+              <i class="bi bi-heart-pulse"></i>
+              <span>{{ 'DEVICES.MANAGEMENT.CMD_DIAGNOSTICS' | translate }}</span>
+            </button>
+            <button class="cmd-btn" type="button" (click)="onAction('Capture snapshot')" [disabled]="!isOnline()">
+              <i class="bi bi-camera"></i>
+              <span>{{ 'DEVICES.MANAGEMENT.CMD_SNAPSHOT' | translate }}</span>
+            </button>
+            <button class="cmd-btn cmd-danger" type="button" (click)="onAction('Factory reset')" [disabled]="!isOnline()">
+              <i class="bi bi-exclamation-octagon"></i>
+              <span>{{ 'DEVICES.MANAGEMENT.CMD_FACTORY_RESET' | translate }}</span>
+            </button>
+          </div>
+        </section>
+
+        <!-- Connectivity -->
+        <section class="card">
+          <div class="card-head">
+            <div class="c-icon green"><i class="bi bi-wifi"></i></div>
+            <div>
+              <h3>{{ 'DEVICES.MANAGEMENT.CONNECTIVITY_TITLE' | translate }}</h3>
+              <p>{{ 'DEVICES.MANAGEMENT.CONNECTIVITY_SUB' | translate }}</p>
+            </div>
           </div>
 
-          <div class="kv-item">
-            <span>Wi-Fi RSSI</span>
-            <strong>
-              {{
-                currentDevice.signal !== null && currentDevice.signal !== undefined
-                  ? currentDevice.signal + ' dBm'
-                  : '—'
-              }}
-            </strong>
+          <div class="kv-list">
+            <div class="kv-row">
+              <span>{{ 'DEVICES.MANAGEMENT.CONN_STATUS' | translate }}</span>
+              <strong [class.ok]="isOnline()" [class.danger]="!isOnline()">
+                {{ d.status || 'offline' }}
+              </strong>
+            </div>
+            <div class="kv-row">
+              <span>{{ 'DEVICES.MANAGEMENT.HEARTBEAT' | translate }}</span>
+              <strong [ngClass]="getHeartbeatClass()">{{ heartbeatLabel() }}</strong>
+            </div>
+            <div class="kv-row">
+              <span>{{ 'DEVICES.MANAGEMENT.CONN_RSSI' | translate }}</span>
+              <strong>{{ d.signal !== null && d.signal !== undefined ? d.signal + ' dBm' : '—' }}</strong>
+            </div>
+            <div class="kv-row">
+              <span>{{ 'DEVICES.MANAGEMENT.CONN_SIGNAL_QUALITY' | translate }}</span>
+              <strong [ngClass]="signalLevelClass()">{{ signalLabel() }}</strong>
+            </div>
+            <div class="kv-row">
+              <span>{{ 'DEVICES.MANAGEMENT.CONN_IP' | translate }}</span>
+              <strong>{{ d.ipAddress || '—' }}</strong>
+            </div>
+            <div class="kv-row">
+              <span>{{ 'DEVICES.MANAGEMENT.CONN_MQTT_SESSION' | translate }}</span>
+              <strong>{{ 'DEVICES.MANAGEMENT.MQTT_PERSISTENT' | translate }}</strong>
+            </div>
+            <div class="kv-row">
+              <span>{{ 'DEVICES.COLUMNS.ZONE' | translate }}</span>
+              <strong>{{ zoneName() }}</strong>
+            </div>
+            <div class="kv-row">
+              <span>{{ 'DEVICES.MANAGEMENT.CONN_LAST_HB' | translate }}</span>
+              <strong>{{ lastHeartbeat() ? (lastHeartbeat() | date:'dd/MM/yyyy HH:mm:ss') : '—' }}</strong>
+            </div>
           </div>
 
-          <div class="kv-item">
-            <span>Signal Quality</span>
-            <strong [ngClass]="signalLevelClass()">{{ signalLabel() }}</strong>
+          <div class="card-footer">
+            <button class="btn btn-ghost" type="button" (click)="onAction('Ping device')" [disabled]="!isOnline()">
+              <i class="bi bi-wifi"></i> {{ 'DEVICES.MANAGEMENT.PING' | translate }}
+            </button>
+            <button class="btn btn-ghost" type="button" (click)="onAction('Refresh status')">
+              <i class="bi bi-arrow-clockwise"></i> {{ 'DEVICES.MANAGEMENT.REFRESH' | translate }}
+            </button>
           </div>
+        </section>
 
-          <div class="kv-item">
-            <span>Local IP</span>
-            <strong>{{ currentDevice.ipAddress || '—' }}</strong>
-          </div>
-
-          <div class="kv-item">
-            <span>Network Type</span>
-            <strong>{{ currentDevice.networkType || '—' }}</strong>
-          </div>
-
-          <div class="kv-item">
-            <span>MQTT Session</span>
-            <strong>Persistent</strong>
-          </div>
-
-          <div class="kv-item">
-            <span>Last Heartbeat</span>
-            <strong>
-              {{
-                lastHeartbeat()
-                  ? (lastHeartbeat() | date: 'yyyy-MM-dd HH:mm:ss')
-                  : 'Never'
-              }}
-            </strong>
-          </div>
-
-          <div class="kv-item">
-            <span>Zone Binding</span>
-            <strong>{{ zoneName() }}</strong>
-          </div>
-        </div>
-
-        <div class="section-actions">
-          <button class="btn ghost" (click)="onAction('Ping device')" [disabled]="!isOnline()">
-            Ping Device
-          </button>
-          <button class="btn ghost" (click)="onAction('Refresh status')">
-            Refresh Status
-          </button>
-        </div>
-      </section>
+      </div>
     </div>
+
   }
 </div>
 
+<!-- ── CONFIRM MODAL ──────────────────────────────────── -->
 @if (showConfirmModal()) {
   <div class="modal-backdrop" (click)="closeModal()">
-    <div class="modal-card" (click)="$event.stopPropagation()">
+    <div class="modal-box" (click)="$event.stopPropagation()">
+      <div class="modal-icon"><i class="bi bi-lightning-charge"></i></div>
       <h3>{{ confirmTitle() }}</h3>
       <p>{{ confirmText() }}</p>
 
       @if (actionError()) {
-        <div class="error-text">{{ actionError() }}</div>
+        <div class="modal-error">
+          <i class="bi bi-exclamation-circle"></i> {{ actionError() }}
+        </div>
       }
 
       <div class="modal-actions">
-        <button class="btn ghost" (click)="closeModal()" [disabled]="actionLoading()">
-          Cancel
+        <button class="btn btn-ghost" type="button" (click)="closeModal()" [disabled]="actionLoading()">
+          {{ 'COMMON.CANCEL' | translate }}
         </button>
-        <button class="btn primary" (click)="confirmAction()" [disabled]="actionLoading()">
-          {{ actionLoading() ? 'Sending...' : 'Confirm' }}
+        <button class="btn btn-primary" type="button" (click)="confirmAction()" [disabled]="actionLoading()">
+          {{ actionLoading() ? ('DEVICES.MANAGEMENT.SENDING' | translate) : ('DEVICES.MANAGEMENT.CONFIRM' | translate) }}
         </button>
       </div>
     </div>

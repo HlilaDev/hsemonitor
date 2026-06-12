@@ -1,4 +1,5 @@
 import { CommonModule } from '@angular/common';
+import { TranslatePipe } from '@ngx-translate/core';
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import {
   FormBuilder,
@@ -24,7 +25,7 @@ type DisplayMode = 'once' | 'repeat' | 'persistent';
 @Component({
   selector: 'app-add-operational-message',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, TranslatePipe],
   templateUrl: './add-operational-message.html',
   styleUrl: './add-operational-message.scss',
 })
@@ -255,7 +256,7 @@ export class AddOperationalMessage implements OnInit {
   }
 
   goBack(): void {
-    this.router.navigate(['/dashboard/operational-messages']);
+    this.router.navigate(['/manager/operational-messages']);
   }
 
   fieldInvalid(fieldName: string): boolean {

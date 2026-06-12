@@ -1,23 +1,20 @@
 <div class="page">
   <div class="hero">
     <div class="hero-text">
-      <div class="eyebrow">Audit Management</div>
-      <h1>Audit Overview</h1>
-      <p>
-        Track audit activity, monitor compliance progress, and review inspection
-        performance across all industrial zones.
-      </p>
+      <div class="eyebrow">{{ 'audits.kicker' | translate }}</div>
+      <h1>{{ 'audits.title' | translate }}</h1>
+      <p>{{ 'audits.subtitle' | translate }}</p>
     </div>
 
     <div class="hero-actions">
       <a class="btn ghost" routerLink="/manager/audits">
         <i class="bi bi-list-task"></i>
-        All audits
+        {{ 'audits.actions.allAudits' | translate }}
       </a>
 
       <a class="btn primary" routerLink="/manager/audits/add">
         <i class="bi bi-plus-lg"></i>
-        New audit
+        {{ 'audits.actions.newAudit' | translate }}
       </a>
     </div>
   </div>
@@ -26,36 +23,36 @@
     <div class="stat-card soft-blue">
       <div class="stat-icon"><i class="bi bi-clipboard-data"></i></div>
       <div class="stat-content">
-        <span>Total Audits</span>
+        <span>{{ 'audits.stats.total' | translate }}</span>
         <strong>{{ totalAudits() }}</strong>
-        <small>All registered audits</small>
+        <small>{{ 'audits.stats.totalHint' | translate }}</small>
       </div>
     </div>
 
     <div class="stat-card soft-green">
       <div class="stat-icon"><i class="bi bi-check2-circle"></i></div>
       <div class="stat-content">
-        <span>Completed</span>
+        <span>{{ 'audits.stats.completed' | translate }}</span>
         <strong>{{ completedAudits() }}</strong>
-        <small>Audits closed successfully</small>
+        <small>{{ 'audits.stats.completedHint' | translate }}</small>
       </div>
     </div>
 
     <div class="stat-card soft-orange">
       <div class="stat-icon"><i class="bi bi-calendar-event"></i></div>
       <div class="stat-content">
-        <span>Planned</span>
+        <span>{{ 'audits.stats.planned' | translate }}</span>
         <strong>{{ plannedAudits() }}</strong>
-        <small>Upcoming inspections</small>
+        <small>{{ 'audits.stats.plannedHint' | translate }}</small>
       </div>
     </div>
 
     <div class="stat-card soft-purple">
       <div class="stat-icon"><i class="bi bi-bar-chart-line"></i></div>
       <div class="stat-content">
-        <span>Average Score</span>
+        <span>{{ 'audits.stats.avgScore' | translate }}</span>
         <strong>{{ avgScore() }}%</strong>
-        <small>{{ totalFindings() }} total findings</small>
+        <small>{{ totalFindings() }} {{ 'audits.stats.totalFindings' | translate }}</small>
       </div>
     </div>
   </div>
@@ -63,8 +60,8 @@
   <div class="toolbar-card">
     <div class="toolbar-top">
       <div>
-        <h2>Audit Activity</h2>
-        <p>Search and filter audits by type, status, zone, or auditor.</p>
+        <h2>{{ 'audits.toolbar.title' | translate }}</h2>
+        <p>{{ 'audits.toolbar.subtitle' | translate }}</p>
       </div>
     </div>
 
@@ -75,30 +72,30 @@
           type="text"
           [value]="q()"
           (input)="q.set($any($event.target).value)"
-          placeholder="Search by title, zone, auditor..."
+          [placeholder]="'audits.toolbar.searchPlaceholder' | translate"
         />
       </div>
 
       <div class="filter-block">
-        <label>Status</label>
+        <label>{{ 'audits.toolbar.statusLabel' | translate }}</label>
         <select [value]="selectedStatus()" (change)="setStatus($any($event.target).value)">
-          <option value="all">All statuses</option>
-          <option value="planned">Planned</option>
-          <option value="in_progress">In progress</option>
-          <option value="completed">Completed</option>
-          <option value="cancelled">Cancelled</option>
+          <option value="all">{{ 'audits.toolbar.allStatuses' | translate }}</option>
+          <option value="planned">{{ 'audits.status.planned' | translate }}</option>
+          <option value="in_progress">{{ 'audits.status.in_progress' | translate }}</option>
+          <option value="completed">{{ 'audits.status.completed' | translate }}</option>
+          <option value="cancelled">{{ 'audits.status.cancelled' | translate }}</option>
         </select>
       </div>
 
       <div class="filter-block">
-        <label>Type</label>
+        <label>{{ 'audits.toolbar.typeLabel' | translate }}</label>
         <select [value]="selectedType()" (change)="setType($any($event.target).value)">
-          <option value="all">All types</option>
-          <option value="internal">Internal</option>
-          <option value="external">External</option>
-          <option value="safety">Safety</option>
-          <option value="environment">Environment</option>
-          <option value="compliance">Compliance</option>
+          <option value="all">{{ 'audits.toolbar.allTypes' | translate }}</option>
+          <option value="internal">{{ 'audits.type.internal' | translate }}</option>
+          <option value="external">{{ 'audits.type.external' | translate }}</option>
+          <option value="safety">{{ 'audits.type.safety' | translate }}</option>
+          <option value="environment">{{ 'audits.type.environment' | translate }}</option>
+          <option value="compliance">{{ 'audits.type.compliance' | translate }}</option>
         </select>
       </div>
     </div>
@@ -107,8 +104,8 @@
   <div class="table-card">
     <div class="table-head">
       <div>
-        <h3>Audits List</h3>
-        <span>{{ filteredAudits().length }} result(s)</span>
+        <h3>{{ 'audits.list.title' | translate }}</h3>
+        <span>{{ filteredAudits().length }} {{ 'audits.list.results' | translate }}</span>
       </div>
     </div>
 
@@ -146,20 +143,20 @@
 
         <div class="extra-info">
           <div class="mini">
-            <span>Findings</span>
+            <span>{{ 'audits.list.findings' | translate }}</span>
             <strong>{{ audit.findingsCount }}</strong>
           </div>
           <div class="mini">
-            <span>Files</span>
+            <span>{{ 'audits.list.files' | translate }}</span>
             <strong>{{ audit.attachmentsCount }}</strong>
           </div>
         </div>
 
         <div class="actions">
-          <a class="icon-btn" [routerLink]="['/manager/audits', audit._id]" title="View details">
+          <a class="icon-btn" [routerLink]="['/manager/audits', audit._id]" [title]="'audits.list.viewDetails' | translate">
             <i class="bi bi-eye"></i>
           </a>
-          <a class="icon-btn" [routerLink]="['/manager/audits/edit', audit._id]" title="Edit audit">
+          <a class="icon-btn" [routerLink]="['/manager/audits/edit', audit._id]" [title]="'audits.list.editAudit' | translate">
             <i class="bi bi-pencil-square"></i>
           </a>
         </div>
@@ -171,11 +168,11 @@
         <div class="empty-icon">
           <i class="bi bi-inboxes"></i>
         </div>
-        <h3>No audits found</h3>
-        <p>Try changing filters or create a new audit to get started.</p>
+        <h3>{{ 'audits.empty.title' | translate }}</h3>
+        <p>{{ 'audits.empty.subtitle' | translate }}</p>
         <a class="btn primary" routerLink="/manager/audits/add">
           <i class="bi bi-plus-lg"></i>
-          Create audit
+          {{ 'audits.empty.cta' | translate }}
         </a>
       </div>
     </ng-template>

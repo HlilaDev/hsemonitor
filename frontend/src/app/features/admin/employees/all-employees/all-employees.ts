@@ -9,6 +9,8 @@ import {
   EmployeeServices,
   Employee,
 } from '../../../../core/services/employees/employee-services';
+import { ConfirmModalService } from '../../../../core/services/confirm-modal/confirm-modal.service';
+import { ToastService } from '../../../../core/services/toast/toast.service';
 
 @Component({
   selector: 'app-all-employees',
@@ -26,6 +28,8 @@ import {
 export class AllEmployees {
   private employeeService = inject(EmployeeServices);
   private t = inject(TranslateService);
+  private confirmModal = inject(ConfirmModalService);
+  private toast = inject(ToastService);
 
   loading = signal(false);
   error = signal<string | null>(null);
@@ -151,34 +155,31 @@ export class AllEmployees {
     return e.isActive ? 'ok' : 'bad';
   }
 
-  deleteEmployee(id: string) {
-    const msg = this.t.instant('EMPLOYEES.CONFIRM_DELETE');
-    if (!confirm(msg)) return;
+  deleteEmployee(id: string, name?: string) {
+    this.confirmModal.open({
+      message: 'Êtes-vous sûr de vouloir supprimer cet employé ?',
+      itemName: name,
+      onConfirm: () => {
+        this.loading.set(true);
+        this.error.set(null);
 
-    this.loading.set(true);
-    this.error.set(null);
-
-    this.employeeService
-      .deleteEmployee(id)
-      .pipe(
-        catchError((err) => {
-          this.error.set(
-            err?.error?.message ?? this.t.instant('EMPLOYEES.ERROR.DELETE')
-          );
-          return of(null);
-        }),
-        finalize(() => this.loading.set(false))
-      )
-      .subscribe((res) => {
-        if (res === null) return;
-
-        const next = this.employees().filter(e => e._id !== id);
-        this.employees.set(next);
-
-        if (this.page() > this.pages()) {
-          this.page.set(this.pages());
-        }
-      });
+        this.employeeService
+          .deleteEmployee(id)
+          .pipe(
+            catchError((err) => {
+              this.toast.error(err?.error?.message ?? this.t.instant('EMPLOYEES.ERROR.DELETE'));
+              return of(null);
+            }),
+            finalize(() => this.loading.set(false))
+          )
+          .subscribe((res) => {
+            if (res === null) return;
+            this.employees.set(this.employees().filter(e => e._id !== id));
+            if (this.page() > this.pages()) this.page.set(this.pages());
+            this.toast.success('Employé supprimé avec succès.');
+          });
+      },
+    });
   }
 
   toggleActive(e: Employee) {

@@ -3,11 +3,11 @@
 
     <div class="topbar">
       <button class="back-btn" routerLink="/admin/sensors">
-        ← Retour
+        ← {{ 'COMMON.BACK' | translate }}
       </button>
 
       <div class="breadcrumb">
-        <span>Capteurs</span>
+        <span>{{ 'SENSORS.DETAIL.KICKER' | translate }}</span>
         <span>/</span>
         <strong>{{ sensor.name }}</strong>
       </div>
@@ -33,26 +33,26 @@
           <h1>{{ sensor.name }}</h1>
 
           <span class="status-badge" [ngClass]="sensor.status">
-            {{ sensor.status }}
+            {{ 'SENSORS.STATUS.' + sensor.status | translate }}
           </span>
         </div>
 
         <div class="meta-list">
-          <span>Zone : {{ getZoneName() }}</span>
-          <span>Type : {{ sensor.type }}</span>
-          <span *ngIf="sensor.unit">Unité : {{ sensor.unit }}</span>
+          <span>{{ 'SENSORS.DETAIL.ZONE' | translate }} {{ getZoneName() }}</span>
+          <span>{{ 'SENSORS.DETAIL.TYPE' | translate }} {{ 'SENSORS.TYPE.' + sensor.type | translate }}</span>
+          <span *ngIf="sensor.unit">{{ 'SENSORS.DETAIL.UNIT' | translate }} {{ sensor.unit }}</span>
         </div>
       </div>
 
       <div class="current-value-card">
-        <span class="label">Dernière valeur</span>
+        <span class="label">{{ 'SENSORS.DETAIL.LAST_VALUE' | translate }}</span>
         <strong>{{ getCurrentValue() }}</strong>
       </div>
     </section>
 
     <section class="stats-grid">
       <div class="stat-card">
-        <span>Seuil d'alerte</span>
+        <span>{{ 'SENSORS.DETAIL.THRESHOLD' | translate }}</span>
         <strong>
           {{ sensor.threshold !== null && sensor.threshold !== undefined ? sensor.threshold : '—' }}
           <small *ngIf="sensor.unit">{{ sensor.unit }}</small>
@@ -60,24 +60,24 @@
       </div>
 
       <div class="stat-card">
-        <span>Device ID</span>
+        <span>{{ 'SENSORS.DETAIL.DEVICE_ID' | translate }}</span>
         <strong class="mono">{{ topicUrl.includes('Device ID') ? '—' : topicUrl.split('/')[2] }}</strong>
       </div>
 
       <div class="stat-card">
-        <span>Créé le</span>
+        <span>{{ 'SENSORS.DETAIL.CREATED' | translate }}</span>
         <strong>{{ sensor.createdAt | date:'dd/MM/yyyy' }}</strong>
       </div>
 
       <div class="stat-card">
-        <span>Modifié le</span>
+        <span>{{ 'SENSORS.DETAIL.UPDATED' | translate }}</span>
         <strong>{{ sensor.updatedAt | date:'dd/MM/yyyy' }}</strong>
       </div>
     </section>
 
     <section class="panel">
       <div class="panel-header">
-        <h2>Topic MQTT</h2>
+        <h2>{{ 'SENSORS.DETAIL.TOPIC' | translate }}</h2>
       </div>
 
       <div class="topic-row">
@@ -89,32 +89,32 @@
         />
 
         <button class="copy-btn" type="button" (click)="copyTopicUrl()">
-          {{ urlCopied ? 'Copié !' : 'Copier' }}
+          {{ urlCopied ? ('SENSORS.DETAIL.COPIED' | translate) : ('SENSORS.DETAIL.COPY' | translate) }}
         </button>
       </div>
     </section>
 
     <section class="panel">
       <div class="panel-header">
-        <h2>Historique du capteur</h2>
-        <span *ngIf="history.length">{{ history.length }} dernières valeurs</span>
+        <h2>{{ 'SENSORS.DETAIL.HISTORY' | translate }}</h2>
+        <span *ngIf="history.length">{{ history.length }} {{ 'SENSORS.DETAIL.HISTORY_VALUES' | translate }}</span>
       </div>
 
       <div class="loading-history" *ngIf="isHistoryLoading">
-        Chargement de l'historique...
+        {{ 'SENSORS.DETAIL.HISTORY_LOADING' | translate }}
       </div>
 
       <div class="empty-history" *ngIf="!isHistoryLoading && history.length === 0">
-        Aucun historique disponible.
+        {{ 'SENSORS.DETAIL.HISTORY_EMPTY' | translate }}
       </div>
 
       <div class="history-table" *ngIf="!isHistoryLoading && history.length > 0">
         <div class="history-head">
-          <span>Date / Heure</span>
-          <span>Type</span>
-          <span>Valeur</span>
-          <span>Statut</span>
-          <span>Message</span>
+          <span>{{ 'SENSORS.DETAIL.COL_DATE' | translate }}</span>
+          <span>{{ 'SENSORS.DETAIL.COL_TYPE' | translate }}</span>
+          <span>{{ 'SENSORS.DETAIL.COL_VALUE' | translate }}</span>
+          <span>{{ 'SENSORS.DETAIL.COL_STATUS' | translate }}</span>
+          <span>{{ 'SENSORS.DETAIL.COL_MESSAGE' | translate }}</span>
         </div>
 
         <div class="history-row" *ngFor="let entry of history">
@@ -133,7 +133,7 @@
 
           <span>
             <span class="status-pill" [ngClass]="entry.status">
-              {{ entry.status }}
+              {{ 'SENSORS.STATUS.' + entry.status | translate }}
             </span>
           </span>
 
@@ -149,14 +149,14 @@
 
 <ng-template #loadingTpl>
   <div class="loading-state">
-    Chargement du capteur...
+    {{ 'SENSORS.DETAIL.LOADING' | translate }}
   </div>
 </ng-template>
 
 <ng-template #noSensor>
   <div class="empty-state">
-    <h2>Capteur introuvable</h2>
-    <p>{{ errorMessage || 'Ce capteur n’existe pas ou a été supprimé.' }}</p>
-    <button routerLink="/admin/sensors">Retour à la liste</button>
+    <h2>{{ 'SENSORS.DETAIL.NOT_FOUND' | translate }}</h2>
+    <p>{{ errorMessage || ('SENSORS.DETAIL.NOT_FOUND_SUB' | translate) }}</p>
+    <button routerLink="/admin/sensors">{{ 'SENSORS.DETAIL.BACK' | translate }}</button>
   </div>
 </ng-template>

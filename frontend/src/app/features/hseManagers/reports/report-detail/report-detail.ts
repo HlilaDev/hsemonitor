@@ -1,4 +1,5 @@
 import { CommonModule, DatePipe, DecimalPipe } from '@angular/common';
+import { TranslatePipe } from '@ngx-translate/core';
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ReportServices } from '../../../../core/services/reports/report-services';
@@ -7,7 +8,7 @@ import { BASE_URL } from '../../../../core/config/api_urls';
 @Component({
   selector: 'app-report-detail',
   standalone: true,
-  imports: [CommonModule, RouterLink, DatePipe, DecimalPipe],
+  imports: [CommonModule, RouterLink, DatePipe, DecimalPipe, TranslatePipe],
   templateUrl: './report-detail.html',
   styleUrl: './report-detail.scss',
 })

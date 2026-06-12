@@ -1,65 +1,37 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, LowerCasePipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
-import { StatCard } from '../../../shared/components/stat-card/stat-card';
+import { RouterModule } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 
 import { DeviceServices } from '../../../core/services/devices/device-services';
 import { EmployeeServices } from '../../../core/services/employees/employee-services';
 import { UserServices } from '../../../core/services/users/user-services';
-import { SensorServices } from '../../../core/services/sensors/sensor-services'; // ✅ AJOUT
+import { SensorServices } from '../../../core/services/sensors/sensor-services';
 
 @Component({
   selector: 'app-dashboard-admin',
   standalone: true,
-  imports: [CommonModule, StatCard],
+  imports: [CommonModule, RouterModule, TranslateModule, LowerCasePipe],
   templateUrl: './dashboard-admin.html',
   styleUrl: './dashboard-admin.scss',
 })
 export class DashboardAdmin {
-  private deviceService = inject(DeviceServices);
+  private deviceService   = inject(DeviceServices);
   private employeeService = inject(EmployeeServices);
-  private userService = inject(UserServices);
-  private sensorService = inject(SensorServices); // ✅ AJOUT
+  private userService     = inject(UserServices);
+  private sensorService   = inject(SensorServices);
 
-  widgets = [
-    {
-      key: 'devices',
-      title: 'Devices',
-      value: 0,
-      subtitle: 'Nombre total des devices',
-      iconClass: 'bi bi-cpu',
-      variant: 'blue',
-      routerLink: ['/admin/devices'],
-    },
-    {
-      key: 'employees',
-      title: 'Employees',
-      value: 0,
-      subtitle: 'Nombre total des employés',
-      iconClass: 'bi bi-people',
-      variant: 'green',
-      routerLink: ['/admin/employees'],
-    },
-    {
-      key: 'users',
-      title: 'Users',
-      value: 0,
-      subtitle: 'Nombre total des utilisateurs',
-      iconClass: 'bi bi-person-badge',
-      variant: 'orange',
-      routerLink: ['/admin/users'],
-    },
+  today = new Date().toLocaleDateString('fr-FR', {
+    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+  });
 
-    // ✅ NEW WIDGET: Sensors
-    {
-      key: 'sensors',
-      title: 'Sensors',
-      value: 0,
-      subtitle: 'Nombre total des capteurs',
-      iconClass: 'bi bi-rss', // ou: 'bi bi-activity'
-      variant: 'purple',      // si ton StatCard supporte sinon mets 'blue'
-      routerLink: ['/admin/sensors'], // adapte selon tes routes
-    },
-  ] as const;
+  private stats: Record<string, number> = {
+    devices: 0, employees: 0, users: 0, sensors: 0
+  };
+
+  getWidget(key: string): number {
+    return this.stats[key] ?? 0;
+  }
 
   constructor() {
     this.loadStats();
@@ -69,41 +41,33 @@ export class DashboardAdmin {
     this.deviceService.getAllDevices().subscribe({
       next: (res: any) => {
         const items = res?.items ?? res?.devices ?? res ?? [];
-        this.updateWidget('devices', Array.isArray(items) ? items.length : 0);
+        this.stats['devices'] = Array.isArray(items) ? items.length : 0;
       },
-      error: () => this.updateWidget('devices', 0),
+      error: () => { this.stats['devices'] = 0; },
     });
 
     this.employeeService.getAllEmployees().subscribe({
       next: (res: any) => {
         const items = res?.items ?? res?.employees ?? res ?? [];
-        this.updateWidget('employees', Array.isArray(items) ? items.length : 0);
+        this.stats['employees'] = Array.isArray(items) ? items.length : 0;
       },
-      error: () => this.updateWidget('employees', 0),
+      error: () => { this.stats['employees'] = 0; },
     });
 
     this.userService.getAllUsers().subscribe({
       next: (res: any) => {
         const items = res?.items ?? res?.users ?? res ?? [];
-        this.updateWidget('users', Array.isArray(items) ? items.length : 0);
+        this.stats['users'] = Array.isArray(items) ? items.length : 0;
       },
-      error: () => this.updateWidget('users', 0),
+      error: () => { this.stats['users'] = 0; },
     });
 
-    // ✅ SENSORS
     this.sensorService.list().subscribe({
       next: (res: any) => {
         const items = res?.items ?? res?.sensors ?? res?.data ?? res ?? [];
-        this.updateWidget('sensors', Array.isArray(items) ? items.length : 0);
+        this.stats['sensors'] = Array.isArray(items) ? items.length : 0;
       },
-      error: () => this.updateWidget('sensors', 0),
+      error: () => { this.stats['sensors'] = 0; },
     });
-  }
-
-  private updateWidget(
-    key: 'devices' | 'employees' | 'users' | 'sensors',
-    value: number
-  ) {
-    this.widgets = this.widgets.map(w => (w.key === key ? { ...w, value } : w)) as any;
   }
 }

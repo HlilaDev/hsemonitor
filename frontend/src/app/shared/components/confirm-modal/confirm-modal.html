@@ -1,0 +1,30 @@
+@if (modal.config(); as cfg) {
+  <div class="modal-backdrop" (click)="modal.cancel()">
+    <div class="modal-box" (click)="$event.stopPropagation()">
+
+      <div class="modal-icon-wrap">
+        <i class="bi bi-trash3-fill"></i>
+      </div>
+
+      <h3 class="modal-title">{{ cfg.title ?? 'Confirmer la suppression' }}</h3>
+
+      <p class="modal-msg">{{ cfg.message }}</p>
+
+      @if (cfg.itemName) {
+        <p class="modal-item">&#171; {{ cfg.itemName }} &#187;</p>
+      }
+
+      <div class="modal-actions">
+        <button type="button" class="btn-cancel" (click)="modal.cancel()">
+          <i class="bi bi-x-lg"></i>
+          {{ cfg.cancelLabel ?? 'Annuler' }}
+        </button>
+        <button type="button" class="btn-confirm" (click)="modal.confirm()">
+          <i class="bi bi-trash3"></i>
+          {{ cfg.confirmLabel ?? 'Supprimer' }}
+        </button>
+      </div>
+
+    </div>
+  </div>
+}

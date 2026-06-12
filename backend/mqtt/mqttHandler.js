@@ -209,9 +209,7 @@ async function handleTelemetryMessage(deviceId, data) {
     console.warn(`⚠️ No parser for sensorType: ${sensorType}`);
     return;
   }
-
   const { values, raw } = parser(data);
-
   const device = await markDeviceOnline(deviceId, {
     lastSeen: new Date(),
     status: "online",
@@ -221,10 +219,8 @@ async function handleTelemetryMessage(deviceId, data) {
     console.warn(`⚠️ Unknown device: ${deviceId}`);
     return;
   }
-
   const zoneId = device.zone?._id || device.zone || null;
   const companyId = device.company?._id || device.company || null;
-
   const sensor = await Sensor.findOne({
     device: device._id,
     type: sensorType,
@@ -401,13 +397,13 @@ async function mqttHandler(topic, payload) {
       return;
     }
 
-    const root = parts[0];
-    const group = parts[1];
-    const deviceId = parts[2];
-    const channel = parts[3];
-    const subChannel = parts[4] || null;
+const root = parts[0];
+const companyId = parts[1];
+const deviceId = parts[2];
+const channel = parts[3];
+const subChannel = parts[4] || null;
 
-    if (root !== "hsemonitor" || group !== "devices") {
+if (root !== "hsemonitor") {
       console.warn(`⚠️ Unsupported topic root: ${topic}`);
       return;
     }
@@ -437,7 +433,7 @@ async function mqttHandler(topic, payload) {
   }
 }
 
-function publishDeviceCommand(deviceId, action, params = {}) {
+function publishDeviceCommand(deviceId, action, params = {}, companyId) {
   const client = require("./mqttClient");
 
   return new Promise((resolve, reject) => {
@@ -445,7 +441,11 @@ function publishDeviceCommand(deviceId, action, params = {}) {
       return reject(new Error("MQTT client not connected"));
     }
 
-    const topic = `hsemonitor/devices/${deviceId}/commands`;
+    if (!companyId) {
+      return reject(new Error("companyId is required to publish device command"));
+    }
+
+    const topic = `hsemonitor/${companyId}/${deviceId}/commands`;
 
     const message = {
       action,

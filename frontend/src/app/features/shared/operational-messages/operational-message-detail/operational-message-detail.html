@@ -2,18 +2,18 @@
   @if (loading()) {
     <div class="state-card loading">
       <div class="spinner"></div>
-      <h3>Chargement du message...</h3>
-      <p>Veuillez patienter pendant la récupération des informations.</p>
+      <h3>{{ 'operationalMessages.list.loadingTitle' | translate }}</h3>
+      <p>{{ 'operationalMessages.list.loadingSubtitle' | translate }}</p>
     </div>
   } @else if (error()) {
     <div class="state-card error">
       <div class="state-icon">
         <i class="bi bi-exclamation-triangle"></i>
       </div>
-      <h3>Impossible de charger le message</h3>
+      <h3>{{ 'operationalMessages.list.errorTitle' | translate }}</h3>
       <p>{{ error() }}</p>
       <a routerLink="/shared/operational-messages" class="btn btn-dark">
-        Retour à la liste
+        {{ 'operationalMessages.list.backToList' | translate }}
       </a>
     </div>
   } @else {
@@ -22,11 +22,11 @@
         <div class="header-left">
           <a routerLink="/shared/operational-messages" class="back-link">
             <i class="bi bi-arrow-left"></i>
-            <span>Retour</span>
+            <span>{{ 'operationalMessages.list.backToList' | translate }}</span>
           </a>
 
           <div class="title-block">
-            <div class="mini-label">Message opérationnel</div>
+            <div class="mini-label">{{ 'operationalMessages.title' | translate }}</div>
             <h1>{{ message().subject }}</h1>
 
             <div class="header-badges">
@@ -40,7 +40,7 @@
 
               @if (message().requiresAcknowledgement) {
                 <span class="badge ack">
-                  Accusé requis
+                  {{ 'operationalMessages.list.ackRequired' | translate }}
                 </span>
               }
             </div>
@@ -51,14 +51,14 @@
           @if (message().status !== 'acknowledged' && message().requiresAcknowledgement) {
             <button class="btn btn-primary" type="button" (click)="markAsAcknowledged()">
               <i class="bi bi-check2-circle"></i>
-              Confirmer
+              {{ 'operationalMessages.list.confirmBtn' | translate }}
             </button>
           }
 
           @if (message().status !== 'archived') {
             <button class="btn btn-light" type="button" (click)="archiveMessage()">
               <i class="bi bi-archive"></i>
-              Archiver
+              {{ 'operationalMessages.list.archiveBtn' | translate }}
             </button>
           }
         </div>
@@ -74,29 +74,29 @@
               </div>
 
               <div class="hero-id">
-                <span>Réf</span>
+                <span>{{ 'operationalMessages.list.ref' | translate }}</span>
                 <strong>#{{ message().id }}</strong>
               </div>
             </div>
 
             <div class="hero-meta">
               <div class="meta-item">
-                <span class="label">Catégorie</span>
+                <span class="label">{{ 'operationalMessages.list.category' | translate }}</span>
                 <strong>{{ message().category }}</strong>
               </div>
 
               <div class="meta-item">
-                <span class="label">Zone</span>
+                <span class="label">{{ 'operationalMessages.list.zone' | translate }}</span>
                 <strong>{{ message().zone }}</strong>
               </div>
 
               <div class="meta-item">
-                <span class="label">Device</span>
+                <span class="label">{{ 'operationalMessages.list.device' | translate }}</span>
                 <strong>{{ message().device }}</strong>
               </div>
 
               <div class="meta-item">
-                <span class="label">Destinataires</span>
+                <span class="label">{{ 'operationalMessages.list.recipients' | translate }}</span>
                 <strong>{{ recipientsCount() }}</strong>
               </div>
             </div>
@@ -104,7 +104,7 @@
 
           <section class="card">
             <div class="section-head">
-              <h3>Contenu du message</h3>
+              <h3>{{ 'operationalMessages.list.contentSection' | translate }}</h3>
             </div>
 
             <div class="message-body">
@@ -116,7 +116,7 @@
 
           <section class="card">
             <div class="section-head">
-              <h3>Pièces jointes</h3>
+              <h3>{{ 'operationalMessages.list.attachments' | translate }}</h3>
               <span class="section-count">{{ message().attachments.length }}</span>
             </div>
 
@@ -141,14 +141,14 @@
               </div>
             } @else {
               <div class="empty-block">
-                Aucune pièce jointe disponible.
+                {{ 'operationalMessages.list.noAttachments' | translate }}
               </div>
             }
           </section>
 
           <section class="card">
             <div class="section-head">
-              <h3>Historique d’activité</h3>
+              <h3>{{ 'operationalMessages.list.activityHistory' | translate }}</h3>
             </div>
 
             <div class="timeline">
@@ -174,38 +174,38 @@
         <aside class="side-column">
           <section class="card side-card">
             <div class="section-head">
-              <h3>Informations</h3>
+              <h3>{{ 'operationalMessages.list.infoSection' | translate }}</h3>
             </div>
 
             <div class="info-list">
               <div class="info-row">
-                <span>Auteur</span>
+                <span>{{ 'operationalMessages.list.author' | translate }}</span>
                 <strong>{{ message().author.fullName }}</strong>
               </div>
 
               <div class="info-row">
-                <span>Rôle</span>
+                <span>{{ 'operationalMessages.list.authorRole' | translate }}</span>
                 <strong>{{ message().author.role }}</strong>
               </div>
 
               <div class="info-row">
-                <span>Email</span>
+                <span>{{ 'operationalMessages.list.authorEmail' | translate }}</span>
                 <strong>{{ message().author.email }}</strong>
               </div>
 
               <div class="info-row">
-                <span>Créé le</span>
+                <span>{{ 'operationalMessages.list.createdAt' | translate }}</span>
                 <strong>{{ message().createdAt | date:'dd/MM/yyyy HH:mm' }}</strong>
               </div>
 
               <div class="info-row">
-                <span>Mis à jour</span>
+                <span>{{ 'operationalMessages.list.updatedAt' | translate }}</span>
                 <strong>{{ message().updatedAt | date:'dd/MM/yyyy HH:mm' }}</strong>
               </div>
 
               @if (message().sentAt) {
                 <div class="info-row">
-                  <span>Envoyé le</span>
+                  <span>{{ 'operationalMessages.list.sentAt' | translate }}</span>
                   <strong>{{ message().sentAt | date:'dd/MM/yyyy HH:mm' }}</strong>
                 </div>
               }
@@ -214,7 +214,7 @@
 
           <section class="card side-card">
             <div class="section-head">
-              <h3>Destinataires</h3>
+              <h3>{{ 'operationalMessages.list.recipientsSection' | translate }}</h3>
             </div>
 
             <div class="chips-list">
@@ -226,23 +226,23 @@
 
           <section class="card side-card quick-actions">
             <div class="section-head">
-              <h3>Actions rapides</h3>
+              <h3>{{ 'operationalMessages.list.quickActionsTitle' | translate }}</h3>
             </div>
 
             <div class="quick-actions-list">
               <button class="quick-btn" type="button">
                 <i class="bi bi-pencil-square"></i>
-                Modifier
+                {{ 'operationalMessages.list.editBtn' | translate }}
               </button>
 
               <button class="quick-btn" type="button">
                 <i class="bi bi-send"></i>
-                Renvoyer
+                {{ 'operationalMessages.list.resendBtn' | translate }}
               </button>
 
               <button class="quick-btn danger" type="button">
                 <i class="bi bi-trash3"></i>
-                Supprimer
+                {{ 'operationalMessages.list.deleteBtn' | translate }}
               </button>
             </div>
           </section>

@@ -2,6 +2,8 @@ import { Component, OnInit, inject } from '@angular/core';
 import { forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
+import { TranslatePipe } from '@ngx-translate/core';
+
 import { StatCard } from '../../../shared/components/stat-card/stat-card';
 import { AuthServices } from '../../../core/services/auth/auth-services';
 import { ObservationService } from '../../../core/services/observations/observation-services';
@@ -11,7 +13,7 @@ import { NotificationServices } from '../../../core/services/notifications/notif
 @Component({
   selector: 'app-hseagent-dashboard',
   standalone: true,
-  imports: [StatCard],
+  imports: [StatCard, TranslatePipe],
   templateUrl: './hseagent-dashboard.html',
   styleUrl: './hseagent-dashboard.scss',
 })

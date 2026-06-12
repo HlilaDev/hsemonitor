@@ -2,6 +2,7 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
+import { TranslatePipe } from '@ngx-translate/core';
 import { of, switchMap } from 'rxjs';
 
 import {
@@ -19,7 +20,7 @@ type ZoneLite = { _id?: string; id?: string; name: string };
 @Component({
   selector: 'app-add-observation',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, TranslatePipe],
   templateUrl: './add-observation.html',
   styleUrl: './add-observation.scss',
 })

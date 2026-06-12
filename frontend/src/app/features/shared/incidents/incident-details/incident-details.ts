@@ -1,6 +1,6 @@
 import { CommonModule, Location } from '@angular/common';
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 
 import {
   IncidentEvent,
@@ -12,7 +12,7 @@ import {
 @Component({
   selector: 'app-incident-details',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule],
   templateUrl: './incident-details.html',
   styleUrl: './incident-details.scss',
 })

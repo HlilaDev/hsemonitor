@@ -3,7 +3,7 @@
     <div class="left">
       <button class="btn ghost" type="button" (click)="goBack()">
         <i class="bi bi-arrow-left"></i>
-        Retour
+        {{ 'trainings.detail.back' | translate }}
       </button>
     </div>
 
@@ -15,7 +15,7 @@
         [disabled]="!training()"
       >
         <i class="bi bi-pencil-square"></i>
-        Modifier
+        {{ 'trainings.detail.edit' | translate }}
       </button>
     </div>
   </div>
@@ -37,7 +37,7 @@
     <div class="hero card">
       <div class="hero-top">
         <div class="hero-left">
-          <div class="eyebrow">Formation HSE</div>
+          <div class="eyebrow">{{ 'trainings.detail.kicker' | translate }}</div>
           <h1>{{ t.title }}</h1>
 
           <div class="hero-badges">
@@ -52,14 +52,14 @@
 
             <span class="chip soft">
               <i class="bi bi-people"></i>
-              {{ (t.participants?.length ?? 0) }} participant(s)
+              {{ (t.participants?.length ?? 0) }} {{ 'trainings.detail.participants' | translate }}
             </span>
           </div>
         </div>
 
         <div class="hero-right">
           <div class="meta-box">
-            <span class="meta-label">Créée par</span>
+            <span class="meta-label">{{ 'trainings.detail.createdBy' | translate }}</span>
 <strong>{{ getCreatedByName() }}</strong>
             <small>{{ t.createdBy?.email || '' }}</small>
           </div>
@@ -77,37 +77,37 @@
       <div class="main-col">
         <div class="card info-card">
           <div class="section-head">
-            <h3>Informations générales</h3>
+            <h3>{{ 'trainings.detail.summary.title' | translate }}</h3>
           </div>
 
           <div class="info-grid">
             <div class="info-item">
-              <span class="k"><i class="bi bi-calendar-event"></i> Début</span>
+              <span class="k"><i class="bi bi-calendar-event"></i> {{ 'trainings.detail.start' | translate }}</span>
               <span class="v">{{ fmtDateTime(t.startDate) }}</span>
             </div>
 
             <div class="info-item">
-              <span class="k"><i class="bi bi-calendar-check"></i> Fin</span>
+              <span class="k"><i class="bi bi-calendar-check"></i> {{ 'trainings.detail.end' | translate }}</span>
               <span class="v">{{ t.endDate ? fmtDateTime(t.endDate) : '-' }}</span>
             </div>
 
             <div class="info-item">
-              <span class="k"><i class="bi bi-building"></i> Provider</span>
+              <span class="k"><i class="bi bi-building"></i> {{ 'trainings.detail.provider' | translate }}</span>
               <span class="v">{{ t.provider || '-' }}</span>
             </div>
 
             <div class="info-item">
-              <span class="k"><i class="bi bi-geo-alt"></i> Lieu</span>
+              <span class="k"><i class="bi bi-geo-alt"></i> {{ 'trainings.detail.location' | translate }}</span>
               <span class="v">{{ t.location || '-' }}</span>
             </div>
 
             <div class="info-item">
-              <span class="k"><i class="bi bi-diagram-3"></i> Société</span>
+              <span class="k"><i class="bi bi-diagram-3"></i> {{ 'trainings.detail.company' | translate }}</span>
               <span class="v">{{ t.company?.name || '-' }}</span>
             </div>
 
             <div class="info-item">
-              <span class="k"><i class="bi bi-clock-history"></i> Créée le</span>
+              <span class="k"><i class="bi bi-clock-history"></i> {{ 'trainings.detail.createdAt' | translate }}</span>
               <span class="v">{{ fmtDate(t.createdAt) }}</span>
             </div>
           </div>
@@ -116,9 +116,9 @@
         <div class="card participants-card">
           <div class="section-head participants-head">
             <div>
-              <h3>Participants</h3>
+              <h3>{{ 'trainings.detail.participants' | translate }}</h3>
               <p class="section-subtitle">
-                Gérez les employés inscrits à cette formation.
+                {{ 'trainings.detail.participantsSubtitle' | translate }}
               </p>
             </div>
 
@@ -132,7 +132,7 @@
                   (click)="openAddParticipantsModal()"
                 >
                   <i class="bi bi-plus-lg"></i>
-                  Ajouter
+                  {{ 'trainings.detail.addParticipants' | translate }}
                 </button>
               }
             </div>
@@ -142,8 +142,7 @@
             <div class="inline-info">
               <i class="bi bi-info-circle"></i>
               <span>
-                L’ajout de participants est autorisé uniquement pour une
-                formation planifiée qui n’a pas encore commencé.
+                {{ 'trainings.detail.addWarning' | translate }}
               </span>
             </div>
           }
@@ -151,7 +150,7 @@
           @if (!t.participants || t.participants.length === 0) {
             <div class="empty-state">
               <i class="bi bi-people"></i>
-              <p>Aucun participant enregistré pour cette formation.</p>
+              <p>{{ 'trainings.detail.noParticipants' | translate }}</p>
 
               @if (canManageParticipants()) {
                 <button
@@ -160,7 +159,7 @@
                   (click)="openAddParticipantsModal()"
                 >
                   <i class="bi bi-plus-lg"></i>
-                  Ajouter des participants
+                  {{ 'trainings.detail.addParticipants' | translate }}
                 </button>
               }
             </div>
@@ -195,12 +194,12 @@
 
                   <div class="participant-right">
                     <div class="mini-stat">
-                      <span class="label">Score</span>
+                      <span class="label">{{ 'trainings.detail.summary.participants' | translate }}</span>
                       <strong>{{ participant.score ?? '-' }}</strong>
                     </div>
 
                     <div class="mini-stat">
-                      <span class="label">Validité</span>
+                      <span class="label">{{ 'trainings.detail.summary.location' | translate }}</span>
                       <strong>
                         {{ participant.validUntil ? fmtDate(participant.validUntil) : '-' }}
                       </strong>
@@ -216,27 +215,27 @@
       <div class="side-col">
         <div class="card quick-card">
           <div class="section-head">
-            <h3>Résumé</h3>
+            <h3>{{ 'trainings.detail.summary.title' | translate }}</h3>
           </div>
 
           <div class="quick-list">
             <div class="quick-item">
-              <span>Catégorie</span>
+              <span>{{ 'trainings.detail.summary.category' | translate }}</span>
               <strong>{{ categoryLabel(t.category) }}</strong>
             </div>
 
             <div class="quick-item">
-              <span>Statut</span>
+              <span>{{ 'trainings.detail.summary.status' | translate }}</span>
               <strong>{{ statusLabel(t.status) }}</strong>
             </div>
 
             <div class="quick-item">
-              <span>Participants</span>
+              <span>{{ 'trainings.detail.summary.participants' | translate }}</span>
               <strong>{{ t.participants?.length ?? 0 }}</strong>
             </div>
 
             <div class="quick-item">
-              <span>Lieu</span>
+              <span>{{ 'trainings.detail.summary.location' | translate }}</span>
               <strong>{{ t.location || '-' }}</strong>
             </div>
           </div>
@@ -244,13 +243,13 @@
 
         <div class="card actions-card">
           <div class="section-head">
-            <h3>Actions</h3>
+            <h3>{{ 'trainings.detail.actions.title' | translate }}</h3>
           </div>
 
           <div class="action-stack">
             <button class="btn primary block" type="button" (click)="goEdit()">
               <i class="bi bi-pencil-square"></i>
-              Modifier la formation
+              {{ 'trainings.detail.actions.editTraining' | translate }}
             </button>
 
             @if (canManageParticipants()) {
@@ -260,13 +259,13 @@
                 (click)="openAddParticipantsModal()"
               >
                 <i class="bi bi-person-plus"></i>
-                Ajouter des participants
+                {{ 'trainings.detail.actions.addParticipants' | translate }}
               </button>
             }
 
             <button class="btn ghost block" type="button" (click)="goBack()">
               <i class="bi bi-list-ul"></i>
-              Retour à la liste
+              {{ 'trainings.detail.actions.backToList' | translate }}
             </button>
           </div>
         </div>
@@ -278,9 +277,9 @@
         <div class="modal-card" (click)="$event.stopPropagation()">
           <div class="modal-head">
             <div>
-              <h3>Ajouter des participants</h3>
+              <h3>{{ 'trainings.detail.modal.title' | translate }}</h3>
               <p>
-                Sélectionnez un ou plusieurs employés à inscrire à la formation.
+                {{ 'trainings.detail.modal.subtitle' | translate }}
               </p>
             </div>
 
@@ -299,14 +298,14 @@
               <i class="bi bi-search"></i>
               <input
                 type="text"
-                placeholder="Rechercher un employé..."
+                [placeholder]="'trainings.detail.modal.searchPlaceholder' | translate"
                 [value]="employeeSearch()"
                 (input)="onSearchEmployees($any($event.target).value)"
               />
             </div>
 
             <div class="selected-chip">
-              {{ selectedCount() }} sélectionné(s)
+              {{ selectedCount() }} {{ 'trainings.detail.modal.selected' | translate }}
             </div>
           </div>
 
@@ -321,13 +320,13 @@
             @if (employeesLoading()) {
               <div class="modal-loading">
                 <div class="spinner"></div>
-                <span>Chargement des employés...</span>
+                <span>{{ 'trainings.detail.modal.loading' | translate }}</span>
               </div>
             } @else if (availableEmployees().length === 0) {
               <div class="empty-state slim">
                 <i class="bi bi-person-x"></i>
                 <p>
-                  Aucun employé disponible à ajouter.
+                  {{ 'trainings.detail.modal.empty' | translate }}
                 </p>
               </div>
             } @else {
@@ -370,7 +369,7 @@
               (click)="closeAddParticipantsModal()"
               [disabled]="isSubmittingParticipants()"
             >
-              Annuler
+              {{ 'trainings.detail.modal.cancel' | translate }}
             </button>
 
             <button
@@ -381,10 +380,10 @@
             >
               @if (isSubmittingParticipants()) {
                 <span class="btn-loader"></span>
-                Ajout...
+                {{ 'trainings.detail.modal.adding' | translate }}
               } @else {
                 <i class="bi bi-person-plus"></i>
-                Ajouter les participants
+                {{ 'trainings.detail.modal.addBtn' | translate }}
               }
             </button>
           </div>
@@ -394,9 +393,9 @@
   } @else {
     <div class="empty-state card">
       <i class="bi bi-journal-x"></i>
-      <p>Formation introuvable.</p>
+      <p>{{ 'trainings.detail.notFound' | translate }}</p>
       <button class="btn ghost" type="button" (click)="goBack()">
-        Retour
+        {{ 'trainings.detail.notFoundBack' | translate }}
       </button>
     </div>
   }

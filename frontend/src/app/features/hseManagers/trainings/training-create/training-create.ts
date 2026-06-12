@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import {
   FormArray,
   FormBuilder,
@@ -31,7 +32,7 @@ type EmployeeLite = {
 @Component({
   selector: 'app-training-create',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, TranslatePipe],
   templateUrl: './training-create.html',
   styleUrl: './training-create.scss',
 })

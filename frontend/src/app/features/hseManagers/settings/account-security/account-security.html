@@ -1,11 +1,9 @@
 <div class="security-page">
   <div class="page-header">
     <div class="title-wrap">
-      <span class="eyebrow">Important</span>
-      <h1>Account Security</h1>
-      <p>
-        Review account protection, security status and access options for your HSE platform account.
-      </p>
+      <span class="eyebrow">{{ 'settings.security.kicker' | translate }}</span>
+      <h1>{{ 'settings.security.title' | translate }}</h1>
+      <p>{{ 'settings.security.subtitle' | translate }}</p>
     </div>
 
     <div class="score-card">
@@ -14,7 +12,7 @@
       </div>
 
       <div class="score-info">
-        <h3>Security Score</h3>
+        <h3>{{ 'settings.security.scoreCard.title' | translate }}</h3>
         <p>{{ securityLevel() }}</p>
       </div>
     </div>
@@ -26,7 +24,7 @@
         <i class="bi bi-shield-check"></i>
       </div>
       <div class="mini-text">
-        <span>Protection</span>
+        <span>{{ 'settings.security.scoreCard.protection' | translate }}</span>
         <strong>{{ securityLevel() }}</strong>
       </div>
     </div>
@@ -36,8 +34,8 @@
         <i class="bi bi-bell"></i>
       </div>
       <div class="mini-text">
-        <span>Login Alerts</span>
-        <strong>{{ loginAlertsEnabled() ? 'Enabled' : 'Disabled' }}</strong>
+        <span>{{ 'settings.security.scoreCard.loginAlerts' | translate }}</span>
+        <strong>{{ loginAlertsEnabled() ? ('settings.security.scoreCard.enabled' | translate) : ('settings.security.scoreCard.disabled' | translate) }}</strong>
       </div>
     </div>
 
@@ -46,8 +44,8 @@
         <i class="bi bi-shield-lock"></i>
       </div>
       <div class="mini-text">
-        <span>2FA</span>
-        <strong>{{ twoFactorEnabled() ? 'Enabled' : 'Not Enabled' }}</strong>
+        <span>{{ 'settings.security.scoreCard.twoFA' | translate }}</span>
+        <strong>{{ twoFactorEnabled() ? ('settings.security.scoreCard.enabled' | translate) : ('settings.security.scoreCard.notEnabled' | translate) }}</strong>
       </div>
     </div>
   </div>
@@ -56,8 +54,8 @@
     <div class="left-column">
       <div class="panel-card">
         <div class="panel-head">
-          <h2>Protection Status</h2>
-          <p>Review the main security layers of your account.</p>
+          <h2>{{ 'settings.security.sections.protection.title' | translate }}</h2>
+          <p>{{ 'settings.security.sections.protection.subtitle' | translate }}</p>
         </div>
 
         <div class="protection-list">
@@ -85,8 +83,8 @@
 
       <div class="panel-card">
         <div class="panel-head">
-          <h2>Recent Access Activity</h2>
-          <p>Latest successful and failed account access events.</p>
+          <h2>{{ 'settings.security.sections.recentAccess.title' | translate }}</h2>
+          <p>{{ 'settings.security.sections.recentAccess.subtitle' | translate }}</p>
         </div>
 
         <div class="activity-list">
@@ -111,15 +109,15 @@
     <div class="right-column">
       <div class="panel-card">
         <div class="panel-head">
-          <h2>Security Controls</h2>
-          <p>Quickly manage common account protection options.</p>
+          <h2>{{ 'settings.security.sections.controls.title' | translate }}</h2>
+          <p>{{ 'settings.security.sections.controls.subtitle' | translate }}</p>
         </div>
 
         <div class="controls-list">
           <div class="control-item">
             <div class="control-text">
-              <h4>Two-Factor Authentication</h4>
-              <p>Require an extra verification step when signing in.</p>
+              <h4>{{ 'settings.security.sections.controls.twoFA' | translate }}</h4>
+              <p>{{ 'settings.security.sections.controls.twoFAHint' | translate }}</p>
             </div>
 
             <button
@@ -133,8 +131,8 @@
 
           <div class="control-item">
             <div class="control-text">
-              <h4>Login Alerts</h4>
-              <p>Get notified when a new login or unusual access is detected.</p>
+              <h4>{{ 'settings.security.sections.controls.loginAlerts' | translate }}</h4>
+              <p>{{ 'settings.security.sections.controls.loginAlertsHint' | translate }}</p>
             </div>
 
             <button
@@ -148,8 +146,8 @@
 
           <div class="control-item">
             <div class="control-text">
-              <h4>Suspicious Activity Protection</h4>
-              <p>Block risky sign-in attempts and untrusted session behavior.</p>
+              <h4>{{ 'settings.security.sections.controls.suspiciousProtection' | translate }}</h4>
+              <p>{{ 'settings.security.sections.controls.suspiciousProtectionHint' | translate }}</p>
             </div>
 
             <button
@@ -168,11 +166,8 @@
           <i class="bi bi-exclamation-triangle"></i>
         </div>
 
-        <h3>Security Recommendation</h3>
-        <p>
-          Enable two-factor authentication and review failed login attempts regularly
-          to improve your overall account security.
-        </p>
+        <h3>{{ 'settings.security.recommendation.title' | translate }}</h3>
+        <p>{{ 'settings.security.recommendation.body' | translate }}</p>
       </div>
     </div>
   </div>

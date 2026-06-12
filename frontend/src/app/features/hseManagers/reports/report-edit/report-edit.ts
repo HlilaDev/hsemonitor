@@ -1,4 +1,5 @@
 import { CommonModule } from '@angular/common';
+import { TranslatePipe } from '@ngx-translate/core';
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import {
   FormBuilder,
@@ -13,7 +14,7 @@ import { ZoneServices } from '../../../../core/services/zones/zone-services';
 @Component({
   selector: 'app-report-edit',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, TranslatePipe],
   templateUrl: './report-edit.html',
   styleUrl: './report-edit.scss',
 })

@@ -1,4 +1,5 @@
 import { CommonModule } from '@angular/common';
+import { TranslatePipe } from '@ngx-translate/core';
 import { Component, computed, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { catchError, finalize, forkJoin, of, switchMap } from 'rxjs';
@@ -63,7 +64,7 @@ createdBy?: {
 @Component({
   selector: 'app-training-detail',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, TranslatePipe],
   templateUrl: './training-detail.html',
   styleUrl: './training-detail.scss',
 })

@@ -1,21 +1,18 @@
 <section class="page">
   <div class="head">
     <div>
-      <div class="eyebrow">HSE AGENT OBSERVATIONS</div>
-      <h2>Observations</h2>
-      <p>
-        Vue unifiée des observations qui vous concernent :
-        déclarées par vous ou affectées à vous.
-      </p>
+      <div class="eyebrow">{{ 'observations.agent.kicker' | translate }}</div>
+      <h2>{{ 'observations.agent.title' | translate }}</h2>
+      <p>{{ 'observations.agent.subtitle' | translate }}</p>
     </div>
 
     <div class="head-actions">
       <a class="btn ghost" routerLink="/agent/observations/add">
-        + Nouvelle observation
+        {{ 'observations.agent.newObservation' | translate }}
       </a>
 
       <button class="btn" type="button" (click)="reload()" [disabled]="loading()">
-        {{ loading() ? 'Chargement...' : 'Actualiser' }}
+        {{ loading() ? ('observations.agent.loading' | translate) : ('observations.agent.refresh' | translate) }}
       </button>
     </div>
   </div>
@@ -42,38 +39,38 @@
 
   <div class="summary">
     <div class="summary-card">
-      <span class="summary-label">Vue active</span>
+      <span class="summary-label">{{ currentScopeLabel() }}</span>
       <strong>{{ currentScopeLabel() }}</strong>
       <small>{{ currentScopeHint() }}</small>
     </div>
 
     <div class="summary-card">
-      <span class="summary-label">Total visible</span>
+      <span class="summary-label">Total</span>
       <strong>{{ total() }}</strong>
-      <small>Observation(s) après filtres</small>
+      <small>{{ 'observations.agent.table.empty' | translate }}</small>
     </div>
 
     <div class="summary-card">
-      <span class="summary-label">Page</span>
+      <span class="summary-label">{{ 'observations.agent.pagination.page' | translate }}</span>
       <strong>{{ page() }} / {{ pages() }}</strong>
-      <small>{{ limit() }} par page</small>
+      <small>{{ limit() }}</small>
     </div>
   </div>
 
   <div class="toolbar">
     <div class="field field-search">
-      <label>Recherche</label>
+      <label>{{ 'observations.agent.filters.searchPlaceholder' | translate }}</label>
       <input
         [value]="q()"
         (input)="onSearch($any($event.target).value)"
-        placeholder="Titre / description..."
+        [placeholder]="'observations.agent.filters.searchPlaceholder' | translate"
       />
     </div>
 
     <div class="field">
-      <label>Statut</label>
+      <label>{{ 'observations.agent.filters.status' | translate }}</label>
       <select [value]="status()" (change)="onStatus($any($event.target).value)">
-        <option value="">Tous</option>
+        <option value="">{{ 'observations.agent.filters.all' | translate }}</option>
         @for (st of statusOptions; track st) {
           <option [value]="st">{{ st }}</option>
         }
@@ -81,9 +78,9 @@
     </div>
 
     <div class="field">
-      <label>Gravité</label>
+      <label>{{ 'observations.agent.filters.severity' | translate }}</label>
       <select [value]="severity()" (change)="onSeverity($any($event.target).value)">
-        <option value="">Toutes</option>
+        <option value="">{{ 'observations.agent.filters.all' | translate }}</option>
         @for (sev of severityOptions; track sev) {
           <option [value]="sev">{{ sev }}</option>
         }
@@ -91,7 +88,7 @@
     </div>
 
     <div class="field">
-      <label>Par page</label>
+      <label>{{ 'observations.agent.filters.perPage' | translate }}</label>
       <select [value]="limit()" (change)="onLimit($any($event.target).value)">
         <option [value]="5">5</option>
         <option [value]="10">10</option>
@@ -102,7 +99,7 @@
 
   @if (loading()) {
     <div class="state loading">
-      Chargement des observations...
+      {{ 'observations.agent.loading' | translate }}
     </div>
   } @else {
     @if (pagedItems().length) {
@@ -110,14 +107,14 @@
         <table class="table">
           <thead>
             <tr>
-              <th>Date</th>
-              <th>Titre</th>
-              <th>Zone</th>
-              <th>Déclarée par</th>
-              <th>Affectée à</th>
-              <th>Gravité</th>
-              <th>Statut</th>
-              <th>Action</th>
+              <th>{{ 'observations.agent.table.date' | translate }}</th>
+              <th>{{ 'observations.agent.table.titleCol' | translate }}</th>
+              <th>{{ 'observations.agent.table.zone' | translate }}</th>
+              <th>{{ 'observations.agent.table.declaredBy' | translate }}</th>
+              <th>{{ 'observations.agent.table.assignedTo' | translate }}</th>
+              <th>{{ 'observations.agent.table.severity' | translate }}</th>
+              <th>{{ 'observations.agent.table.status' | translate }}</th>
+              <th>{{ 'observations.agent.table.action' | translate }}</th>
             </tr>
           </thead>
 
@@ -163,8 +160,8 @@
                   <a
                     class="icon-link"
                     [routerLink]="['/agent/observations', o._id]"
-                    title="Voir le détail"
-                    aria-label="Voir le détail"
+                    [title]="'observations.agent.table.viewDetail' | translate"
+                    [attr.aria-label]="'observations.agent.table.viewDetail' | translate"
                   >
                     <i class="bi bi-eye"></i>
                   </a>
@@ -183,11 +180,11 @@
             (click)="prevPage()"
             [disabled]="page() <= 1"
           >
-            ◀ Précédent
+            ◀ {{ 'observations.agent.pagination.previous' | translate }}
           </button>
 
           <div class="meta">
-            Page <b>{{ page() }}</b> / {{ pages() }} — Total : {{ total() }}
+            {{ 'observations.agent.pagination.page' | translate }} <b>{{ page() }}</b> / {{ pages() }} — {{ 'observations.agent.pagination.total' | translate }} {{ total() }}
           </div>
 
           <button
@@ -196,13 +193,13 @@
             (click)="nextPage()"
             [disabled]="page() >= pages()"
           >
-            Suivant ▶
+            {{ 'observations.agent.pagination.next' | translate }} ▶
           </button>
         </div>
       }
     } @else {
       <div class="state empty">
-        Aucune observation trouvée pour cette vue.
+        {{ 'observations.agent.table.empty' | translate }}
       </div>
     }
   }

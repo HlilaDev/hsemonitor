@@ -1,21 +1,19 @@
 <section class="inventory-item-page">
   <div class="page-header">
     <div>
-      <p class="eyebrow">HSE Inventory</p>
-      <h1>Détail de l’élément d’inventaire</h1>
-      <p class="subtitle">
-        Suivi complet de l’article, de ses mouvements, affectations et inspections.
-      </p>
+      <p class="eyebrow">{{ 'inventory.kicker' | translate }}</p>
+      <h1>{{ 'inventory.title' | translate }}</h1>
+      <p class="subtitle">{{ 'inventory.subtitle' | translate }}</p>
     </div>
 
     <div class="header-actions">
       <button class="btn btn-light" type="button" (click)="goBack()">
-        Retour
+        {{ 'inventory.back' | translate }}
       </button>
 
       @if (item()) {
         <button class="btn btn-primary" type="button" (click)="editItem()">
-          Modifier
+          {{ 'inventory.edit' | translate }}
         </button>
       }
     </div>
@@ -23,7 +21,7 @@
 
   @if (loading()) {
     <div class="state-card">
-      Chargement de l’élément...
+      {{ 'inventory.loading' | translate }}
     </div>
   } @else if (errorMessage()) {
     <div class="state-card error">
@@ -48,26 +46,26 @@
           </div>
 
           <h2>{{ currentItem.name }}</h2>
-          <p>{{ currentItem.description || 'Aucune description disponible.' }}</p>
+          <p>{{ currentItem.description || ('inventory.noDescription' | translate) }}</p>
 
           <div class="hero-meta">
             <div class="meta-chip">
-              <span>Code</span>
+              <span>{{ 'inventory.code' | translate }}</span>
               <strong>{{ currentItem.inventoryCode || '—' }}</strong>
             </div>
 
             <div class="meta-chip">
-              <span>Quantité</span>
+              <span>{{ 'inventory.quantity' | translate }}</span>
               <strong>{{ currentItem.quantity || 0 }} {{ currentItem.unit || 'unit' }}</strong>
             </div>
 
             <div class="meta-chip">
-              <span>Zone</span>
+              <span>{{ 'inventory.zone' | translate }}</span>
               <strong>{{ getZoneName(currentItem.zone) }}</strong>
             </div>
 
             <div class="meta-chip">
-              <span>Affecté à</span>
+              <span>{{ 'inventory.assignedTo' | translate }}</span>
               <strong>{{ getAssignedToName(currentItem) }}</strong>
             </div>
           </div>
@@ -80,7 +78,7 @@
         } @else {
           <div class="no-image">
             <i class="bi bi-image"></i>
-            <span>Aucune image</span>
+            <span>{{ 'inventory.noImage' | translate }}</span>
           </div>
         }
       </div>
@@ -88,58 +86,58 @@
 
     <div class="summary-grid">
       <div class="summary-card">
-        <span>Mouvements</span>
+        <span>{{ 'inventory.summary.movements' | translate }}</span>
         <strong>{{ summary().movementCount }}</strong>
       </div>
 
       <div class="summary-card">
-        <span>Affectations</span>
+        <span>{{ 'inventory.summary.assignments' | translate }}</span>
         <strong>{{ summary().assignmentCount }}</strong>
       </div>
 
       <div class="summary-card">
-        <span>Inspections</span>
+        <span>{{ 'inventory.summary.inspections' | translate }}</span>
         <strong>{{ summary().inspectionCount }}</strong>
       </div>
 
       <div class="summary-card" [class.alert]="summary().hasAlerts">
-        <span>Alertes</span>
-        <strong>{{ summary().hasAlerts ? 'Oui' : 'Non' }}</strong>
+        <span>{{ 'inventory.summary.alerts' | translate }}</span>
+        <strong>{{ summary().hasAlerts ? ('inventory.summary.yes' | translate) : ('inventory.summary.no' | translate) }}</strong>
       </div>
     </div>
 
     <div class="details-card">
       <div class="details-grid">
         <div class="detail-item">
-          <span>Entreprise</span>
+          <span>{{ 'inventory.details.company' | translate }}</span>
           <strong>{{ getCompanyName(currentItem) }}</strong>
         </div>
         <div class="detail-item">
-          <span>Marque</span>
+          <span>{{ 'inventory.details.brand' | translate }}</span>
           <strong>{{ currentItem.brand || '—' }}</strong>
         </div>
         <div class="detail-item">
-          <span>Modèle</span>
+          <span>{{ 'inventory.details.model' | translate }}</span>
           <strong>{{ currentItem.model || '—' }}</strong>
         </div>
         <div class="detail-item">
-          <span>Série</span>
+          <span>{{ 'inventory.details.serial' | translate }}</span>
           <strong>{{ currentItem.serialNumber || '—' }}</strong>
         </div>
         <div class="detail-item">
-          <span>Fournisseur</span>
+          <span>{{ 'inventory.details.supplier' | translate }}</span>
           <strong>{{ currentItem.supplier || '—' }}</strong>
         </div>
         <div class="detail-item">
-          <span>Date achat</span>
+          <span>{{ 'inventory.details.purchaseDate' | translate }}</span>
           <strong>{{ formatDate(currentItem.purchaseDate) }}</strong>
         </div>
         <div class="detail-item">
-          <span>Expiration</span>
+          <span>{{ 'inventory.details.expiry' | translate }}</span>
           <strong>{{ formatDate(currentItem.expiryDate) }}</strong>
         </div>
         <div class="detail-item">
-          <span>Prochaine inspection</span>
+          <span>{{ 'inventory.details.nextInspection' | translate }}</span>
           <strong>{{ formatDate(currentItem.nextInspectionDate) }}</strong>
         </div>
       </div>
@@ -153,7 +151,7 @@
           [class.active]="activeTab() === 'overview'"
           (click)="setTab('overview')"
         >
-          Vue générale
+          {{ 'inventory.tabs.overview' | translate }}
         </button>
 
         <button
@@ -162,7 +160,7 @@
           [class.active]="activeTab() === 'movements'"
           (click)="setTab('movements')"
         >
-          Mouvements
+          {{ 'inventory.tabs.movements' | translate }}
         </button>
 
         <button
@@ -171,7 +169,7 @@
           [class.active]="activeTab() === 'assignments'"
           (click)="setTab('assignments')"
         >
-          Affectations
+          {{ 'inventory.tabs.assignments' | translate }}
         </button>
 
         <button
@@ -180,7 +178,7 @@
           [class.active]="activeTab() === 'inspections'"
           (click)="setTab('inspections')"
         >
-          Inspections
+          {{ 'inventory.tabs.inspections' | translate }}
         </button>
       </div>
 
@@ -191,24 +189,24 @@
               <button class="action-card" type="button" (click)="addMovement()">
                 <i class="bi bi-arrow-left-right"></i>
                 <div>
-                  <h4>Ajouter mouvement</h4>
-                  <p>Entrée, sortie, transfert ou ajustement.</p>
+                  <h4>{{ 'inventory.actions.addMovement' | translate }}</h4>
+                  <p>{{ 'inventory.actions.addMovementHint' | translate }}</p>
                 </div>
               </button>
 
               <button class="action-card" type="button" (click)="addAssignment()">
                 <i class="bi bi-person-check"></i>
                 <div>
-                  <h4>Affecter</h4>
-                  <p>Attribuer cet article à un employé ou une zone.</p>
+                  <h4>{{ 'inventory.actions.assign' | translate }}</h4>
+                  <p>{{ 'inventory.actions.assignHint' | translate }}</p>
                 </div>
               </button>
 
               <button class="action-card" type="button" (click)="addInspection()">
                 <i class="bi bi-clipboard-check"></i>
                 <div>
-                  <h4>Nouvelle inspection</h4>
-                  <p>Enregistrer un contrôle ou une vérification.</p>
+                  <h4>{{ 'inventory.actions.newInspection' | translate }}</h4>
+                  <p>{{ 'inventory.actions.newInspectionHint' | translate }}</p>
                 </div>
               </button>
             </div>
@@ -218,28 +216,28 @@
         @if (activeTab() === 'movements') {
           <div class="section-head">
             <div>
-              <h3>Mouvements</h3>
-              <p>Historique logistique de cet article.</p>
+              <h3>{{ 'inventory.movements.title' | translate }}</h3>
+              <p>{{ 'inventory.movements.subtitle' | translate }}</p>
             </div>
 
             <button class="btn btn-primary" type="button" (click)="addMovement()">
-              Ajouter mouvement
+              {{ 'inventory.actions.addMovement' | translate }}
             </button>
           </div>
 
           @if (loadingRelated()) {
-            <div class="empty-box">Chargement des mouvements...</div>
+            <div class="empty-box">{{ 'inventory.movements.loading' | translate }}</div>
           } @else if (movements().length === 0) {
-            <div class="empty-box">Aucun mouvement enregistré.</div>
+            <div class="empty-box">{{ 'inventory.movements.empty' | translate }}</div>
           } @else {
             <div class="list-table">
               <div class="list-head">
-                <span>Type</span>
-                <span>Quantité</span>
-                <span>De</span>
-                <span>Vers</span>
-                <span>Employé</span>
-                <span>Date</span>
+                <span>{{ 'inventory.movements.type' | translate }}</span>
+                <span>{{ 'inventory.movements.quantity' | translate }}</span>
+                <span>{{ 'inventory.movements.from' | translate }}</span>
+                <span>{{ 'inventory.movements.to' | translate }}</span>
+                <span>{{ 'inventory.movements.employee' | translate }}</span>
+                <span>{{ 'inventory.movements.date' | translate }}</span>
               </div>
 
               @for (movement of movements(); track trackMovement($index, movement)) {
@@ -259,28 +257,28 @@
         @if (activeTab() === 'assignments') {
           <div class="section-head">
             <div>
-              <h3>Affectations</h3>
-              <p>Historique des affectations de cet article.</p>
+              <h3>{{ 'inventory.assignments.title' | translate }}</h3>
+              <p>{{ 'inventory.assignments.subtitle' | translate }}</p>
             </div>
 
             <button class="btn btn-primary" type="button" (click)="addAssignment()">
-              Affecter
+              {{ 'inventory.actions.assign' | translate }}
             </button>
           </div>
 
           @if (loadingRelated()) {
-            <div class="empty-box">Chargement des affectations...</div>
+            <div class="empty-box">{{ 'inventory.assignments.loading' | translate }}</div>
           } @else if (assignments().length === 0) {
-            <div class="empty-box">Aucune affectation enregistrée.</div>
+            <div class="empty-box">{{ 'inventory.assignments.empty' | translate }}</div>
           } @else {
             <div class="list-table">
               <div class="list-head assignment-grid">
-                <span>Employé</span>
-                <span>Type</span>
-                <span>Statut</span>
-                <span>Date</span>
-                <span>Retour prévu</span>
-                <span>Retour réel</span>
+                <span>{{ 'inventory.assignments.employee' | translate }}</span>
+                <span>{{ 'inventory.assignments.type' | translate }}</span>
+                <span>{{ 'inventory.assignments.status' | translate }}</span>
+                <span>{{ 'inventory.assignments.date' | translate }}</span>
+                <span>{{ 'inventory.assignments.expectedReturn' | translate }}</span>
+                <span>{{ 'inventory.assignments.actualReturn' | translate }}</span>
               </div>
 
               @for (assignment of assignments(); track trackAssignment($index, assignment)) {
@@ -300,27 +298,27 @@
         @if (activeTab() === 'inspections') {
           <div class="section-head">
             <div>
-              <h3>Inspections</h3>
-              <p>Historique des contrôles et vérifications.</p>
+              <h3>{{ 'inventory.inspectionsTab.title' | translate }}</h3>
+              <p>{{ 'inventory.inspectionsTab.subtitle' | translate }}</p>
             </div>
 
             <button class="btn btn-primary" type="button" (click)="addInspection()">
-              Nouvelle inspection
+              {{ 'inventory.actions.newInspection' | translate }}
             </button>
           </div>
 
           @if (loadingRelated()) {
-            <div class="empty-box">Chargement des inspections...</div>
+            <div class="empty-box">{{ 'inventory.inspectionsTab.loading' | translate }}</div>
           } @else if (inspections().length === 0) {
-            <div class="empty-box">Aucune inspection enregistrée.</div>
+            <div class="empty-box">{{ 'inventory.inspectionsTab.empty' | translate }}</div>
           } @else {
             <div class="list-table">
               <div class="list-head inspection-grid">
-                <span>Date</span>
-                <span>Résultat</span>
-                <span>État</span>
-                <span>Inspecté par</span>
-                <span>Prochaine inspection</span>
+                <span>{{ 'inventory.inspectionsTab.date' | translate }}</span>
+                <span>{{ 'inventory.inspectionsTab.result' | translate }}</span>
+                <span>{{ 'inventory.inspectionsTab.condition' | translate }}</span>
+                <span>{{ 'inventory.inspectionsTab.inspectedBy' | translate }}</span>
+                <span>{{ 'inventory.inspectionsTab.next' | translate }}</span>
               </div>
 
               @for (inspection of inspections(); track trackInspection($index, inspection)) {

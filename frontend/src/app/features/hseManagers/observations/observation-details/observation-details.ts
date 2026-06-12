@@ -1,4 +1,5 @@
 import { CommonModule, DatePipe, NgClass } from '@angular/common';
+import { TranslatePipe } from '@ngx-translate/core';
 import { Component, DestroyRef, computed, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { finalize } from 'rxjs';
@@ -40,7 +41,7 @@ type ExtendedObservation = Observation & {
 @Component({
   selector: 'app-observation-details',
   standalone: true,
-  imports: [CommonModule, NgClass, DatePipe, RouterModule],
+  imports: [CommonModule, NgClass, DatePipe, RouterModule, TranslatePipe],
   templateUrl: './observation-details.html',
   styleUrl: './observation-details.scss',
 })

@@ -1,0 +1,79 @@
+<div class="page">
+
+  <!-- ── HERO ─────────────────────────────────────────── -->
+  <div class="hero-strip">
+    <div class="hero-icon">
+      <i class="bi bi-gear-wide-connected"></i>
+    </div>
+    <div class="hero-body">
+      <p class="hero-kicker">Admin · Paramètres</p>
+      <h1>{{ 'settings.title' | translate }}</h1>
+      <p class="hero-sub">{{ 'settings.subtitle' | translate }}</p>
+    </div>
+  </div>
+
+  <!-- ── TILES GRID ─────────────────────────────────────── -->
+  <div class="tiles-grid">
+
+    <a class="tile" routerLink="/admin/settings/logs">
+      <div class="tile-icon blue">
+        <i class="bi bi-clock-history"></i>
+      </div>
+      <div class="tile-body">
+        <h3>{{ 'settings.logs.title' | translate }}</h3>
+        <p>{{ 'settings.logs.subtitle' | translate }}</p>
+      </div>
+      <i class="tile-arrow bi bi-arrow-right"></i>
+    </a>
+
+    <a class="tile" routerLink="/admin/profile">
+      <div class="tile-icon violet">
+        <i class="bi bi-person-circle"></i>
+      </div>
+      <div class="tile-body">
+        <h3>{{ 'settings.profile.title' | translate }}</h3>
+        <p>{{ 'settings.profile.subtitle' | translate }}</p>
+      </div>
+      <i class="tile-arrow bi bi-arrow-right"></i>
+    </a>
+
+    <a class="tile tile-soon" href="#" (click)="$event.preventDefault()">
+      <div class="tile-icon teal">
+        <i class="bi bi-shield-lock"></i>
+      </div>
+      <div class="tile-body">
+        <h3>{{ 'settings.security.title' | translate }}</h3>
+        <p>{{ 'settings.security.subtitle' | translate }}</p>
+      </div>
+      <span class="soon-badge">Bientôt</span>
+    </a>
+
+    <a class="tile tile-soon" href="#" (click)="$event.preventDefault()">
+      <div class="tile-icon amber">
+        <i class="bi bi-bell"></i>
+      </div>
+      <div class="tile-body">
+        <h3>{{ 'settings.notifications.title' | translate }}</h3>
+        <p>{{ 'settings.notifications.subtitle' | translate }}</p>
+      </div>
+      <span class="soon-badge">Bientôt</span>
+    </a>
+
+  </div>
+
+  <!-- ── SECURITY NOTE ─────────────────────────────────── -->
+  <div class="security-note">
+    <div class="note-icon">
+      <i class="bi bi-shield-check"></i>
+    </div>
+    <div class="note-content">
+      <h3>{{ 'settings.securityNote.title' | translate }}</h3>
+      <p>{{ 'settings.securityNote.body' | translate }}</p>
+    </div>
+    <a class="note-link" routerLink="/admin/settings/logs">
+      {{ 'settings.securityNote.link' | translate }}
+      <i class="bi bi-arrow-right"></i>
+    </a>
+  </div>
+
+</div>

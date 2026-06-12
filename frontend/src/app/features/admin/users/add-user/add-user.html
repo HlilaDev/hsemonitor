@@ -1,136 +1,175 @@
 <div class="page">
-  <div class="page-header">
-    <div>
-      <h2>Ajouter un utilisateur</h2>
-      <p class="muted">Créer un compte (Agent / Manager / admin).</p>
-    </div>
 
-    <a class="btn btn-outline-secondary" routerLink="/admin/users">← Retour</a>
+  <!-- ── TopBar ──────────────────────────────────────── -->
+  <div class="topbar">
+    <a class="btn-back" routerLink="/admin/users">
+      <i class="bi bi-arrow-left"></i>
+      {{ 'users.add.kicker' | translate }}
+    </a>
   </div>
 
-  <div class="card">
+  <!-- ── Hero ────────────────────────────────────────── -->
+  <div class="hero-card">
+    <div class="hero-gradient"></div>
+    <div class="hero-body">
+      <div class="hero-icon-wrap">
+        <i class="bi bi-person-plus-fill hero-icon"></i>
+      </div>
+      <div class="hero-text">
+        <p class="hero-eyebrow">{{ 'users.add.kicker' | translate }}</p>
+        <h1 class="hero-title">{{ 'users.add.title' | translate }}</h1>
+        <p class="hero-sub">{{ 'users.add.subtitle' | translate }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Form Card ────────────────────────────────────── -->
+  <div class="form-card">
+
+    @if (errorMessage) {
+      <div class="alert-error">
+        <i class="bi bi-exclamation-triangle-fill"></i>
+        {{ errorMessage }}
+      </div>
+    }
+
+    @if (successMessage) {
+      <div class="alert-success">
+        <i class="bi bi-check-circle-fill"></i>
+        {{ successMessage }}
+      </div>
+    }
+
     <form [formGroup]="form" (ngSubmit)="submit()">
 
-      @if (errorMessage) {
-        <div class="alert alert-danger">{{ errorMessage }}</div>
-      }
-
-      @if (successMessage) {
-        <div class="alert alert-success">{{ successMessage }}</div>
-      }
-
-      <!-- First name -->
-      <div class="form-group">
-        <label class="form-label">
-          Prénom <span class="req">*</span>
-        </label>
-
-        <input
-          type="text"
-          class="form-control"
-          formControlName="firstName"
-          placeholder="Ex: Ahmed"
-          [class.is-invalid]="firstName.touched && firstName.invalid"
-        />
-
-        @if (firstName.touched && firstName.errors?.['required']) {
-          <div class="invalid-feedback">Le prénom est obligatoire.</div>
-        }
-        @if (firstName.touched && firstName.errors?.['minlength']) {
-          <div class="invalid-feedback">Minimum 2 caractères.</div>
-        }
+      <!-- Section: Identity -->
+      <div class="section-header">
+        <div class="section-icon violet"><i class="bi bi-person-badge-fill"></i></div>
+        <div>
+          <h3 class="section-title">{{ 'users.add.sectionIdentity' | translate }}</h3>
+        </div>
       </div>
 
-      <!-- Last name -->
-      <div class="form-group">
-        <label class="form-label">
-          Nom <span class="req">*</span>
-        </label>
+      <div class="fields-grid">
 
-        <input
-          type="text"
-          class="form-control"
-          formControlName="lastName"
-          placeholder="Ex: Ben Ali"
-          [class.is-invalid]="lastName.touched && lastName.invalid"
-        />
+        <!-- First Name -->
+        <div class="form-field">
+          <label class="field-label">{{ 'users.add.firstName' | translate }} <span class="req">*</span></label>
+          <input
+            type="text"
+            class="field-input"
+            formControlName="firstName"
+            [placeholder]="'users.add.firstNamePh' | translate"
+            [class.is-invalid]="firstName.touched && firstName.invalid"
+          />
+          @if (firstName.touched && firstName.errors?.['required']) {
+            <span class="field-error">{{ 'users.add.error.firstNameRequired' | translate }}</span>
+          }
+          @if (firstName.touched && firstName.errors?.['minlength']) {
+            <span class="field-error">{{ 'users.add.error.firstNameMin' | translate }}</span>
+          }
+        </div>
 
-        @if (lastName.touched && lastName.errors?.['required']) {
-          <div class="invalid-feedback">Le nom est obligatoire.</div>
-        }
-        @if (lastName.touched && lastName.errors?.['minlength']) {
-          <div class="invalid-feedback">Minimum 2 caractères.</div>
-        }
+        <!-- Last Name -->
+        <div class="form-field">
+          <label class="field-label">{{ 'users.add.lastName' | translate }} <span class="req">*</span></label>
+          <input
+            type="text"
+            class="field-input"
+            formControlName="lastName"
+            [placeholder]="'users.add.lastNamePh' | translate"
+            [class.is-invalid]="lastName.touched && lastName.invalid"
+          />
+          @if (lastName.touched && lastName.errors?.['required']) {
+            <span class="field-error">{{ 'users.add.error.lastNameRequired' | translate }}</span>
+          }
+          @if (lastName.touched && lastName.errors?.['minlength']) {
+            <span class="field-error">{{ 'users.add.error.lastNameMin' | translate }}</span>
+          }
+        </div>
+
+        <!-- Email -->
+        <div class="form-field">
+          <label class="field-label">{{ 'users.add.email' | translate }} <span class="req">*</span></label>
+          <input
+            type="email"
+            class="field-input"
+            formControlName="email"
+            [placeholder]="'users.add.emailPh' | translate"
+            [class.is-invalid]="email.touched && email.invalid"
+          />
+          @if (email.touched && email.errors?.['required']) {
+            <span class="field-error">{{ 'users.add.error.emailRequired' | translate }}</span>
+          }
+          @if (email.touched && email.errors?.['email']) {
+            <span class="field-error">{{ 'users.add.error.emailInvalid' | translate }}</span>
+          }
+        </div>
+
+        <!-- Password -->
+        <div class="form-field">
+          <label class="field-label">{{ 'users.add.password' | translate }} <span class="req">*</span></label>
+          <input
+            type="password"
+            class="field-input"
+            formControlName="password"
+            [placeholder]="'users.add.passwordPh' | translate"
+            [class.is-invalid]="password.touched && password.invalid"
+          />
+          @if (password.touched && password.errors?.['required']) {
+            <span class="field-error">{{ 'users.add.error.passwordRequired' | translate }}</span>
+          }
+          @if (password.touched && password.errors?.['minlength']) {
+            <span class="field-error">{{ 'users.add.error.passwordMin' | translate }}</span>
+          }
+        </div>
+
+        <!-- Role -->
+        <div class="form-field full">
+          <label class="field-label">{{ 'users.add.role' | translate }} <span class="req">*</span></label>
+          <div class="role-options" formControlName="role">
+            <label class="role-option" [class.is-active]="form.controls.role.value === 'agent'">
+              <input type="radio" formControlName="role" value="agent" />
+              <i class="bi bi-person-fill"></i>
+              <span>{{ 'users.roles.agent' | translate }}</span>
+            </label>
+            <label class="role-option" [class.is-active]="form.controls.role.value === 'manager'">
+              <input type="radio" formControlName="role" value="manager" />
+              <i class="bi bi-briefcase-fill"></i>
+              <span>{{ 'users.roles.manager' | translate }}</span>
+            </label>
+            <label class="role-option" [class.is-active]="form.controls.role.value === 'supervisor'">
+              <input type="radio" formControlName="role" value="supervisor" />
+              <i class="bi bi-eye-fill"></i>
+              <span>{{ 'users.roles.supervisor' | translate }}</span>
+            </label>
+            <label class="role-option" [class.is-active]="form.controls.role.value === 'admin'">
+              <input type="radio" formControlName="role" value="admin" />
+              <i class="bi bi-shield-fill"></i>
+              <span>{{ 'users.roles.admin' | translate }}</span>
+            </label>
+          </div>
+        </div>
+
       </div>
 
-      <!-- Email -->
-      <div class="form-group">
-        <label class="form-label">
-          Email <span class="req">*</span>
-        </label>
-
-        <input
-          type="email"
-          class="form-control"
-          formControlName="email"
-          placeholder="Ex: user@company.com"
-          [class.is-invalid]="email.touched && email.invalid"
-        />
-
-        @if (email.touched && email.errors?.['required']) {
-          <div class="invalid-feedback">L’email est obligatoire.</div>
-        }
-        @if (email.touched && email.errors?.['email']) {
-          <div class="invalid-feedback">Email invalide.</div>
-        }
-      </div>
-
-      <!-- Password -->
-      <div class="form-group">
-        <label class="form-label">
-          Mot de passe <span class="req">*</span>
-        </label>
-
-        <input
-          type="password"
-          class="form-control"
-          formControlName="password"
-          placeholder="Minimum 6 caractères"
-          [class.is-invalid]="password.touched && password.invalid"
-        />
-
-        @if (password.touched && password.errors?.['required']) {
-          <div class="invalid-feedback">Le mot de passe est obligatoire.</div>
-        }
-        @if (password.touched && password.errors?.['minlength']) {
-          <div class="invalid-feedback">Minimum 6 caractères.</div>
-        }
-      </div>
-
-      <!-- Role -->
-      <div class="form-group">
-        <label class="form-label">
-          Rôle <span class="req">*</span>
-        </label>
-
-        <select class="form-select" formControlName="role">
-          <option value="agent">Agent</option>
-          <option value="manager">Manager</option>
-           <option value="supervisor">Supervisor</option>
-          <option value="admin">Admin</option>
-        </select>
-      </div>
-
-      <!-- Actions -->
-      <div class="actions">
-        <button class="btn btn-primary" type="submit" [disabled]="loading">
-          @if (!loading) { <span>Créer</span> } @else { <span>Création...</span> }
+      <!-- Form Actions -->
+      <div class="form-footer">
+        <button class="btn-save" type="submit" [disabled]="loading">
+          @if (!loading) {
+            <i class="bi bi-check-lg"></i>
+            {{ 'users.add.createBtn' | translate }}
+          } @else {
+            <span class="spinner-sm"></span>
+            {{ 'users.add.creating' | translate }}
+          }
         </button>
-
-        <button class="btn btn-light" type="button" (click)="reset()" [disabled]="loading">
-          Réinitialiser
+        <button class="btn-cancel" type="button" (click)="reset()" [disabled]="loading">
+          {{ 'users.add.resetBtn' | translate }}
         </button>
       </div>
+
     </form>
   </div>
+
 </div>

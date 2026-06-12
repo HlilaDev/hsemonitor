@@ -1,22 +1,20 @@
 <section class="messages-page">
   <div class="page-header">
     <div>
-      <p class="eyebrow">HSE Communication</p>
-      <h1>Messages Opérationnels</h1>
-      <p class="subtitle">
-        Gérez les messages envoyés vers les écrans, devices et zones connectées.
-      </p>
+      <p class="eyebrow">{{ 'operationalMessages.kicker' | translate }}</p>
+      <h1>{{ 'operationalMessages.title' | translate }}</h1>
+      <p class="subtitle">{{ 'operationalMessages.subtitle' | translate }}</p>
     </div>
 
     <div class="header-actions">
       <button type="button" class="btn btn-refresh" (click)="loadMessages()">
         <i class="bi bi-arrow-clockwise"></i>
-        <span>Actualiser</span>
+        <span>{{ 'operationalMessages.refresh' | translate }}</span>
       </button>
 
-      <button type="button" class="btn btn-primary"  >
+      <button type="button" class="btn btn-primary" (click)="goToAdd()">
         <i class="bi bi-plus-lg"></i>
-        <span>Nouveau message</span>
+        <span>{{ 'operationalMessages.newMessage' | translate }}</span>
       </button>
     </div>
   </div>
@@ -27,7 +25,7 @@
         <i class="bi bi-file-earmark-text"></i>
       </div>
       <div class="stat-content">
-        <span>Draft</span>
+        <span>{{ 'operationalMessages.stats.draft' | translate }}</span>
         <strong>{{ draftCount() }}</strong>
       </div>
     </article>
@@ -37,7 +35,7 @@
         <i class="bi bi-send"></i>
       </div>
       <div class="stat-content">
-        <span>Sent</span>
+        <span>{{ 'operationalMessages.stats.sent' | translate }}</span>
         <strong>{{ sentCount() }}</strong>
       </div>
     </article>
@@ -47,7 +45,7 @@
         <i class="bi bi-badge-hd"></i>
       </div>
       <div class="stat-content">
-        <span>Displayed</span>
+        <span>{{ 'operationalMessages.stats.displayed' | translate }}</span>
         <strong>{{ displayedCount() }}</strong>
       </div>
     </article>
@@ -57,7 +55,7 @@
         <i class="bi bi-exclamation-triangle"></i>
       </div>
       <div class="stat-content">
-        <span>Critical</span>
+        <span>{{ 'operationalMessages.stats.critical' | translate }}</span>
         <strong>{{ criticalCount() }}</strong>
       </div>
     </article>
@@ -71,7 +69,7 @@
           type="text"
           [value]="search()"
           (input)="onSearchChange($any($event.target).value)"
-          placeholder="Rechercher par titre ou contenu..."
+          [placeholder]="'operationalMessages.filters.searchPlaceholder' | translate"
         />
       </div>
 
@@ -96,12 +94,12 @@
 
         <button type="button" class="btn btn-primary" (click)="applyFilters()">
           <i class="bi bi-funnel"></i>
-          <span>Filtrer</span>
+          <span>{{ 'operationalMessages.filters.filterBtn' | translate }}</span>
         </button>
 
         <button type="button" class="btn btn-light" (click)="resetFilters()">
           <i class="bi bi-x-circle"></i>
-          <span>Reset</span>
+          <span>{{ 'operationalMessages.filters.resetBtn' | translate }}</span>
         </button>
       </div>
     </div>
@@ -117,35 +115,35 @@
   <div class="table-card">
     <div class="table-header">
       <div>
-        <h2>Liste des messages</h2>
-        <p>{{ total() }} message(s) trouvé(s)</p>
+        <h2>{{ 'operationalMessages.list.title' | translate }}</h2>
+        <p>{{ total() }} {{ 'operationalMessages.list.count' | translate }}</p>
       </div>
     </div>
 
     @if (loading()) {
       <div class="state-box loading-state">
         <div class="spinner"></div>
-        <p>Chargement des messages...</p>
+        <p>{{ 'operationalMessages.list.loading' | translate }}</p>
       </div>
     } @else if (!items().length) {
       <div class="state-box empty-state">
         <i class="bi bi-inbox"></i>
-        <h3>Aucun message trouvé</h3>
-        <p>Essayez de modifier les filtres ou ajoutez un nouveau message.</p>
+        <h3>{{ 'operationalMessages.list.emptyTitle' | translate }}</h3>
+        <p>{{ 'operationalMessages.list.emptyBody' | translate }}</p>
       </div>
     } @else {
       <div class="table-wrapper">
         <table>
           <thead>
             <tr>
-              <th>Message</th>
-              <th>Type</th>
-              <th>Priorité</th>
-              <th>Cible</th>
-              <th>Statut</th>
-              <th>Créé par</th>
-              <th>Date</th>
-              <th class="actions-col">Actions</th>
+              <th>{{ 'operationalMessages.list.colMessage' | translate }}</th>
+              <th>{{ 'operationalMessages.list.colType' | translate }}</th>
+              <th>{{ 'operationalMessages.list.colPriority' | translate }}</th>
+              <th>{{ 'operationalMessages.list.colTarget' | translate }}</th>
+              <th>{{ 'operationalMessages.list.colStatus' | translate }}</th>
+              <th>{{ 'operationalMessages.list.colCreatedBy' | translate }}</th>
+              <th>{{ 'operationalMessages.list.colDate' | translate }}</th>
+              <th class="actions-col">{{ 'operationalMessages.list.colActions' | translate }}</th>
             </tr>
           </thead>
 
@@ -158,9 +156,9 @@
                       type="button"
                       class="message-title-btn"
                       (click)="goToDetail(item)"
-                      [title]="item.title || 'Sans titre'"
+                      [title]="item.title || ('operationalMessages.list.noTitle' | translate)"
                     >
-                      {{ item.title || 'Sans titre' }}
+                      {{ item.title || ('operationalMessages.list.noTitle' | translate) }}
                     </button>
 
                     <p>{{ item.content }}</p>
@@ -206,7 +204,7 @@
                     <button
                       type="button"
                       class="icon-btn info"
-                      title="Voir détail"
+                      [title]="'operationalMessages.list.actionView' | translate"
                       [disabled]="actionLoadingId() === item._id"
                       (click)="goToDetail(item)"
                     >
@@ -216,7 +214,7 @@
                     <button
                       type="button"
                       class="icon-btn success"
-                      title="Publier"
+                      [title]="'operationalMessages.list.actionPublish' | translate"
                       [disabled]="actionLoadingId() === item._id"
                       (click)="publishMessage(item)"
                     >
@@ -226,7 +224,7 @@
                     <button
                       type="button"
                       class="icon-btn warning"
-                      title="Annuler"
+                      [title]="'operationalMessages.list.actionCancel' | translate"
                       [disabled]="actionLoadingId() === item._id"
                       (click)="cancelMessage(item)"
                     >
@@ -236,7 +234,7 @@
                     <button
                       type="button"
                       class="icon-btn danger"
-                      title="Supprimer"
+                      [title]="'operationalMessages.list.actionDelete' | translate"
                       [disabled]="actionLoadingId() === item._id"
                       (click)="deleteMessage(item)"
                     >
@@ -258,11 +256,11 @@
           (click)="goToPage(page() - 1)"
         >
           <i class="bi bi-chevron-left"></i>
-          <span>Précédent</span>
+          <span>{{ 'operationalMessages.pagination.previous' | translate }}</span>
         </button>
 
         <div class="page-indicator">
-          Page <strong>{{ page() }}</strong> / {{ totalPages() }}
+          {{ 'operationalMessages.pagination.page' | translate }} <strong>{{ page() }}</strong> / {{ totalPages() }}
         </div>
 
         <button
@@ -271,7 +269,7 @@
           [disabled]="page() >= totalPages()"
           (click)="goToPage(page() + 1)"
         >
-          <span>Suivant</span>
+          <span>{{ 'operationalMessages.pagination.next' | translate }}</span>
           <i class="bi bi-chevron-right"></i>
         </button>
       </div>

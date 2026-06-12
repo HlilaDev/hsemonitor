@@ -1,169 +1,163 @@
-<div class="page">
+<div class="edit-page">
 
-  <div class="page-header">
-    <div>
-      <h2>{{ 'DEVICES.EDIT_TITLE' | translate }}</h2>
-      <p class="muted">{{ 'DEVICES.EDIT_SUBTITLE' | translate }}</p>
-    </div>
-
-    <a class="btn btn-outline-secondary" routerLink="/admin/devices">
-      ← {{ 'COMMON.BACK' | translate }}
+  <!-- ── Top Bar ─────────────────────────────── -->
+  <div class="topbar">
+    <a class="btn-back" routerLink="/admin/devices">
+      <i class="bi bi-arrow-left"></i>
+      {{ 'COMMON.BACK' | translate }}
     </a>
   </div>
 
+  <!-- ── Hero ───────────────────────────────── -->
+  <div class="hero-card">
+    <div class="hero-gradient"></div>
+    <div class="hero-body">
+      <div class="hero-icon-wrap">
+        <i class="bi bi-pencil-square"></i>
+      </div>
+      <div class="hero-text">
+        <p class="hero-eyebrow"><i class="bi bi-router-fill"></i> {{ 'DEVICES.KICKER' | translate }}</p>
+        <h1 class="hero-title">{{ 'DEVICES.EDIT_TITLE' | translate }}</h1>
+        <p class="hero-sub">{{ 'DEVICES.EDIT_SUBTITLE' | translate }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Loading ────────────────────────────── -->
   @if (loading) {
-    <p>{{ 'COMMON.LOADING' | translate }}</p>
+    <div class="state-box">
+      <span class="spinner"></span>
+      {{ 'COMMON.LOADING' | translate }}
+    </div>
   }
 
+  <!-- ── Form Card ──────────────────────────── -->
   @if (!loading) {
-    <div class="card">
+    <div class="form-card">
 
       @if (errorKey) {
-        <div class="alert alert-danger">
+        <div class="alert-box error-box">
+          <i class="bi bi-exclamation-triangle-fill"></i>
           {{ errorKey | translate }}
         </div>
       }
-
       @if (successKey) {
-        <div class="alert alert-success">
+        <div class="alert-box success-box">
+          <i class="bi bi-check-circle-fill"></i>
           {{ successKey | translate }}
         </div>
       }
 
       <form [formGroup]="form" (ngSubmit)="onSubmit()">
 
-        <!-- DEVICE ID -->
-        <div class="form-group">
-          <label class="form-label">
-            {{ 'DEVICES.FORM.DEVICE_ID' | translate }}
-            <span class="req">*</span>
-          </label>
-
-          <input
-            type="text"
-            class="form-control"
-            formControlName="deviceId"
-            [class.is-invalid]="deviceId.touched && deviceId.invalid"
-          />
-
-          @if (deviceId.touched && deviceId.errors?.['required']) {
-            <div class="invalid-feedback">
-              {{ 'DEVICES.VALIDATION.DEVICE_ID_REQUIRED' | translate }}
-            </div>
-          }
-
-          @if (deviceId.touched && deviceId.errors?.['minlength']) {
-            <div class="invalid-feedback">
-              {{ 'DEVICES.VALIDATION.DEVICE_ID_MIN' | translate }}
-            </div>
-          }
+        <!-- Section: Identification -->
+        <div class="section-header">
+          <div class="section-icon cyan"><i class="bi bi-cpu-fill"></i></div>
+          <span>{{ 'DEVICES.FORM.SECTION_IDENTIFICATION' | translate }}</span>
         </div>
 
-        <!-- NAME -->
-        <div class="form-group">
-          <label class="form-label">
-            {{ 'DEVICES.FORM.NAME' | translate }}
-          </label>
-
-          <input
-            type="text"
-            class="form-control"
-            formControlName="name"
-          />
-        </div>
-
-        <!-- ZONE -->
-        <div class="form-group">
-          <label class="form-label">
-            {{ 'DEVICES.FORM.ZONE' | translate }}
-            <span class="req">*</span>
-          </label>
-
-          <select
-            class="form-select"
-            formControlName="zone"
-            [class.is-invalid]="zone.touched && zone.invalid"
-          >
-            @for (z of zones; track z._id) {
-              <option [value]="z._id">
-                {{ z.name }}
-              </option>
+        <div class="fields-grid">
+          <div class="form-field">
+            <label>{{ 'DEVICES.FORM.DEVICE_ID' | translate }} <span class="req">*</span></label>
+            <div class="input-wrap">
+              <i class="bi bi-upc-scan input-icon"></i>
+              <input
+                type="text"
+                formControlName="deviceId"
+                [class.invalid]="deviceId.touched && deviceId.invalid"
+              />
+            </div>
+            @if (deviceId.touched && deviceId.errors?.['required']) {
+              <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ 'DEVICES.VALIDATION.DEVICE_ID_REQUIRED' | translate }}</span>
             }
-          </select>
+            @if (deviceId.touched && deviceId.errors?.['minlength']) {
+              <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ 'DEVICES.VALIDATION.DEVICE_ID_MIN' | translate }}</span>
+            }
+          </div>
 
-          @if (zone.touched && zone.errors?.['required']) {
-            <div class="invalid-feedback">
-              {{ 'DEVICES.VALIDATION.ZONE_REQUIRED' | translate }}
+          <div class="form-field">
+            <label>{{ 'DEVICES.FORM.NAME' | translate }}</label>
+            <div class="input-wrap">
+              <i class="bi bi-router input-icon"></i>
+              <input type="text" formControlName="name" />
             </div>
-          }
-        </div>
+          </div>
 
-        <!-- SENSORS -->
-        <div class="form-group">
-          <label class="form-label">
-            {{ 'DEVICES.FORM.SENSORS' | translate }}
-          </label>
-
-          <input
-            type="text"
-            class="form-control"
-            formControlName="sensorsText"
-          />
-
-          <div class="muted small">
-            {{ 'DEVICES.FORM.SENSORS_HELP' | translate }}
+          <div class="form-field full">
+            <label>{{ 'DEVICES.FORM.DESCRIPTION' | translate }}</label>
+            <textarea formControlName="description" rows="3"></textarea>
           </div>
         </div>
 
-        <!-- STATUS -->
-        <div class="form-group">
-          <label class="form-label">
-            {{ 'DEVICES.FORM.STATUS' | translate }}
-          </label>
-
-          <select class="form-select" formControlName="status">
-            <option value="online">
-              {{ 'DEVICES.STATUS.online' | translate }}
-            </option>
-            <option value="offline">
-              {{ 'DEVICES.STATUS.offline' | translate }}
-            </option>
-          </select>
+        <!-- Section: Configuration -->
+        <div class="section-header">
+          <div class="section-icon slate"><i class="bi bi-sliders"></i></div>
+          <span>{{ 'DEVICES.FORM.SECTION_CONFIGURATION' | translate }}</span>
         </div>
 
-        <!-- DESCRIPTION -->
-        <div class="form-group">
-          <label class="form-label">
-            {{ 'DEVICES.FORM.DESCRIPTION' | translate }}
-          </label>
+        <div class="fields-grid">
+          <div class="form-field">
+            <label>{{ 'DEVICES.FORM.ZONE' | translate }} <span class="req">*</span></label>
+            <div class="select-wrap">
+              <i class="bi bi-geo-alt input-icon"></i>
+              <select formControlName="zone" [class.invalid]="zone.touched && zone.invalid">
+                <option value="">— Sélectionner une zone —</option>
+                @for (z of zones; track z._id) {
+                  <option [value]="z._id">{{ z.name }}</option>
+                }
+              </select>
+              <i class="bi bi-chevron-down select-arrow"></i>
+            </div>
+            @if (zone.touched && zone.errors?.['required']) {
+              <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ 'DEVICES.VALIDATION.ZONE_REQUIRED' | translate }}</span>
+            }
+          </div>
 
-          <textarea
-            class="form-control"
-            rows="3"
-            formControlName="description"
-          ></textarea>
+          <div class="form-field">
+            <label>{{ 'DEVICES.FORM.STATUS' | translate }}</label>
+            <div class="status-options">
+              <label class="status-option online" [class.selected]="form.value.status === 'online'">
+                <input type="radio" formControlName="status" value="online" hidden />
+                <i class="bi bi-wifi"></i>
+                <span>{{ 'DEVICES.STATUS.online' | translate }}</span>
+              </label>
+              <label class="status-option offline" [class.selected]="form.value.status === 'offline'">
+                <input type="radio" formControlName="status" value="offline" hidden />
+                <i class="bi bi-wifi-off"></i>
+                <span>{{ 'DEVICES.STATUS.offline' | translate }}</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="form-field full">
+            <label>{{ 'DEVICES.FORM.SENSORS' | translate }}</label>
+            <div class="input-wrap">
+              <i class="bi bi-broadcast input-icon"></i>
+              <input
+                type="text"
+                formControlName="sensorsText"
+                [placeholder]="'DEVICES.FORM.SENSORS_HELP' | translate"
+              />
+            </div>
+            <span class="field-hint">{{ 'DEVICES.FORM.SENSORS_HELP' | translate }}</span>
+          </div>
         </div>
 
-        <!-- ACTIONS -->
-        <div class="actions">
-          <button
-            type="submit"
-            class="btn btn-success"
-            [disabled]="saving"
-          >
-            @if (!saving) {
-              {{ 'COMMON.SAVE' | translate }}
-            } @else {
+        <div class="form-actions">
+          <a class="btn-cancel" routerLink="/admin/devices">{{ 'COMMON.CANCEL' | translate }}</a>
+          <button class="btn-submit" type="submit" [disabled]="saving">
+            @if (saving) {
+              <span class="spinner"></span>
               {{ 'COMMON.SAVING' | translate }}
+            } @else {
+              <i class="bi bi-check-lg"></i>
+              {{ 'COMMON.SAVE' | translate }}
             }
           </button>
-
-          <a class="btn btn-light" routerLink="/admin/devices">
-            {{ 'COMMON.CANCEL' | translate }}
-          </a>
         </div>
 
       </form>
     </div>
   }
+
 </div>

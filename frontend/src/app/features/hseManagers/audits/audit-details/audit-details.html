@@ -2,25 +2,25 @@
   <div class="topbar">
     <a class="back-btn" routerLink="/manager/audits">
       <i class="bi bi-arrow-left"></i>
-      Back to audits
+      {{ 'audits.detail.back' | translate }}
     </a>
 
     <div class="top-actions">
       <a class="btn light" [routerLink]="['/manager/audits/edit', audit()._id]">
         <i class="bi bi-pencil-square"></i>
-        Edit
+        {{ 'audits.detail.edit' | translate }}
       </a>
 
       <button class="btn primary" type="button">
         <i class="bi bi-download"></i>
-        Export
+        {{ 'audits.detail.export' | translate }}
       </button>
     </div>
   </div>
 
   <div class="hero-card">
     <div class="hero-main">
-      <div class="eyebrow">Audit Details</div>
+      <div class="eyebrow">{{ 'audits.detail.title' | translate }}</div>
 
       <div class="title-row">
         <h1>{{ audit().title }}</h1>
@@ -61,7 +61,7 @@
         <div class="score-value">{{ audit().score ?? 0 }}%</div>
       </div>
       <div class="score-label">{{ getScoreLabel(audit().score) }}</div>
-      <small>Final audit performance</small>
+      <small>{{ 'audits.detail.finalPerf' | translate }}</small>
     </div>
   </div>
 
@@ -71,7 +71,7 @@
         <i class="bi bi-search"></i>
       </div>
       <div class="stat-content">
-        <span>Total Findings</span>
+        <span>{{ 'audits.detail.totalFindings' | translate }}</span>
         <strong>{{ findingsCount() }}</strong>
       </div>
     </div>
@@ -81,7 +81,7 @@
         <i class="bi bi-check2-circle"></i>
       </div>
       <div class="stat-content">
-        <span>Resolved / Closed</span>
+        <span>{{ 'audits.detail.resolvedClosed' | translate }}</span>
         <strong>{{ resolvedCount() }}</strong>
       </div>
     </div>
@@ -91,7 +91,7 @@
         <i class="bi bi-hourglass-split"></i>
       </div>
       <div class="stat-content">
-        <span>Open / In progress</span>
+        <span>{{ 'audits.detail.openInProgress' | translate }}</span>
         <strong>{{ openCount() }}</strong>
       </div>
     </div>
@@ -101,7 +101,7 @@
         <i class="bi bi-bar-chart-line"></i>
       </div>
       <div class="stat-content">
-        <span>Correction Progress</span>
+        <span>{{ 'audits.detail.correctionProgress' | translate }}</span>
         <strong>{{ progressValue() }}%</strong>
       </div>
     </div>
@@ -111,48 +111,48 @@
     <div class="main-column">
       <div class="card">
         <div class="card-head">
-          <h2>Audit Summary</h2>
-          <span>Main operational and timeline information</span>
+          <h2>{{ 'audits.detail.summary.title' | translate }}</h2>
+          <span>{{ 'audits.detail.summary.subtitle' | translate }}</span>
         </div>
 
         <div class="summary-grid">
           <div class="summary-item">
-            <label>Audit Type</label>
+            <label>{{ 'audits.detail.summary.type' | translate }}</label>
             <strong>{{ audit().type }}</strong>
           </div>
 
           <div class="summary-item">
-            <label>Status</label>
+            <label>{{ 'audits.detail.summary.status' | translate }}</label>
             <strong>{{ audit().status }}</strong>
           </div>
 
           <div class="summary-item">
-            <label>Zone</label>
+            <label>{{ 'audits.detail.summary.zone' | translate }}</label>
             <strong>{{ audit().zoneName }}</strong>
           </div>
 
           <div class="summary-item">
-            <label>Auditor</label>
+            <label>{{ 'audits.detail.summary.auditor' | translate }}</label>
             <strong>{{ audit().auditorName }}</strong>
           </div>
 
           <div class="summary-item">
-            <label>Scheduled Date</label>
+            <label>{{ 'audits.detail.summary.scheduledDate' | translate }}</label>
             <strong>{{ formatDate(audit().scheduledDate) }}</strong>
           </div>
 
           <div class="summary-item">
-            <label>Completed Date</label>
+            <label>{{ 'audits.detail.summary.completedDate' | translate }}</label>
             <strong>{{ formatDate(audit().completedDate) }}</strong>
           </div>
 
           <div class="summary-item">
-            <label>Created At</label>
+            <label>{{ 'audits.detail.summary.createdAt' | translate }}</label>
             <strong>{{ formatDate(audit().createdAt) }}</strong>
           </div>
 
           <div class="summary-item">
-            <label>Last Updated</label>
+            <label>{{ 'audits.detail.summary.updatedAt' | translate }}</label>
             <strong>{{ formatDate(audit().updatedAt) }}</strong>
           </div>
         </div>
@@ -160,8 +160,8 @@
 
       <div class="card">
         <div class="card-head">
-          <h2>Findings</h2>
-          <span>{{ findingsCount() }} finding(s) recorded during this audit</span>
+          <h2>{{ 'audits.detail.findings' | translate }}</h2>
+          <span>{{ findingsCount() }} {{ 'audits.detail.findingsRecorded' | translate }}</span>
         </div>
 
         <div class="findings-list">
@@ -205,8 +205,8 @@
     <aside class="side-column">
       <div class="card side-card">
         <div class="card-head">
-          <h2>Score Insight</h2>
-          <span>Inspection performance summary</span>
+          <h2>{{ 'audits.detail.scoreInsight.title' | translate }}</h2>
+          <span>{{ 'audits.detail.scoreInsight.subtitle' | translate }}</span>
         </div>
 
         <div class="score-panel">
@@ -223,8 +223,8 @@
 
       <div class="card side-card">
         <div class="card-head">
-          <h2>Attachments</h2>
-          <span>{{ audit().attachments.length }} linked file(s)</span>
+          <h2>{{ 'audits.detail.attachments' | translate }}</h2>
+          <span>{{ audit().attachments.length }} {{ 'audits.detail.linkedFiles' | translate }}</span>
         </div>
 
         <div class="attachments-list">
@@ -249,23 +249,23 @@
 
       <div class="card side-card">
         <div class="card-head">
-          <h2>Corrective Progress</h2>
-          <span>Based on findings resolution</span>
+          <h2>{{ 'audits.detail.correctiveProgress.title' | translate }}</h2>
+          <span>{{ 'audits.detail.correctiveProgress.subtitle' | translate }}</span>
         </div>
 
         <div class="progress-summary">
           <div class="mini-row">
-            <span>Resolved</span>
+            <span>{{ 'audits.detail.correctiveProgress.resolved' | translate }}</span>
             <strong>{{ resolvedCount() }}</strong>
           </div>
 
           <div class="mini-row">
-            <span>Pending</span>
+            <span>{{ 'audits.detail.correctiveProgress.pending' | translate }}</span>
             <strong>{{ openCount() }}</strong>
           </div>
 
           <div class="mini-row total">
-            <span>Progress</span>
+            <span>{{ 'audits.detail.correctiveProgress.progress' | translate }}</span>
             <strong>{{ progressValue() }}%</strong>
           </div>
         </div>

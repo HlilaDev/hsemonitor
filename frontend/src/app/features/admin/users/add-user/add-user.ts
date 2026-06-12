@@ -2,10 +2,11 @@ import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, Validators, FormControl, FormGroup } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 
 import { UserServices } from '../../../../core/services/users/user-services';
 
-type Role = 'agent' | 'manager' | 'admin';
+type Role = 'agent' | 'manager' | 'supervisor' | 'admin';
 
 type AddUserForm = FormGroup<{
   firstName: FormControl<string>;
@@ -18,7 +19,7 @@ type AddUserForm = FormGroup<{
 @Component({
   selector: 'app-add-user',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, TranslateModule],
   templateUrl: './add-user.html',
   styleUrl: './add-user.scss',
 })

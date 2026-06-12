@@ -1,80 +1,102 @@
 <div class="page">
-  <div class="page-header">
-    <div>
-      <h2>Utilisateurs</h2>
-      <p class="muted">Liste des comptes (Agent / Manager / Admin / Supervisor).</p>
-    </div>
 
-    <div class="header-actions">
-      <a class="btn btn-outline-secondary" routerLink="/admin">← Retour</a>
-      <a class="btn btn-primary" routerLink="/admin/users/add">+ Ajouter</a>
+  <!-- ── Hero ───────────────────────────────────────── -->
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-content">
+      <div class="hero-left">
+        <p class="hero-kicker"><i class="bi bi-people-fill"></i> {{ 'users.list.kicker' | translate }}</p>
+        <h1>{{ 'users.list.title' | translate }}</h1>
+        <p class="hero-sub">{{ 'users.list.subtitle' | translate }}</p>
+      </div>
+      <a class="btn-hero" routerLink="/admin/users/add">
+        <i class="bi bi-plus-lg"></i>
+        {{ 'users.list.addBtn' | translate }}
+      </a>
     </div>
-  </div>
+  </section>
 
-  <div class="card">
+  <!-- ── Table Card ──────────────────────────────────── -->
+  <div class="card table-card">
+
+    @if (errorMessage) {
+      <div class="alert-error">
+        <i class="bi bi-exclamation-triangle-fill"></i>
+        {{ errorMessage }}
+        <button class="btn-retry" type="button" (click)="loadUsers()">
+          <i class="bi bi-arrow-clockwise"></i> {{ 'users.list.retry' | translate }}
+        </button>
+      </div>
+    }
+
     @if (loading) {
-      <div class="state muted">Chargement...</div>
-    } @else if (errorMessage) {
-      <div class="alert alert-danger">{{ errorMessage }}</div>
-      <button class="btn btn-light" type="button" (click)="loadUsers()">Réessayer</button>
-    } @else if (users.length === 0) {
-      <div class="state muted">Aucun utilisateur.</div>
+      <div class="loading-state">
+        <span class="spinner"></span>
+        {{ 'users.list.loading' | translate }}
+      </div>
     } @else {
-
       <div class="table-wrap">
         <table class="table">
           <thead>
             <tr>
-              <th style="width: 260px;">Nom</th>
-              <th>Email</th>
-              <th style="width: 160px; text-align:center;">Rôle</th>
-              <th style="width: 200px;">Créé le</th>
-              <th style="width: 220px; text-align:right;">Actions</th>
+              <th>{{ 'users.list.colUser' | translate }}</th>
+              <th>{{ 'users.list.colEmail' | translate }}</th>
+              <th class="center">{{ 'users.list.colRole' | translate }}</th>
+              <th>{{ 'users.list.colCreated' | translate }}</th>
+              <th class="right">{{ 'users.list.colActions' | translate }}</th>
             </tr>
           </thead>
-
           <tbody>
             @for (u of users; track trackById($index, u)) {
               <tr>
-                <td class="strong">{{ fullName(u) }}</td>
-                <td class="mono">{{ u.email }}</td>
+                <td>
+                  <div class="cell-user">
+                    <div class="user-avatar" [class]="'role-' + u.role">
+                      {{ (u.firstName[0] || '') + (u.lastName[0] || '') | uppercase }}
+                    </div>
+                    <div class="user-info">
+                      <span class="user-name">{{ fullName(u) }}</span>
+                    </div>
+                  </div>
+                </td>
 
-                <td style="text-align:center;">
-                  <span
-                    class="badge"
-                    [class.admin]="u.role === 'admin'"
-                    [class.manager]="u.role === 'manager'"
-                    [class.agent]="u.role === 'agent'"
-                    [class.supervisor]="u.role === 'supervisor'"
-                  >
-                    {{ roleText(u.role) }}
+                <td class="cell-mono">{{ u.email }}</td>
+
+                <td class="center">
+                  <span class="role-badge" [class]="'role-' + u.role">
+                    <i class="bi" [class]="roleIcon(u.role)"></i>
+                    {{ 'users.roles.' + u.role | translate }}
                   </span>
                 </td>
 
-                <td>
-                  @if (u.createdAt) {
-                    {{ u.createdAt | date:'yyyy-MM-dd HH:mm' }}
-                  } @else {
-                    <span class="muted">—</span>
-                  }
+                <td class="cell-muted">
+                  {{ u.createdAt ? (u.createdAt | date:'dd/MM/yyyy HH:mm') : '—' }}
                 </td>
 
-                <td class="actions">
-                  <a
-                    class="btn btn-sm btn-outline-primary"
-                    [routerLink]="['/admin/users/edit', u._id]"
-                  >
-                    Modifier
-                  </a>
+                <td class="right">
+                  <div class="row-actions">
+                    <a class="icon-btn"
+                      [routerLink]="['/admin/users/edit', u._id]"
+                      [title]="'COMMON.EDIT' | translate">
+                      <i class="bi bi-pencil"></i>
+                    </a>
+                    <button class="icon-btn danger"
+                      type="button"
+                      [disabled]="!u._id"
+                      (click)="deleteUser(u._id!)"
+                      [title]="'COMMON.DELETE' | translate">
+                      <i class="bi bi-trash"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            }
 
-                  <button
-                    class="btn btn-sm btn-outline-danger"
-                    type="button"
-                    [disabled]="!u._id"
-                    (click)="deleteUser(u._id!)"
-                  >
-                    Supprimer
-                  </button>
+            @if (users.length === 0) {
+              <tr>
+                <td colspan="5" class="empty-row">
+                  <i class="bi bi-people"></i>
+                  <span>{{ 'users.list.empty' | translate }}</span>
                 </td>
               </tr>
             }
@@ -82,6 +104,11 @@
         </table>
       </div>
 
+      <div class="table-footer">
+        <span class="total-info">{{ 'users.list.total' | translate }} : <b>{{ users.length }}</b></span>
+      </div>
     }
+
   </div>
+
 </div>

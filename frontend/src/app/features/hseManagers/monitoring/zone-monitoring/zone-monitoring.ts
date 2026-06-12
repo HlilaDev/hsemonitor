@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
+import { TranslatePipe } from '@ngx-translate/core';
 
 import {
   ReadingItem,
@@ -10,7 +11,7 @@ import {
 @Component({
   selector: 'app-zone-monitoring',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, TranslatePipe],
   templateUrl: './zone-monitoring.html',
   styleUrl: './zone-monitoring.scss',
 })

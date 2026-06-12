@@ -1,23 +1,20 @@
 <div class="page">
   <div class="hero">
     <div>
-      <div class="kicker">HSE Incidents</div>
-      <h1 class="title">Incidents Overview</h1>
-      <p class="subtitle">
-        Vue globale des incidents HSE créés, alertes critiques, zones à risque
-        et suivi opérationnel.
-      </p>
+      <div class="kicker">{{ 'incidents.kicker' | translate }}</div>
+      <h1 class="title">{{ 'incidents.title' | translate }}</h1>
+      <p class="subtitle">{{ 'incidents.subtitle' | translate }}</p>
     </div>
 
     <div class="hero-actions">
       <button class="btn ghost" type="button" (click)="refreshPage()">
         <i class="bi bi-arrow-clockwise"></i>
-        Actualiser
+        {{ 'incidents.actions.refresh' | translate }}
       </button>
 
       <a class="btn primary" routerLink="/manager/incidents/add">
         <i class="bi bi-plus-lg"></i>
-        New Incident
+        {{ 'incidents.actions.new' | translate }}
       </a>
     </div>
   </div>
@@ -29,20 +26,20 @@
 
   <div class="loading-card" *ngIf="isLoading()">
     <div class="loader"></div>
-    <p>Chargement des incidents...</p>
+    <p>{{ 'incidents.loading' | translate }}</p>
   </div>
 
   <ng-container *ngIf="!isLoading()">
     <div class="stats-grid">
+
+      <!-- Total — avec trend -->
       <div class="stat-card">
         <div class="stat-icon blue">
           <i class="bi bi-exclamation-octagon"></i>
         </div>
-
         <div class="stat-content">
           <div class="stat-value">{{ totalIncidents() }}</div>
-          <div class="stat-label">Total Incidents</div>
-
+          <div class="stat-label">{{ 'incidents.stats.total' | translate }}</div>
           <div class="stat-trend" [ngClass]="trendClass(weeklyTrend())">
             <i [class]="trendIcon(weeklyTrend())"></i>
             {{ trendText(weeklyTrend()) }}
@@ -50,124 +47,81 @@
         </div>
       </div>
 
+      <!-- Open — sans trend -->
       <div class="stat-card">
         <div class="stat-icon orange">
           <i class="bi bi-hourglass-split"></i>
         </div>
-
         <div class="stat-content">
           <div class="stat-value">{{ openCount() }}</div>
-          <div class="stat-label">Open</div>
-
-          <div class="stat-trend" [ngClass]="trendClass(openTrend())">
-            <i [class]="trendIcon(openTrend())"></i>
-            {{ trendText(openTrend()) }}
-          </div>
+          <div class="stat-label">{{ 'incidents.stats.open' | translate }}</div>
         </div>
       </div>
 
+      <!-- In Progress — sans trend -->
       <div class="stat-card">
         <div class="stat-icon yellow">
           <i class="bi bi-search"></i>
         </div>
-
         <div class="stat-content">
           <div class="stat-value">{{ investigatingCount() }}</div>
-          <div class="stat-label">In Progress</div>
-
-          <div class="stat-trend" [ngClass]="trendClass(investigatingTrend())">
-            <i [class]="trendIcon(investigatingTrend())"></i>
-            {{ trendText(investigatingTrend()) }}
-          </div>
+          <div class="stat-label">{{ 'incidents.stats.inProgress' | translate }}</div>
         </div>
       </div>
 
+      <!-- Critical — sans trend -->
       <div class="stat-card">
         <div class="stat-icon red">
           <i class="bi bi-shield-exclamation"></i>
         </div>
-
         <div class="stat-content">
           <div class="stat-value">{{ criticalCount() }}</div>
-          <div class="stat-label">Critical</div>
-
-          <div class="stat-trend" [ngClass]="trendClass(criticalTrend())">
-            <i [class]="trendIcon(criticalTrend())"></i>
-            {{ trendText(criticalTrend()) }}
-          </div>
+          <div class="stat-label">{{ 'incidents.stats.critical' | translate }}</div>
         </div>
       </div>
 
+      <!-- Resolved — sans trend -->
       <div class="stat-card">
         <div class="stat-icon green">
           <i class="bi bi-check2-circle"></i>
         </div>
-
         <div class="stat-content">
           <div class="stat-value">{{ resolvedCount() }}</div>
-          <div class="stat-label">Resolved</div>
-
-          <div class="stat-trend" [ngClass]="trendClass(closedTrend())">
-            <i [class]="trendIcon(closedTrend())"></i>
-            {{ trendText(closedTrend()) }}
-          </div>
+          <div class="stat-label">{{ 'incidents.stats.resolved' | translate }}</div>
         </div>
       </div>
+
     </div>
 
     <div class="toolbar">
-      <button
-        class="filter-chip"
-        [class.active]="selectedFilter() === 'all'"
-        (click)="setFilter('all')"
-        type="button"
-      >
-        All
+      <button class="filter-chip" [class.active]="selectedFilter() === 'all'"
+        (click)="setFilter('all')" type="button">
+        {{ 'incidents.filters.all' | translate }}
       </button>
 
-      <button
-        class="filter-chip"
-        [class.active]="selectedFilter() === 'open'"
-        (click)="setFilter('open')"
-        type="button"
-      >
-        Open
+      <button class="filter-chip" [class.active]="selectedFilter() === 'open'"
+        (click)="setFilter('open')" type="button">
+        {{ 'incidents.filters.open' | translate }}
       </button>
 
-      <button
-        class="filter-chip"
-        [class.active]="selectedFilter() === 'in_progress'"
-        (click)="setFilter('in_progress')"
-        type="button"
-      >
-        In Progress
+      <button class="filter-chip" [class.active]="selectedFilter() === 'in_progress'"
+        (click)="setFilter('in_progress')" type="button">
+        {{ 'incidents.filters.inProgress' | translate }}
       </button>
 
-      <button
-        class="filter-chip"
-        [class.active]="selectedFilter() === 'reviewed'"
-        (click)="setFilter('reviewed')"
-        type="button"
-      >
-        Reviewed
+      <button class="filter-chip" [class.active]="selectedFilter() === 'reviewed'"
+        (click)="setFilter('reviewed')" type="button">
+        {{ 'incidents.filters.reviewed' | translate }}
       </button>
 
-      <button
-        class="filter-chip"
-        [class.active]="selectedFilter() === 'closed'"
-        (click)="setFilter('closed')"
-        type="button"
-      >
-        Closed
+      <button class="filter-chip" [class.active]="selectedFilter() === 'closed'"
+        (click)="setFilter('closed')" type="button">
+        {{ 'incidents.filters.closed' | translate }}
       </button>
 
-      <button
-        class="filter-chip"
-        [class.active]="selectedFilter() === 'false_positive'"
-        (click)="setFilter('false_positive')"
-        type="button"
-      >
-        False Positive
+      <button class="filter-chip" [class.active]="selectedFilter() === 'false_positive'"
+        (click)="setFilter('false_positive')" type="button">
+        {{ 'incidents.filters.falsePositive' | translate }}
       </button>
     </div>
 
@@ -175,14 +129,14 @@
       <div class="card incidents-card">
         <div class="card-header">
           <div>
-            <h2>Recent Incidents</h2>
-            <p>{{ filteredIncidents().length }} incident(s) affiché(s)</p>
+            <h2>{{ 'incidents.list.title' | translate }}</h2>
+            <p>{{ filteredIncidents().length }} {{ 'incidents.list.count' | translate }}</p>
           </div>
         </div>
 
         <div class="empty-state" *ngIf="filteredIncidents().length === 0">
           <i class="bi bi-shield-check"></i>
-          <p>Aucun incident trouvé.</p>
+          <p>{{ 'incidents.list.empty' | translate }}</p>
         </div>
 
         <div class="incident-list" *ngIf="filteredIncidents().length > 0">
@@ -195,24 +149,20 @@
                   </div>
 
                   <div class="badges">
-                    <span
-                      class="badge severity"
+                    <span class="badge severity"
                       [class.low]="incident.severity === 'low'"
                       [class.medium]="incident.severity === 'medium'"
                       [class.high]="incident.severity === 'high'"
-                      [class.critical]="incident.severity === 'critical'"
-                    >
+                      [class.critical]="incident.severity === 'critical'">
                       {{ severityLabel(incident.severity) }}
                     </span>
 
-                    <span
-                      class="badge status"
+                    <span class="badge status"
                       [class.open]="incident.status === 'open'"
                       [class.reviewed]="incident.status === 'reviewed'"
                       [class.in-progress]="incident.status === 'in_progress'"
                       [class.closed]="incident.status === 'closed'"
-                      [class.false-positive]="incident.status === 'false_positive'"
-                    >
+                      [class.false-positive]="incident.status === 'false_positive'">
                       {{ statusLabel(incident.status) }}
                     </span>
                   </div>
@@ -225,12 +175,10 @@
                     <i class="bi bi-geo-alt"></i>
                     {{ getZoneName(incident.zone) }}
                   </span>
-
                   <span>
                     <i class="bi bi-tag"></i>
                     {{ typeLabel(incident.type) }}
                   </span>
-
                   <span>
                     <i class="bi bi-clock"></i>
                     {{ formatDate(incident.createdAt) }}
@@ -239,14 +187,11 @@
               </div>
 
               <div class="incident-side">
-                <div class="assigned-label">Reported by</div>
+                <div class="assigned-label">{{ 'incidents.list.reportedBy' | translate }}</div>
                 <div class="assigned-value">{{ getReportedBy(incident) }}</div>
 
-                <a
-                  class="mini-btn"
-                  [routerLink]="['/manager/incidents', incident._id]"
-                >
-                  View Details
+                <a class="mini-btn" [routerLink]="['/manager/incidents', incident._id]">
+                  {{ 'incidents.list.viewDetails' | translate }}
                 </a>
               </div>
             </div>
@@ -258,8 +203,8 @@
         <div class="card">
           <div class="card-header">
             <div>
-              <h2>High Risk Zones</h2>
-              <p>Zones avec le plus d’incidents</p>
+              <h2>{{ 'incidents.zones.title' | translate }}</h2>
+              <p>{{ 'incidents.zones.subtitle' | translate }}</p>
             </div>
           </div>
 
@@ -268,15 +213,13 @@
               <div class="zone-item">
                 <div>
                   <div class="zone-name">{{ zone.zone }}</div>
-                  <div class="zone-sub">{{ zone.incidents }} incidents</div>
+                  <div class="zone-sub">{{ zone.incidents }} {{ 'incidents.zones.incidents' | translate }}</div>
                 </div>
 
-                <span
-                  class="badge risk"
+                <span class="badge risk"
                   [class.stable]="zone.risk === 'stable'"
                   [class.warning]="zone.risk === 'warning'"
-                  [class.critical]="zone.risk === 'critical'"
-                >
+                  [class.critical]="zone.risk === 'critical'">
                   {{ riskLabel(zone.risk) }}
                 </span>
               </div>
@@ -284,28 +227,26 @@
           </div>
 
           <div class="empty-state small" *ngIf="riskZones().length === 0">
-            <p>Aucune zone à risque.</p>
+            <p>{{ 'incidents.zones.empty' | translate }}</p>
           </div>
         </div>
 
         <div class="card">
           <div class="card-header">
             <div>
-              <h2>Activity Timeline</h2>
-              <p>Dernières actions opérationnelles</p>
+              <h2>{{ 'incidents.timeline.title' | translate }}</h2>
+              <p>{{ 'incidents.timeline.subtitle' | translate }}</p>
             </div>
           </div>
 
           <div class="timeline" *ngIf="activities().length > 0">
             @for (activity of activities(); track activity.time + activity.text) {
               <div class="timeline-item">
-                <div
-                  class="timeline-dot"
+                <div class="timeline-dot"
                   [class.create]="activity.type === 'create'"
                   [class.update]="activity.type === 'update'"
-                  [class.resolve]="activity.type === 'resolve'"
-                ></div>
-
+                  [class.resolve]="activity.type === 'resolve'">
+                </div>
                 <div class="timeline-content">
                   <div class="timeline-time">{{ activity.time }}</div>
                   <div class="timeline-text">{{ activity.text }}</div>
@@ -315,7 +256,7 @@
           </div>
 
           <div class="empty-state small" *ngIf="activities().length === 0">
-            <p>Aucune activité récente.</p>
+            <p>{{ 'incidents.timeline.empty' | translate }}</p>
           </div>
         </div>
       </div>

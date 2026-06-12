@@ -1,0 +1,1799 @@
+{
+  "incidents": {
+    "kicker": "HSE Incidents",
+    "title": "Incidents Overview",
+    "subtitle": "Global view of HSE incidents, critical alerts, risk zones and operational tracking.",
+    "actions": {
+      "refresh": "Refresh",
+      "new": "New Incident"
+    },
+    "loading": "Loading incidents...",
+    "errors": {
+      "loadFailed": "Unable to load incidents."
+    },
+    "trend": {
+      "vsLastWeek": "vs last week"
+    },
+    "unassigned": "Unassigned",
+    "stats": {
+      "total": "Total Incidents",
+      "open": "Open",
+      "inProgress": "In Progress",
+      "critical": "Critical",
+      "resolved": "Resolved"
+    },
+    "filters": {
+      "all": "All",
+      "open": "Open",
+      "inProgress": "In Progress",
+      "reviewed": "Reviewed",
+      "closed": "Closed",
+      "falsePositive": "False Positive"
+    },
+    "list": {
+      "title": "Recent Incidents",
+      "count": "incident(s) displayed",
+      "empty": "No incidents found.",
+      "reportedBy": "Reported by",
+      "viewDetails": "View Details"
+    },
+    "zones": {
+      "title": "Risk Zones",
+      "subtitle": "Zones with the most incidents",
+      "incidents": "incidents",
+      "empty": "No risk zones.",
+      "undefined": "Undefined zone"
+    },
+    "timeline": {
+      "title": "Activity History",
+      "subtitle": "Latest operational actions",
+      "empty": "No recent activity."
+    },
+    "severity": {
+      "low": "Low",
+      "medium": "Medium",
+      "high": "High",
+      "critical": "Critical",
+      "undefined": "Undefined"
+    },
+    "status": {
+      "open": "Open",
+      "inProgress": "In Progress",
+      "reviewed": "Reviewed",
+      "closed": "Closed",
+      "falsePositive": "False Positive",
+      "unknown": "Unknown"
+    },
+    "risk": {
+      "stable": "Stable",
+      "warning": "Warning",
+      "critical": "Critical"
+    },
+    "types": {
+      "fall": "Fall",
+      "injury": "Injury",
+      "fire_alert": "Fire Alert",
+      "leak": "Leak",
+      "work_accident": "Work Accident",
+      "no_helmet": "No Helmet",
+      "no_vest": "No Vest",
+      "gas_alert": "Gas Alert",
+      "temp_alert": "Temperature Alert",
+      "manual_report": "Manual Report",
+      "other": "Other"
+    }
+  },
+
+  "monitoring": {
+    "backLink": "Back to monitoring",
+    "refresh": "Refresh",
+    "zone": {
+      "title": "Zone Monitoring",
+      "subtitle": "Aggregated view of devices, latest readings and overall zone status.",
+      "loading": "Loading zone monitoring...",
+      "zoneId": "Zone ID:",
+      "devicesCount": "Monitored devices:",
+      "lastSync": "Last sync:",
+      "stats": {
+        "devices": "Devices",
+        "online": "Online",
+        "avgTemp": "Average Temperature",
+        "avgHumidity": "Average Humidity"
+      },
+      "charts": {
+        "tempTrend": "Global temperature trend",
+        "humidityTrend": "Global humidity trend",
+        "wholeZone": "Entire zone",
+        "tempPlaceholder": "Global temperature chart to be integrated here",
+        "humidityPlaceholder": "Global humidity chart to be integrated here"
+      },
+      "table": {
+        "title": "Latest readings per device",
+        "subtitle": "One row per monitored device in the zone",
+        "device": "Device",
+        "status": "Status",
+        "sensor": "Sensor",
+        "temperature": "Temperature",
+        "humidity": "Humidity",
+        "gas": "Gas",
+        "lastReading": "Last reading",
+        "action": "Action",
+        "viewDetail": "View detail"
+      },
+      "card": {
+        "sensor": "Sensor",
+        "values": "Values",
+        "reading": "Reading",
+        "openDevice": "Open device"
+      }
+    },
+    "device": {
+      "title": "Device Monitoring",
+      "subtitle": "Real-time tracking, latest values and history of the selected device.",
+      "loading": "Loading device data...",
+      "noReading": "No readings available for this device.",
+      "deviceId": "Device ID:",
+      "zone": "Zone:",
+      "sensor": "Sensor:",
+      "lastReading": "Last reading:",
+      "stats": {
+        "temperature": "Temperature",
+        "humidity": "Humidity",
+        "gas": "Gas",
+        "sync": "Sync"
+      },
+      "charts": {
+        "tempEvolution": "Temperature evolution",
+        "humidityEvolution": "Humidity evolution",
+        "lastMeasures": "last measures"
+      },
+      "history": {
+        "title": "Recent history",
+        "subtitle": "Latest readings recorded for this device",
+        "date": "Date",
+        "sensorType": "Sensor type",
+        "values": "Values",
+        "empty": "No readings found for this device."
+      }
+    }
+  },
+
+  "audits": {
+    "kicker": "Audit Management",
+    "title": "Audit Overview",
+    "subtitle": "Track audit activity, monitor compliance progress, and review inspection performance across all industrial zones.",
+    "actions": {
+      "allAudits": "All audits",
+      "newAudit": "New audit",
+      "createAudit": "Create audit"
+    },
+    "stats": {
+      "total": "Total Audits",
+      "totalHint": "All registered audits",
+      "completed": "Completed",
+      "completedHint": "Audits closed successfully",
+      "planned": "Planned",
+      "plannedHint": "Upcoming inspections",
+      "avgScore": "Average Score",
+      "totalFindings": "total findings"
+    },
+    "toolbar": {
+      "title": "Audit Activity",
+      "subtitle": "Search and filter audits by type, status, zone, or auditor.",
+      "searchPlaceholder": "Search by title, zone, auditor...",
+      "statusLabel": "Status",
+      "typeLabel": "Type",
+      "allStatuses": "All statuses",
+      "allTypes": "All types"
+    },
+    "status": {
+      "planned": "Planned",
+      "in_progress": "In progress",
+      "completed": "Completed",
+      "cancelled": "Cancelled"
+    },
+    "type": {
+      "internal": "Internal",
+      "external": "External",
+      "safety": "Safety",
+      "environment": "Environment",
+      "compliance": "Compliance"
+    },
+    "list": {
+      "title": "Audits List",
+      "results": "result(s)",
+      "findings": "Findings",
+      "files": "Files",
+      "viewDetails": "View details",
+      "editAudit": "Edit audit"
+    },
+    "empty": {
+      "title": "No audits found",
+      "subtitle": "Try changing filters or create a new audit to get started.",
+      "cta": "Create audit"
+    },
+    "detail": {
+      "back": "Back to audits",
+      "edit": "Edit",
+      "export": "Export",
+      "title": "Audit Details",
+      "finalPerf": "Final audit performance",
+      "totalFindings": "Total Findings",
+      "resolvedClosed": "Resolved / Closed",
+      "openInProgress": "Open / In progress",
+      "correctionProgress": "Correction Progress",
+      "summary": {
+        "title": "Audit Summary",
+        "subtitle": "Main operational and timeline information",
+        "type": "Audit Type",
+        "status": "Status",
+        "zone": "Zone",
+        "auditor": "Auditor",
+        "scheduledDate": "Scheduled Date",
+        "completedDate": "Completed Date",
+        "createdAt": "Created At",
+        "updatedAt": "Last Updated"
+      },
+      "findings": "Findings",
+      "findingsRecorded": "finding(s) recorded during this audit",
+      "scoreInsight": {
+        "title": "Score Insight",
+        "subtitle": "Inspection performance summary"
+      },
+      "attachments": "Attachments",
+      "linkedFiles": "linked file(s)",
+      "correctiveProgress": {
+        "title": "Corrective Progress",
+        "subtitle": "Based on findings resolution",
+        "resolved": "Resolved",
+        "pending": "Pending",
+        "progress": "Progress"
+      }
+    },
+    "form": {
+      "kicker": "Audit Management",
+      "createTitle": "Create Audit",
+      "createSubtitle": "Create a new audit linked to your HSE process, zone, auditor, findings, and supporting documents.",
+      "back": "Back",
+      "formTitle": "Audit Form",
+      "formSubtitle": "Fill the audit information based on your backend model.",
+      "mainInfo": "Main Information",
+      "titleLabel": "Title",
+      "titlePlaceholder": "Ex: Weekly PPE Safety Audit - Zone A",
+      "titleError": "Title is required and must have at least 3 characters",
+      "typeLabel": "Type",
+      "statusLabel": "Status",
+      "descriptionLabel": "Description",
+      "descriptionPlaceholder": "Write audit description, scope, objectives and operational notes...",
+      "assignment": "Assignment & Scheduling",
+      "zoneLabel": "Zone ID",
+      "auditorLabel": "Auditor ID",
+      "auditorError": "Auditor is required",
+      "scheduledDate": "Scheduled Date",
+      "completedDate": "Completed Date",
+      "scoreLabel": "Score",
+      "findings": "Findings",
+      "addFinding": "Add finding",
+      "findingNum": "Finding #",
+      "remove": "Remove",
+      "findingTitle": "Finding Title",
+      "findingTitlePlaceholder": "Ex: Emergency exit blocked",
+      "findingTitleError": "Finding title is required",
+      "severity": "Severity",
+      "dueDate": "Due Date",
+      "assignedTo": "Assigned To",
+      "attachments": "Attachments",
+      "attachmentUrls": "Attachment URLs",
+      "attachmentPlaceholder": "https://file1.pdf, https://image2.jpg",
+      "attachmentHint": "Separate URLs with commas.",
+      "cancel": "Cancel",
+      "createBtn": "Create Audit",
+      "saving": "Saving...",
+      "tips": {
+        "title": "Audit Tips",
+        "subtitle": "Best practices for creating a complete audit",
+        "clearTitle": "Clear title",
+        "clearTitleHint": "Use the zone or process name in the audit title",
+        "assignAuditor": "Assign auditor",
+        "assignAuditorHint": "Select the responsible auditor before saving",
+        "addFindings": "Add findings",
+        "addFindingsHint": "Record observed issues directly during audit creation",
+        "attachEvidence": "Attach evidence",
+        "attachEvidenceHint": "Add document or image links for traceability"
+      }
+    }
+  },
+
+  "trainings": {
+    "list": {
+      "kicker": "HSE TRAINING",
+      "title": "Training Overview",
+      "subtitle": "Track, plan and manage all HSE trainings for your teams from one place.",
+      "refresh": "Refresh",
+      "newTraining": "New training",
+      "stats": {
+        "total": "Total trainings",
+        "totalHint": "Registered trainings",
+        "scheduled": "Scheduled",
+        "scheduledHint": "Upcoming sessions",
+        "completed": "Completed",
+        "completedHint": "Finalized sessions",
+        "cancelled": "Cancelled",
+        "cancelledHint": "Sessions not held",
+        "participants": "Participants",
+        "participantsHint": "Total enrollments"
+      },
+      "filters": {
+        "search": "Search",
+        "searchPlaceholder": "Title, description, provider, location...",
+        "category": "Category",
+        "allCategories": "All",
+        "status": "Status",
+        "allStatuses": "All",
+        "sort": "Sort",
+        "sortOptions": {
+          "dateDesc": "Date (recent → oldest)",
+          "dateAsc": "Date (oldest → recent)",
+          "titleAsc": "Title (A → Z)",
+          "titleDesc": "Title (Z → A)"
+        },
+        "reset": "Reset"
+      },
+      "empty": {
+        "title": "No training",
+        "subtitle": "Create your first training or change the filters.",
+        "create": "Create training"
+      },
+      "card": {
+        "start": "Start",
+        "end": "End",
+        "location": "Location",
+        "participants": "Participants",
+        "viewDetails": "View details",
+        "details": "Details",
+        "edit": "Edit",
+        "delete": "Delete"
+      }
+    },
+    "create": {
+      "title": "New Training",
+      "subtitle": "Create an HSE training and invite employees (participants).",
+      "back": "Back",
+      "create": "Create",
+      "saving": "Saving...",
+      "titleLabel": "Title",
+      "titlePlaceholder": "Ex: PPE Wearing Training",
+      "titleError": "Title required (min 3 characters).",
+      "categoryLabel": "Category",
+      "categoryError": "Category required.",
+      "statusLabel": "Status",
+      "statusError": "Status required.",
+      "providerLabel": "Provider",
+      "providerPlaceholder": "Ex: External / Consultant",
+      "locationLabel": "Location",
+      "locationPlaceholder": "Ex: Room A, Factory 1",
+      "startDateLabel": "Start date",
+      "startDateError": "Start date required.",
+      "endDateLabel": "End date",
+      "endDateHint": "Optional",
+      "descriptionLabel": "Description",
+      "descriptionPlaceholder": "Objective, content, prerequisites...",
+      "participants": "Participants",
+      "participantsSubtitle": "Select employees to invite.",
+      "addEmployees": "Add employees",
+      "selectionHint": "Tip: hold <b>Ctrl</b> (Windows) / <b>Cmd</b> (Mac) to select multiple.",
+      "noneSelected": "No participant selected.",
+      "cancel": "Cancel",
+      "createBtn": "Create training",
+      "category": {
+        "safety": "Safety",
+        "environment": "Environment",
+        "quality": "Quality",
+        "security": "Security",
+        "other": "Other"
+      },
+      "status": {
+        "scheduled": "Scheduled",
+        "completed": "Completed",
+        "cancelled": "Cancelled"
+      }
+    },
+    "edit": {
+      "title": "Edit training",
+      "subtitle": "Update training information and the participants list.",
+      "back": "Back",
+      "generalInfo": "General information",
+      "titleLabel": "Title",
+      "titlePlaceholder": "Ex: Fire safety training",
+      "titleError": "Title is mandatory and must contain at least 3 characters.",
+      "descriptionLabel": "Description",
+      "descriptionPlaceholder": "Describe the training objective...",
+      "categoryLabel": "Category",
+      "statusLabel": "Status",
+      "providerLabel": "Provider",
+      "providerPlaceholder": "Ex: external organization",
+      "locationLabel": "Location",
+      "locationPlaceholder": "Ex: HSE Room / Site A",
+      "startDateLabel": "Start date",
+      "startDateError": "Start date is mandatory.",
+      "endDateLabel": "End date",
+      "participants": "Participants",
+      "selectEmployees": "Select employees",
+      "selectionHint": "Hold Ctrl or Cmd to select multiple employees.",
+      "noneSelected": "No participant selected.",
+      "participantStatus": "Participant status",
+      "scoreLabel": "Score",
+      "validityLabel": "Valid until",
+      "noteLabel": "Note",
+      "notePlaceholder": "Observation, result...",
+      "summary": "Summary",
+      "participantsCol": "Participants",
+      "categoryCol": "Category",
+      "statusCol": "Status",
+      "startDateCol": "Start date",
+      "actionsCol": "Actions",
+      "saveBtn": "Save changes",
+      "cancel": "Cancel",
+      "saving": "Saving..."
+    },
+    "detail": {
+      "kicker": "HSE Training",
+      "back": "Back",
+      "edit": "Edit",
+      "createdBy": "Created by",
+      "start": "Start",
+      "end": "End",
+      "provider": "Provider",
+      "location": "Location",
+      "company": "Company",
+      "createdAt": "Created on",
+      "participants": "Participants",
+      "participantsSubtitle": "Manage employees enrolled in this training.",
+      "addParticipants": "Add",
+      "addWarning": "Adding participants is only allowed for a scheduled training that has not yet started.",
+      "noParticipants": "No participants registered for this training.",
+      "summary": {
+        "title": "Summary",
+        "category": "Category",
+        "status": "Status",
+        "participants": "Participants",
+        "location": "Location"
+      },
+      "actions": {
+        "title": "Actions",
+        "editTraining": "Edit training",
+        "addParticipants": "Add participants",
+        "backToList": "Back to list"
+      },
+      "modal": {
+        "title": "Add participants",
+        "subtitle": "Select one or more employees to enroll in this training.",
+        "searchPlaceholder": "Search an employee...",
+        "selected": "selected",
+        "loading": "Loading employees...",
+        "empty": "No employees available to add.",
+        "cancel": "Cancel",
+        "addBtn": "Add participants",
+        "adding": "Adding..."
+      },
+      "notFound": "Training not found",
+      "notFoundBack": "Back"
+    },
+    "overview": {
+      "kicker": "HSE AGENT TRAININGS",
+      "title": "Training Overview",
+      "subtitle": "Track manager-scheduled trainings, view upcoming sessions and quickly access field work.",
+      "loading": "Loading...",
+      "refresh": "Refresh",
+      "viewAll": "View all trainings",
+      "stats": {
+        "scheduled": "Scheduled",
+        "scheduledHint": "Sessions to prepare",
+        "completed": "Completed",
+        "completedHint": "Closed sessions",
+        "cancelled": "Cancelled",
+        "cancelledHint": "Interrupted sessions",
+        "participants": "Participants",
+        "participantsHint": "Total enrolled employees"
+      },
+      "filters": {
+        "searchPlaceholder": "Title, description, location, provider...",
+        "status": "Status",
+        "category": "Category",
+        "sort": "Sort",
+        "sortOptions": {
+          "startAsc": "Start date ↑",
+          "startDesc": "Start date ↓",
+          "titleAsc": "Title A → Z",
+          "titleDesc": "Title Z → A"
+        },
+        "reset": "Reset"
+      },
+      "upcoming": {
+        "title": "Upcoming sessions",
+        "subtitle": "Upcoming trainings to follow in the field.",
+        "start": "Start",
+        "location": "Location",
+        "participants": "Participants",
+        "present": "Present/validated",
+        "empty": "No upcoming sessions."
+      },
+      "recent": {
+        "title": "Recently completed trainings",
+        "subtitle": "Sessions already finalized by agents."
+      },
+      "list": {
+        "title": "Filtered list",
+        "count": "training(s) visible after filters",
+        "titleCol": "Title",
+        "category": "Category",
+        "startDate": "Start",
+        "location": "Location",
+        "participants": "Participants",
+        "status": "Status",
+        "action": "Action",
+        "empty": "No training found for these filters."
+      }
+    },
+    "agentDetail": {
+      "back": "Back",
+      "loading": "Loading...",
+      "refresh": "Refresh",
+      "kicker": "AGENT TRAINING",
+      "createdBy": "Created by manager",
+      "start": "Start",
+      "end": "End",
+      "provider": "Trainer / provider",
+      "location": "Location",
+      "company": "Company",
+      "createdAt": "Created on",
+      "participants": {
+        "title": "Participants and field tracking",
+        "subtitle": "The agent can mark attendance, absence and add comments.",
+        "scheduled": "Scheduled:",
+        "present": "Present:",
+        "absent": "Absent:",
+        "empty": "No participants registered for this training.",
+        "statusLabel": "Participant status",
+        "scoreLabel": "Score",
+        "scorePlaceholder": "Ex: 80",
+        "validity": "Validity",
+        "comment": "Comment / reason for absence",
+        "commentPlaceholder": "Ex: justified absence, arrived late...",
+        "save": "Save",
+        "saving": "Saving..."
+      },
+      "summary": {
+        "title": "Summary",
+        "category": "Category",
+        "status": "Current status",
+        "participants": "Participants",
+        "location": "Location"
+      },
+      "statusUpdate": {
+        "title": "Session update",
+        "newStatus": "New status",
+        "updateBtn": "Update status",
+        "updating": "Updating...",
+        "tips": {
+          "title": "Recommended use",
+          "scheduled": "before the training takes place",
+          "completed": "after the field session",
+          "cancelled": "session not held"
+        }
+      },
+      "resetBtn": "Reset all participants to 'scheduled'",
+      "backToList": "Back to list",
+      "notFound": "Training not found",
+      "notFoundBack": "Back"
+    }
+  },
+
+  "reports": {
+    "create": {
+      "title": "Create Report",
+      "subtitle": "Generate a report (weekly / monthly / yearly / audit / custom) for a zone and period.",
+      "back": "Back",
+      "titleLabel": "Title",
+      "titlePlaceholder": "Ex: Audit Report Zone A",
+      "titleHint": "Optional. If empty, a title can be generated automatically.",
+      "typeLabel": "Type",
+      "typeError": "Type required",
+      "zoneLabel": "Zone",
+      "zoneAll": "All / global",
+      "zoneHint": "Leave empty for a global report.",
+      "startDateLabel": "Start date",
+      "startDateHint": "Optional.",
+      "endDateLabel": "End date",
+      "endDateError": "End date must be after start date.",
+      "modeLabel": "Mode",
+      "automatic": "Automatic",
+      "manual": "Manual",
+      "modeHint": "Automatic: the server computes metrics. Manual: you can complete or adjust data afterward.",
+      "totalIncidents": "Total Incidents",
+      "totalObservations": "Total Observations",
+      "complianceRate": "Compliance Rate (%)",
+      "uploadPdf": "Upload PDF",
+      "choosePdf": "Choose a PDF file",
+      "pdfSizeHint": "Max recommended size: 10 MB",
+      "pdfHint": "Optional. You can directly attach the report PDF.",
+      "cancel": "Cancel",
+      "create": "Create",
+      "creating": "Creating..."
+    },
+    "edit": {
+      "back": "Back",
+      "viewDetail": "View detail",
+      "save": "Save",
+      "saving": "Saving...",
+      "title": "Edit report",
+      "pdfAvailable": "PDF available",
+      "currentCompliance": "Current compliance",
+      "editInfo": "Edit information",
+      "titleLabel": "Title",
+      "titlePlaceholder": "Ex: HSE Report zone A - week 12",
+      "typeLabel": "Type",
+      "typeError": "Type is mandatory",
+      "startDateLabel": "Start date",
+      "endDateLabel": "End date",
+      "zoneLabel": "Zone",
+      "zoneNone": "No zone",
+      "modeLabel": "Generation mode",
+      "automatic": "Automatic",
+      "manual": "Manual",
+      "reset": "Reset",
+      "saveBtn": "Save changes",
+      "metrics": {
+        "title": "Current metrics",
+        "incidents": "Incidents",
+        "observations": "Observations",
+        "compliance": "Compliance"
+      },
+      "info": {
+        "title": "Report information",
+        "author": "Author",
+        "currentZone": "Current zone",
+        "pdf": "PDF",
+        "available": "Available",
+        "none": "None",
+        "mode": "Mode",
+        "automatic": "Automatic",
+        "manual": "Manual"
+      },
+      "notFound": "Report not found",
+      "notFoundMsg": "Unable to load this report for editing.",
+      "backToList": "Back to list"
+    },
+    "detail": {
+      "notFound": "Report not found",
+      "notFoundMsg": "The requested report does not exist or is no longer available.",
+      "backToList": "Back to list",
+      "back": "Back",
+      "openPdf": "Open PDF",
+      "edit": "Edit",
+      "recalculate": "Recalculate metrics",
+      "recalculating": "Recalculating...",
+      "kicker": "HSE Report",
+      "period": "Period & traceability",
+      "automatic": "Automatic",
+      "manual": "Manual",
+      "compliance": "Global compliance",
+      "metrics": {
+        "incidents": "Incidents",
+        "incidentsHint": "Total recorded",
+        "observations": "Observations",
+        "observationsHint": "Collected HSE observations",
+        "compliance": "Compliance",
+        "complianceHint": "Calculated compliance level"
+      },
+      "generatedBy": "Generated by",
+      "authorHint": "Report author",
+      "info": {
+        "title": "General information",
+        "titleLabel": "Title",
+        "type": "Type",
+        "zone": "Zone",
+        "mode": "Mode",
+        "automatic": "Automatic",
+        "manual": "Manual",
+        "period": "Period & traceability",
+        "startDate": "Start date",
+        "endDate": "End date",
+        "createdAt": "Created on",
+        "updatedAt": "Updated"
+      },
+      "export": {
+        "title": "PDF Export",
+        "available": "Export available",
+        "availableHint": "The report already has a generated PDF file.",
+        "openPdf": "Open PDF",
+        "noExport": "No PDF export",
+        "noExportHint": "This report does not yet contain a generated PDF file."
+      }
+    }
+  },
+
+  "observations": {
+    "manager": {
+      "kicker": "HSE Supervision",
+      "title": "Observations Overview",
+      "subtitle": "Track all observations reported by agents across different zones.",
+      "refresh": "Refresh",
+      "export": "Export",
+      "stats": {
+        "total": "Total observations",
+        "totalHint": "Across all zones",
+        "open": "Open observations",
+        "openHint": "To be handled quickly",
+        "critical": "Critical",
+        "criticalHint": "High risk level",
+        "closed": "Closed",
+        "closedHint": "Handled by teams"
+      },
+      "filters": {
+        "title": "Filters and search",
+        "subtitle": "Refine results by severity, status, zone or agent.",
+        "searchLabel": "Search",
+        "searchPlaceholder": "Title, description, zone, agent...",
+        "statusLabel": "Status",
+        "severityLabel": "Severity",
+        "zoneLabel": "Zone",
+        "all": "All",
+        "allZones": "All zones",
+        "status": {
+          "open": "Open",
+          "in_progress": "In progress",
+          "closed": "Closed"
+        },
+        "severity": {
+          "all": "All",
+          "low": "Low",
+          "medium": "Medium",
+          "high": "High",
+          "critical": "Critical"
+        }
+      },
+      "list": {
+        "title": "Observations list",
+        "count": "result(s) displayed",
+        "date": "Date",
+        "observation": "Observation",
+        "agent": "Agent",
+        "zone": "Zone",
+        "severity": "Severity",
+        "status": "Status",
+        "images": "Images",
+        "action": "Action",
+        "view": "View",
+        "loading": "Loading observations...",
+        "empty": "No observations found",
+        "emptyHint": "Try changing filters or search to display more results."
+      }
+    },
+    "agent": {
+      "kicker": "HSE AGENT OBSERVATIONS",
+      "title": "Observations",
+      "subtitle": "Unified view of observations that concern you: declared by you or assigned to you.",
+      "newObservation": "+ New observation",
+      "loading": "Loading...",
+      "refresh": "Refresh",
+      "back": "Back",
+      "filters": {
+        "searchPlaceholder": "Title / description...",
+        "status": "Status",
+        "severity": "Severity",
+        "perPage": "Per page",
+        "all": "All"
+      },
+      "table": {
+        "title": "Table",
+        "date": "Date",
+        "titleCol": "Title",
+        "zone": "Zone",
+        "declaredBy": "Declared by",
+        "assignedTo": "Assigned to",
+        "severity": "Severity",
+        "status": "Status",
+        "action": "Action",
+        "viewDetail": "View detail",
+        "empty": "No observations found for this view."
+      },
+      "pagination": {
+        "previous": "Previous",
+        "page": "Page",
+        "total": "Total:",
+        "next": "Next"
+      }
+    },
+    "myObservations": {
+      "title": "My observations",
+      "subtitle": "List of observations you have declared.",
+      "newObservation": "+ New observation",
+      "loading": "Loading...",
+      "refresh": "Refresh",
+      "filters": {
+        "searchPlaceholder": "Title / description...",
+        "status": "Status",
+        "severity": "Severity",
+        "perPage": "Per page",
+        "all": "All"
+      },
+      "table": {
+        "date": "Date",
+        "titleCol": "Title",
+        "zone": "Zone",
+        "severity": "Severity",
+        "status": "Status",
+        "images": "Images",
+        "action": "Action",
+        "view": "View",
+        "empty": "No observations found."
+      },
+      "pagination": {
+        "previous": "Previous",
+        "page": "Page",
+        "total": "Total:",
+        "next": "Next"
+      }
+    },
+    "add": {
+      "title": "Add observation",
+      "subtitle": "Report a risk situation or anomaly in a zone.",
+      "titleLabel": "Title",
+      "titlePlaceholder": "Ex: Missing fire extinguisher",
+      "titleError": "Title required (min 3 characters)",
+      "zoneLabel": "Zone",
+      "zoneError": "Zone required",
+      "severityLabel": "Severity",
+      "statusLabel": "Status",
+      "descriptionLabel": "Description",
+      "descriptionPlaceholder": "Describe the observation...",
+      "descriptionError": "Description required (min 5 characters)",
+      "imagesLabel": "Images",
+      "imagesCount": "image(s) selected",
+      "create": "Create observation",
+      "saving": "Saving...",
+      "cancel": "Cancel"
+    }
+  },
+
+  "agent": {
+    "dashboard": {
+      "kicker": "AGENT DASHBOARD",
+      "welcome": "Welcome",
+      "subtitle": "Quickly track your observations, assignments, trainings and important notifications.",
+      "loading": "Loading...",
+      "refresh": "Refresh",
+      "widgets": {
+        "myObservations": "My observations",
+        "myObservationsSubtitle": "Observations created by you",
+        "myObservationsLink": "View my observations",
+        "assignedObservations": "Assigned observations",
+        "assignedObservationsSubtitle": "Observations assigned to handle",
+        "assignedObservationsLink": "View assignments",
+        "scheduledTrainings": "Scheduled trainings",
+        "scheduledTrainingsSubtitle": "Sessions still to complete",
+        "scheduledTrainingsLink": "View trainings",
+        "completedTrainings": "Completed trainings",
+        "completedTrainingsSubtitle": "Sessions already closed",
+        "completedTrainingsLink": "View history",
+        "unreadNotifications": "Unread notifications",
+        "unreadNotificationsSubtitle": "Pending alerts and actions",
+        "unreadNotificationsLink": "View notifications"
+      },
+      "quickAccess": {
+        "title": "Quick access",
+        "subtitle": "The most useful actions for the agent.",
+        "observations": "Observations",
+        "observationsHint": "View and handle observations",
+        "trainings": "Trainings",
+        "trainingsHint": "Track scheduled and completed sessions",
+        "notifications": "Notifications",
+        "notificationsHint": "View received alerts and assignments",
+        "profile": "My profile",
+        "profileHint": "Manage your personal information"
+      },
+      "summary": {
+        "title": "Agent summary",
+        "subtitle": "Synthetic view of your activity.",
+        "totalWidgets": "Total business widgets",
+        "myObservations": "Created observations",
+        "assignedObservations": "Assigned observations",
+        "scheduledTrainings": "Scheduled trainings",
+        "unreadNotifications": "Unread notifications"
+      }
+    }
+  },
+
+  "superadmin": {
+    "companies": {
+      "kicker": "Super Admin",
+      "title": "Companies Management",
+      "subtitle": "Manage all registered companies in your HSE intelligent platform.",
+      "addCompany": "Add Company",
+      "stats": {
+        "total": "Total",
+        "active": "Active",
+        "inactive": "Inactive"
+      },
+      "filters": {
+        "searchLabel": "Search",
+        "searchPlaceholder": "Company name...",
+        "statusLabel": "Status",
+        "all": "All",
+        "active": "Active",
+        "inactive": "Inactive",
+        "searchBtn": "Search"
+      },
+      "list": {
+        "title": "All Companies",
+        "count": "company(s) found",
+        "loading": "Loading companies...",
+        "empty": "No companies found.",
+        "company": "Company",
+        "industry": "Industry",
+        "contact": "Contact",
+        "location": "Location",
+        "status": "Status",
+        "actions": "Actions",
+        "view": "View",
+        "edit": "Edit",
+        "delete": "Delete",
+        "active": "Active",
+        "inactive": "Inactive"
+      },
+      "pagination": {
+        "previous": "Previous",
+        "page": "Page",
+        "next": "Next"
+      },
+      "add": {
+        "kicker": "Super Admin",
+        "title": "Add New Company",
+        "subtitle": "Register a new company in your HSE intelligent platform and configure its main profile information.",
+        "backToList": "Back to list",
+        "formTitle": "Company Information",
+        "formSubtitle": "Fill in the details below to create a new company.",
+        "nameLabel": "Company Name",
+        "namePlaceholder": "Enter company name",
+        "industryLabel": "Industry",
+        "industryPlaceholder": "Industry sector",
+        "logoLabel": "Logo URL",
+        "countryLabel": "Country",
+        "countryPlaceholder": "Country",
+        "cityLabel": "City",
+        "cityPlaceholder": "City",
+        "streetLabel": "Street",
+        "streetPlaceholder": "Street",
+        "postalCodeLabel": "Postal Code",
+        "postalCodePlaceholder": "Postal code",
+        "emailLabel": "Contact Email",
+        "emailPlaceholder": "contact@company.com",
+        "phoneLabel": "Contact Phone",
+        "phonePlaceholder": "+216 xx xxx xxx",
+        "statusLabel": "Status",
+        "active": "Active",
+        "inactive": "Inactive",
+        "cancel": "Cancel",
+        "create": "Create Company",
+        "creating": "Creating..."
+      },
+      "detail": {
+        "back": "Back",
+        "loading": "Loading...",
+        "totalAdmins": "Total Admins",
+        "status": "Status",
+        "inactive": "Inactive",
+        "active": "Active",
+        "info": {
+          "title": "Information",
+          "name": "Name",
+          "industry": "Industry",
+          "email": "Email",
+          "phone": "Phone",
+          "noIndustry": "No industry"
+        },
+        "admins": {
+          "title": "Admins",
+          "add": "+ Add",
+          "empty": "No admins",
+          "name": "Name",
+          "email": "Email"
+        }
+      }
+    },
+    "admins": {
+      "kicker": "Super Admin / Management",
+      "title": "Admins",
+      "subtitle": "Manage company administrators.",
+      "back": "Back",
+      "addBtn": "Add",
+      "stats": {
+        "total": "Total",
+        "page": "Page",
+        "results": "Results"
+      },
+      "filters": {
+        "searchPlaceholder": "Search an admin...",
+        "searchBtn": "Search"
+      },
+      "list": {
+        "title": "Admins list",
+        "count": "administrator(s) found",
+        "loading": "Loading administrators...",
+        "empty": "No administrator found",
+        "emptyHint": "Try another search or add a new admin.",
+        "name": "Name",
+        "email": "Email",
+        "status": "Status",
+        "actions": "Actions",
+        "active": "Active",
+        "inactive": "Inactive",
+        "edit": "Edit",
+        "delete": "Delete"
+      },
+      "pagination": {
+        "previous": "Previous",
+        "page": "Pagination",
+        "next": "Next"
+      },
+      "add": {
+        "kicker": "Super Admin / Management",
+        "title": "Add Admin",
+        "subtitle": "Create a new administrator and link them to a company.",
+        "back": "Back",
+        "preview": {
+          "title": "Preview",
+          "name": "New Admin",
+          "role": "Role",
+          "roleValue": "Admin",
+          "status": "Status",
+          "active": "Active",
+          "inactive": "Inactive"
+        },
+        "formTitle": "Administrator information",
+        "formSubtitle": "Fill in the main account information for the admin.",
+        "firstNameLabel": "First name",
+        "firstNamePlaceholder": "Ex: Ali",
+        "lastNameLabel": "Last name",
+        "lastNamePlaceholder": "Ex: Salah",
+        "emailLabel": "Email",
+        "emailPlaceholder": "admin@company.com",
+        "passwordLabel": "Password",
+        "passwordPlaceholder": "Create a password",
+        "show": "Show",
+        "hide": "Hide",
+        "confirmPasswordLabel": "Confirm password",
+        "confirmPasswordPlaceholder": "Confirm password",
+        "passwordMismatch": "Passwords do not match",
+        "companyLabel": "Company",
+        "companyLoading": "Loading companies...",
+        "companySelect": "Select a company",
+        "companySelected": "Selected company:",
+        "activeLabel": "Active account",
+        "activeHint": "The administrator will be able to log in immediately.",
+        "cancel": "Cancel",
+        "reset": "Reset",
+        "createBtn": "Create Admin",
+        "creating": "Creating..."
+      }
+    }
+  },
+
+  "team": {
+    "kicker": "HSE Team Monitoring",
+    "title": "Team Overview",
+    "subtitle": "View managers and agents from your company in real time from the backend.",
+    "viewTable": "Table",
+    "viewCards": "Cards",
+    "refresh": "Refresh",
+    "stats": {
+      "total": "Total Team",
+      "managers": "Managers",
+      "agents": "Agents",
+      "filtered": "Filtered"
+    },
+    "filters": {
+      "searchPlaceholder": "Search by name, role, email or company...",
+      "allRoles": "All roles",
+      "manager": "Manager",
+      "agent": "Agent"
+    },
+    "table": {
+      "title": "Team Members",
+      "count": "member(s) found",
+      "member": "Member",
+      "role": "Role",
+      "company": "Company",
+      "email": "Email",
+      "createdAt": "Created At",
+      "loading": "Loading team members...",
+      "empty": "No team members found for the selected filters."
+    }
+  },
+
+  "settings": {
+    "title": "Settings",
+    "subtitle": "Manage your account, security and platform preferences.",
+    "logs": {
+      "title": "Session Logs",
+      "subtitle": "Track recent sign-ins, active devices and failed attempts."
+    },
+    "profile": {
+      "title": "Profile",
+      "subtitle": "Edit your personal information and photo."
+    },
+    "notifications": {
+      "title": "Notifications",
+      "subtitle": "Configure email alerts and notification preferences."
+    },
+    "securityNote": {
+      "title": "Security Tip",
+      "body": "Review your login history regularly and update your password to reduce the risk of unauthorized access.",
+      "link": "View session logs"
+    },
+    "home": {
+      "kicker": "Account Center",
+      "title": "Settings",
+      "subtitle": "Manage your profile, security, notifications and personal preferences for the HSE platform.",
+      "securityScore": "Security Score",
+      "quickCards": {
+        "profileStatus": "Profile Status",
+        "profileComplete": "Complete",
+        "accountProtection": "Account Protection",
+        "alerts": "Alerts",
+        "enabled": "Enabled",
+        "disabled": "Disabled",
+        "theme": "Theme",
+        "dark": "Dark",
+        "light": "Light"
+      },
+      "sections": {
+        "title": "Settings Sections",
+        "subtitle": "Access the main account configuration areas."
+      },
+      "recentActivity": {
+        "title": "Recent Activity",
+        "subtitle": "Latest account changes and security events."
+      },
+      "preferences": {
+        "title": "Quick Preferences",
+        "subtitle": "Update common options directly from here.",
+        "emailAlerts": "Email Alerts",
+        "emailAlertsHint": "Receive alerts for critical incidents and reports.",
+        "darkMode": "Dark Mode",
+        "darkModeHint": "Use a darker visual theme for low-light environments.",
+        "extraSecurity": "Extra Security",
+        "extraSecurityHint": "Enable stronger protection for account access."
+      },
+      "recommendation": {
+        "title": "Security Recommendation",
+        "text": "Review your login history regularly and update your password periodically to reduce unauthorized access risks.",
+        "link": "Open Security Settings"
+      }
+    },
+    "changePassword": {
+      "kicker": "Account Security",
+      "title": "Change Password",
+      "subtitle": "Update your account password regularly to keep your HSE platform access secure.",
+      "formTitle": "Password Update",
+      "formSubtitle": "Enter your current password and choose a stronger new password.",
+      "currentPassword": "Current Password",
+      "currentPasswordPlaceholder": "Enter current password",
+      "currentPasswordError": "Current password is required",
+      "newPassword": "New Password",
+      "newPasswordPlaceholder": "Enter new password",
+      "passwordStrength": "Password strength",
+      "confirmPassword": "Confirm New Password",
+      "confirmPasswordPlaceholder": "Confirm new password",
+      "confirmPasswordError": "Password confirmation is required",
+      "passwordMismatch": "Passwords do not match",
+      "updateBtn": "Update Password",
+      "rules": {
+        "title": "Password Rules",
+        "subtitle": "Your new password should follow these security rules.",
+        "minLength": "At least 8 characters",
+        "uppercase": "At least one uppercase letter",
+        "lowercase": "At least one lowercase letter",
+        "number": "At least one number",
+        "special": "At least one special character",
+        "match": "Password confirmation matches"
+      },
+      "advice": {
+        "title": "Security Advice",
+        "text": "Do not reuse your company password on other platforms. Choose a unique password and update it immediately if suspicious access is detected."
+      }
+    },
+    "security": {
+      "kicker": "Important",
+      "title": "Account Security",
+      "subtitle": "Review account protection, security status and access options for your HSE platform account.",
+      "scoreCard": {
+        "score": "Security Score",
+        "protection": "Protection",
+        "loginAlerts": "Login Alerts",
+        "enabled": "Enabled",
+        "disabled": "Disabled",
+        "twoFactor": "2FA",
+        "twoFactorEnabled": "Enabled",
+        "twoFactorNot": "Not Enabled"
+      },
+      "sections": {
+        "protection": {
+          "title": "Protection Status",
+          "subtitle": "Review the main security layers of your account."
+        },
+        "recentAccess": {
+          "title": "Recent Access Activity",
+          "subtitle": "Latest successful and failed account access events."
+        },
+        "controls": {
+          "title": "Security Controls",
+          "subtitle": "Quickly manage common account protection options.",
+          "twoFactor": "Two-Factor Authentication",
+          "twoFactorHint": "Require an extra verification step when signing in.",
+          "loginAlerts": "Login Alerts",
+          "loginAlertsHint": "Get notified when a new login or unusual access is detected.",
+          "suspiciousProtection": "Suspicious Activity Protection",
+          "suspiciousProtectionHint": "Block risky sign-in attempts and untrusted session behavior."
+        }
+      },
+      "recommendation": {
+        "title": "Security Recommendation",
+        "text": "Enable two-factor authentication and review failed login attempts regularly to improve your overall account security."
+      }
+    }
+  },
+
+  "operationalMessages": {
+    "kicker": "HSE Communication",
+    "title": "Operational Messages",
+    "subtitle": "Manage messages sent to screens, devices and connected zones.",
+    "refresh": "Refresh",
+    "newMessage": "New message",
+    "stats": {
+      "draft": "Draft",
+      "sent": "Sent",
+      "displayed": "Displayed",
+      "critical": "Critical",
+      "devicesLoaded": "Devices loaded",
+      "devicesOnline": "Devices online",
+      "zonesLoaded": "Zones loaded"
+    },
+    "filters": {
+      "searchPlaceholder": "Search by title or content...",
+      "filterBtn": "Filter",
+      "resetBtn": "Reset"
+    },
+    "list": {
+      "title": "Messages list",
+      "count": "message(s) found",
+      "loading": "Loading messages...",
+      "empty": "No messages found",
+      "emptyHint": "Try changing filters or add a new message.",
+      "emptyTitle": "No messages found",
+      "emptyBody": "Try adjusting filters or create a new message.",
+      "message": "Message",
+      "type": "Type",
+      "priority": "Priority",
+      "target": "Target",
+      "status": "Status",
+      "createdBy": "Created by",
+      "date": "Date",
+      "actions": "Actions",
+      "colMessage": "Message",
+      "colType": "Type",
+      "colPriority": "Priority",
+      "colTarget": "Target",
+      "colStatus": "Status",
+      "colCreatedBy": "Created by",
+      "colDate": "Date",
+      "colActions": "Actions",
+      "noTitle": "No title",
+      "viewDetail": "View detail",
+      "publish": "Publish",
+      "cancel": "Cancel",
+      "delete": "Delete",
+      "actionView": "View detail",
+      "actionPublish": "Publish",
+      "actionCancel": "Cancel",
+      "actionDelete": "Delete",
+      "titlePlaceholder": "Message title...",
+      "contentLabel": "Content",
+      "contentPlaceholder": "Enter the message content...",
+      "contentRequired": "Content is required.",
+      "targetDevice": "Target device",
+      "selectDevice": "Select a device",
+      "deviceRequired": "Device is required.",
+      "targetZone": "Target zone",
+      "selectZone": "Select a zone",
+      "zoneRequired": "Zone is required.",
+      "broadcastTitle": "General broadcast",
+      "broadcastBody": "This message will be broadcast to all connected devices and zones.",
+      "displayMode": "Display mode",
+      "duration": "Duration (s)",
+      "durationError": "Duration must be between 1 and 3600 seconds.",
+      "scheduledAt": "Scheduled at",
+      "expiresAt": "Expires at",
+      "notes": "Notes",
+      "notesPlaceholder": "Optional notes...",
+      "loadingReferences": "Loading devices and zones...",
+      "previewTitle": "Message preview",
+      "previewPlaceholder": "Content will appear here...",
+      "createBtn": "Create message",
+      "creating": "Creating..."
+    },
+    "pagination": {
+      "previous": "Previous",
+      "next": "Next",
+      "page": "Page"
+    }
+  },
+
+  "inspections": {
+    "kicker": "MANAGER INSPECTIONS",
+    "title": "Inspections Overview",
+    "subtitle": "Manage your control templates, track field executions and monitor global HSE inspection compliance.",
+    "newInspection": "New inspection",
+    "refresh": "Refresh",
+    "loading": "Loading...",
+    "newTemplate": "New template",
+    "stats": {
+      "templates": "Templates",
+      "completedExecutions": "Completed executions",
+      "completedHint": "Finalized controls",
+      "inProgress": "In progress",
+      "inProgressHint": "Active inspections",
+      "completionRate": "Completion rate",
+      "completionSuffix": "executions"
+    },
+    "templates": {
+      "title": "Recent templates",
+      "subtitle": "Available checklist templates for inspections.",
+      "viewAll": "View all",
+      "loading": "Loading templates...",
+      "items": "item(s)",
+      "active": "Active",
+      "inactive": "Inactive",
+      "empty": "No inspection template found.",
+      "noDescription": "No description."
+    },
+    "executions": {
+      "title": "Recent executions",
+      "subtitle": "Latest controls performed by agents in the field.",
+      "viewAll": "View all",
+      "loading": "Loading executions...",
+      "checklist": "Checklist",
+      "agent": "Agent",
+      "zone": "Zone",
+      "status": "Status",
+      "score": "Score",
+      "date": "Date",
+      "empty": "No inspection execution found."
+    },
+    "lowScore": {
+      "title": "Low-score executions",
+      "subtitle": "Controls requiring quick attention.",
+      "analyzing": "Analyzing scores...",
+      "empty": "No critical execution detected."
+    },
+    "categories": {
+      "title": "Distribution by category",
+      "subtitle": "Available templates by HSE domain."
+    },
+    "topZones": {
+      "title": "Top zones",
+      "subtitle": "Most recently inspected zones.",
+      "empty": "No zones available."
+    },
+    "inactiveTemplates": {
+      "title": "Inactive templates",
+      "subtitle": "Disabled templates to check.",
+      "empty": "No inactive template."
+    },
+    "summary": {
+      "title": "Activity summary",
+      "subtitle": "Quick overview of the inspections module.",
+      "total": "Total executions",
+      "completed": "Completed",
+      "inProgress": "In progress",
+      "drafts": "Drafts",
+      "activeTemplates": "Active templates"
+    },
+    "lastActivity": {
+      "title": "Last activity",
+      "subtitle": "Summary of recent module activity.",
+      "lastTemplate": "Last template",
+      "lastExecution": "Last execution",
+      "lastCompleted": "Last completed inspection"
+    },
+    "quickActions": {
+      "title": "Quick actions",
+      "subtitle": "Useful shortcuts for the manager.",
+      "createInspection": "Create inspection",
+      "createTemplate": "Create template",
+      "manageTemplates": "Manage templates",
+      "viewExecutions": "View executions"
+    }
+  },
+
+  "inventory": {
+    "kicker": "HSE Inventory",
+    "title": "Inventory Item Detail",
+    "subtitle": "Complete tracking of the item, its movements, assignments and inspections.",
+    "back": "Back",
+    "edit": "Edit",
+    "loading": "Loading item...",
+    "noDescription": "No description available.",
+    "noImage": "No image",
+    "code": "Code",
+    "quantity": "Quantity",
+    "zone": "Zone",
+    "assignedTo": "Assigned to",
+    "summary": {
+      "movements": "Movements",
+      "assignments": "Assignments",
+      "inspections": "Inspections",
+      "alerts": "Alerts",
+      "yes": "Yes",
+      "no": "No"
+    },
+    "details": {
+      "company": "Company",
+      "brand": "Brand",
+      "model": "Model",
+      "serial": "Serial number",
+      "supplier": "Supplier",
+      "purchaseDate": "Purchase date",
+      "expiry": "Expiry",
+      "nextInspection": "Next inspection"
+    },
+    "tabs": {
+      "overview": "Overview",
+      "movements": "Movements",
+      "assignments": "Assignments",
+      "inspections": "Inspections"
+    },
+    "actions": {
+      "addMovement": "Add movement",
+      "addMovementHint": "Entry, exit, transfer or adjustment.",
+      "assign": "Assign",
+      "assignHint": "Assign this item to an employee or zone.",
+      "newInspection": "New inspection",
+      "newInspectionHint": "Record a control or verification."
+    },
+    "movements": {
+      "title": "Movements",
+      "subtitle": "Logistics history of this item.",
+      "loading": "Loading movements...",
+      "empty": "No movements recorded.",
+      "type": "Type",
+      "quantity": "Quantity",
+      "from": "From",
+      "to": "To",
+      "employee": "Employee",
+      "date": "Date"
+    },
+    "assignments": {
+      "title": "Assignments",
+      "subtitle": "Assignment history of this item.",
+      "loading": "Loading assignments...",
+      "empty": "No assignments recorded.",
+      "employee": "Employee",
+      "type": "Type",
+      "status": "Status",
+      "date": "Date",
+      "expectedReturn": "Expected return",
+      "actualReturn": "Actual return"
+    },
+    "inspectionsTab": {
+      "title": "Inspections",
+      "subtitle": "Controls and verification history.",
+      "loading": "Loading inspections...",
+      "empty": "No inspections recorded.",
+      "date": "Date",
+      "result": "Result",
+      "condition": "Condition",
+      "inspectedBy": "Inspected by",
+      "next": "Next inspection"
+    }
+  },
+  "landing": {
+    "nav": {
+      "platform": "Platform",
+      "features": "Features",
+      "workflow": "Workflow",
+      "roles": "Roles",
+      "pricing": "Pricing"
+    },
+    "header": {
+      "tagline": "Intelligent HSE Platform",
+      "login": "Log in",
+      "goToPlatform": "Go to platform →"
+    },
+    "hero": {
+      "badge": "NEW · HSE MONITOR",
+      "title": "Monitor industrial safety",
+      "titleHighlight": "in real time",
+      "subtitle": "All-in-one SaaS platform connecting IoT sensors, AI-powered PPE detection and HSE dashboards to protect your field teams.",
+      "ctaStart": "Get started now",
+      "ctaDiscover": "Watch demo →",
+      "stat1Value": "99.9%",
+      "stat1Label": "Uptime",
+      "stat2Value": "< 2s",
+      "stat2Label": "Real-time detection",
+      "stat3Value": "50+",
+      "stat3Label": "Supported sensors"
+    },
+    "about": {
+      "badge": "PLATFORM",
+      "title": "A complete solution for industrial safety",
+      "subtitle": "HSE Monitor centralises all your safety tools within a single intelligent platform connected to your IoT devices.",
+      "card1Title": "24/7 Monitoring",
+      "card1Desc": "Continuous monitoring of all your industrial zones with instant alerts.",
+      "card2Title": "Built-in AI",
+      "card2Desc": "Automatic detection of missing PPE through intelligent video analysis.",
+      "card3Title": "Multi-site",
+      "card3Desc": "Manage multiple companies and industrial sites from a single dashboard.",
+      "card4Title": "Guaranteed compliance",
+      "card4Desc": "Automatic HSE reports to meet ISO 45001 standards and HSE regulations."
+    },
+    "industries": {
+      "badge": "TARGET SECTORS",
+      "title": "Built for demanding industrial sites",
+      "subtitle": "HSE Monitor adapts to every sector where field safety is critical.",
+      "item1Name": "Oil & Gas / Petrochemicals",
+      "item1Desc": "Hazardous zone surveillance, gas detection, ATEX incident management.",
+      "item2Name": "Construction & Civil",
+      "item2Desc": "On-site PPE control, work permit tracking, accident management.",
+      "item3Name": "Chemical Industry",
+      "item3Desc": "Exposure monitoring, hazardous substances management, HSE traceability.",
+      "item4Name": "Food & Agriculture",
+      "item4Desc": "Food safety and hygiene, regular audits, certified training programmes.",
+      "item5Name": "Mining & Extraction",
+      "item5Desc": "Underground personnel tracking, atmospheric detection, evacuation management.",
+      "item6Name": "Energy & Utilities",
+      "item6Desc": "Worker protection on electrical sites, lockout/tagout management."
+    },
+    "features": {
+      "badge": "FEATURES",
+      "title": "Everything you need to manage safety",
+      "subtitle": "A complete set of integrated tools to manage your HSE policy end to end.",
+      "feat1Title": "Zone monitoring",
+      "feat1Desc": "Define zones, assign IoT sensors and receive real-time alerts.",
+      "feat2Title": "Incident management",
+      "feat2Desc": "Report, track and analyse observations and workplace accidents.",
+      "feat3Title": "HSE Training",
+      "feat3Desc": "Plan and track regulatory training programmes for all your employees.",
+      "feat4Title": "Reports & Analytics",
+      "feat4Desc": "Automatic HSE report generation with key performance indicators.",
+      "feat5Title": "PPE Inventory",
+      "feat5Desc": "Manage personal protective equipment stock with expiry alerts.",
+      "feat6Title": "Audits & Inspections",
+      "feat6Desc": "Create checklists, schedule audits and track corrective actions."
+    },
+    "workflow": {
+      "badge": "HOW IT WORKS",
+      "title": "Up and running in under a week",
+      "subtitle": "A simple, fast deployment to start protecting your teams without delay.",
+      "step1Num": "01",
+      "step1Title": "Setup",
+      "step1Desc": "Create your company, define your zones and connect your IoT equipment.",
+      "step2Num": "02",
+      "step2Title": "Team onboarding",
+      "step2Desc": "Invite your HSE managers, field agents and supervisors with the right permissions.",
+      "step3Num": "03",
+      "step3Title": "Active monitoring",
+      "step3Desc": "Your sensors feed data in real time. Automatic alerts on any anomaly.",
+      "step4Num": "04",
+      "step4Title": "Analysis & Improvement",
+      "step4Desc": "Use reports and analytics to continuously improve your HSE policy."
+    },
+    "roles": {
+      "badge": "ROLES",
+      "title": "A platform tailored to every profile",
+      "subtitle": "Dedicated interfaces for every actor in your HSE organisation.",
+      "role1Name": "Administrator",
+      "role1Desc": "Manages IoT equipment, zones and the site's technical configuration.",
+      "role1Icon": "bi-cpu",
+      "role2Name": "HSE Manager",
+      "role2Desc": "Drives HSE policy, creates training programmes, audits and compliance reports.",
+      "role2Icon": "bi-clipboard-check",
+      "role3Name": "HSE Agent",
+      "role3Desc": "Performs field rounds, reports observations and tracks own training.",
+      "role3Icon": "bi-person-walking",
+      "role4Name": "Supervisor",
+      "role4Desc": "Full safety overview, incident validation and team management.",
+      "role4Icon": "bi-eye",
+      "role5Name": "Super Admin",
+      "role5Desc": "Multi-company management from a centralised administration console.",
+      "role5Icon": "bi-shield-check"
+    },
+    "cta": {
+      "title": "Ready to secure your industrial sites?",
+      "subtitle": "Join the companies that trust HSE Monitor to protect their teams.",
+      "btn": "Request a demo"
+    },
+    "pricing": {
+      "badge": "PRICING",
+      "title": "Choose the plan that fits your business",
+      "subtitle": "Simple, scalable plans to deploy HSE Monitor in your industrial environments, with IoT technical support included.",
+      "monthly": "/ month",
+      "recommended": "Recommended",
+      "choose": "Choose this plan",
+      "contact": "Contact the team",
+      "starter": {
+        "name": "Starter",
+        "desc": "Ideal for a small industrial site or a pilot phase.",
+        "f1": "1 company",
+        "f2": "User management",
+        "f3": "Zone monitoring",
+        "f4": "Real-time alerts",
+        "f5": "Web dashboard",
+        "f6": "Standard IoT technical support"
+      },
+      "professional": {
+        "name": "Professional",
+        "desc": "Perfect for a company with multiple zones and more devices.",
+        "f1": "Multi-zone",
+        "f2": "Advanced role management",
+        "f3": "HSE incident tracking",
+        "f4": "AI-powered PPE detection",
+        "f5": "Reports and statistics",
+        "f6": "Priority IoT technical support"
+      },
+      "enterprise": {
+        "name": "Enterprise",
+        "desc": "Designed for larger industrial structures requiring full support.",
+        "f1": "Multi-company",
+        "f2": "Centralised supervision",
+        "f3": "Advanced IoT integration",
+        "f4": "Intelligent alert analysis",
+        "f5": "Full deployment support",
+        "f6": "Full IoT technical support"
+      }
+    },
+    "footer": {
+      "tagline": "Intelligent SaaS platform for industrial HSE supervision, connecting IoT, AI and field safety in real time.",
+      "platformTitle": "Platform",
+      "companyTitle": "Company",
+      "supportTitle": "Support",
+      "features": "Features",
+      "architecture": "Architecture",
+      "security": "Security",
+      "api": "API",
+      "about": "About",
+      "team": "Team",
+      "careers": "Careers",
+      "contact": "Contact",
+      "documentation": "Documentation",
+      "helpCenter": "Help centre",
+      "faq": "FAQ",
+      "techSupport": "Technical support",
+      "copyright": "HSE Monitor — All rights reserved.",
+      "privacy": "Privacy",
+      "terms": "Terms",
+      "cookies": "Cookies"
+    }
+  },
+
+  "users": {
+    "list": {
+      "kicker": "Access Management",
+      "title": "Users",
+      "subtitle": "List of Agent / Manager / Admin / Supervisor accounts.",
+      "addBtn": "Add user",
+      "loading": "Loading users...",
+      "retry": "Retry",
+      "colUser": "User",
+      "colEmail": "Email",
+      "colRole": "Role",
+      "colCreated": "Created on",
+      "colActions": "Actions",
+      "empty": "No users found.",
+      "total": "Total",
+      "confirmDelete": "Confirm deletion?"
+    },
+    "roles": {
+      "admin": "Admin",
+      "manager": "Manager",
+      "supervisor": "Supervisor",
+      "agent": "Agent"
+    },
+    "add": {
+      "kicker": "Access Management",
+      "title": "Add User",
+      "subtitle": "Create an account (Agent / Manager / Admin / Supervisor).",
+      "sectionIdentity": "Account Information",
+      "firstName": "First Name",
+      "firstNamePh": "Ex: Ahmed",
+      "lastName": "Last Name",
+      "lastNamePh": "Ex: Ben Ali",
+      "email": "Email",
+      "emailPh": "Ex: user@company.com",
+      "password": "Password",
+      "passwordPh": "Minimum 6 characters",
+      "role": "Role",
+      "createBtn": "Create User",
+      "creating": "Creating...",
+      "resetBtn": "Reset",
+      "error": {
+        "firstNameRequired": "First name is required.",
+        "firstNameMin": "Minimum 2 characters.",
+        "lastNameRequired": "Last name is required.",
+        "lastNameMin": "Minimum 2 characters.",
+        "emailRequired": "Email is required.",
+        "emailInvalid": "Invalid email.",
+        "passwordRequired": "Password is required.",
+        "passwordMin": "Minimum 6 characters."
+      },
+      "success": "User created successfully."
+    },
+    "edit": {
+      "kicker": "Access Management",
+      "title": "Edit User",
+      "subtitle": "Update account information.",
+      "loading": "Loading...",
+      "sectionIdentity": "Account Information",
+      "sectionPassword": "Change Password",
+      "sectionPasswordHint": "Leave empty if you do not want to change the password.",
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "email": "Email",
+      "role": "Role",
+      "newPassword": "New Password",
+      "newPasswordPh": "Minimum 6 characters",
+      "confirmPassword": "Confirm Password",
+      "confirmPasswordPh": "Confirm password",
+      "saveBtn": "Save",
+      "saving": "Saving...",
+      "resetPassword": "Reset password",
+      "error": {
+        "firstNameRequired": "First name is required.",
+        "firstNameMin": "Minimum 2 characters.",
+        "lastNameRequired": "Last name is required.",
+        "lastNameMin": "Minimum 2 characters.",
+        "emailRequired": "Email is required.",
+        "emailInvalid": "Invalid email.",
+        "passwordMismatch": "Passwords do not match."
+      },
+      "success": "User updated successfully."
+    }
+  },
+
+  "admin": {
+    "dashboard": {
+      "kicker": "System Administration",
+      "title": "Dashboard",
+      "titleAccent": "Admin",
+      "subtitle": "Global overview of the HSE Monitor infrastructure — devices, sensors, employees and users.",
+      "kpi": {
+        "devices": "Devices",
+        "devicesSub": "Registered equipment",
+        "employees": "Employees",
+        "employeesSub": "Company staff",
+        "users": "Users",
+        "usersSub": "Active accounts on the platform",
+        "sensors": "Sensors",
+        "sensorsSub": "Connected IoT sensors"
+      },
+      "actions": {
+        "title": "Quick actions",
+        "zones": "Manage zones",
+        "devices": "Manage devices",
+        "sensors": "Manage sensors",
+        "employees": "Manage employees",
+        "users": "Manage users",
+        "settings": "Settings"
+      },
+      "info": {
+        "secured": "Secure Platform",
+        "securedSub": "HSE Monitor · Central Administration",
+        "online": "Online",
+        "iot": "IoT Infrastructure",
+        "team": "Team",
+        "active": "Active"
+      }
+    }
+  }
+}

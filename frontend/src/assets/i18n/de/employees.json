@@ -1,11 +1,15 @@
 {
   "EMPLOYEES": {
-    "KICKER": "Belegschaft",
+    "KICKER": "Personalverwaltung",
     "TITLE": "Mitarbeiter",
     "SUBTITLE": "Mitarbeiterliste mit Filtern",
     "ADD_BTN": "Mitarbeiter hinzufügen",
     "ADD_TITLE": "Mitarbeiter hinzufügen",
+    "ADD_EYEBROW": "Neuer Mitarbeiter",
+    "ADD_SUBTITLE": "Geben Sie die persönlichen und beruflichen Informationen des neuen Mitarbeiters ein.",
     "EDIT_TITLE": "Mitarbeiter bearbeiten",
+    "EDIT_EYEBROW": "Mitarbeiter",
+    "EDIT_SUBTITLE": "Aktualisieren Sie die persönlichen und beruflichen Informationen des Mitarbeiters.",
     "LOADING_EMPLOYEE": "Mitarbeiter wird geladen...",
     "LOADING_ZONES": "Zonen werden geladen...",
     "SAVE_CHANGES": "Änderungen speichern",
@@ -18,13 +22,18 @@
     },
     "COLUMNS": {
       "NAME": "Vollständiger Name",
+      "FULL_NAME": "Vollständiger Name",
       "EMPLOYEE_ID": "Mitarbeiter-ID",
-      
+      "MATRICULE": "Matrikelnummer",
       "DEPARTMENT": "Abteilung",
       "JOB_TITLE": "Position",
+      "JOB": "Stelle",
       "ZONE": "Zone",
       "PHONE": "Telefon",
-      "STATUS": "Status"
+      "STATUS": "Status",
+      "ACTIVE": "Aktiv",
+      "ACTIONS": "Aktionen",
+      "HIRE_DATE": "Einstellungsdatum"
     },
     "FILTERS": {
       "SEARCH": "Suche",
@@ -50,7 +59,9 @@
       "PHONE": "Telefon",
       "PHONE_PH": "+216 ...",
       "HIRE_DATE": "Einstellungsdatum",
-      "ACTIVE": "Aktiv"
+      "ACTIVE": "Aktiv",
+      "SECTION_IDENTITY": "Identität",
+      "STATUS": "Status"
     },
     "STATUS": {
       "ACTIVE": "Aktiv",
@@ -79,7 +90,8 @@
       "DEACTIVATE": "Deaktivieren",
       "SCORE": "Punktzahl",
       "CERTIFIED": "Zertifiziert",
-      "ZONE_ID_PH": "Zone-ObjectId"
+      "ZONE_ID_PH": "Zone-ObjectId",
+      "SINCE": "Seit"
     }
   },
   "COMMON": {

@@ -1,18 +1,15 @@
 <section class="page">
   <div class="hero">
     <div class="hero-content">
-      <span class="eyebrow">MANAGER INSPECTIONS</span>
-      <h1>Vue d’ensemble des inspections</h1>
-      <p>
-        Gérez vos templates de contrôle, suivez les exécutions terrain et
-        surveillez la conformité globale des inspections HSE.
-      </p>
+      <span class="eyebrow">{{ 'inspections.kicker' | translate }}</span>
+      <h1>{{ 'inspections.title' | translate }}</h1>
+      <p>{{ 'inspections.subtitle' | translate }}</p>
     </div>
 
     <div class="hero-actions">
         <button class="btn ghost" (click)="goToCreateExecution()">
   <i class="bi bi-clipboard-plus"></i>
-  Nouvelle inspection
+  {{ 'inspections.newInspection' | translate }}
 </button>
       <button
         class="btn ghost"
@@ -21,12 +18,12 @@
         [disabled]="loading()"
       >
         <i class="bi bi-arrow-repeat"></i>
-        {{ loading() ? 'Chargement...' : 'Actualiser' }}
+        {{ loading() ? ('inspections.loading' | translate) : ('inspections.refresh' | translate) }}
       </button>
 
       <button class="btn" type="button" (click)="goToCreateTemplate()">
         <i class="bi bi-plus-circle"></i>
-        Nouveau template
+        {{ 'inspections.newTemplate' | translate }}
       </button>
     </div>
   </div>
@@ -40,33 +37,33 @@
 
   <div class="stats-grid">
     <app-inspection-kpi-card
-      title="Templates"
+      [title]="'inspections.stats.templates' | translate"
       [value]="totalTemplates()"
-      [subtitle]="activeTemplates() + ' actifs'"
+      [subtitle]="activeTemplates() + ' ' + ('inspections.stats.active' | translate)"
       icon="bi bi-ui-checks-grid"
       tone="blue"
     />
 
     <app-inspection-kpi-card
-      title="Exécutions terminées"
+      [title]="'inspections.stats.completedExecutions' | translate"
       [value]="completedExecutions()"
-      subtitle="Contrôles finalisés"
+      [subtitle]="'inspections.stats.finalizedControls' | translate"
       icon="bi bi-clipboard-check"
       tone="green"
     />
 
     <app-inspection-kpi-card
-      title="En cours"
+      [title]="'inspections.stats.inProgress' | translate"
       [value]="inProgressExecutions()"
-      subtitle="Inspections actives"
+      [subtitle]="'inspections.stats.activeInspections' | translate"
       icon="bi bi-hourglass-split"
       tone="amber"
     />
 
     <app-inspection-kpi-card
-      title="Taux de complétion"
+      [title]="'inspections.stats.completionRate' | translate"
       [value]="completionRate() + '%'"
-      [subtitle]="'Sur ' + totalExecutions() + ' exécutions'"
+      [subtitle]="('inspections.stats.outOf' | translate) + ' ' + totalExecutions() + ' ' + ('inspections.stats.executions' | translate)"
       icon="bi bi-speedometer2"
       tone="purple"
     />
@@ -77,17 +74,17 @@
       <div class="panel">
         <div class="panel-head">
           <div>
-            <h3>Templates récents</h3>
-            <p>Les modèles de checklist disponibles pour les inspections.</p>
+            <h3>{{ 'inspections.templates.recentTitle' | translate }}</h3>
+            <p>{{ 'inspections.templates.recentSubtitle' | translate }}</p>
           </div>
 
           <button class="text-btn" type="button" (click)="goToTemplates()">
-            Voir tout
+            {{ 'inspections.templates.viewAll' | translate }}
           </button>
         </div>
 
         @if (loading()) {
-          <div class="state">Chargement des templates...</div>
+          <div class="state">{{ 'inspections.templates.loading' | translate }}</div>
         } @else if (recentTemplates().length) {
           <div class="template-list">
             @for (template of recentTemplates(); track template._id || $index) {
@@ -99,7 +96,7 @@
                 <div class="template-top">
                   <div>
                     <h4>{{ template.title }}</h4>
-                    <p>{{ template.description || 'Aucune description.' }}</p>
+                    <p>{{ template.description || ('inspections.templates.noDescription' | translate) }}</p>
                   </div>
 
                   <span class="chip">
@@ -108,8 +105,8 @@
                 </div>
 
                 <div class="template-bottom">
-                  <span>{{ template.items?.length ?? 0 }} item(s)</span>
-                  <span>{{ template.isActive !== false ? 'Actif' : 'Inactif' }}</span>
+                  <span>{{ template.items?.length ?? 0 }} {{ 'inspections.templates.items' | translate }}</span>
+                  <span>{{ template.isActive !== false ? ('inspections.templates.active' | translate) : ('inspections.templates.inactive' | translate) }}</span>
                   <span>{{ formatDate(template.createdAt) }}</span>
                 </div>
               </button>
@@ -117,7 +114,7 @@
           </div>
         } @else {
           <div class="state empty">
-            Aucun template inspection trouvé.
+            {{ 'inspections.templates.empty' | translate }}
           </div>
         }
       </div>
@@ -125,28 +122,28 @@
       <div class="panel">
         <div class="panel-head">
           <div>
-            <h3>Exécutions récentes</h3>
-            <p>Derniers contrôles réalisés par les agents sur le terrain.</p>
+            <h3>{{ 'inspections.executions.recentTitle' | translate }}</h3>
+            <p>{{ 'inspections.executions.recentSubtitle' | translate }}</p>
           </div>
 
           <button class="text-btn" type="button" (click)="goToExecutions()">
-            Voir tout
+            {{ 'inspections.executions.viewAll' | translate }}
           </button>
         </div>
 
         @if (loading()) {
-          <div class="state">Chargement des exécutions...</div>
+          <div class="state">{{ 'inspections.executions.loading' | translate }}</div>
         } @else if (recentExecutions().length) {
           <div class="table-wrap">
             <table class="table">
               <thead>
                 <tr>
-                  <th>Checklist</th>
-                  <th>Agent</th>
-                  <th>Zone</th>
-                  <th>Statut</th>
-                  <th>Score</th>
-                  <th>Date</th>
+                  <th>{{ 'inspections.executions.colChecklist' | translate }}</th>
+                  <th>{{ 'inspections.executions.colAgent' | translate }}</th>
+                  <th>{{ 'inspections.executions.colZone' | translate }}</th>
+                  <th>{{ 'inspections.executions.colStatus' | translate }}</th>
+                  <th>{{ 'inspections.executions.colScore' | translate }}</th>
+                  <th>{{ 'inspections.executions.colDate' | translate }}</th>
                   <th></th>
                 </tr>
               </thead>
@@ -184,7 +181,7 @@
           </div>
         } @else {
           <div class="state empty">
-            Aucune exécution inspection trouvée.
+            {{ 'inspections.executions.empty' | translate }}
           </div>
         }
       </div>
@@ -192,13 +189,13 @@
       <div class="panel">
         <div class="panel-head">
           <div>
-            <h3>Exécutions à faible score</h3>
-            <p>Contrôles nécessitant une attention rapide.</p>
+            <h3>{{ 'inspections.lowScore.title' | translate }}</h3>
+            <p>{{ 'inspections.lowScore.subtitle' | translate }}</p>
           </div>
         </div>
 
         @if (loading()) {
-          <div class="state">Analyse des scores...</div>
+          <div class="state">{{ 'inspections.lowScore.loading' | translate }}</div>
         } @else if (lowScoreExecutions().length) {
           <div class="risk-list">
             @for (execution of lowScoreExecutions(); track execution._id || $index) {
@@ -222,7 +219,7 @@
           </div>
         } @else {
           <div class="state empty">
-            Aucune exécution critique détectée.
+            {{ 'inspections.lowScore.empty' | translate }}
           </div>
         }
       </div>
@@ -232,8 +229,8 @@
       <div class="panel">
         <div class="panel-head">
           <div>
-            <h3>Répartition par catégorie</h3>
-            <p>Templates disponibles par domaine HSE.</p>
+            <h3>{{ 'inspections.categories.title' | translate }}</h3>
+            <p>{{ 'inspections.categories.subtitle' | translate }}</p>
           </div>
         </div>
 
@@ -250,8 +247,8 @@
       <div class="panel">
         <div class="panel-head">
           <div>
-            <h3>Top zones</h3>
-            <p>Zones les plus inspectées récemment.</p>
+            <h3>{{ 'inspections.topZones.title' | translate }}</h3>
+            <p>{{ 'inspections.topZones.subtitle' | translate }}</p>
           </div>
         </div>
 
@@ -265,15 +262,15 @@
             }
           </div>
         } @else {
-          <div class="state empty">Aucune zone disponible.</div>
+          <div class="state empty">{{ 'inspections.topZones.empty' | translate }}</div>
         }
       </div>
 
       <div class="panel">
         <div class="panel-head">
           <div>
-            <h3>Templates inactifs</h3>
-            <p>Modèles désactivés à vérifier.</p>
+            <h3>{{ 'inspections.inactiveTemplates.title' | translate }}</h3>
+            <p>{{ 'inspections.inactiveTemplates.subtitle' | translate }}</p>
           </div>
         </div>
 
@@ -291,41 +288,41 @@
             }
           </div>
         } @else {
-          <div class="state empty">Aucun template inactif.</div>
+          <div class="state empty">{{ 'inspections.inactiveTemplates.empty' | translate }}</div>
         }
       </div>
 
       <div class="panel">
         <div class="panel-head">
           <div>
-            <h3>Résumé d’activité</h3>
-            <p>Vue rapide du module inspections.</p>
+            <h3>{{ 'inspections.summary.title' | translate }}</h3>
+            <p>{{ 'inspections.summary.subtitle' | translate }}</p>
           </div>
         </div>
 
         <div class="summary-list">
           <div class="summary-row">
-            <span>Total exécutions</span>
+            <span>{{ 'inspections.summary.totalExecutions' | translate }}</span>
             <strong>{{ totalExecutions() }}</strong>
           </div>
 
           <div class="summary-row">
-            <span>Terminées</span>
+            <span>{{ 'inspections.summary.completed' | translate }}</span>
             <strong>{{ completedExecutions() }}</strong>
           </div>
 
           <div class="summary-row">
-            <span>En cours</span>
+            <span>{{ 'inspections.summary.inProgress' | translate }}</span>
             <strong>{{ inProgressExecutions() }}</strong>
           </div>
 
           <div class="summary-row">
-            <span>Brouillons</span>
+            <span>{{ 'inspections.summary.drafts' | translate }}</span>
             <strong>{{ draftExecutions() }}</strong>
           </div>
 
           <div class="summary-row">
-            <span>Templates actifs</span>
+            <span>{{ 'inspections.summary.activeTemplates' | translate }}</span>
             <strong>{{ activeTemplates() }}</strong>
           </div>
         </div>
@@ -334,14 +331,14 @@
       <div class="panel">
         <div class="panel-head">
           <div>
-            <h3>Dernière activité</h3>
-            <p>Résumé des derniers mouvements du module.</p>
+            <h3>{{ 'inspections.lastActivity.title' | translate }}</h3>
+            <p>{{ 'inspections.lastActivity.subtitle' | translate }}</p>
           </div>
         </div>
 
         <div class="activity-list">
           <div class="activity-row">
-            <span>Dernier template</span>
+            <span>{{ 'inspections.lastActivity.lastTemplate' | translate }}</span>
             <strong>
               {{ lastCreatedTemplate()?.title || '—' }}
             </strong>
@@ -351,7 +348,7 @@
           </div>
 
           <div class="activity-row">
-            <span>Dernière exécution</span>
+            <span>{{ 'inspections.lastActivity.lastExecution' | translate }}</span>
             <strong>
               {{ getChecklistTitle(lastExecution()?.checklist) }}
             </strong>
@@ -361,7 +358,7 @@
           </div>
 
           <div class="activity-row">
-            <span>Dernière inspection terminée</span>
+            <span>{{ 'inspections.lastActivity.lastCompleted' | translate }}</span>
             <strong>
               {{ getChecklistTitle(lastCompletedExecution()?.checklist) }}
             </strong>
@@ -375,29 +372,29 @@
       <div class="panel quick-actions">
         <div class="panel-head">
           <div>
-            <h3>Accès rapides</h3>
-            <p>Raccourcis utiles pour le manager.</p>
+            <h3>{{ 'inspections.quickActions.title' | translate }}</h3>
+            <p>{{ 'inspections.quickActions.subtitle' | translate }}</p>
           </div>
         </div>
 
         <button class="quick-btn" (click)="goToCreateExecution()">
   <i class="bi bi-clipboard-plus"></i>
-  <span>Créer une inspection</span>
+  <span>{{ 'inspections.quickActions.createExecution' | translate }}</span>
 </button>
 
         <button class="quick-btn" type="button" (click)="goToCreateTemplate()">
           <i class="bi bi-plus-square"></i>
-          <span>Créer un template</span>
+          <span>{{ 'inspections.quickActions.createTemplate' | translate }}</span>
         </button>
 
         <button class="quick-btn" type="button" (click)="goToTemplates()">
           <i class="bi bi-card-checklist"></i>
-          <span>Gérer les templates</span>
+          <span>{{ 'inspections.quickActions.manageTemplates' | translate }}</span>
         </button>
 
         <button class="quick-btn" type="button" (click)="goToExecutions()">
           <i class="bi bi-clipboard-data"></i>
-          <span>Voir les exécutions</span>
+          <span>{{ 'inspections.quickActions.viewExecutions' | translate }}</span>
         </button>
       </div>
     </div>

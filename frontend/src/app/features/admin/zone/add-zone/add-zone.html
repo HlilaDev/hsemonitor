@@ -1,99 +1,152 @@
-<div class="page">
-  <div class="page-header">
-    <div>
-      <h2>Ajouter une zone</h2>
-      <p class="muted">Créer une nouvelle zone HSE.</p>
-    </div>
+<div class="add-page">
 
-    <a class="btn btn-outline-secondary" routerLink="/admin/zones">← Retour</a>
+  <!-- ── Top Bar ──────────────────────────────────────── -->
+  <div class="topbar">
+    <a class="btn-back" routerLink="/admin/zones">
+      <i class="bi bi-arrow-left"></i>
+      {{ 'ZONES.TITLE' | translate }}
+    </a>
   </div>
 
-  <div class="card">
+  <!-- ── Hero ─────────────────────────────────────────── -->
+  <div class="hero-card">
+    <div class="hero-gradient"></div>
+    <div class="hero-body">
+      <div class="hero-icon-wrap">
+        <i class="bi bi-geo-alt-fill"></i>
+      </div>
+      <div class="hero-text">
+        <p class="hero-eyebrow"><i class="bi bi-plus-circle-fill"></i> {{ 'ZONES.ADD_BTN' | translate }}</p>
+        <h1 class="hero-title">{{ 'ZONES.ADD_TITLE' | translate }}</h1>
+        <p class="hero-sub">{{ 'ZONES.ADD_SUBTITLE' | translate }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Form Card ─────────────────────────────────────── -->
+  <div class="form-card">
+
+    <!-- Alerts -->
+    @if (errorMessage) {
+      <div class="alert-box error-box">
+        <i class="bi bi-exclamation-triangle-fill"></i>
+        {{ errorMessage }}
+      </div>
+    }
+    @if (successMessage) {
+      <div class="alert-box success-box">
+        <i class="bi bi-check-circle-fill"></i>
+        {{ successMessage }}
+      </div>
+    }
+
     <form [formGroup]="form" (ngSubmit)="onSubmit()">
 
-      @if (errorMessage) {
-        <div class="alert alert-danger">{{ errorMessage }}</div>
-      }
-
-      @if (successMessage) {
-        <div class="alert alert-success">{{ successMessage }}</div>
-      }
-
-      <!-- Name -->
-      <div class="form-group">
-        <label class="form-label">
-          Nom de la zone <span class="req">*</span>
-        </label>
-
-        <input
-          type="text"
-          class="form-control"
-          formControlName="name"
-          placeholder="Ex: Atelier production"
-          [class.is-invalid]="name.touched && name.invalid"
-        />
-
-        @if (name.touched && name.errors?.['required']) {
-          <div class="invalid-feedback">Le nom est obligatoire.</div>
-        }
-        @if (name.touched && name.errors?.['minlength']) {
-          <div class="invalid-feedback">Le nom doit contenir au moins 3 caractères.</div>
-        }
+      <!-- ── Section: Identification ── -->
+      <div class="section-header">
+        <div class="section-icon teal"><i class="bi bi-tag-fill"></i></div>
+        <span>{{ 'ZONES.FORM.SECTION_IDENTIFICATION' | translate }}</span>
       </div>
 
-      <!-- Description -->
-      <div class="form-group">
-        <label class="form-label">Description</label>
-        <textarea
-          class="form-control"
-          formControlName="description"
-          rows="3"
-          placeholder="Détails sur la zone..."
-        ></textarea>
-      </div>
-
-      <!-- Risk Level -->
-      <div class="form-group">
-        <label class="form-label">
-          Niveau de risque <span class="req">*</span>
-        </label>
-
-        <select class="form-select" formControlName="riskLevel">
-          <option value="low">Low</option>
-          <option value="medium">Medium</option>
-          <option value="high">High</option>
-        </select>
-      </div>
-
-      <!-- Active -->
-      <div class="form-group switch-row">
-        <div>
-          <label class="form-label">Zone active</label>
-          <div class="muted small">Désactive une zone sans la supprimer.</div>
+      <div class="fields-grid">
+        <!-- Name -->
+        <div class="form-field full">
+          <label>{{ 'ZONES.FORM.NAME' | translate }} <span class="req">*</span></label>
+          <div class="input-wrap">
+            <i class="bi bi-geo-alt input-icon"></i>
+            <input
+              type="text"
+              formControlName="name"
+              [placeholder]="'ZONES.FORM.NAME_PH' | translate"
+              [class.invalid]="name.touched && name.invalid"
+            />
+          </div>
+          @if (name.touched && name.errors?.['required']) {
+            <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ 'ZONES.VALIDATION.NAME_REQUIRED' | translate }}</span>
+          }
+          @if (name.touched && name.errors?.['minlength']) {
+            <span class="field-error"><i class="bi bi-exclamation-circle"></i> {{ 'ZONES.VALIDATION.NAME_MIN' | translate }}</span>
+          }
         </div>
 
-        <label class="switch">
-          <input type="checkbox" formControlName="isActive" />
-          <span class="slider"></span>
-        </label>
+        <!-- Description -->
+        <div class="form-field full">
+          <label>{{ 'ZONES.FORM.DESCRIPTION' | translate }}</label>
+          <textarea
+            formControlName="description"
+            rows="3"
+            [placeholder]="'ZONES.FORM.DESC_PH' | translate"
+          ></textarea>
+        </div>
       </div>
 
-      <!-- Actions -->
-      <div class="actions">
-        <button class="btn btn-primary" type="submit" [disabled]="loading">
-          @if (!loading) { <span>Créer la zone</span> }
-          @else { <span>Création...</span> }
-        </button>
+      <!-- ── Section: Security ── -->
+      <div class="section-header">
+        <div class="section-icon orange"><i class="bi bi-shield-exclamation"></i></div>
+        <span>{{ 'ZONES.FORM.SECTION_SECURITY' | translate }}</span>
+      </div>
 
-        <button
-          class="btn btn-light"
-          type="button"
-          (click)="form.reset({ riskLevel: 'medium', isActive: true })"
-          [disabled]="loading"
-        >
-          Réinitialiser
+      <div class="fields-grid">
+        <!-- Risk Level -->
+        <div class="form-field">
+          <label>{{ 'ZONES.FORM.RISK' | translate }} <span class="req">*</span></label>
+          <div class="risk-options">
+            <label class="risk-option low" [class.selected]="form.value.riskLevel === 'low'">
+              <input type="radio" formControlName="riskLevel" value="low" hidden />
+              <i class="bi bi-shield-check"></i>
+              <span class="risk-label">{{ 'ZONES.RISK.low' | translate }}</span>
+              <span class="risk-desc">{{ 'ZONES.RISK_DESC.low' | translate }}</span>
+            </label>
+            <label class="risk-option medium" [class.selected]="form.value.riskLevel === 'medium'">
+              <input type="radio" formControlName="riskLevel" value="medium" hidden />
+              <i class="bi bi-shield-half"></i>
+              <span class="risk-label">{{ 'ZONES.RISK.medium' | translate }}</span>
+              <span class="risk-desc">{{ 'ZONES.RISK_DESC.medium' | translate }}</span>
+            </label>
+            <label class="risk-option high" [class.selected]="form.value.riskLevel === 'high'">
+              <input type="radio" formControlName="riskLevel" value="high" hidden />
+              <i class="bi bi-shield-x"></i>
+              <span class="risk-label">{{ 'ZONES.RISK.high' | translate }}</span>
+              <span class="risk-desc">{{ 'ZONES.RISK_DESC.high' | translate }}</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Active Toggle -->
+        <div class="form-field">
+          <label>{{ 'ZONES.FORM.ACTIVE' | translate }}</label>
+          <div class="toggle-card" [class.is-active]="form.value.isActive">
+            <div class="toggle-info">
+              <strong>{{ (form.value.isActive ? 'ZONES.STATUS.active' : 'ZONES.STATUS.inactive') | translate }}</strong>
+              <span>{{ 'ZONES.FORM.ACTIVE_HELP' | translate }}</span>
+            </div>
+            <label class="switch">
+              <input type="checkbox" formControlName="isActive" />
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Actions ── -->
+      <div class="form-actions">
+        <button class="btn-reset" type="button" [disabled]="loading"
+          (click)="form.reset({ riskLevel: 'medium', isActive: true })">
+          <i class="bi bi-arrow-counterclockwise"></i>
+          {{ 'COMMON.RESET' | translate }}
+        </button>
+        <button class="btn-submit" type="submit" [disabled]="loading">
+          @if (loading) {
+            <span class="spinner"></span>
+            {{ 'COMMON.SAVING' | translate }}
+          } @else {
+            <i class="bi bi-check-lg"></i>
+            {{ 'COMMON.SAVE' | translate }}
+          }
         </button>
       </div>
+
     </form>
   </div>
+
 </div>

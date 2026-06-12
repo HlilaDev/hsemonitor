@@ -1,16 +1,20 @@
 {
   "ZONES": {
+    "KICKER": "Gestion des zones",
     "TITLE": "Zones",
     "SUBTITLE": "Gérez les zones industrielles et leur niveau de risque.",
     "ADD_BTN": "Ajouter une zone",
     "EMPTY": "Aucune zone trouvée.",
     "EDIT_TITLE": "Modifier la zone",
     "EDIT_SUBTITLE": "Mettez à jour les informations de cette zone.",
+    "ADD_TITLE": "Ajouter une zone",
+    "ADD_SUBTITLE": "Créer une nouvelle zone HSE avec son niveau de risque associé.",
     "COLUMNS": {
       "NAME": "Nom",
       "DESCRIPTION": "Description",
       "RISK": "Niveau de risque",
-      "ACTIVE": "Active"
+      "ACTIVE": "Active",
+      "ACTIONS": "Actions"
     },
     "FORM": {
       "NAME": "Nom de la zone",
@@ -19,7 +23,9 @@
       "DESC_PH": "Décrivez cette zone...",
       "RISK": "Niveau de risque",
       "ACTIVE": "Zone active",
-      "ACTIVE_HELP": "Désactivez cette option pour masquer temporairement la zone."
+      "ACTIVE_HELP": "Désactivez cette option pour masquer temporairement la zone.",
+      "SECTION_IDENTIFICATION": "Identification",
+      "SECTION_SECURITY": "Paramètres de sécurité"
     },
     "FILTERS": {
       "SEARCH": "Recherche",
@@ -40,12 +46,29 @@
       "CRITICAL": "Critique",
       "UNKNOWN": "Inconnu"
     },
+    "RISK_DESC": {
+      "low": "Risque minimal",
+      "medium": "Risque modéré",
+      "high": "Risque critique"
+    },
+    "STATUS": {
+      "active": "Active",
+      "inactive": "Inactive"
+    },
     "VALIDATION": {
       "NAME_REQUIRED": "Le nom de la zone est requis.",
       "NAME_MIN": "Le nom doit contenir au moins 3 caractères."
     },
+    "SUCCESS": {
+      "CREATED": "Zone créée avec succès.",
+      "UPDATED": "Zone mise à jour avec succès."
+    },
     "ERROR": {
       "LOAD": "Erreur lors du chargement des zones.",
+      "NOT_FOUND": "Zone introuvable.",
+      "LOAD_ONE": "Erreur lors du chargement de la zone.",
+      "UPDATE": "Erreur lors de la mise à jour de la zone.",
+      "CREATE": "Erreur lors de la création de la zone.",
       "DELETE": "Erreur lors de la suppression de la zone.",
       "TOGGLE_ACTIVE": "Erreur lors de la mise à jour du statut de la zone."
     },

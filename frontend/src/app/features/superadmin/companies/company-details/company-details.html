@@ -1,20 +1,20 @@
 <div class="page">
   <div class="page-header">
     <div>
-      <span class="eyebrow">Company</span>
+      <span class="eyebrow">{{ 'superadmin.companies.detail.info.eyebrow' | translate }}</span>
       <h2>{{ company()?.name }}</h2>
-      <p class="muted">{{ company()?.industry || 'No industry' }}</p>
+      <p class="muted">{{ company()?.industry || ('superadmin.companies.detail.info.noIndustry' | translate) }}</p>
     </div>
 
     <div class="header-actions">
       <a class="btn btn-light" routerLink="/super/companies">
-        ← Retour
+        {{ 'superadmin.companies.detail.back' | translate }}
       </a>
     </div>
   </div>
 
   @if (loading()) {
-    <div class="state-card">Chargement...</div>
+    <div class="state-card">{{ 'superadmin.companies.detail.loading' | translate }}</div>
   } @else if (errorMessage()) {
     <div class="alert-error">{{ errorMessage() }}</div>
   } @else {
@@ -22,40 +22,40 @@
     <!-- STATS -->
     <div class="stats-grid">
       <div class="stat-card">
-        <span>Total Admins</span>
+        <span>{{ 'superadmin.companies.detail.totalAdmins' | translate }}</span>
         <strong>{{ admins().length }}</strong>
       </div>
 
       <div class="stat-card">
-        <span>Status</span>
+        <span>{{ 'superadmin.companies.detail.status' | translate }}</span>
         <strong>
-          {{ company()?.isActive === false ? 'Inactive' : 'Active' }}
+          {{ company()?.isActive === false ? ('superadmin.companies.detail.inactive' | translate) : ('superadmin.companies.detail.active' | translate) }}
         </strong>
       </div>
     </div>
 
     <!-- INFOS -->
     <div class="card">
-      <h3>Informations</h3>
+      <h3>{{ 'superadmin.companies.detail.info.title' | translate }}</h3>
 
       <div class="info-grid">
         <div>
-          <label>Nom</label>
+          <label>{{ 'superadmin.companies.detail.info.name' | translate }}</label>
           <p>{{ company()?.name }}</p>
         </div>
 
         <div>
-          <label>Industry</label>
+          <label>{{ 'superadmin.companies.detail.info.industry' | translate }}</label>
           <p>{{ company()?.industry || '-' }}</p>
         </div>
 
         <div>
-          <label>Email</label>
+          <label>{{ 'superadmin.companies.detail.info.email' | translate }}</label>
           <p>{{ company()?.contacts?.email || '-' }}</p>
         </div>
 
         <div>
-          <label>Téléphone</label>
+          <label>{{ 'superadmin.companies.detail.info.phone' | translate }}</label>
           <p>{{ company()?.contacts?.phone || '-' }}</p>
         </div>
       </div>
@@ -64,21 +64,21 @@
     <!-- ADMINS -->
     <div class="card">
       <div class="card-head">
-        <h3>Admins</h3>
+        <h3>{{ 'superadmin.companies.detail.admins.title' | translate }}</h3>
         <a routerLink="/super/admins/add" class="btn btn-primary">
-          + Ajouter
+          {{ 'superadmin.companies.detail.admins.addBtn' | translate }}
         </a>
       </div>
 
       @if (admins().length === 0) {
-        <div class="empty">Aucun admin</div>
+        <div class="empty">{{ 'superadmin.companies.detail.admins.empty' | translate }}</div>
       } @else {
 
         <table class="table">
           <thead>
             <tr>
-              <th>Nom</th>
-              <th>Email</th>
+              <th>{{ 'superadmin.companies.detail.admins.colName' | translate }}</th>
+              <th>{{ 'superadmin.companies.detail.admins.colEmail' | translate }}</th>
             </tr>
           </thead>
 

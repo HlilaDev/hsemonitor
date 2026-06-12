@@ -8,6 +8,7 @@ import {
   FormControl,
 } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 
 import {
   ZoneServices,
@@ -25,7 +26,7 @@ type AddZoneForm = FormGroup<{
 @Component({
   selector: 'app-add-zone',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, TranslateModule],
   templateUrl: './add-zone.html',
   styleUrl: './add-zone.scss',
 })

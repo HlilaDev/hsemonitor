@@ -1,19 +1,19 @@
 <div class="page">
   <div class="header">
     <div class="title">
-      <h2>Nouvelle formation</h2>
-      <p class="muted">Créer une formation HSE et inviter des employés (participants).</p>
+      <h2>{{ 'trainings.create.title' | translate }}</h2>
+      <p class="muted">{{ 'trainings.create.subtitle' | translate }}</p>
     </div>
 
     <div class="actions">
       <button class="btn ghost" type="button" routerLink="../" [disabled]="isLoading()">
         <i class="bi bi-arrow-left"></i>
-        Retour
+        {{ 'trainings.create.back' | translate }}
       </button>
 
       <button class="btn primary" type="submit" form="trainingForm" [disabled]="isLoading()">
         <i class="bi bi-plus-lg"></i>
-        {{ isLoading() ? 'Enregistrement...' : 'Créer' }}
+        {{ isLoading() ? ('trainings.create.saving' | translate) : ('trainings.create.create' | translate) }}
       </button>
     </div>
   </div>
@@ -26,70 +26,70 @@
   <form id="trainingForm" class="card form-card" [formGroup]="form" (ngSubmit)="submit()">
     <div class="grid">
       <div class="field span-2">
-        <label for="title">Titre <span class="req">*</span></label>
+        <label for="title">{{ 'trainings.create.titleLabel' | translate }} <span class="req">*</span></label>
         <input
           id="title"
           class="input"
           type="text"
           formControlName="title"
-          placeholder="Ex: Formation Port des EPI"
+          [placeholder]="'trainings.create.titlePlaceholder' | translate"
           [class.invalid]="fieldInvalid('title')"
         />
-        <div class="hint error" *ngIf="fieldInvalid('title')">Titre requis (min 3 caractères).</div>
+        <div class="hint error" *ngIf="fieldInvalid('title')">{{ 'trainings.create.titleError' | translate }}</div>
       </div>
 
       <div class="field">
-        <label for="category">Catégorie <span class="req">*</span></label>
+        <label for="category">{{ 'trainings.create.categoryLabel' | translate }} <span class="req">*</span></label>
         <select id="category" class="select" formControlName="category" [class.invalid]="fieldInvalid('category')">
-          <option value="safety">Safety</option>
-          <option value="environment">Environment</option>
-          <option value="quality">Quality</option>
-          <option value="security">Security</option>
-          <option value="other">Other</option>
+          <option value="safety">{{ 'trainings.create.category.safety' | translate }}</option>
+          <option value="environment">{{ 'trainings.create.category.environment' | translate }}</option>
+          <option value="quality">{{ 'trainings.create.category.quality' | translate }}</option>
+          <option value="security">{{ 'trainings.create.category.security' | translate }}</option>
+          <option value="other">{{ 'trainings.create.category.other' | translate }}</option>
         </select>
-        <div class="hint error" *ngIf="fieldInvalid('category')">Catégorie requise.</div>
+        <div class="hint error" *ngIf="fieldInvalid('category')">{{ 'trainings.create.categoryError' | translate }}</div>
       </div>
 
       <div class="field">
-        <label for="status">Statut <span class="req">*</span></label>
+        <label for="status">{{ 'trainings.create.statusLabel' | translate }} <span class="req">*</span></label>
         <select id="status" class="select" formControlName="status" [class.invalid]="fieldInvalid('status')">
-          <option value="scheduled">Prévu</option>
-          <option value="completed">Terminé</option>
-          <option value="cancelled">Annulé</option>
+          <option value="scheduled">{{ 'trainings.create.status.scheduled' | translate }}</option>
+          <option value="completed">{{ 'trainings.create.status.completed' | translate }}</option>
+          <option value="cancelled">{{ 'trainings.create.status.cancelled' | translate }}</option>
         </select>
-        <div class="hint error" *ngIf="fieldInvalid('status')">Statut requis.</div>
+        <div class="hint error" *ngIf="fieldInvalid('status')">{{ 'trainings.create.statusError' | translate }}</div>
       </div>
 
       <div class="field">
-        <label for="provider">Provider</label>
-        <input id="provider" class="input" type="text" formControlName="provider" placeholder="Ex: INPT / Consultant" />
+        <label for="provider">{{ 'trainings.create.providerLabel' | translate }}</label>
+        <input id="provider" class="input" type="text" formControlName="provider" [placeholder]="'trainings.create.providerPlaceholder' | translate" />
       </div>
 
       <div class="field">
-        <label for="location">Lieu</label>
-        <input id="location" class="input" type="text" formControlName="location" placeholder="Ex: Salle A, Usine 1" />
+        <label for="location">{{ 'trainings.create.locationLabel' | translate }}</label>
+        <input id="location" class="input" type="text" formControlName="location" [placeholder]="'trainings.create.locationPlaceholder' | translate" />
       </div>
 
       <div class="field">
-        <label for="startDate">Date de début <span class="req">*</span></label>
+        <label for="startDate">{{ 'trainings.create.startDateLabel' | translate }} <span class="req">*</span></label>
         <input id="startDate" class="input" type="date" formControlName="startDate" [class.invalid]="fieldInvalid('startDate')" />
-        <div class="hint error" *ngIf="fieldInvalid('startDate')">Date de début requise.</div>
+        <div class="hint error" *ngIf="fieldInvalid('startDate')">{{ 'trainings.create.startDateError' | translate }}</div>
       </div>
 
       <div class="field">
-        <label for="endDate">Date de fin</label>
+        <label for="endDate">{{ 'trainings.create.endDateLabel' | translate }}</label>
         <input id="endDate" class="input" type="date" formControlName="endDate" />
-        <div class="hint muted">Optionnel</div>
+        <div class="hint muted">{{ 'trainings.create.endDateHint' | translate }}</div>
       </div>
 
       <div class="field span-2">
-        <label for="description">Description</label>
+        <label for="description">{{ 'trainings.create.descriptionLabel' | translate }}</label>
         <textarea
           id="description"
           class="textarea"
           rows="4"
           formControlName="description"
-          placeholder="Objectif, contenu, prérequis..."
+          [placeholder]="'trainings.create.descriptionPlaceholder' | translate"
         ></textarea>
       </div>
     </div>
@@ -99,14 +99,14 @@
         <div>
           <div class="section-title">
             <i class="bi bi-people"></i>
-            Participants
+            {{ 'trainings.create.participants' | translate }}
           </div>
-          <div class="section-sub">Sélectionner les employés à inviter.</div>
+          <div class="section-sub">{{ 'trainings.create.participantsSubtitle' | translate }}</div>
         </div>
       </div>
 
       <div class="field span-2">
-        <label>Ajouter des employés</label>
+        <label>{{ 'trainings.create.addEmployees' | translate }}</label>
 
         <select
           class="select"
@@ -119,9 +119,7 @@
           }
         </select>
 
-        <div class="hint muted">
-          Astuce : maintiens <b>Ctrl</b> (Windows) / <b>Cmd</b> (Mac) pour sélectionner plusieurs.
-        </div>
+        <div class="hint muted" [innerHTML]="'trainings.create.selectionHint' | translate"></div>
       </div>
 
       <div class="chips" *ngIf="selectedEmployeeIds().length > 0">
@@ -129,7 +127,7 @@
           <div class="chip">
             <i class="bi bi-person"></i>
             <span class="txt">{{ employeeLabelById(empId) }}</span>
-            <button type="button" class="x" (click)="removeParticipantById(empId)" title="Retirer">
+            <button type="button" class="x" (click)="removeParticipantById(empId)">
               <i class="bi bi-x-lg"></i>
             </button>
           </div>
@@ -138,18 +136,18 @@
 
       <div class="empty-mini" *ngIf="selectedEmployeeIds().length === 0">
         <i class="bi bi-info-circle"></i>
-        Aucun participant sélectionné.
+        {{ 'trainings.create.noneSelected' | translate }}
       </div>
     </div>
 
     <div class="form-actions">
       <button class="btn ghost" type="button" routerLink="../" [disabled]="isLoading()">
-        Annuler
+        {{ 'trainings.create.cancel' | translate }}
       </button>
 
       <button class="btn primary" type="submit" [disabled]="isLoading()">
         <i class="bi bi-plus-lg"></i>
-        {{ isLoading() ? 'Enregistrement...' : 'Créer la formation' }}
+        {{ isLoading() ? ('trainings.create.saving' | translate) : ('trainings.create.createBtn' | translate) }}
       </button>
     </div>
   </form>

@@ -8,6 +8,7 @@ import {
   signal,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 import { Subscription, finalize, interval } from 'rxjs';
 
 import {
@@ -43,7 +44,7 @@ type DeviceDetails = Device & {
 @Component({
   selector: 'app-device-management',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TranslateModule],
   templateUrl: './device-management.html',
   styleUrl: './device-management.scss',
 })
@@ -176,7 +177,7 @@ export class DeviceManagement implements OnInit, OnDestroy {
 
     return [
       {
-        label: 'CPU Temperature',
+        label: 'DEVICES.MANAGEMENT.HEALTH_CPU',
         value:
           current?.cpuTemp !== null && current?.cpuTemp !== undefined
             ? `${current.cpuTemp} °C`
@@ -184,7 +185,7 @@ export class DeviceManagement implements OnInit, OnDestroy {
         state: this.cpuTempState(),
       },
       {
-        label: 'Memory Usage',
+        label: 'DEVICES.MANAGEMENT.HEALTH_MEMORY',
         value:
           current?.memoryUsage !== null && current?.memoryUsage !== undefined
             ? `${current.memoryUsage}%`
@@ -192,12 +193,12 @@ export class DeviceManagement implements OnInit, OnDestroy {
         state: this.memoryState(),
       },
       {
-        label: 'Wi-Fi Quality',
+        label: 'DEVICES.MANAGEMENT.HEALTH_WIFI',
         value: this.signalLabel(),
         state: this.signalLevelClass(),
       },
       {
-        label: 'Network Type',
+        label: 'DEVICES.MANAGEMENT.HEALTH_NETWORK',
         value: current?.networkType || '—',
         state: 'neutral',
       },

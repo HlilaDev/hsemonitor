@@ -46,7 +46,7 @@
       <div class="topbar">
         <button class="btn ghost" (click)="goBack()">
           <i class="bi bi-arrow-left"></i>
-          Retour
+          {{ 'reports.edit.back' | translate }}
         </button>
 
         <div class="topbar-actions">
@@ -55,7 +55,7 @@
             [routerLink]="['/manager/reports', r._id]"
           >
             <i class="bi bi-eye"></i>
-            Voir détail
+            {{ 'reports.edit.viewDetail' | translate }}
           </a>
 
           <button
@@ -64,14 +64,14 @@
             [disabled]="saving()"
           >
             <i class="bi bi-save"></i>
-            {{ saving() ? 'Enregistrement...' : 'Enregistrer' }}
+            {{ saving() ? ('reports.edit.saving' | translate) : ('reports.edit.save' | translate) }}
           </button>
         </div>
       </div>
 
       <div class="card hero">
         <div class="hero-left">
-          <div class="eyebrow">Édition du rapport</div>
+          <div class="eyebrow">{{ 'reports.edit.title' | translate }}</div>
           <h1>{{ r.title || ('Rapport ' + typeLabel(r.type)) }}</h1>
 
           <div class="hero-meta">
@@ -81,7 +81,7 @@
 
             <span class="chip" *ngIf="r.exportUrl">
               <i class="bi bi-file-earmark-pdf"></i>
-              PDF disponible
+              {{ 'reports.edit.pdfAvailable' | translate }}
             </span>
 
             <span class="chip">
@@ -93,7 +93,7 @@
 
         <div class="hero-right">
           <div class="status-card">
-            <span class="status-label">Conformité actuelle</span>
+            <span class="status-label">{{ 'reports.edit.currentCompliance' | translate }}</span>
             <span class="status-value">
               {{ metrics().complianceRate | number:'1.0-2' }}%
             </span>
@@ -106,51 +106,51 @@
         <div class="card form-card">
           <div class="section-title">
             <i class="bi bi-pencil-square"></i>
-            Modifier les informations
+            {{ 'reports.edit.editInfo' | translate }}
           </div>
 
           <form class="form" [formGroup]="form" (ngSubmit)="submit()">
             <div class="grid two">
               <div class="field">
-                <label>Titre</label>
+                <label>{{ 'reports.edit.titleLabel' | translate }}</label>
                 <input
                   class="input"
                   type="text"
                   formControlName="title"
-                  placeholder="Ex: Rapport HSE zone A - semaine 12"
+                  [placeholder]="'reports.edit.titlePlaceholder' | translate"
                 />
               </div>
 
               <div class="field">
-                <label>Type <span class="req">*</span></label>
+                <label>{{ 'reports.edit.typeLabel' | translate }} <span class="req">*</span></label>
                 <select class="select" formControlName="type">
                   <option *ngFor="let opt of typeOptions" [value]="opt.value">
                     {{ opt.label }}
                   </option>
                 </select>
                 <div class="hint error" *ngIf="fieldInvalid('type')">
-                  Le type est obligatoire.
+                  {{ 'reports.edit.typeError' | translate }}
                 </div>
               </div>
             </div>
 
             <div class="grid two">
               <div class="field">
-                <label>Date début</label>
+                <label>{{ 'reports.edit.startDateLabel' | translate }}</label>
                 <input class="input" type="date" formControlName="startDate" />
               </div>
 
               <div class="field">
-                <label>Date fin</label>
+                <label>{{ 'reports.edit.endDateLabel' | translate }}</label>
                 <input class="input" type="date" formControlName="endDate" />
               </div>
             </div>
 
             <div class="grid two">
               <div class="field">
-                <label>Zone</label>
+                <label>{{ 'reports.edit.zoneLabel' | translate }}</label>
                 <select class="select" formControlName="zone">
-                  <option value="">Aucune zone</option>
+                  <option value="">{{ 'reports.edit.zoneNone' | translate }}</option>
                   <option *ngFor="let z of zones()" [value]="z._id">
                     {{ z.name }}
                   </option>
@@ -158,13 +158,13 @@
               </div>
 
               <div class="field toggle-field">
-                <label>Mode de génération</label>
+                <label>{{ 'reports.edit.modeLabel' | translate }}</label>
 
                 <label class="switch">
                   <input type="checkbox" formControlName="isAutomatic" />
                   <span class="slider"></span>
                   <span class="switch-label">
-                    {{ form.value.isAutomatic ? 'Automatique' : 'Manuel' }}
+                    {{ form.value.isAutomatic ? ('reports.edit.automatic' | translate) : ('reports.edit.manual' | translate) }}
                   </span>
                 </label>
               </div>
@@ -178,7 +178,7 @@
                 [disabled]="saving()"
               >
                 <i class="bi bi-arrow-counterclockwise"></i>
-                Réinitialiser
+                {{ 'reports.edit.reset' | translate }}
               </button>
 
               <button
@@ -187,7 +187,7 @@
                 [disabled]="saving()"
               >
                 <i class="bi bi-save"></i>
-                {{ saving() ? 'Enregistrement...' : 'Enregistrer les modifications' }}
+                {{ saving() ? ('reports.edit.saving' | translate) : ('reports.edit.saveBtn' | translate) }}
               </button>
             </div>
           </form>
@@ -198,14 +198,14 @@
           <div class="card side-card">
             <div class="section-title">
               <i class="bi bi-bar-chart-line"></i>
-              Métriques actuelles
+              {{ 'reports.edit.metrics.title' | translate }}
             </div>
 
             <div class="metric-list">
               <div class="metric-row">
                 <span class="k">
                   <i class="bi bi-exclamation-octagon"></i>
-                  Incidents
+                  {{ 'reports.edit.metrics.incidents' | translate }}
                 </span>
                 <span class="v">{{ metrics().totalIncidents }}</span>
               </div>
@@ -213,7 +213,7 @@
               <div class="metric-row">
                 <span class="k">
                   <i class="bi bi-clipboard-check"></i>
-                  Observations
+                  {{ 'reports.edit.metrics.observations' | translate }}
                 </span>
                 <span class="v">{{ metrics().totalObservations }}</span>
               </div>
@@ -221,7 +221,7 @@
               <div class="metric-row">
                 <span class="k">
                   <i class="bi bi-shield-check"></i>
-                  Compliance
+                  {{ 'reports.edit.metrics.compliance' | translate }}
                 </span>
                 <span class="v">{{ metrics().complianceRate | number:'1.0-2' }}%</span>
               </div>
@@ -231,28 +231,28 @@
           <div class="card side-card">
             <div class="section-title">
               <i class="bi bi-info-circle"></i>
-              Informations du rapport
+              {{ 'reports.edit.info.title' | translate }}
             </div>
 
             <div class="info-list">
               <div class="info-row">
-                <span class="k">Auteur</span>
+                <span class="k">{{ 'reports.edit.info.author' | translate }}</span>
                 <span class="v">{{ userName(r.generatedBy) }}</span>
               </div>
 
               <div class="info-row">
-                <span class="k">Zone actuelle</span>
+                <span class="k">{{ 'reports.edit.info.currentZone' | translate }}</span>
                 <span class="v">{{ zoneName(r.zone) }}</span>
               </div>
 
               <div class="info-row">
-                <span class="k">PDF</span>
-                <span class="v">{{ r.exportUrl ? 'Disponible' : 'Aucun' }}</span>
+                <span class="k">{{ 'reports.edit.info.pdf' | translate }}</span>
+                <span class="v">{{ r.exportUrl ? ('reports.edit.info.available' | translate) : ('reports.edit.info.none' | translate) }}</span>
               </div>
 
               <div class="info-row">
-                <span class="k">Mode</span>
-                <span class="v">{{ r.isAutomatic ? 'Automatique' : 'Manuel' }}</span>
+                <span class="k">{{ 'reports.edit.info.mode' | translate }}</span>
+                <span class="v">{{ r.isAutomatic ? ('reports.edit.info.automatic' | translate) : ('reports.edit.info.manual' | translate) }}</span>
               </div>
             </div>
           </div>
@@ -265,11 +265,11 @@
         <div class="empty-icon">
           <i class="bi bi-file-earmark-x"></i>
         </div>
-        <h3>Rapport introuvable</h3>
-        <p>Impossible de charger ce rapport pour modification.</p>
+        <h3>{{ 'reports.edit.notFound' | translate }}</h3>
+        <p>{{ 'reports.edit.notFoundMsg' | translate }}</p>
         <button class="btn primary" routerLink="/manager/reports">
           <i class="bi bi-arrow-left"></i>
-          Retour à la liste
+          {{ 'reports.edit.backToList' | translate }}
         </button>
       </div>
     </ng-template>

@@ -1,4 +1,5 @@
 import { CommonModule } from '@angular/common';
+import { TranslatePipe } from '@ngx-translate/core';
 import { Component, OnInit, inject, signal } from '@angular/core';
 import {
   FormArray,
@@ -63,7 +64,7 @@ type EmployeesResponse =
 @Component({
   selector: 'app-training-edit',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, TranslatePipe],
   templateUrl: './training-edit.html',
   styleUrl: './training-edit.scss',
 })

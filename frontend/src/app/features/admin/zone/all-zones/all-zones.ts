@@ -5,6 +5,8 @@ import { RouterModule } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { ZoneServices, Zone } from '../../../../core/services/zones/zone-services';
+import { ConfirmModalService } from '../../../../core/services/confirm-modal/confirm-modal.service';
+import { ToastService } from '../../../../core/services/toast/toast.service';
 
 @Component({
   selector: 'app-all-zones',
@@ -16,6 +18,8 @@ import { ZoneServices, Zone } from '../../../../core/services/zones/zone-service
 export class AllZones {
   private zoneService = inject(ZoneServices);
   private t = inject(TranslateService);
+  private confirmModal = inject(ConfirmModalService);
+  private toast = inject(ToastService);
 
   zones: Zone[] = [];
   loading = true;
@@ -137,19 +141,20 @@ export class AllZones {
 
   deleteZone(zone: any) {
     const id = this.getRowId(zone);
-    const msg = this.t.instant('ZONES.CONFIRM_DELETE');
 
-    if (!confirm(msg)) return;
-
-    this.zoneService.deleteZone(id).subscribe({
-      next: () => {
-        this.zones = this.zones.filter(z => this.getRowId(z) !== id);
-
-        if (this.page() > this.pages()) {
-          this.page.set(this.pages());
-        }
+    this.confirmModal.open({
+      message: 'Êtes-vous sûr de vouloir supprimer cette zone ?',
+      itemName: zone?.name,
+      onConfirm: () => {
+        this.zoneService.deleteZone(id).subscribe({
+          next: () => {
+            this.zones = this.zones.filter(z => this.getRowId(z) !== id);
+            if (this.page() > this.pages()) this.page.set(this.pages());
+            this.toast.success('Zone supprimée avec succès.');
+          },
+          error: () => this.toast.error(this.t.instant('ZONES.ERROR.DELETE')),
+        });
       },
-      error: () => alert(this.t.instant('ZONES.ERROR.DELETE')),
     });
   }
 }

@@ -6,6 +6,9 @@ const mqttOptions = {
   clean: true,
   connectTimeout: 4000,
   reconnectPeriod: 2000,
+    username: process.env.MQTT_USERNAME,
+  password: process.env.MQTT_PASSWORD,
+  rejectUnauthorized: true, 
 };
 
 const client = mqtt.connect(process.env.MQTT_BROKER_URL, mqttOptions);
@@ -13,14 +16,14 @@ const client = mqtt.connect(process.env.MQTT_BROKER_URL, mqttOptions);
 client.on("connect", () => {
   console.log("🚀 MQTT connected");
 
-  client.subscribe("hsemonitor/devices/+/telemetry", { qos: 1 });
-  client.subscribe("hsemonitor/devices/+/status", { qos: 1 });
+  client.subscribe("hsemonitor/+/+/telemetry", { qos: 1 });
+  client.subscribe("hsemonitor/+/+/status", { qos: 1 });
 
-  client.subscribe("hsemonitor/devices/+/alerts/ppe", { qos: 1 }, (err) => {
+  client.subscribe("hsemonitor/+/+/alerts/ppe", { qos: 1 }, (err) => {
     if (err) {
       console.error("❌ Subscribe PPE error:", err.message);
     } else {
-      console.log("✅ Subscribed to hsemonitor/devices/+/alerts/ppe");
+      console.log("✅ Subscribed to hsemonitor/+/+/alerts/ppe");
     }
   });
 });

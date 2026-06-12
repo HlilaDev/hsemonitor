@@ -253,7 +253,6 @@ export class PpeAlertsOverview implements OnInit {
       case 'no_helmet':
       case 'NO-Hardhat':
       case 'no-hardhat':
-      case 'no_helmet':
         return 'Sans casque';
       case 'no_vest':
         return 'Sans gilet';

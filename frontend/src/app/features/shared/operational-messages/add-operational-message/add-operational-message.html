@@ -1,263 +1,285 @@
-<section class="add-message-page">
-  <div class="page-header">
-    <div>
-      <p class="eyebrow">HSE Communication</p>
-      <h1>Nouveau message opérationnel</h1>
-      <p class="subtitle">
-        Créez un message à envoyer vers un device, une zone ou en diffusion générale.
-      </p>
-    </div>
+<section class="add-page">
 
-    <button type="button" class="btn btn-light" (click)="goBack()">
+  <!-- ── PAGE HEAD ──────────────────────────────────── -->
+  <div class="page-head">
+    <button type="button" class="back-btn" (click)="goBack()">
       <i class="bi bi-arrow-left"></i>
-      <span>Retour</span>
+      {{ 'operationalMessages.filters.resetBtn' | translate }}
     </button>
+    <div class="breadcrumb">
+      <span>{{ 'operationalMessages.kicker' | translate }}</span>
+      <i class="bi bi-chevron-right"></i>
+      <span class="bc-active">{{ 'operationalMessages.newMessage' | translate }}</span>
+    </div>
+    <div class="head-chips">
+      <span class="ref-chip">
+        <i class="bi bi-cpu"></i>
+        {{ devices().length }} {{ 'operationalMessages.stats.devicesLoaded' | translate }}
+        <em class="online-dot" [class.has-online]="onlineDevicesCount() > 0">{{ onlineDevicesCount() }} en ligne</em>
+      </span>
+      <span class="ref-chip">
+        <i class="bi bi-geo-alt"></i>
+        {{ zones().length }} {{ 'operationalMessages.stats.zonesLoaded' | translate }}
+      </span>
+    </div>
   </div>
 
-  <div class="top-stats">
-    <div class="mini-card">
-      <span>Devices chargés</span>
-      <strong>{{ devices().length }}</strong>
-    </div>
-
-    <div class="mini-card">
-      <span>Devices online</span>
-      <strong>{{ onlineDevicesCount() }}</strong>
-    </div>
-
-    <div class="mini-card">
-      <span>Zones chargées</span>
-      <strong>{{ zones().length }}</strong>
-    </div>
-  </div>
-
+  <!-- ── ALERTS ─────────────────────────────────────── -->
   @if (error()) {
-    <div class="alert-box error">
-      <i class="bi bi-exclamation-octagon"></i>
-      <span>{{ error() }}</span>
+    <div class="alert error">
+      <i class="bi bi-exclamation-circle-fill"></i>
+      {{ error() }}
     </div>
   }
-
   @if (success()) {
-    <div class="alert-box success">
-      <i class="bi bi-check-circle"></i>
-      <span>{{ success() }}</span>
+    <div class="alert success">
+      <i class="bi bi-check-circle-fill"></i>
+      {{ success() }}
+    </div>
+  }
+  @if (loadingReferences()) {
+    <div class="alert info">
+      <span class="spin-sm"></span>
+      {{ 'operationalMessages.list.loadingReferences' | translate }}
     </div>
   }
 
-  <form class="form-card" [formGroup]="form" (ngSubmit)="submit()">
-    <div class="form-grid">
-      <div class="field full">
-        <label for="title">Titre</label>
-        <input
-          id="title"
-          type="text"
-          formControlName="title"
-          placeholder="Ex: Alerte sécurité zone A"
-        />
-      </div>
+  <!-- ── MAIN LAYOUT ────────────────────────────────── -->
+  <div class="main-layout">
 
-      <div class="field full">
-        <label for="content">Contenu du message <span>*</span></label>
-        <textarea
-          id="content"
-          rows="5"
-          formControlName="content"
-          placeholder="Ex: Port du casque obligatoire dans cette zone."
-        ></textarea>
+    <!-- FORM ── -->
+    <form class="form-card" [formGroup]="form" (ngSubmit)="submit()">
 
-        <div class="field-meta">
-          <small>{{ contentLength() }}/500</small>
-          @if (fieldInvalid('content')) {
-            <small class="error-text">Le contenu est obligatoire.</small>
-          }
+      <!-- Section: Message -->
+      <div class="section-head">
+        <div class="s-icon blue"><i class="bi bi-chat-text"></i></div>
+        <div>
+          <h3>Message</h3>
+          <p>{{ 'operationalMessages.subtitle' | translate }}</p>
         </div>
       </div>
 
       <div class="field">
-        <label for="messageType">Type de message <span>*</span></label>
-        <select id="messageType" formControlName="messageType">
-          @for (option of messageTypeOptions; track option.value) {
-            <option [value]="option.value">{{ option.label }}</option>
-          }
-        </select>
+        <label for="title">{{ 'operationalMessages.list.colMessage' | translate }}</label>
+        <input id="title" type="text" formControlName="title"
+               [placeholder]="'operationalMessages.list.titlePlaceholder' | translate" />
       </div>
 
       <div class="field">
-        <label for="priority">Priorité <span>*</span></label>
-        <select id="priority" formControlName="priority">
-          @for (option of priorityOptions; track option.value) {
-            <option [value]="option.value">{{ option.label }}</option>
+        <label for="content">
+          {{ 'operationalMessages.list.contentLabel' | translate }}
+          <span class="req">*</span>
+        </label>
+        <textarea id="content" rows="4" formControlName="content"
+                  [placeholder]="'operationalMessages.list.contentPlaceholder' | translate"></textarea>
+        <div class="field-foot">
+          <small class="char-count">{{ contentLength() }}/500</small>
+          @if (fieldInvalid('content')) {
+            <small class="err-text">{{ 'operationalMessages.list.contentRequired' | translate }}</small>
           }
-        </select>
+        </div>
       </div>
 
-      <div class="field">
-        <label for="targetType">Type de cible <span>*</span></label>
-        <select id="targetType" formControlName="targetType">
-          @for (option of targetTypeOptions; track option.value) {
-            <option [value]="option.value">{{ option.label }}</option>
-          }
-        </select>
+      <div class="divider"></div>
+
+      <!-- Section: Classification (3 per row) -->
+      <div class="section-head">
+        <div class="s-icon violet"><i class="bi bi-tags"></i></div>
+        <div>
+          <h3>Classification</h3>
+          <p>Type, priorité et cible</p>
+        </div>
       </div>
 
-      @if (targetType() === 'device') {
+      <div class="grid-3">
         <div class="field">
-          <label for="targetDevice">Device cible <span>*</span></label>
-          <select id="targetDevice" formControlName="targetDevice">
-            <option value="">Sélectionner un device</option>
-            @for (device of devices(); track device._id || device.deviceId) {
-              <option [value]="device._id || ''">
-                {{ getDeviceLabel(device) }} ({{ device.deviceId }})
-              </option>
+          <label for="messageType">{{ 'operationalMessages.list.colType' | translate }} <span class="req">*</span></label>
+          <select id="messageType" formControlName="messageType">
+            @for (opt of messageTypeOptions; track opt.value) {
+              <option [value]="opt.value">{{ opt.label }}</option>
             }
           </select>
+        </div>
 
+        <div class="field">
+          <label for="priority">{{ 'operationalMessages.list.colPriority' | translate }} <span class="req">*</span></label>
+          <select id="priority" formControlName="priority">
+            @for (opt of priorityOptions; track opt.value) {
+              <option [value]="opt.value">{{ opt.label }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="targetType">{{ 'operationalMessages.list.colTarget' | translate }} <span class="req">*</span></label>
+          <select id="targetType" formControlName="targetType">
+            @for (opt of targetTypeOptions; track opt.value) {
+              <option [value]="opt.value">{{ opt.label }}</option>
+            }
+          </select>
+        </div>
+      </div>
+
+      <!-- Conditional target selects -->
+      @if (targetType() === 'device') {
+        <div class="field">
+          <label for="targetDevice">{{ 'operationalMessages.list.targetDevice' | translate }} <span class="req">*</span></label>
+          <select id="targetDevice" formControlName="targetDevice">
+            <option value="">{{ 'operationalMessages.list.selectDevice' | translate }}</option>
+            @for (dev of devices(); track dev._id || dev.deviceId) {
+              <option [value]="dev._id || ''">{{ getDeviceLabel(dev) }} ({{ dev.deviceId }})</option>
+            }
+          </select>
           @if (fieldInvalid('targetDevice')) {
-            <small class="error-text">Le device est obligatoire.</small>
+            <small class="err-text">{{ 'operationalMessages.list.deviceRequired' | translate }}</small>
           }
         </div>
       }
 
       @if (targetType() === 'zone') {
         <div class="field">
-          <label for="targetZone">Zone cible <span>*</span></label>
+          <label for="targetZone">{{ 'operationalMessages.list.targetZone' | translate }} <span class="req">*</span></label>
           <select id="targetZone" formControlName="targetZone">
-            <option value="">Sélectionner une zone</option>
+            <option value="">{{ 'operationalMessages.list.selectZone' | translate }}</option>
             @for (zone of zones(); track zone._id) {
-              <option [value]="zone._id">
-                {{ getZoneLabel(zone) }}
-              </option>
+              <option [value]="zone._id">{{ getZoneLabel(zone) }}</option>
             }
           </select>
-
           @if (fieldInvalid('targetZone')) {
-            <small class="error-text">La zone est obligatoire.</small>
+            <small class="err-text">{{ 'operationalMessages.list.zoneRequired' | translate }}</small>
           }
         </div>
       }
 
       @if (targetType() === 'broadcast') {
-        <div class="field full info-card">
-          <div class="inline-info">
-            <i class="bi bi-broadcast"></i>
-            <div>
-              <strong>Diffusion générale</strong>
-              <p>
-                Ce message sera envoyé à tous les écrans / devices concernés.
-              </p>
-            </div>
+        <div class="broadcast-info">
+          <i class="bi bi-broadcast"></i>
+          <div>
+            <strong>{{ 'operationalMessages.list.broadcastTitle' | translate }}</strong>
+            <p>{{ 'operationalMessages.list.broadcastBody' | translate }}</p>
           </div>
         </div>
       }
 
-      <div class="field">
-        <label for="displayMode">Mode d’affichage <span>*</span></label>
-        <select id="displayMode" formControlName="displayMode">
-          @for (option of displayModeOptions; track option.value) {
-            <option [value]="option.value">{{ option.label }}</option>
+      <div class="divider"></div>
+
+      <!-- Section: Display (3 per row) -->
+      <div class="section-head">
+        <div class="s-icon teal"><i class="bi bi-display"></i></div>
+        <div>
+          <h3>Affichage</h3>
+          <p>Mode, durée et planification</p>
+        </div>
+      </div>
+
+      <div class="grid-3">
+        <div class="field">
+          <label for="displayMode">{{ 'operationalMessages.list.displayMode' | translate }} <span class="req">*</span></label>
+          <select id="displayMode" formControlName="displayMode">
+            @for (opt of displayModeOptions; track opt.value) {
+              <option [value]="opt.value">{{ opt.label }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="durationSeconds">{{ 'operationalMessages.list.duration' | translate }} <span class="req">*</span></label>
+          <input id="durationSeconds" type="number" min="1" max="3600"
+                 formControlName="durationSeconds" placeholder="10" />
+          @if (fieldInvalid('durationSeconds')) {
+            <small class="err-text">{{ 'operationalMessages.list.durationError' | translate }}</small>
           }
-        </select>
+        </div>
+
+        <div class="field">
+          <label for="scheduledAt">{{ 'operationalMessages.list.scheduledAt' | translate }}</label>
+          <input id="scheduledAt" type="datetime-local" formControlName="scheduledAt" />
+        </div>
       </div>
 
-      <div class="field">
-        <label for="durationSeconds">Durée (secondes) <span>*</span></label>
-        <input
-          id="durationSeconds"
-          type="number"
-          min="1"
-          max="3600"
-          formControlName="durationSeconds"
-          placeholder="10"
-        />
-
-        @if (fieldInvalid('durationSeconds')) {
-          <small class="error-text">
-            La durée doit être entre 1 et 3600 secondes.
-          </small>
-        }
+      <div class="grid-2">
+        <div class="field">
+          <label for="expiresAt">{{ 'operationalMessages.list.expiresAt' | translate }}</label>
+          <input id="expiresAt" type="datetime-local" formControlName="expiresAt" />
+        </div>
+        <div class="field">
+          <label for="notes">{{ 'operationalMessages.list.notes' | translate }}</label>
+          <input id="notes" type="text" formControlName="notes"
+                 [placeholder]="'operationalMessages.list.notesPlaceholder' | translate" />
+        </div>
       </div>
 
-      <div class="field">
-        <label for="scheduledAt">Planifié pour</label>
-        <input
-          id="scheduledAt"
-          type="datetime-local"
-          formControlName="scheduledAt"
-        />
+      <!-- Actions -->
+      <div class="form-actions">
+        <button type="button" class="btn btn-ghost" (click)="goBack()">
+          <i class="bi bi-x-lg"></i>
+          <span>{{ 'operationalMessages.filters.resetBtn' | translate }}</span>
+        </button>
+        <button type="submit" class="btn btn-primary" [disabled]="loading()">
+          @if (loading()) {
+            <span class="btn-spin"></span>
+            <span>{{ 'operationalMessages.list.creating' | translate }}</span>
+          } @else {
+            <i class="bi bi-send"></i>
+            <span>{{ 'operationalMessages.list.createBtn' | translate }}</span>
+          }
+        </button>
       </div>
 
-      <div class="field">
-        <label for="expiresAt">Expire le</label>
-        <input
-          id="expiresAt"
-          type="datetime-local"
-          formControlName="expiresAt"
-        />
-      </div>
+    </form>
 
-      <div class="field full">
-        <label for="notes">Notes</label>
-        <textarea
-          id="notes"
-          rows="4"
-          formControlName="notes"
-          placeholder="Notes internes, contexte, consignes..."
-        ></textarea>
-      </div>
-    </div>
+    <!-- PREVIEW ── -->
+    <aside class="preview-col">
+      <div class="preview-card" [attr.data-type]="form.get('messageType')?.value">
+        <div class="preview-top">
+          <div class="preview-label">
+            <i class="bi bi-eye"></i>
+            {{ 'operationalMessages.list.previewTitle' | translate }}
+          </div>
+          <span class="type-pill">{{ form.get('messageType')?.value || 'info' }}</span>
+        </div>
 
-    @if (loadingReferences()) {
-      <div class="loading-box">
-        <span class="spinner"></span>
-        <p>Chargement des devices et zones...</p>
-      </div>
-    }
+        <h3 class="preview-title">
+          {{ form.get('title')?.value || ('operationalMessages.list.noTitle' | translate) }}
+        </h3>
+        <p class="preview-body">
+          {{ form.get('content')?.value || ('operationalMessages.list.previewPlaceholder' | translate) }}
+        </p>
 
-    <div class="preview-card">
-      <div class="preview-header">
-        <h2>Aperçu du message</h2>
-        <span class="preview-badge" [attr.data-type]="form.get('messageType')?.value">
-          {{ form.get('messageType')?.value || 'info' }}
-        </span>
-      </div>
-
-      <div class="preview-body">
-        <h3>{{ form.get('title')?.value || 'Sans titre' }}</h3>
-        <p>{{ form.get('content')?.value || 'Votre message apparaîtra ici...' }}</p>
-
-        <div class="preview-meta">
-          <span class="meta-chip">
-            Priorité: {{ form.get('priority')?.value || 'normal' }}
+        <div class="preview-chips">
+          <span class="pchip">
+            <i class="bi bi-flag"></i>
+            {{ form.get('priority')?.value || 'normal' }}
           </span>
-          <span class="meta-chip">
-            Cible: {{ form.get('targetType')?.value || 'device' }}
+          <span class="pchip">
+            <i class="bi bi-crosshair"></i>
+            {{ form.get('targetType')?.value || 'device' }}
           </span>
-          <span class="meta-chip">
-            Mode: {{ form.get('displayMode')?.value || 'once' }}
+          <span class="pchip">
+            <i class="bi bi-display"></i>
+            {{ form.get('displayMode')?.value || 'once' }}
           </span>
-          <span class="meta-chip">
-            Durée: {{ form.get('durationSeconds')?.value || 10 }} s
+          <span class="pchip">
+            <i class="bi bi-clock"></i>
+            {{ form.get('durationSeconds')?.value || 10 }}s
           </span>
         </div>
       </div>
-    </div>
 
-    <div class="form-actions">
-      <button type="button" class="btn btn-light" (click)="goBack()">
-        <i class="bi bi-x-lg"></i>
-        <span>Annuler</span>
-      </button>
+      <!-- Mini guide -->
+      <div class="guide-card">
+        <div class="guide-icon"><i class="bi bi-info-circle"></i></div>
+        <div class="guide-body">
+          <strong>Guide rapide</strong>
+          <ul>
+            <li>Choisir le type et la priorité du message</li>
+            <li>Sélectionner la cible : device, zone ou broadcast</li>
+            <li>Définir la durée d'affichage en secondes</li>
+            <li>Planifier optionnellement une date d'envoi</li>
+          </ul>
+        </div>
+      </div>
+    </aside>
 
-      <button type="submit" class="btn btn-primary" [disabled]="loading()">
-        @if (loading()) {
-          <span class="btn-spinner"></span>
-          <span>Création...</span>
-        } @else {
-          <i class="bi bi-save2"></i>
-          <span>Créer le message</span>
-        }
-      </button>
-    </div>
-  </form>
+  </div>
 </section>

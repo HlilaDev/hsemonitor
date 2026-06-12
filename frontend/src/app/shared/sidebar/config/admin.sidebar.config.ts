@@ -4,6 +4,7 @@ export const ADMIN_SECTIONS: SidebarSection[] = [
   {
     titleKey: 'SIDEBAR.SECTIONS.ADMIN',
     items: [
+      { labelKey: 'SIDEBAR.MENU.DASHBOARD', icon: 'bi bi-grid-1x2', route: '/admin', exact: true },
       { labelKey: 'SIDEBAR.MENU.ZONES', icon: 'bi bi-geo-alt', route: '/admin/zones', exact: true },
       { labelKey: 'SIDEBAR.MENU.DEVICES', icon: 'bi bi-cpu', route: '/admin/devices' },
       { labelKey: 'SIDEBAR.MENU.SENSORS', icon: 'bi bi-activity', route: '/admin/sensors' },

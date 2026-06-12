@@ -1,4 +1,5 @@
 import { CommonModule, DatePipe } from '@angular/common';
+import { TranslatePipe } from '@ngx-translate/core';
 import { Component, computed, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
@@ -48,7 +49,7 @@ interface OperationalMessageDetailModel {
 @Component({
   selector: 'app-operational-message-detail',
   standalone: true,
-  imports: [CommonModule, RouterLink, DatePipe],
+  imports: [CommonModule, RouterLink, DatePipe, TranslatePipe],
   templateUrl: './operational-message-detail.html',
   styleUrl: './operational-message-detail.scss',
 })

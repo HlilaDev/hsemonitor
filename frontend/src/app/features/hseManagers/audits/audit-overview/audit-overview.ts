@@ -1,6 +1,7 @@
 import { Component, computed, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { TranslatePipe } from '@ngx-translate/core';
 import {
   AuditStatus,
   AuditType,
@@ -24,7 +25,7 @@ type AuditItem = {
 @Component({
   selector: 'app-audit-overview',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, TranslatePipe],
   templateUrl: './audit-overview.html',
   styleUrl: './audit-overview.scss',
 })

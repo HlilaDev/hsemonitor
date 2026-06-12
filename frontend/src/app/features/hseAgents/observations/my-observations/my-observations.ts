@@ -1,6 +1,7 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { TranslatePipe } from '@ngx-translate/core';
 import { of, switchMap } from 'rxjs';
 
 import {
@@ -25,7 +26,7 @@ type ObservationItem = {
 @Component({
   selector: 'app-my-observations',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, TranslatePipe],
   templateUrl: './my-observations.html',
   styleUrl: './my-observations.scss',
 })

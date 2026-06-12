@@ -1,11 +1,15 @@
 {
   "EMPLOYEES": {
-    "KICKER": "Workforce",
+    "KICKER": "Staff Management",
     "TITLE": "Employees",
     "SUBTITLE": "Employee list with filters",
     "ADD_BTN": "Add Employee",
     "ADD_TITLE": "Add Employee",
+    "ADD_EYEBROW": "New Employee",
+    "ADD_SUBTITLE": "Enter the personal and professional information of the new employee.",
     "EDIT_TITLE": "Edit Employee",
+    "EDIT_EYEBROW": "Employee",
+    "EDIT_SUBTITLE": "Update the personal and professional information of the employee.",
     "LOADING_EMPLOYEE": "Loading employee...",
     "LOADING_ZONES": "Loading zones...",
     "SAVE_CHANGES": "Save changes",
@@ -55,7 +59,9 @@
       "PHONE": "Phone",
       "PHONE_PH": "+216 ...",
       "HIRE_DATE": "Hire Date",
-      "ACTIVE": "Active"
+      "ACTIVE": "Active",
+      "SECTION_IDENTITY": "Identity",
+      "STATUS": "Status"
     },
     "STATUS": {
       "ACTIVE": "Active",
@@ -84,7 +90,8 @@
       "DEACTIVATE": "Deactivate",
       "SCORE": "Score",
       "CERTIFIED": "Certified",
-      "ZONE_ID_PH": "Zone ObjectId"
+      "ZONE_ID_PH": "Zone ObjectId",
+      "SINCE": "Since"
     }
   },
   "COMMON": {

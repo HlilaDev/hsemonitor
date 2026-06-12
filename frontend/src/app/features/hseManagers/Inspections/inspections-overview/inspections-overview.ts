@@ -1,4 +1,5 @@
 import { CommonModule } from '@angular/common';
+import { TranslatePipe } from '@ngx-translate/core';
 import { Component, computed, inject, signal } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { catchError, finalize, forkJoin, of } from 'rxjs';
@@ -15,7 +16,7 @@ import { InspectionKpiCard } from '../inspection-kpi-card/inspection-kpi-card';
 @Component({
   selector: 'app-inspections-overview',
   standalone: true,
-  imports: [CommonModule, RouterModule, InspectionKpiCard],
+  imports: [CommonModule, RouterModule, InspectionKpiCard, TranslatePipe],
   templateUrl: './inspections-overview.html',
   styleUrl: './inspections-overview.scss',
 })
@@ -120,24 +121,24 @@ export class InspectionsOverview {
   });
 
   readonly lastCreatedTemplate = computed(() => {
-    const [item] = [...this.templates()].sort(
-      (a, b) => this.toTime(b.createdAt) - this.toTime(a.createdAt)
-    );
+    const item = [...this.templates()]
+      .sort((a, b) => this.toTime(b.createdAt) - this.toTime(a.createdAt))
+      .at(0);
     return item ?? null;
   });
 
   readonly lastExecution = computed(() => {
-    const [item] = [...this.executions()].sort(
-      (a, b) => this.toTime(b.createdAt) - this.toTime(a.createdAt)
-    );
+    const item = [...this.executions()]
+      .sort((a, b) => this.toTime(b.createdAt) - this.toTime(a.createdAt))
+      .at(0);
     return item ?? null;
   });
 
   readonly lastCompletedExecution = computed(() => {
-    const [item] = [...this.executions()]
+    const item = [...this.executions()]
       .filter((execution) => execution.status === 'completed')
-      .sort((a, b) => this.toTime(b.updatedAt || b.createdAt) - this.toTime(a.updatedAt || a.createdAt));
-
+      .sort((a, b) => this.toTime(b.updatedAt || b.createdAt) - this.toTime(a.updatedAt || a.createdAt))
+      .at(0);
     return item ?? null;
   });
 

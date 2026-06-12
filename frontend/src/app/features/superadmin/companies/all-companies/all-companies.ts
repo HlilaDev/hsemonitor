@@ -1,4 +1,5 @@
 import { CommonModule } from '@angular/common';
+import { TranslatePipe } from '@ngx-translate/core';
 import { Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
@@ -8,16 +9,20 @@ import {
   CompanyListResponse,
   CompanyServices,
 } from '../../../../core/services/companies/company-services';
+import { ConfirmModalService } from '../../../../core/services/confirm-modal/confirm-modal.service';
+import { ToastService } from '../../../../core/services/toast/toast.service';
 
 @Component({
   selector: 'app-all-companies',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule, RouterLink, TranslatePipe],
   templateUrl: './all-companies.html',
   styleUrl: './all-companies.scss',
 })
 export class AllCompanies {
   private companyService = inject(CompanyServices);
+  private confirmModal = inject(ConfirmModalService);
+  private toast = inject(ToastService);
 
   companies = signal<Company[]>([]);
   loading = signal(false);
@@ -97,33 +102,27 @@ export class AllCompanies {
   }
 
   onDelete(id: string, name: string): void {
-    const confirmed = window.confirm(
-      `Delete company "${name}" ?`
-    );
+    this.confirmModal.open({
+      message: 'Êtes-vous sûr de vouloir supprimer cette entreprise ?',
+      itemName: name,
+      onConfirm: () => {
+        this.deletingId.set(id);
+        this.errorMessage.set('');
+        this.successMessage.set('');
 
-    if (!confirmed) return;
-
-    this.deletingId.set(id);
-    this.errorMessage.set('');
-    this.successMessage.set('');
-
-    this.companyService.deleteCompany(id).subscribe({
-      next: (res) => {
-        this.successMessage.set(res.message || 'Company deleted successfully');
-
-        const isLastItemOnPage = this.companies().length === 1 && this.page() > 1;
-        if (isLastItemOnPage) {
-          this.page.set(this.page() - 1);
-        }
-
-        this.deletingId.set(null);
-        this.loadCompanies();
-      },
-      error: (err) => {
-        this.errorMessage.set(
-          err?.error?.message || 'Failed to delete company'
-        );
-        this.deletingId.set(null);
+        this.companyService.deleteCompany(id).subscribe({
+          next: (res) => {
+            this.toast.success(res.message || 'Entreprise supprimée avec succès.');
+            const isLastItemOnPage = this.companies().length === 1 && this.page() > 1;
+            if (isLastItemOnPage) this.page.set(this.page() - 1);
+            this.deletingId.set(null);
+            this.loadCompanies();
+          },
+          error: (err) => {
+            this.toast.error(err?.error?.message || 'Suppression impossible.');
+            this.deletingId.set(null);
+          },
+        });
       },
     });
   }

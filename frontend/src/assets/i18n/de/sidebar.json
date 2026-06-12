@@ -3,7 +3,10 @@
     "SECTIONS": {
       "ADMIN": "ADMINMENÜ",
       "MANAGER": "MANAGER MENÜ",
-      "AGENT": "AGENT MENÜ"
+      "AGENT": "AGENT MENÜ",
+      "MANAGER_MAIN": "Überwachung & Alarme",
+      "HSE_MANAGEMENT": "HSE Verwaltung",
+      "HSE_MANAGEMENT_RESSOURCES": "Organisation & Ressourcen"
     },
     "MENU": {
       "DASHBOARD": "Dashboard",
@@ -13,20 +16,20 @@
       "EMPLOYEES": "Mitarbeiter",
       "USERS": "Benutzer",
       "SETTINGS": "Einstellungen",
-             "OPMESSAGES" :"operative Meldungen",
+
       "OBSERVATIONS": "Beobachtungen",
       "INCIDENTS": "Vorfälle",
       "TRAINING": "Schulungen",
-            "TEAM": "Team",
-      "INVENTORIES":"Lagerbestände",
-                  "INSPECTIONS":"Inspektionen",
+      "TEAM": "Team",
+      "INVENTORIES": "Lagerbestände",
+      "OPMESSAGES": "Operative Meldungen",
+      "INSPECTIONS": "Inspektionen",
 
-
-            "MONITORING": "Überwachung",
-
-      "AUDITS":"Audits",
+      "MONITORING": "Überwachung",
+      "AUDITS": "Audits",
       "ALERTS": "Warnungen",
-      "REPORTS": "Berichte"
+      "REPORTS": "Berichte",
+      "PPE": "PSA"
     },
     "HINT": {
       "SECURE_ADMIN": "Sichere Administration",

@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { TranslatePipe } from '@ngx-translate/core';
 import { finalize, forkJoin } from 'rxjs';
 
 import {
@@ -50,6 +51,7 @@ type InventoryTab = 'overview' | 'movements' | 'assignments' | 'inspections';
     AssignInventoryModel,
     AddInventoryMovementModel,
     AddInventoryInspectionModel,
+    TranslatePipe,
   ],
   templateUrl: './inventory-item.html',
   styleUrl: './inventory-item.scss',

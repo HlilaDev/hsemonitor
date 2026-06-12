@@ -2,17 +2,14 @@
   <section class="hero-card">
     <div class="hero-content">
       <div>
-        <span class="eyebrow">Super Admin</span>
-        <h1>Add New Company</h1>
-        <p>
-          Register a new company in your HSE intelligent platform and configure
-          its main profile information.
-        </p>
+        <span class="eyebrow">{{ 'superadmin.companies.add.kicker' | translate }}</span>
+        <h1>{{ 'superadmin.companies.add.title' | translate }}</h1>
+        <p>{{ 'superadmin.companies.add.subtitle' | translate }}</p>
       </div>
 
       <a class="btn light" routerLink="/super/companies">
         <i class="bi bi-arrow-left"></i>
-        <span>Back to list</span>
+        <span>{{ 'superadmin.companies.add.backToList' | translate }}</span>
       </a>
     </div>
   </section>
@@ -34,19 +31,19 @@
   <section class="form-card">
     <div class="card-head">
       <div>
-        <h2>Company Information</h2>
-        <p>Fill in the details below to create a new company.</p>
+        <h2>{{ 'superadmin.companies.add.formTitle' | translate }}</h2>
+        <p>{{ 'superadmin.companies.add.formSubtitle' | translate }}</p>
       </div>
     </div>
 
     <form class="company-form" (ngSubmit)="onSubmit()">
       <div class="form-grid">
         <div class="field full">
-          <label>Company Name <span>*</span></label>
+          <label>{{ 'superadmin.companies.add.nameLabel' | translate }} <span>*</span></label>
           <input
             class="input"
             type="text"
-            placeholder="Enter company name"
+            [placeholder]="'superadmin.companies.add.namePlaceholder' | translate"
             [ngModel]="form().name"
             (ngModelChange)="updateField('name', $event)"
             name="name"
@@ -54,11 +51,11 @@
         </div>
 
         <div class="field">
-          <label>Industry</label>
+          <label>{{ 'superadmin.companies.add.industryLabel' | translate }}</label>
           <input
             class="input"
             type="text"
-            placeholder="Industry sector"
+            [placeholder]="'superadmin.companies.add.industryPlaceholder' | translate"
             [ngModel]="form().industry"
             (ngModelChange)="updateField('industry', $event)"
             name="industry"
@@ -66,7 +63,7 @@
         </div>
 
         <div class="field">
-          <label>Logo URL</label>
+          <label>{{ 'superadmin.companies.add.logoLabel' | translate }}</label>
           <input
             class="input"
             type="text"
@@ -78,11 +75,11 @@
         </div>
 
         <div class="field">
-          <label>Country</label>
+          <label>{{ 'superadmin.companies.add.countryLabel' | translate }}</label>
           <input
             class="input"
             type="text"
-            placeholder="Country"
+            [placeholder]="'superadmin.companies.add.countryPlaceholder' | translate"
             [ngModel]="form().address?.country"
             (ngModelChange)="updateAddressField('country', $event)"
             name="country"
@@ -90,11 +87,11 @@
         </div>
 
         <div class="field">
-          <label>City</label>
+          <label>{{ 'superadmin.companies.add.cityLabel' | translate }}</label>
           <input
             class="input"
             type="text"
-            placeholder="City"
+            [placeholder]="'superadmin.companies.add.cityPlaceholder' | translate"
             [ngModel]="form().address?.city"
             (ngModelChange)="updateAddressField('city', $event)"
             name="city"
@@ -102,11 +99,11 @@
         </div>
 
         <div class="field">
-          <label>Street</label>
+          <label>{{ 'superadmin.companies.add.streetLabel' | translate }}</label>
           <input
             class="input"
             type="text"
-            placeholder="Street"
+            [placeholder]="'superadmin.companies.add.streetPlaceholder' | translate"
             [ngModel]="form().address?.street"
             (ngModelChange)="updateAddressField('street', $event)"
             name="street"
@@ -114,11 +111,11 @@
         </div>
 
         <div class="field">
-          <label>Postal Code</label>
+          <label>{{ 'superadmin.companies.add.postalCodeLabel' | translate }}</label>
           <input
             class="input"
             type="text"
-            placeholder="Postal code"
+            [placeholder]="'superadmin.companies.add.postalCodePlaceholder' | translate"
             [ngModel]="form().address?.postalCode"
             (ngModelChange)="updateAddressField('postalCode', $event)"
             name="postalCode"
@@ -126,11 +123,11 @@
         </div>
 
         <div class="field">
-          <label>Contact Email</label>
+          <label>{{ 'superadmin.companies.add.emailLabel' | translate }}</label>
           <input
             class="input"
             type="email"
-            placeholder="contact@company.com"
+            [placeholder]="'superadmin.companies.add.emailPlaceholder' | translate"
             [ngModel]="form().contacts?.email"
             (ngModelChange)="updateContactField('email', $event)"
             name="contactEmail"
@@ -138,11 +135,11 @@
         </div>
 
         <div class="field">
-          <label>Contact Phone</label>
+          <label>{{ 'superadmin.companies.add.phoneLabel' | translate }}</label>
           <input
             class="input"
             type="text"
-            placeholder="+216 xx xxx xxx"
+            [placeholder]="'superadmin.companies.add.phonePlaceholder' | translate"
             [ngModel]="form().contacts?.phone"
             (ngModelChange)="updateContactField('phone', $event)"
             name="contactPhone"
@@ -150,31 +147,31 @@
         </div>
 
         <div class="field full">
-          <label>Status</label>
+          <label>{{ 'superadmin.companies.add.statusLabel' | translate }}</label>
           <select
             class="select"
             [ngModel]="form().isActive"
             (ngModelChange)="updateField('isActive', $event)"
             name="isActive"
           >
-            <option [ngValue]="true">Active</option>
-            <option [ngValue]="false">Inactive</option>
+            <option [ngValue]="true">{{ 'superadmin.companies.add.active' | translate }}</option>
+            <option [ngValue]="false">{{ 'superadmin.companies.add.inactive' | translate }}</option>
           </select>
         </div>
       </div>
 
       <div class="form-actions">
         <a class="btn ghost" routerLink="/super/companies">
-          Cancel
+          {{ 'superadmin.companies.add.cancel' | translate }}
         </a>
 
         <button class="btn primary" type="submit" [disabled]="loading()">
           @if (loading()) {
             <span class="mini-spinner"></span>
-            <span>Creating...</span>
+            <span>{{ 'superadmin.companies.add.creating' | translate }}</span>
           } @else {
             <i class="bi bi-building-add"></i>
-            <span>Create Company</span>
+            <span>{{ 'superadmin.companies.add.create' | translate }}</span>
           }
         </button>
       </div>

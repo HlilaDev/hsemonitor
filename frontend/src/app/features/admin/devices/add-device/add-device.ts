@@ -10,6 +10,7 @@ import {
 import { Router, RouterModule } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { startWith } from 'rxjs';
+import { TranslateModule } from '@ngx-translate/core';
 
 import {
   DeviceServices,
@@ -25,7 +26,7 @@ type AddDeviceForm = FormGroup<{
 @Component({
   selector: 'app-add-device',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, TranslateModule],
   templateUrl: './add-device.html',
   styleUrl: './add-device.scss',
 })

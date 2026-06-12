@@ -3,18 +3,16 @@
     <div>
       <a class="back-link" routerLink="/manager/monitoring">
         <i class="bi bi-arrow-left"></i>
-        Retour au monitoring
+        {{ 'monitoring.backLink' | translate }}
       </a>
 
-      <h2>Monitoring du device</h2>
-      <p class="muted">
-        Suivi en temps réel, dernières valeurs et historique du device sélectionné.
-      </p>
+      <h2>{{ 'monitoring.device.title' | translate }}</h2>
+      <p class="muted">{{ 'monitoring.device.subtitle' | translate }}</p>
     </div>
 
     <button class="btn-refresh" type="button" (click)="refresh()">
       <i class="bi bi-arrow-clockwise"></i>
-      Actualiser
+      {{ 'monitoring.refresh' | translate }}
     </button>
   </div>
 
@@ -28,7 +26,7 @@
   @if (isLoading()) {
     <div class="loading-card">
       <div class="loader"></div>
-      <p>Chargement des données du device...</p>
+      <p>{{ 'monitoring.device.loading' | translate }}</p>
     </div>
   } @else {
     @if (latestReading(); as latest) {
@@ -41,9 +39,9 @@
           <div class="hero-content">
             <h3>{{ asDeviceIdLabel() }}</h3>
             <div class="meta-list">
-              <span><strong>Device ID :</strong> {{ deviceId() }}</span>
-              <span><strong>Zone :</strong> {{ zoneName() || '—' }}</span>
-              <span><strong>Capteur :</strong> {{ latest.sensorType }}</span>
+              <span><strong>{{ 'monitoring.device.deviceId' | translate }}</strong> {{ deviceId() }}</span>
+              <span><strong>{{ 'monitoring.device.zone' | translate }}</strong> {{ zoneName() || '—' }}</span>
+              <span><strong>{{ 'monitoring.device.sensor' | translate }}</strong> {{ latest.sensorType }}</span>
             </div>
           </div>
         </div>
@@ -52,7 +50,7 @@
           <span class="status-badge" [ngClass]="getStatusClass(latestStatus())">
             {{ latestStatus() }}
           </span>
-          <small>Dernière lecture : {{ latest.ts | date:'dd/MM/yyyy HH:mm:ss' }}</small>
+          <small>{{ 'monitoring.device.lastReading' | translate }} {{ latest.ts | date:'dd/MM/yyyy HH:mm:ss' }}</small>
         </div>
       </div>
 
@@ -62,7 +60,7 @@
             <i class="bi bi-thermometer-half"></i>
           </div>
           <div class="stat-body">
-            <span class="label">Température</span>
+            <span class="label">{{ 'monitoring.device.stats.temperature' | translate }}</span>
             <strong>{{ temperature() !== null ? (temperature() + ' °C') : '—' }}</strong>
           </div>
         </div>
@@ -72,7 +70,7 @@
             <i class="bi bi-droplet-half"></i>
           </div>
           <div class="stat-body">
-            <span class="label">Humidité</span>
+            <span class="label">{{ 'monitoring.device.stats.humidity' | translate }}</span>
             <strong>{{ humidity() !== null ? (humidity() + ' %') : '—' }}</strong>
           </div>
         </div>
@@ -82,7 +80,7 @@
             <i class="bi bi-wind"></i>
           </div>
           <div class="stat-body">
-            <span class="label">Gaz</span>
+            <span class="label">{{ 'monitoring.device.stats.gas' | translate }}</span>
             <strong>{{ gas() !== null ? gas() : '—' }}</strong>
           </div>
         </div>
@@ -92,7 +90,7 @@
             <i class="bi bi-clock-history"></i>
           </div>
           <div class="stat-body">
-            <span class="label">Synchronisation</span>
+            <span class="label">{{ 'monitoring.device.stats.sync' | translate }}</span>
             <strong>{{ latest.ts | date:'HH:mm:ss' }}</strong>
           </div>
         </div>
@@ -101,14 +99,14 @@
       <div class="charts-grid">
         <div class="panel-card">
           <div class="panel-head">
-            <h3>Évolution de la température</h3>
-            <span>{{ temperaturePoints().length }} dernières mesures</span>
+            <h3>{{ 'monitoring.device.charts.tempEvolution' | translate }}</h3>
+            <span>{{ temperaturePoints().length }} {{ 'monitoring.device.charts.lastMeasures' | translate }}</span>
           </div>
 
           <div class="chart-host">
 <app-sensor-trend-curve
   [points]="temperaturePoints()"
-  [datasetLabel]="'Température'"
+  [datasetLabel]="'monitoring.device.stats.temperature' | translate"
   [unit]="'°C'"
   [color]="'#ef4444'">
 </app-sensor-trend-curve>
@@ -117,14 +115,14 @@
 
         <div class="panel-card">
           <div class="panel-head">
-            <h3>Évolution de l’humidité</h3>
-            <span>{{ humidityPoints().length }} dernières mesures</span>
+            <h3>{{ 'monitoring.device.charts.humidityEvolution' | translate }}</h3>
+            <span>{{ humidityPoints().length }} {{ 'monitoring.device.charts.lastMeasures' | translate }}</span>
           </div>
 
           <div class="chart-host">
             <app-sensor-trend-curve
               [points]="humidityPoints()"
-              [datasetLabel]="'Humidité'"
+              [datasetLabel]="'monitoring.device.stats.humidity' | translate"
               [unit]="'%'"
               [color]="'#2563eb'">
             </app-sensor-trend-curve>
@@ -135,8 +133,8 @@
       <div class="panel-card">
         <div class="panel-head">
           <div>
-            <h3>Historique récent</h3>
-            <span>Les dernières lectures enregistrées pour ce device</span>
+            <h3>{{ 'monitoring.device.history.title' | translate }}</h3>
+            <span>{{ 'monitoring.device.history.subtitle' | translate }}</span>
           </div>
         </div>
 
@@ -144,9 +142,9 @@
           <table>
             <thead>
               <tr>
-                <th>Date</th>
-                <th>Type capteur</th>
-                <th>Valeurs</th>
+                <th>{{ 'monitoring.device.history.date' | translate }}</th>
+                <th>{{ 'monitoring.device.history.sensorType' | translate }}</th>
+                <th>{{ 'monitoring.device.history.values' | translate }}</th>
               </tr>
             </thead>
 
@@ -164,7 +162,7 @@
               } @else {
                 <tr>
                   <td colspan="3" class="empty-cell">
-                    Aucune lecture trouvée pour ce device.
+                    {{ 'monitoring.device.history.empty' | translate }}
                   </td>
                 </tr>
               }
@@ -174,7 +172,7 @@
       </div>
     } @else {
       <div class="loading-card">
-        <p>Aucune lecture disponible pour ce device.</p>
+        <p>{{ 'monitoring.device.noReading' | translate }}</p>
       </div>
     }
   }

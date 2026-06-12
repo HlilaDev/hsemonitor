@@ -2,20 +2,18 @@
   <section class="hero">
     <div class="hero__content">
       <div>
-        <p class="eyebrow">Supervision HSE</p>
-        <h1>Vue d’ensemble des observations</h1>
-        <p class="subtitle">
-          Suivez toutes les observations remontées par les agents sur les différentes zones.
-        </p>
+        <p class="eyebrow">{{ 'observations.manager.kicker' | translate }}</p>
+        <h1>{{ 'observations.manager.title' | translate }}</h1>
+        <p class="subtitle">{{ 'observations.manager.subtitle' | translate }}</p>
       </div>
 
       <div class="hero__actions">
         <button class="btn btn-secondary" type="button" (click)="refresh()">
-          Actualiser
+          {{ 'observations.manager.refresh' | translate }}
         </button>
 
         <button class="btn btn-primary" type="button">
-          Exporter
+          {{ 'observations.manager.export' | translate }}
         </button>
       </div>
     </div>
@@ -23,88 +21,88 @@
 
   <section class="stats">
     <article class="stat-card">
-      <div class="stat-card__label">Total observations</div>
+      <div class="stat-card__label">{{ 'observations.manager.stats.total' | translate }}</div>
       <div class="stat-card__value">{{ stats().total }}</div>
-      <div class="stat-card__hint">Toutes zones confondues</div>
+      <div class="stat-card__hint">{{ 'observations.manager.stats.totalHint' | translate }}</div>
     </article>
 
     <article class="stat-card">
-      <div class="stat-card__label">Observations ouvertes</div>
+      <div class="stat-card__label">{{ 'observations.manager.stats.open' | translate }}</div>
       <div class="stat-card__value">{{ stats().open }}</div>
-      <div class="stat-card__hint">À traiter rapidement</div>
+      <div class="stat-card__hint">{{ 'observations.manager.stats.openHint' | translate }}</div>
     </article>
 
     <article class="stat-card">
-      <div class="stat-card__label">Critiques</div>
+      <div class="stat-card__label">{{ 'observations.manager.stats.critical' | translate }}</div>
       <div class="stat-card__value">{{ stats().critical }}</div>
-      <div class="stat-card__hint">Niveau de risque élevé</div>
+      <div class="stat-card__hint">{{ 'observations.manager.stats.criticalHint' | translate }}</div>
     </article>
 
     <article class="stat-card">
-      <div class="stat-card__label">Clôturées</div>
+      <div class="stat-card__label">{{ 'observations.manager.stats.closed' | translate }}</div>
       <div class="stat-card__value">{{ stats().closed }}</div>
-      <div class="stat-card__hint">Traitées par les équipes</div>
+      <div class="stat-card__hint">{{ 'observations.manager.stats.closedHint' | translate }}</div>
     </article>
   </section>
 
   <section class="panel filters">
     <div class="panel__header">
       <div>
-        <h2>Filtres et recherche</h2>
-        <p>Affinez les résultats selon la gravité, le statut, la zone ou l’agent.</p>
+        <h2>{{ 'observations.manager.filters.title' | translate }}</h2>
+        <p>{{ 'observations.manager.filters.subtitle' | translate }}</p>
       </div>
     </div>
 
     <div class="filters__grid">
       <div class="field field--search">
-        <label for="search">Recherche</label>
+        <label for="search">{{ 'observations.manager.filters.searchLabel' | translate }}</label>
         <input
           id="search"
           type="text"
-          placeholder="Titre, description, zone, agent..."
+          [placeholder]="'observations.manager.filters.searchPlaceholder' | translate"
           [ngModel]="search()"
           (ngModelChange)="search.set($event)"
         />
       </div>
 
       <div class="field">
-        <label for="status">Statut</label>
+        <label for="status">{{ 'observations.manager.filters.statusLabel' | translate }}</label>
         <select
           id="status"
           [ngModel]="selectedStatus()"
           (ngModelChange)="selectedStatus.set($event)"
         >
-          <option value="all">Tous</option>
-          <option value="open">Ouverte</option>
-          <option value="in_progress">En cours</option>
-          <option value="closed">Clôturée</option>
+          <option value="all">{{ 'observations.manager.filters.all' | translate }}</option>
+          <option value="open">{{ 'observations.manager.filters.status.open' | translate }}</option>
+          <option value="in_progress">{{ 'observations.manager.filters.status.in_progress' | translate }}</option>
+          <option value="closed">{{ 'observations.manager.filters.status.closed' | translate }}</option>
         </select>
       </div>
 
       <div class="field">
-        <label for="severity">Gravité</label>
+        <label for="severity">{{ 'observations.manager.filters.severityLabel' | translate }}</label>
         <select
           id="severity"
           [ngModel]="selectedSeverity()"
           (ngModelChange)="selectedSeverity.set($event)"
         >
-          <option value="all">Toutes</option>
-          <option value="low">Faible</option>
-          <option value="medium">Moyenne</option>
-          <option value="high">Élevée</option>
-          <option value="critical">Critique</option>
+          <option value="all">{{ 'observations.manager.filters.severity.all' | translate }}</option>
+          <option value="low">{{ 'observations.manager.filters.severity.low' | translate }}</option>
+          <option value="medium">{{ 'observations.manager.filters.severity.medium' | translate }}</option>
+          <option value="high">{{ 'observations.manager.filters.severity.high' | translate }}</option>
+          <option value="critical">{{ 'observations.manager.filters.severity.critical' | translate }}</option>
         </select>
       </div>
 
       <div class="field">
-        <label for="zone">Zone</label>
+        <label for="zone">{{ 'observations.manager.filters.zoneLabel' | translate }}</label>
         <select
           id="zone"
           [ngModel]="selectedZone()"
           (ngModelChange)="selectedZone.set($event)"
         >
           <option *ngFor="let zone of zones()" [value]="zone">
-            {{ zone === 'all' ? 'Toutes les zones' : zone }}
+            {{ zone === 'all' ? ('observations.manager.filters.allZones' | translate) : zone }}
           </option>
         </select>
       </div>
@@ -114,8 +112,8 @@
   <section class="panel table-panel">
     <div class="panel__header">
       <div>
-        <h2>Liste des observations</h2>
-        <p>{{ filteredObservations().length }} résultat(s) affiché(s)</p>
+        <h2>{{ 'observations.manager.list.title' | translate }}</h2>
+        <p>{{ filteredObservations().length }} {{ 'observations.manager.list.count' | translate }}</p>
       </div>
     </div>
 
@@ -127,14 +125,14 @@
       <table class="observations-table">
         <thead>
           <tr>
-            <th>Date</th>
-            <th>Observation</th>
-            <th>Agent</th>
-            <th>Zone</th>
-            <th>Gravité</th>
-            <th>Statut</th>
-            <th>Images</th>
-            <th class="actions-col">Action</th>
+            <th>{{ 'observations.manager.list.date' | translate }}</th>
+            <th>{{ 'observations.manager.list.observation' | translate }}</th>
+            <th>{{ 'observations.manager.list.agent' | translate }}</th>
+            <th>{{ 'observations.manager.list.zone' | translate }}</th>
+            <th>{{ 'observations.manager.list.severity' | translate }}</th>
+            <th>{{ 'observations.manager.list.status' | translate }}</th>
+            <th>{{ 'observations.manager.list.images' | translate }}</th>
+            <th class="actions-col">{{ 'observations.manager.list.action' | translate }}</th>
           </tr>
         </thead>
 
@@ -171,7 +169,7 @@
 
             <td class="actions-col">
               <button class="link-btn" type="button" (click)="viewDetails(item)">
-                Voir
+                {{ 'observations.manager.list.view' | translate }}
               </button>
             </td>
           </tr>
@@ -182,16 +180,15 @@
     <ng-template #tableStateTpl>
       <div class="empty-state" *ngIf="loading(); else emptyState">
         <div class="empty-state__icon">⏳</div>
-        <h3>Chargement des observations...</h3>
-        <p>Les données sont en cours de récupération depuis la base.</p>
+        <h3>{{ 'observations.manager.list.loading' | translate }}</h3>
       </div>
     </ng-template>
 
     <ng-template #emptyState>
       <div class="empty-state">
         <div class="empty-state__icon">📝</div>
-        <h3>Aucune observation trouvée</h3>
-        <p>Essayez de modifier les filtres ou la recherche pour afficher plus de résultats.</p>
+        <h3>{{ 'observations.manager.list.empty' | translate }}</h3>
+        <p>{{ 'observations.manager.list.emptyHint' | translate }}</p>
       </div>
     </ng-template>
   </section>

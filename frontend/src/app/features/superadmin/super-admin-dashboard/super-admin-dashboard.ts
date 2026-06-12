@@ -69,6 +69,12 @@ export class SuperAdminDashboard {
       .slice(0, 5)
   );
 
+  readonly ringStyle = computed(() => {
+    const total = this.totalCompanies() || 1;
+    const deg = Math.round((this.activeCompanies() / total) * 360);
+    return `--active-deg: ${deg}deg`;
+  });
+
   constructor() {
     this.loadDashboard();
   }

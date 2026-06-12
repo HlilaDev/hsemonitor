@@ -1,5 +1,6 @@
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { TranslatePipe } from '@ngx-translate/core';
 import {
   FormArray,
   FormBuilder,
@@ -22,7 +23,7 @@ import {
 @Component({
   selector: 'app-add-audit',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, TranslatePipe],
   templateUrl: './add-audit.html',
   styleUrl: './add-audit.scss',
 })

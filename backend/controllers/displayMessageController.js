@@ -13,19 +13,15 @@ const getCompanyId = (user) => {
   return user?.company?._id || user?.company || null;
 };
 
-const buildPayload = (message, device = null) => {
+const buildPayload = (message) => {
   return {
-    messageId: String(message._id),
-    deviceId: device?.deviceId || null,
-    title: message.title || "",
-    content: message.content,
-    messageType: message.messageType,
+    id: String(message._id).slice(-8),
+    title: (message.title || "").substring(0, 20),
+    content: String(message.content).substring(0, 80),
+    type: message.messageType,
     priority: message.priority,
-    displayMode: message.displayMode,
-    durationSeconds: message.durationSeconds,
-    scheduledAt: message.scheduledAt || null,
-    expiresAt: message.expiresAt || null,
-    createdAt: message.createdAt,
+    mode: message.displayMode,
+    duration: message.durationSeconds,
   };
 };
 
@@ -40,7 +36,7 @@ const buildMqttTopic = async (message) => {
     }
 
     return {
-      topic: `hsemonitor/devices/${device.deviceId}/commands/display`,
+      topic: `hsemonitor/${device.company}/${device.deviceId}/commands/display`,
       device,
     };
   }
@@ -85,7 +81,7 @@ const publishMqttMessage = (topic, payload) => {
 
 const prepareMessageTransportData = async (message) => {
   const { topic, device } = await buildMqttTopic(message);
-  const payload = buildPayload(message, device);
+  const payload = buildPayload(message);
 
   message.mqttTopic = topic;
   message.payload = payload;
@@ -98,6 +94,10 @@ const prepareMessageTransportData = async (message) => {
  */
 exports.createDisplayMessage = async (req, res) => {
   try {
+    console.log("========== CREATE DISPLAY MESSAGE ==========");
+    console.log("Body:", JSON.stringify(req.body));
+    console.log("User:", req.user?._id, "| Role:", req.user?.role, "| Company:", getCompanyId(req.user));
+
     const {
       title,
       content,
@@ -117,40 +117,48 @@ exports.createDisplayMessage = async (req, res) => {
     const company = getCompanyId(req.user);
 
     if (!createdBy) {
+      console.warn("createDisplayMessage: no authenticated user");
       return res.status(401).json({
         message: "Authenticated user not found",
       });
     }
 
     if (!company) {
+      console.warn("createDisplayMessage: user company is missing");
       return res.status(400).json({
         message: "User company is missing",
       });
     }
 
     if (!content || !String(content).trim()) {
+      console.warn("createDisplayMessage: content is empty");
       return res.status(400).json({
         message: "Message content is required",
       });
     }
 
     if (!targetType) {
+      console.warn("createDisplayMessage: targetType missing");
       return res.status(400).json({
         message: "targetType is required",
       });
     }
 
     if (targetType === "device" && !targetDevice) {
+      console.warn("createDisplayMessage: targetDevice missing for device targetType");
       return res.status(400).json({
         message: "targetDevice is required when targetType is device",
       });
     }
 
     if (targetType === "zone" && !targetZone) {
+      console.warn("createDisplayMessage: targetZone missing for zone targetType");
       return res.status(400).json({
         message: "targetZone is required when targetType is zone",
       });
     }
+
+    console.log("createDisplayMessage: creating message in DB...");
 
     const item = await DisplayMessage.create({
       title: title || "",
@@ -170,21 +178,28 @@ exports.createDisplayMessage = async (req, res) => {
       company,
     });
 
-    await prepareMessageTransportData(item);
-    await item.save();
+    console.log("✅ createDisplayMessage: message created with id:", item._id);
 
     return res.status(201).json({
       message: "Display message created successfully",
       item,
     });
   } catch (error) {
-    console.error("createDisplayMessage error:", error);
+    console.error("❌ createDisplayMessage error:", error.name, "|", error.message);
 
     if (error.name === "ValidationError") {
+      console.error("Validation details:", JSON.stringify(error.errors));
       return res.status(400).json({
         message: "Validation error",
         error: error.message,
         details: error.errors,
+      });
+    }
+
+    if (error.name === "CastError") {
+      return res.status(400).json({
+        message: "Invalid ID format",
+        error: error.message,
       });
     }
 
@@ -200,6 +215,10 @@ exports.createDisplayMessage = async (req, res) => {
  */
 exports.getDisplayMessages = async (req, res) => {
   try {
+    console.log("========== GET DISPLAY MESSAGES ==========");
+    console.log("User:", req.user?._id, "| Company:", getCompanyId(req.user));
+    console.log("Query:", JSON.stringify(req.query));
+
     const { status, targetType, page = 1, limit = 10, search = "" } = req.query;
 
     const filters = {
@@ -236,6 +255,8 @@ exports.getDisplayMessages = async (req, res) => {
       DisplayMessage.countDocuments(filters),
     ]);
 
+    console.log(`getDisplayMessages: found ${total} messages (page ${pageNumber}/${Math.ceil(total / limitNumber)})`);
+
     return res.status(200).json({
       items,
       pagination: {
@@ -246,6 +267,7 @@ exports.getDisplayMessages = async (req, res) => {
       },
     });
   } catch (error) {
+    console.error("❌ getDisplayMessages error:", error.message);
     return res.status(500).json({
       message: "Failed to fetch display messages",
       error: error.message,
@@ -460,10 +482,20 @@ exports.publishDisplayMessage = async (req, res) => {
 
     const { topic, payload, device } = await prepareMessageTransportData(existingMessage);
 
-    console.log("Device found:", device);
-    console.log("MQTT connected:", mqttClient.connected);
+    console.log("Device found:", device ? device.deviceId : "N/A (zone or broadcast)");
+    console.log("MQTT connected:", mqttClient?.connected);
     console.log("MQTT topic:", topic);
-    console.log("MQTT payload:", payload);
+    console.log("MQTT payload:", JSON.stringify(payload));
+
+    if (!mqttClient || !mqttClient.connected) {
+      console.warn("⚠️  MQTT not connected — saving as queued");
+      existingMessage.status = "queued";
+      await existingMessage.save();
+      return res.status(503).json({
+        message: "MQTT broker not connected. Message saved as queued and will be sent when connection is restored.",
+        item: existingMessage,
+      });
+    }
 
     await publishMqttMessage(topic, payload);
 
@@ -480,7 +512,7 @@ exports.publishDisplayMessage = async (req, res) => {
       item: existingMessage,
     });
   } catch (error) {
-    console.error("❌ publishDisplayMessage error:", error);
+    console.error("❌ publishDisplayMessage error:", error.name, "|", error.message);
 
     return res.status(500).json({
       message: "Failed to publish display message",

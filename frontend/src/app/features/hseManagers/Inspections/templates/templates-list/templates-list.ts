@@ -8,6 +8,8 @@ import {
   ChecklistServices,
   ChecklistTemplate,
 } from '../../../../../core/services/checklist/checklist-services';
+import { ConfirmModalService } from '../../../../../core/services/confirm-modal/confirm-modal.service';
+import { ToastService } from '../../../../../core/services/toast/toast.service';
 
 
 @Component({
@@ -20,6 +22,8 @@ import {
 export class TemplatesList {
   private checklistService = inject(ChecklistServices);
   private router = inject(Router);
+  private confirmModal = inject(ConfirmModalService);
+  private toast = inject(ToastService);
 
   loading = signal(true);
   deletingId = signal<string | null>(null);
@@ -112,40 +116,28 @@ export class TemplatesList {
   deleteTemplate(template: ChecklistTemplate): void {
     if (!template?._id) return;
 
-    const confirmed = window.confirm(
-      `Supprimer le template "${template.title}" ?`
-    );
+    this.confirmModal.open({
+      message: 'Êtes-vous sûr de vouloir supprimer ce template de checklist ?',
+      itemName: template.title,
+      onConfirm: () => {
+        this.deletingId.set(template._id!);
 
-    if (!confirmed) return;
-
-    this.deletingId.set(template._id);
-    this.errorMsg.set('');
-    this.successMsg.set('');
-
-    this.checklistService
-      .deleteTemplate(template._id)
-      .pipe(
-        catchError((error) => {
-          console.error('deleteTemplate error:', error);
-          this.errorMsg.set(
-            error?.error?.message ||
-              'Erreur lors de la suppression du template.'
-          );
-          return of(null);
-        }),
-        finalize(() => {
-          this.deletingId.set(null);
-        })
-      )
-      .subscribe((response) => {
-        if (!response) return;
-
-        this.templates.update((list) =>
-          list.filter((item) => item._id !== template._id)
-        );
-
-        this.successMsg.set('Template supprimé avec succès.');
-      });
+        this.checklistService
+          .deleteTemplate(template._id!)
+          .pipe(
+            catchError((error) => {
+              this.toast.error(error?.error?.message || 'Erreur lors de la suppression du template.');
+              return of(null);
+            }),
+            finalize(() => this.deletingId.set(null))
+          )
+          .subscribe((response) => {
+            if (!response) return;
+            this.templates.update((list) => list.filter((item) => item._id !== template._id));
+            this.toast.success('Template supprimé avec succès.');
+          });
+      },
+    });
   }
 
   resetFilters(): void {

@@ -1,75 +1,81 @@
 <div class="page">
-  <div class="header">
-    <div>
-      <h2 class="title">{{ 'EMPLOYEES.TITLE' | translate }}</h2>
-      <p class="muted">{{ 'EMPLOYEES.SUBTITLE' | translate }}</p>
+
+  <!-- ── Hero ───────────────────────────────────────── -->
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-content">
+      <div class="hero-left">
+        <p class="hero-kicker"><i class="bi bi-people-fill"></i> {{ 'EMPLOYEES.KICKER' | translate }}</p>
+        <h1>{{ 'EMPLOYEES.TITLE' | translate }}</h1>
+        <p class="hero-sub">{{ 'EMPLOYEES.SUBTITLE' | translate }}</p>
+      </div>
+      <a class="btn-hero" routerLink="/admin/employees/add">
+        <i class="bi bi-plus-lg"></i>
+        {{ 'EMPLOYEES.ADD_BTN' | translate }}
+      </a>
     </div>
+  </section>
 
-    <a class="btn primary" routerLink="/admin/employees/add">
-      <i class="bi bi-plus-lg"></i>
-      {{ 'EMPLOYEES.ADD_BTN' | translate }}
-    </a>
-  </div>
-
-  <!-- Filters -->
+  <!-- ── Filters ─────────────────────────────────────── -->
   <div class="card filters">
     <div class="field">
       <label>{{ 'EMPLOYEES.FILTERS.SEARCH' | translate }}</label>
-      <input
-        class="input"
-        type="text"
-        [placeholder]="'EMPLOYEES.FILTERS.SEARCH_PH' | translate"
-        [ngModel]="q()"
-        (ngModelChange)="q.set($event)"
-        (keyup.enter)="onSearch()"
-      />
+      <div class="input-wrap">
+        <i class="bi bi-search input-icon"></i>
+        <input
+          class="input"
+          type="text"
+          [placeholder]="'EMPLOYEES.FILTERS.SEARCH_PH' | translate"
+          [ngModel]="q()"
+          (ngModelChange)="q.set($event)"
+          (keyup.enter)="onSearch()"
+        />
+      </div>
     </div>
 
     <div class="field">
       <label>{{ 'EMPLOYEES.FILTERS.DEPARTMENT' | translate }}</label>
-      <input
-        class="input"
-        type="text"
-        [placeholder]="'EMPLOYEES.FILTERS.DEPARTMENT_PH' | translate"
-        [ngModel]="department()"
-        (ngModelChange)="department.set($event)"
-        (keyup.enter)="onSearch()"
-      />
+      <div class="input-wrap">
+        <i class="bi bi-building input-icon"></i>
+        <input
+          class="input"
+          type="text"
+          [placeholder]="'EMPLOYEES.FILTERS.DEPARTMENT_PH' | translate"
+          [ngModel]="department()"
+          (ngModelChange)="department.set($event)"
+          (keyup.enter)="onSearch()"
+        />
+      </div>
     </div>
 
     <div class="field">
       <label>{{ 'EMPLOYEES.FILTERS.STATUS' | translate }}</label>
-      <select
-        class="input"
-        [ngModel]="active()"
-        (ngModelChange)="active.set($event)"
-      >
+      <select class="input" [ngModel]="active()" (ngModelChange)="active.set($event)">
         <option value="">{{ 'EMPLOYEES.FILTERS.ALL' | translate }}</option>
         <option value="active">{{ 'EMPLOYEES.STATUS.ACTIVE' | translate }}</option>
         <option value="inactive">{{ 'EMPLOYEES.STATUS.INACTIVE' | translate }}</option>
       </select>
     </div>
 
-    <div class="actions">
-      <button class="btn" (click)="onSearch()" [disabled]="loading()">
-        <i class="bi bi-search"></i>
+    <div class="filter-actions">
+      <button class="btn-filter" (click)="onSearch()" [disabled]="loading()">
+        <i class="bi bi-funnel-fill"></i>
         {{ 'COMMON.FILTER' | translate }}
       </button>
-
-      <button class="btn ghost" (click)="clearFilters()" [disabled]="loading()">
+      <button class="btn-reset" (click)="clearFilters()" [disabled]="loading()">
         {{ 'COMMON.RESET' | translate }}
       </button>
     </div>
   </div>
 
-  <!-- Table -->
-  <div class="card">
-    <div *ngIf="error()" class="alert error">
-      <i class="bi bi-exclamation-triangle"></i>
+  <!-- ── Table Card ──────────────────────────────────── -->
+  <div class="card table-card">
+    <div *ngIf="error()" class="alert-error">
+      <i class="bi bi-exclamation-triangle-fill"></i>
       {{ error() }}
     </div>
 
-    <div *ngIf="loading()" class="loading">
+    <div *ngIf="loading()" class="loading-state">
       <span class="spinner"></span>
       {{ 'COMMON.LOADING' | translate }}
     </div>
@@ -87,88 +93,75 @@
             <th class="right">{{ 'EMPLOYEES.COLUMNS.ACTIONS' | translate }}</th>
           </tr>
         </thead>
-
         <tbody>
           <tr *ngFor="let e of pagedEmployees(); trackBy: trackById">
-            <td class="strong">{{ e.fullName }}</td>
-            <td>{{ e.employeeId || '—' }}</td>
-            <td>{{ e.department || '—' }}</td>
-            <td>{{ e.jobTitle || '—' }}</td>
-            <td>{{ e.hireDate ? (e.hireDate | date:'yyyy-MM-dd') : '—' }}</td>
+            <td>
+              <div class="cell-employee">
+                <div class="emp-avatar">{{ e.fullName.charAt(0) || '?' }}</div>
+                <span class="emp-name">{{ e.fullName }}</span>
+              </div>
+            </td>
+            <td class="cell-mono">{{ e.employeeId || '—' }}</td>
+            <td class="cell-muted">{{ e.department || '—' }}</td>
+            <td class="cell-muted">{{ e.jobTitle || '—' }}</td>
+            <td class="cell-muted">{{ e.hireDate ? (e.hireDate | date:'dd/MM/yyyy') : '—' }}</td>
 
             <td class="center">
-              <label class="switch">
-                <input
-                  type="checkbox"
-                  [checked]="e.isActive"
-                  (change)="toggleActive(e)"
-                />
-                <span class="slider"></span>
-              </label>
-
-              <div class="status-wrap">
+              <div class="toggle-cell">
+                <label class="switch">
+                  <input type="checkbox" [checked]="e.isActive" (change)="toggleActive(e)" />
+                  <span class="slider"></span>
+                </label>
                 <span class="badge" [class]="badgeClass(e)">
                   {{ activeKey(e) | translate }}
                 </span>
               </div>
             </td>
 
-            <td class="right actions-cell">
-              <a
-                class="btn xs"
-                [routerLink]="['/admin/employees', getRowId(e)]"
-                [title]="'COMMON.VIEW' | translate"
-              >
-                <i class="bi bi-eye"></i>
-              </a>
-
-              <a
-                class="btn xs"
-                [routerLink]="['/admin/employees/edit', getRowId(e)]"
-                [title]="'COMMON.EDIT' | translate"
-              >
-                <i class="bi bi-pencil"></i>
-              </a>
-
-              <button
-                class="btn xs danger"
-                type="button"
-                (click)="deleteEmployee(getRowId(e))"
-                [title]="'COMMON.DELETE' | translate"
-              >
-                <i class="bi bi-trash"></i>
-              </button>
+            <td class="right">
+              <div class="row-actions">
+                <a class="icon-btn"
+                  [routerLink]="['/admin/employees', getRowId(e)]"
+                  [title]="'COMMON.VIEW' | translate">
+                  <i class="bi bi-eye"></i>
+                </a>
+                <a class="icon-btn"
+                  [routerLink]="['/admin/employees/edit', getRowId(e)]"
+                  [title]="'COMMON.EDIT' | translate">
+                  <i class="bi bi-pencil"></i>
+                </a>
+                <button class="icon-btn danger"
+                  type="button"
+                  (click)="deleteEmployee(getRowId(e))"
+                  [title]="'COMMON.DELETE' | translate">
+                  <i class="bi bi-trash"></i>
+                </button>
+              </div>
             </td>
           </tr>
 
           <tr *ngIf="pagedEmployees().length === 0">
-            <td colspan="7" class="empty">
-              {{ 'EMPLOYEES.EMPTY' | translate }}
+            <td colspan="7" class="empty-row">
+              <i class="bi bi-people"></i>
+              <span>{{ 'EMPLOYEES.EMPTY' | translate }}</span>
             </td>
           </tr>
         </tbody>
       </table>
     </div>
 
-    <!-- Pagination -->
     <div class="pager" *ngIf="!loading()">
-      <div class="muted">
-        {{ 'COMMON.TOTAL' | translate }} : <b>{{ total() }}</b>
-      </div>
-
-      <div class="pager-actions">
-        <button class="btn" (click)="prev()" [disabled]="page() <= 1">
+      <span class="pager-info">{{ 'COMMON.TOTAL' | translate }} : <b>{{ total() }}</b></span>
+      <div class="pager-controls">
+        <button class="pager-btn" (click)="prev()" [disabled]="page() <= 1">
           <i class="bi bi-chevron-left"></i>
         </button>
-
-        <span class="muted">
-          {{ 'COMMON.PAGE' | translate }} {{ page() }} / {{ pages() }}
-        </span>
-
-        <button class="btn" (click)="next()" [disabled]="page() >= pages()">
+        <span class="pager-label">{{ 'COMMON.PAGE' | translate }} {{ page() }} / {{ pages() }}</span>
+        <button class="pager-btn" (click)="next()" [disabled]="page() >= pages()">
           <i class="bi bi-chevron-right"></i>
         </button>
       </div>
     </div>
   </div>
+
 </div>

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { catchError, finalize, of } from 'rxjs';
+import { TranslateModule } from '@ngx-translate/core';
 
 import {
   CreateSensorDto,
@@ -14,7 +15,7 @@ import {
 @Component({
   selector: 'app-add-sensor',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, TranslateModule],
   templateUrl: './add-sensor.html',
   styleUrl: './add-sensor.scss',
 })

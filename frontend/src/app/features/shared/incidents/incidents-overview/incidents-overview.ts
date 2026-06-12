@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { TranslateModule, TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import {
   IncidentEvent,
@@ -31,13 +32,14 @@ interface ActivityItem {
 @Component({
   selector: 'app-incidents-overview',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, TranslatePipe],
   templateUrl: './incidents-overview.html',
   styleUrl: './incidents-overview.scss',
 })
 export class IncidentsOverview implements OnInit {
   private incidentService = inject(IncidentEventServices);
   private incidentsStatsService = inject(IncidentsStatsServices);
+  private translate = inject(TranslateService);
 
   selectedFilter = signal<IncidentFilter>('all');
 
@@ -79,11 +81,11 @@ export class IncidentsOverview implements OnInit {
     return this.calcTrend(current, previous);
   });
 
-  openTrend = computed(() => this.stats()?.open?.trend ?? this.weeklyTrend());
-
-  closedTrend = computed(() => this.weeklyTrend());
-  investigatingTrend = computed(() => this.weeklyTrend());
-  criticalTrend = computed(() => this.weeklyTrend());
+// ✅ Après
+openTrend = computed(() => null);
+closedTrend = computed(() => null);
+investigatingTrend = computed(() => null);
+criticalTrend = computed(() => null);
 
   riskZones = computed<ZoneRisk[]>(() => {
     const zones = this.stats()?.byZone ?? [];
@@ -147,7 +149,8 @@ export class IncidentsOverview implements OnInit {
         },
         error: (err) => {
           this.error.set(
-            err?.error?.message || 'Impossible de charger les incidents.'
+            err?.error?.message ||
+              this.translate.instant('incidents.errors.loadFailed')
           );
           this.isLoading.set(false);
         },
@@ -196,98 +199,54 @@ export class IncidentsOverview implements OnInit {
 
   trendText(value: number): string {
     const abs = Math.abs(value);
-    if (value > 0) return `+${abs}% vs semaine passée`;
-    if (value < 0) return `-${abs}% vs semaine passée`;
-    return `0% vs semaine passée`;
+    if (value > 0) return `+${abs}% ${this.translate.instant('incidents.trend.vsLastWeek')}`;
+    if (value < 0) return `-${abs}% ${this.translate.instant('incidents.trend.vsLastWeek')}`;
+    return `0% ${this.translate.instant('incidents.trend.vsLastWeek')}`;
   }
 
   severityLabel(value?: IncidentSeverity): string {
-    switch (value) {
-      case 'low':
-        return 'Faible';
-      case 'medium':
-        return 'Moyenne';
-      case 'high':
-        return 'Élevée';
-      case 'critical':
-        return 'Critique';
-      default:
-        return 'Non définie';
-    }
+    if (!value) return this.translate.instant('incidents.severity.undefined');
+    return this.translate.instant(`incidents.severity.${value}`);
   }
 
   statusLabel(value?: IncidentStatus): string {
-    switch (value) {
-      case 'open':
-        return 'Ouvert';
-      case 'reviewed':
-        return 'Révisé';
-      case 'in_progress':
-        return 'En cours';
-      case 'closed':
-        return 'Clôturé';
-      case 'false_positive':
-        return 'Faux positif';
-      default:
-        return 'Inconnu';
-    }
+    if (!value) return this.translate.instant('incidents.status.unknown');
+    const key = value === 'in_progress' ? 'inProgress'
+               : value === 'false_positive' ? 'falsePositive'
+               : value;
+    return this.translate.instant(`incidents.status.${key}`);
   }
 
   riskLabel(value: ZoneRisk['risk']): string {
-    switch (value) {
-      case 'stable':
-        return 'Stable';
-      case 'warning':
-        return 'Attention';
-      case 'critical':
-        return 'Critique';
-    }
+    return this.translate.instant(`incidents.risk.${value}`);
   }
 
   typeLabel(type?: string): string {
-    switch (type) {
-      case 'FALL':
-        return 'Chute';
-      case 'INJURY':
-        return 'Blessure';
-      case 'FIRE_ALERT':
-        return 'Incendie';
-      case 'LEAK':
-        return 'Fuite';
-      case 'WORK_ACCIDENT':
-        return 'Accident de travail';
-      case 'NO_HELMET':
-        return 'Casque absent';
-      case 'NO_VEST':
-        return 'Gilet absent';
-      case 'GAS_ALERT':
-        return 'Alerte gaz';
-      case 'TEMP_ALERT':
-        return 'Alerte température';
-      case 'MANUAL_REPORT':
-        return 'Signalement manuel';
-      default:
-        return type || 'Autre';
-    }
+    if (!type) return this.translate.instant('incidents.types.other');
+    const key = type.toLowerCase();
+    const translated = this.translate.instant(`incidents.types.${key}`);
+    // fallback si clé non trouvée dans le JSON
+    return translated.startsWith('incidents.types.') ? type : translated;
   }
 
   getZoneName(zone: any): string {
-    if (!zone) return 'Zone non définie';
+    if (!zone) return this.translate.instant('incidents.zones.undefined');
     if (typeof zone === 'string') return zone;
-    return zone.name || zone.label || 'Zone non définie';
+    return zone.name || zone.label || this.translate.instant('incidents.zones.undefined');
   }
 
   getReportedBy(incident: IncidentEvent): string {
     const user = incident.reportedBy;
+    const fallback = this.translate.instant('incidents.unassigned');
 
-    if (!user) return 'Non assigné';
+    if (!user) return fallback;
     if (typeof user === 'string') return user;
 
     return (
       user.fullName ||
       `${user.firstName || ''} ${user.lastName || ''}`.trim() ||
       user.email ||
-      'Non assigné'
+      fallback
     );
   }
 

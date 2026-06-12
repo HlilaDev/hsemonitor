@@ -10,10 +10,11 @@ import {
   ValidationErrors,
 } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 
 import { UserServices, User } from '../../../../core/services/users/user-services';
 
-type Role = 'operator' | 'hseManager' | 'admin';
+type Role = 'agent' | 'manager' | 'supervisor' | 'admin';
 
 type EditUserForm = FormGroup<{
   firstName: FormControl<string>;
@@ -42,7 +43,7 @@ function passwordMatchValidator(group: AbstractControl): ValidationErrors | null
 @Component({
   selector: 'app-edit-user',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, TranslateModule],
   templateUrl: './edit-user.html',
   styleUrl: './edit-user.scss',
 })
@@ -64,7 +65,7 @@ export class EditUser {
       firstName: this.fb.nonNullable.control('', [Validators.required, Validators.minLength(2)]),
       lastName: this.fb.nonNullable.control('', [Validators.required, Validators.minLength(2)]),
       email: this.fb.nonNullable.control('', [Validators.required, Validators.email]),
-      role: this.fb.nonNullable.control<Role>('operator', [Validators.required]),
+      role: this.fb.nonNullable.control<Role>('agent', [Validators.required]),
       password: this.fb.nonNullable.control('', []), // optional
       confirmPassword: this.fb.nonNullable.control('', []), // optional
     },
@@ -99,7 +100,7 @@ export class EditUser {
           firstName: user.firstName ?? '',
           lastName: user.lastName ?? '',
           email: user.email ?? '',
-          role: (user.role as Role) ?? 'operator',
+          role: (user.role as Role) ?? 'agent',
           password: '',
           confirmPassword: '',
         });

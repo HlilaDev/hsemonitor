@@ -1,4 +1,5 @@
 import { CommonModule, DatePipe } from '@angular/common';
+import { TranslatePipe } from '@ngx-translate/core';
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { UserServices } from '../../../../core/services/users/user-services';
@@ -40,7 +41,7 @@ interface TeamMemberView {
 @Component({
   selector: 'app-team-overview',
   standalone: true,
-  imports: [CommonModule, FormsModule, DatePipe],
+  imports: [CommonModule, FormsModule, DatePipe, TranslatePipe],
   templateUrl: './team-overview.html',
   styleUrl: './team-overview.scss',
 })
